@@ -1,0 +1,5 @@
+expyriment (0.5.2-1) unstable; urgency=low
+
+  * Initial release of the Debian package for Expyriment 
+
+ -- Oliver Lindemann <lindemann09@gmail.com>  Thu, 23 Aug 2012 18:57:38 +0200
