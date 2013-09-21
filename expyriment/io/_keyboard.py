@@ -182,6 +182,13 @@ class Keyboard(Input):
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default=True)
 
+        Returns
+        -------
+        found : char
+            pressed charater
+        rt : int
+            reaction time in ms
+
         """
 
         if android is not None:
