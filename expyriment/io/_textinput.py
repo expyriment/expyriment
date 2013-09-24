@@ -46,6 +46,8 @@ class TextInput(Input):
             message to show
         position : (int, int), optional
             position of the TextInput canvas
+        length : int, optional
+            the length of the text input frame in number of charaters
         ascii_filter : list, optional
             list of ASCII codes to filter for
         message_text_size : int, optional
