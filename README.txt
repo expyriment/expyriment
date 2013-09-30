@@ -26,8 +26,8 @@ experience.
 - Project Homepage: http://www.expyriment.org
 
 GNU General Public License v3,
-Florian Krause <siebenhundertzehn@gmail.com>,
-Oliver Lindemann <lindemann09@gmail.com>
+Florian Krause <florian@expyriment.org>,
+Oliver Lindemann <oliver@expyriment.org>
 
 
 Documentation
