@@ -68,7 +68,7 @@ class TextScreen(Visual):
         text_colour : (int,int,int), optional
             text colour
         text_justification : int, optional
-            io (Left), 1(center), 2(right) (int) (optional)
+            0 (Left), 1(center), 2(right) (int) (optional)
         background_colour : (int, int, int), optional
             background_colour
         size : (int, int), optional

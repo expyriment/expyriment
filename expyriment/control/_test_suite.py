@@ -228,9 +228,82 @@ def _audio_playback(exp):
 
     return response
 
+def _font_viewer(exp):
+    all_fonts = expyriment.misc.list_fonts().keys()
+
+    stimuli.TextScreen(heading="Expyriment Font Viewer",
+            text="""
+arrow keys left/right -- Switch font type
+arrow keys up/down    -- Switch font size
+                  i   -- Switch italic
+                  b   -- Switch bold
+                  c   -- Change text
+               return -- Quit""",
+        text_font="freemono", text_bold=True,
+            text_justification=0).present()
+    exp.keyboard.wait()
+
+
+    default_text = """The quick brown fox jumps over the lazy dog.
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+1234567890.:,;(*!?')"""
+    text = default_text
+    size = 14
+    font_id = 0
+    italic = False
+    bold = False
+
+    quest = expyriment.io.TextInput(message="Please enter text to be displayed:")
+
+    while True:
+        font_str = all_fonts[font_id]
+        font_description = "font '{0}', size {1}".format(font_str, size)
+        if italic:
+            font_description += ", italic"
+        if bold:
+            font_description += ", bold"
+
+        try:
+            stimuli.TextScreen(
+                heading=font_description,
+                text=text,
+                text_font=font_str, text_size=size,
+                text_justification=0,
+                text_italic = italic,
+                text_bold = bold).present()
+        except:
+            stimuli.TextLine(text="Sorry, I can't display the text with " +
+                "{0}".format(font_description),
+                text_colour = constants.C_EXPYRIMENT_ORANGE).present()
+        key,rtn = exp.keyboard.wait()
+
+        if (key == constants.K_RETURN):
+            break
+        elif key == constants.K_UP:
+            size += 2
+        elif key == constants.K_DOWN:
+            size -= 2
+        elif key == constants.K_LEFT:
+            font_id -=1
+            if font_id < 0:
+                font_id = len(all_fonts)-1
+        elif key == constants.K_RIGHT:
+            font_id +=1
+            if font_id >= len(all_fonts):
+                font_id = 0
+        elif key == constants.K_i:
+            italic = not(italic)
+        elif key == constants.K_b:
+            bold = not(bold)
+        elif key == constants.K_c:
+            text = quest.get()
+            if len(text)<=0:
+                text = default_text
+
+
 def _write_protocol(exp, results):
     """Write a protocol with all test results."""
-
 
     sorted_keys = results.keys()
     sorted_keys.sort()
@@ -278,9 +351,10 @@ def run_test_suite():
         exp = expyriment._active_exp
 
     #make menu and code for test functions
-    test_functions = ['', '']
+    test_functions = ['', '', '']
     menu = ["1) Visual stimulus presentation",
-            "2) Auditory stimulus presentation"]
+            "2) Auditory stimulus presentation",
+            "3) Font Viewer"]
     for mod, cl in _find_self_tests():
         test_functions.append("rtn = {0}.{1}._self_test(exp)".format(mod, cl))
         menu.append("{0}) {1} test".format(len(test_functions), cl))
@@ -341,6 +415,9 @@ def run_test_suite():
                 presults["testsuite_audio_frequency"] = ""
                 results["testsuite_audio_bitdepth"] = ""
                 results["testsuite_audio_channels"] = ""
+            preselected_item = select + 1
+        elif select == 2:
+            _font_viewer(exp)
             preselected_item = select + 1
         else:
             exec(test_functions[select])
