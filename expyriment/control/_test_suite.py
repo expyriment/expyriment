@@ -231,7 +231,8 @@ def _audio_playback(exp):
 def _font_viewer(exp):
     all_fonts = expyriment.misc.list_fonts().keys()
 
-    stimuli.TextScreen(heading="Expyriment Font Viewer",
+    def info_screen():
+        stimuli.TextScreen(heading="Expyriment Font Viewer",
             text="""
 arrow keys left/right -- Switch font type
 arrow keys up/down    -- Switch font size
@@ -239,9 +240,9 @@ arrow keys up/down    -- Switch font size
                   b   -- Switch bold
                   c   -- Change text
                return -- Quit""",
-        text_font="freemono", text_bold=True,
+            text_font="freemono", text_bold=True,
             text_justification=0).present()
-    exp.keyboard.wait()
+        exp.keyboard.wait()
 
 
     default_text = """The quick brown fox jumps over the lazy dog.
@@ -253,9 +254,9 @@ abcdefghijklmnopqrstuvwxyz
     font_id = 0
     italic = False
     bold = False
+    quest = expyriment.io.TextInput(message="Please enter text: (Keep empty for default text)", length=35)
 
-    quest = expyriment.io.TextInput(message="Please enter text to be displayed:")
-
+    info_screen()
     while True:
         font_str = all_fonts[font_id]
         font_description = "font '{0}', size {1}".format(font_str, size)
@@ -300,6 +301,8 @@ abcdefghijklmnopqrstuvwxyz
             text = quest.get()
             if len(text)<=0:
                 text = default_text
+        else:
+            info_screen()
 
 
 def _write_protocol(exp, results):
