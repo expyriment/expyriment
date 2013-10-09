@@ -17,6 +17,13 @@ experience.
 
 Website: http://www.expyriment.org
 
+To cite Expyriment in publications, please refer to the following article:
+
+  Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive
+  and neuroscientific experiments. Behavior Research Methods.
+
+  see http://dx.doi.org/10.3758/s13428-013-0390-6
+
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
