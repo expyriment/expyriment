@@ -33,7 +33,6 @@ Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.or
 Documentation
 =============
 Documentation is in the directory "documentation".
-
 For online documentation see: 
 http://docs.expyriment.org
 
@@ -41,7 +40,6 @@ http://docs.expyriment.org
 Examples
 ========
 Examples are in the directory "examples".
-
 For online examples see: 
 http://docs.expyriment.org/Examples.html
 
