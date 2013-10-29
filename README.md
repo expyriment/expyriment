@@ -9,13 +9,13 @@
 
 Overview
 ========
-Expyriment is an open-source and platform-independent lightweight Python
+**Expyriment** is an open-source and platform-independent lightweight Python
 library for designing and conducting timing-critical behavioral and
 neuroimaging experiments. The major goal is to provide a well-structured
 Python library for script-based experiment development, with a high priority
 being the readability of the resulting program code.
 
-Expyriment has been tested extensively under Linux and Windows and is an
+**Expyriment** has been tested extensively under Linux and Windows and is an
 all-in-one solution, as it handles stimulus presentation, the recording of
 input/output events, communication with other devices, and the collection and
 preprocessing of data. Furthermore, it offers a hierarchical design structure,
@@ -26,9 +26,8 @@ experience.
 
 - Project Homepage: http://www.expyriment.org
 
-GNU General Public License v3,
-Florian Krause <florian@expyriment.org>,
-Oliver Lindemann <oliver@expyriment.org>
+*GNU General Public License v3*  
+Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.org)
 
 
 Documentation
