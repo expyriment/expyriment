@@ -389,6 +389,8 @@ class TextInput(Input):
 
         """
 
+        if android is not None:
+            android.show_keyboard()
         self._user = []
         for char in default_input:
             self._user.append(char)
@@ -417,6 +419,8 @@ class TextInput(Input):
         if self._logging:
             expyriment._active_exp._event_file_log("TextInput,entered,{0}"\
                                               .format(got))
+        if android is not None:
+            android.hide_keyboard()
         return got
 
 

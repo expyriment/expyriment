@@ -79,7 +79,7 @@ def start(experiment=None, auto_create_subject_id=None):
         if android is not None:
             position = (0, 200)
         else:
-            position = None
+            position = (0, 0)
         while True:
             ask_for_subject = TextInput(message="Subject Number:",
                             position=position,
@@ -143,8 +143,11 @@ def start(experiment=None, auto_create_subject_id=None):
                      check_for_control_keys=False)
         if key[0] is not None:
             break
-
-    stimuli.TextLine("Ready", text_size=24,
+    if android is not None:
+        position = (0, 200)
+    else:
+        position = (0,0)
+    stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
     stimuli._stimulus.Stimulus._id_counter -= 1
     experiment.keyboard.wait()
@@ -171,7 +174,11 @@ def pause():
     experiment._screen.colour = [0, 0, 0]
     old_logging = experiment.log_level
     experiment.set_log_level(0)
-    stimuli.TextLine("Paused", text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+    if android is not None:
+        position = (0, 200)
+    else:
+        position = (0,0)
+    stimuli.TextLine("Paused", position=position, text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                     text_size=24).present()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
@@ -217,7 +224,11 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
         experiment._screen.colour = [0, 0, 0]
-        stimuli.TextLine("Quitting Experiment? (y/n)",
+        if android is not None:
+            position = (0, 200)
+        else:
+            position = (0,0)
+        stimuli.TextLine("Quitting Experiment? (y/n)", position=position,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                          text_size=24).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
@@ -243,7 +254,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
             pygame.display.iconify()
 
     experiment._screen.colour = [0, 0, 0]
-    stimuli.TextLine(goodbye_text,
+    stimuli.TextLine(goodbye_text, position=(0, 0),
                      text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                      text_size=24).present()
     stimuli._stimulus.Stimulus._id_counter -= 1
