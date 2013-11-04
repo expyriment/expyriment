@@ -15,7 +15,13 @@ Installing Expyriment
 ---------------------
 You can then install Expyriment with the online installer::
 
-    wget -P /tmp 'http://expyriment.googlecode.com/files/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
+    wget -P /tmp 
+    'http://expyriment.googlecode.com/files/expyriment_online_install_linux.sh' 
+    && sh /tmp/expyriment_online_install_linux.sh
+
+.. FIXME online script is still at google and should be located at
+..       expyriment.org/expyriment_online_install_linux.sh
+.. FIXME The script needs to be adapted if change.txt is renamed to changes.md
 
 Alternatively, you can download the `Expyriment source`_ (.zip) and install as 
 described here_.
@@ -34,3 +40,4 @@ Notes
 
 .. _`Expyriment Source`: http://code.google.com/p/expyriment/downloads/list
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
+

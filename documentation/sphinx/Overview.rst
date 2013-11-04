@@ -78,9 +78,14 @@ Licence
 -------
 Expyriment is free software and released under the Open Source `GNU General 
 Public Licence <http://www.gnu.org/copyleft/gpl.html>`_ of the Free Software 
-Foundation.
+Foundation. If you have used Expyriment in your work, please cite the follwing 
+publication:
+    
+Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive 
+and neuroscientific experiments. *Behavior Research Methods.*  
+`doi:10.3758/s13428-013-0390-6 <http://dx.doi.org/10.3758/s13428-013-0390-6>`
 
-.. #FIXME: How to cite Expyriment (if paper accepted)
+.. FIXME update BRM publication details
 
 Development repository
 ----------------------
