@@ -54,4 +54,4 @@ the data matrix.::
     	data
     }
 
-.. _expyriment_data.R: https://gist.github.com/lindemann09/497283a29ee69cc7e7a2
+.. _expyriment_data.R: https://gist.github.com/lindemann09/497283a29ee69cc7e7a2/raw/be1ca5911babadd3ea69c7776848d88b7cbec25a/expyriment_data.R
