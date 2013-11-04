@@ -53,7 +53,7 @@ copyright = u'{0}, Florian Krause & Oliver Lindemann'.format(
 #
 
 file_path = os.path.split(os.path.abspath(__file__))[0]
-p = os.path.abspath('{0}/../../CHANGES.txt'.format(file_path))
+p = os.path.abspath('{0}/../../CHANGES.md'.format(file_path))
 version_nr = "{0}"
 with open(p) as f:
     for line in f:
