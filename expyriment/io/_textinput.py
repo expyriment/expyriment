@@ -18,9 +18,15 @@ try:
 except ImportError:
     android = None
 
+try:
+    import android.show_keyboard as android_show_keyboard
+    import android.hide_keyboard as android_hide_keyboard
+except:
+    android.show_keyboard = android.hide_keyboard = None    
+
 import defaults
 from expyriment.misc import find_font
-import expyriment
+import expyrimentan
 from _input_output import Input
 
 
@@ -389,8 +395,8 @@ class TextInput(Input):
 
         """
 
-        if android is not None:
-            android.show_keyboard()
+        if android_show_keyboard is not None:
+            android_show_keyboard()
         self._user = []
         for char in default_input:
             self._user.append(char)
@@ -419,8 +425,8 @@ class TextInput(Input):
         if self._logging:
             expyriment._active_exp._event_file_log("TextInput,entered,{0}"\
                                               .format(got))
-        if android is not None:
-            android.hide_keyboard()
+        if android_hide_keyboard is not None:
+            android_hide_keyboard()
         return got
 
 
