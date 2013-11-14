@@ -297,13 +297,19 @@ def run_test_suite():
 
     results = expyriment.get_system_info()
 
+    try:
+        import android
+        mouse = expyriment.io.Mouse(show_cursor=False)
+    except ImportError:
+        android = None
+        mouse = None
 
     preselected_item = 0
     go_on = True
     while go_on:
         select = expyriment.io.TextMenu(
             "Test suite", menu, width=350, justification=0,
-            background_stimulus=background).get(preselected_item)
+            background_stimulus=background, mouse=mouse).get(preselected_item)
 
         if select == 0:
             rtn = _stimulus_timing(exp)
