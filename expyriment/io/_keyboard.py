@@ -17,10 +17,14 @@ import time, sys
 import pygame
 try:
     import android
-    import android.show_keyboard
-    import android.hide_keyboard
 except ImportError:
     android = None
+    
+try:
+    import android.show_keyboard as android_show_keyboard
+    import android.hide_keyboard as android_hide_keyboard
+except ImportError:
+    android_show_keyboard = android_hide_keyboard = None
 
 import defaults
 import expyriment
@@ -193,8 +197,8 @@ class Keyboard(Input):
 
         """
 
-        if android is not None:
-            android.show_keyboard()
+        if android_show_keyboard is not None:
+            android_show_keyboard()
         start = Clock._cpu_time()
         rt = None
         found_key = None
@@ -230,8 +234,8 @@ class Keyboard(Input):
         if self._logging:
             expyriment._active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
-        if android is not None:
-            android.hide_keyboard()
+        if android_hide_keyboard is not None:
+            android_hide_keyboard()
         return found_key, rt
 
     def wait_char(self, char, duration=None, check_for_control_keys=True):
