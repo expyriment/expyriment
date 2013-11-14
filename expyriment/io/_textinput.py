@@ -21,7 +21,7 @@ except ImportError:
 try:
     import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
-except:
+except ImportError:
     android.show_keyboard = android.hide_keyboard = None    
 
 import defaults
