@@ -15,11 +15,7 @@ __date__ = ''
 import time, sys
 
 import pygame
-try:
-    import android
-except ImportError:
-    android = None
-    
+
 try:
     import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
