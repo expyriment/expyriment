@@ -17,6 +17,8 @@ import time, sys
 import pygame
 try:
     import android
+    import android.show_keyboard
+    import android.hide_keyboard
 except ImportError:
     android = None
 
