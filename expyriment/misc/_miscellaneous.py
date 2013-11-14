@@ -43,23 +43,6 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
         else:
             return False
 
-def _list_android_fonts():
-    """List all truetype fonts in /system/fonts."""
-    
-    import glob
-    import os
-    
-    d = {}
-    for font in glob.glob("/system/fonts/*.ttf"):
-        font = unicode(font)
-        name = os.path.split(font)[1]
-        name = name.lower()
-        name = name.replace("-", "")
-        name = name.replace("_", "")
-        name = name.replace(".ttf", "")
-        d[name] = font
-    return d
-
 def list_fonts():
     """List all fonts installed on the system.
 
@@ -68,21 +51,14 @@ def list_fonts():
 
     """
 
-    try:
-        import android
-    except ImportError:
-        android = None
+    
+    import pygame
+    pygame.font.init()
 
-    if android is not None:
-        d = _list_android_fonts()
-    else:
-        import pygame
-        pygame.font.init()
-
-        d = {}
-        fonts = pygame.font.get_fonts()
-        for font in fonts:
-            d[font] = pygame.font.match_font(font)
+    d = {}
+    fonts = pygame.font.get_fonts()
+    for font in fonts:
+        d[font] = pygame.font.match_font(font)
     return d
 
 def find_font(font):
@@ -103,29 +79,16 @@ def find_font(font):
         If no font is found, an empty string will be returned.
 
     """
+    
+    import pygame
+    pygame.font.init()
 
     try:
-        import android
-    except ImportError:
-        android = None
-
-    if android is not None:
-        fonts = _list_android_fonts()
-        if font in fonts.keys():
-            return fonts(font)
+        pygame.font.Font(font, 10)
+        return font
+    except:
+        font_file = pygame.font.match_font(font)
+        if font_file is not None:
+            return font_file
         else:
             return ""
-
-    else:
-        import pygame
-        pygame.font.init()
-
-        try:
-            pygame.font.Font(font, 10)
-            return font
-        except:
-            font_file = pygame.font.match_font(font)
-            if font_file is not None:
-                return font_file
-            else:
-                return ""
