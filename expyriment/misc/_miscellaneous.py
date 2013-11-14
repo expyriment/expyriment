@@ -45,6 +45,10 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
 def _list_android_fonts():
     """List all truetype fonts in /system/fonts."""
+    
+    import glob
+    import os
+    
     d = {}
     for font in glob.glob("/system/fonts/*.ttf"):
         font = unicode(font)
