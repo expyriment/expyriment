@@ -529,7 +529,6 @@ class Visual(Stimulus):
             else:
                 return False, None
 
-
     def overlapping_with_position(self, position, mode="visible"):
         """Check if stimulus is overlapping with a certain position.
 
@@ -749,8 +748,8 @@ class Visual(Stimulus):
 
         start = Clock._cpu_time()
         if not expyriment._active_exp.is_initialized:
-            message = "Can't preload stimulus. Expyriment needs to be \
-initilized before preloading a stimulus."
+            message = "Can't preload stimulus. Expyriment needs to be " + \
+                      "initilized before preloading a stimulus."
             raise RuntimeError(message)
         self._was_compressed_before_preload = self.is_compressed
         if not self.is_preloaded:

@@ -2,6 +2,19 @@
 Expyriment Release Notes
 ========================
 
+upcoming version
+-----------------
+New Features:
+- new feature in testsuite: Font viewer 
+- new extra stimulus: stimuli.extras.RandomDotKinematogram
+
+Fixed:
+- bugfix: extras.CedrusResponseDevice
+- several fixes in documentation
+
+Changes:
+- several Android related changes (have no impact for normal use of Expyriment)
+
 Version 0.6.4 (5 Aug 2013)
 --------------------------
 New Features:
