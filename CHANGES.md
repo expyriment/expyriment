@@ -7,8 +7,10 @@ upcoming version
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
+- new timer and experiment clock to ensure monotonic timing
 
 Fixed:
+- experiment clock with monotonic timing
 - bugfix: extras.CedrusResponseDevice
 - several fixes in documentation
 

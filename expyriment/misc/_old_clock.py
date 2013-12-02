@@ -1,4 +1,4 @@
-"""The expyriment clock.
+"""The expyriment clock. (old version)
 
 This module contains an experimental clock.
 
@@ -12,18 +12,22 @@ __date__ = ''
 
 
 import sys
-from time import localtime, sleep
+import time
 import types
-from _timer import get_time
 
 import expyriment
 
-class Clock(object) :
+class OldClock(object) :
     """Basic timing class.
 
     Unit of time is milliseconds.
 
     """
+
+    if sys.platform == 'win32':
+        _cpu_time = time.clock
+    else:
+        _cpu_time = time.time
 
     def __init__(self, sync_clock=None):
         """Create a clock.
@@ -35,13 +39,14 @@ class Clock(object) :
 
         """
 
-        if (sync_clock.__class__.__name__ == "Clock"):
+        self.__cpu_time = OldClock._cpu_time
+        if (sync_clock.__class__.__name__ == "OldClock"):
             self.__init_time = sync_clock.init_time / 1000
         else:
-            self.__init_time = get_time()
+            self.__init_time = self.__cpu_time()
 
-        self._init_localtime = localtime()
-        self.__start = get_time()
+        self._init_localtime = time.localtime()
+        self.__start = self.__cpu_time()
 
     @property
     def init_time(self):
@@ -53,13 +58,13 @@ class Clock(object) :
     def cpu_time(self):
         """Getter for CPU time."""
 
-        return get_time()
+        return self.__cpu_time
 
     @property
     def time(self):
         """Getter for current time in milliseconds since clock init."""
 
-        return int((get_time() - self.__init_time) * 1000)
+        return int((self.__cpu_time() - self.__init_time) * 1000)
 
     @property
     def stopwatch_time(self):
@@ -68,7 +73,7 @@ class Clock(object) :
         The use of the stopwatch does not affect the clock time.
         """
 
-        return int((get_time() - self.__start) * 1000)
+        return int((self.__cpu_time() - self.__start) * 1000)
 
     @property
     def init_localtime(self):
@@ -82,7 +87,7 @@ class Clock(object) :
         The use of the stopwatch does not affect the clock time.
         """
 
-        self.__start = get_time()
+        self.__start = self.__cpu_time()
 
     def wait(self, waiting_time, function=None):
         """Wait for a certain amout of milliseconds.
@@ -106,7 +111,7 @@ class Clock(object) :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                sleep((waiting_time - looptime) / 1000)
+                time.sleep((waiting_time - looptime) / 1000)
             while (self.time < start + waiting_time):
                 pass
 

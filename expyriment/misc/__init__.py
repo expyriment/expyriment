@@ -18,6 +18,7 @@ import defaults
 from _miscellaneous import compare_codes, list_fonts, find_font
 from _buffer import  Buffer, ByteBuffer
 from _clock import Clock
+from _old_clock import OldClock
 import geometry
 import data_preprocessing
 import statistics
