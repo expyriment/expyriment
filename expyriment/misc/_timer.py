@@ -2,7 +2,7 @@
 
 This module provides a high-resolution timer via the function get_time()
 
-Thanks to Luca Filippin for providing code examples.
+Thanks to Luca Filippin for the code examples.
 
 Credits and references:
       http://stackoverflow.com/questions/1205722/how-do-i-get-monotonic-time-durations-in-python
@@ -100,9 +100,11 @@ if _use_time_module:
     print("Warning: " + warn_message)
     if platform == 'win32':
         def get_time():
+            """Get high-resolution time stamp (float) """
             return time.clock()
     else:
         def get_time():
+            """Get high-resolution time stamp (float) """
             return time.time()
 
 if __name__ == "__main__":
