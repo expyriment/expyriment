@@ -20,6 +20,8 @@ import ctypes
 import os
 from sys import platform
 
+_use_time_module = False
+
 if platform == 'darwin':
     # MAC
     class _TimeBase(ctypes.Structure):
@@ -28,19 +30,22 @@ if platform == 'darwin':
             ('denom', ctypes.c_uint)
         ]
 
-    _libsys_c = ctypes.CDLL('/usr/lib/system/libsystem_c.dylib')
-    _libsys_kernel = ctypes.CDLL('/usr/lib/system/libsystem_kernel.dylib')
-    _mac_abs_time = _libsys_c.mach_absolute_time
-    _mac_timebase_info = _libsys_kernel.mach_timebase_info
-    _time_base = _TimeBase()
+    try:
+        _libsys_c = ctypes.CDLL('/usr/lib/system/libsystem_c.dylib')
+        _libsys_kernel = ctypes.CDLL('/usr/lib/system/libsystem_kernel.dylib')
+        _mac_abs_time = _libsys_c.mach_absolute_time
+        _mac_timebase_info = _libsys_kernel.mach_timebase_info
+        _time_base = _TimeBase()
+        if (_mac_timebase_info(ctypes.pointer(_time_base)) != 0):
+            _use_time_module = True
 
-    if (_mac_timebase_info(ctypes.pointer(_time_base)) != 0):
-        raise RuntimeError('Failed to get timebase info')
-
-    def get_time():
-        """Get high-resolution monotonic time stamp (float) """
-        _mac_abs_time.restype = ctypes.c_ulonglong
-        return float(_mac_abs_time()) * _time_base.numer / (_time_base.denom * 1e9)
+        def get_time():
+            """Get high-resolution monotonic time stamp (float) """
+            _mac_abs_time.restype = ctypes.c_ulonglong
+            return float(_mac_abs_time()) * _time_base.numer / (_time_base.denom * 1e9)
+        get_time()
+    except:
+        _use_time_module = True
 
 elif platform.startswith('linux'):
     # real OS
@@ -52,29 +57,53 @@ elif platform.startswith('linux'):
             ('tv_nsec', ctypes.c_long)
         ]
 
-    _librt = ctypes.CDLL('librt.so.1', use_errno=True)
-    _clock_gettime = _librt.clock_gettime
-    _clock_gettime.argtypes = [ctypes.c_int, ctypes.POINTER(_TimeSpec)]
+    try:
+        _librt = ctypes.CDLL('librt.so.1', use_errno=True)
+        _clock_gettime = _librt.clock_gettime
+        _clock_gettime.argtypes = [ctypes.c_int, ctypes.POINTER(_TimeSpec)]
 
-    def get_time():
-        """Get high-resolution monotonic time stamp (float) """
-        t = _TimeSpec()
-        if _clock_gettime(_CLOCK_MONOTONIC, ctypes.pointer(t)) != 0:
-            errno_ = ctypes.get_errno()
-            raise OSError(errno_, os.strerror(errno_))
-        return t.tv_sec + t.tv_nsec * 1e-9
-else: 
-    # win32. This code is adapted from the psychopy.core.clock source code.
-    _fcounter = ctypes.c_int64()
-    _qpfreq = ctypes.c_int64()
-    ctypes.windll.Kernel32.QueryPerformanceFrequency(ctypes.byref(_qpfreq))
-    _qpfreq = float(_qpfreq.value)
-    _winQPC = ctypes.windll.Kernel32.QueryPerformanceCounter
+        def get_time():
+            """Get high-resolution monotonic time stamp (float) """
+            t = _TimeSpec()
+            if _clock_gettime(_CLOCK_MONOTONIC, ctypes.pointer(t)) != 0:
+                errno_ = ctypes.get_errno()
+                raise OSError(errno_, os.strerror(errno_))
+            return t.tv_sec + t.tv_nsec * 1e-9
+        get_time()
+    except:
+        _use_time_module = True
+        
+elif platform == 'win32': 
+    # win32. Code adapted from the psychopy.core.clock source code.
+    try:
+        _fcounter = ctypes.c_int64()
+        _qpfreq = ctypes.c_int64()
+        ctypes.windll.Kernel32.QueryPerformanceFrequency(ctypes.byref(_qpfreq))
+        _qpfreq = float(_qpfreq.value)
+        _winQPC = ctypes.windll.Kernel32.QueryPerformanceCounter
 
-    def get_time():
-        """Get high-resolution monotonic time stamp (float) """
-        _winQPC(ctypes.byref(_fcounter))
-        return  _fcounter.value/_qpfreq
+        def get_time():
+            """Get high-resolution monotonic time stamp (float) """
+            _winQPC(ctypes.byref(_fcounter))
+            return  _fcounter.value/_qpfreq
+        get_time()
+    except:
+        _use_time_module = True
+else:
+    # Android or something else
+    _use_time_module = True
+    
+
+if _use_time_module:
+    import time
+    warn_message = "Failed to initialize monotonic timer. Python's time module will be use."
+    print("Warning: " + warn_message)
+    if platform == 'win32':
+        def get_time():
+            return time.clock()
+    else:
+        def get_time():
+            return time.time()
 
 if __name__ == "__main__":
     print get_time()
