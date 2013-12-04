@@ -53,8 +53,10 @@ class RandomDotKinematogram(Stimulus):
             the time the object lives in milliseconds (default 400)
         dot_diameter : int, optional
             diameter of the dots (default = 5)
-        colour : (int, int, int), optional
+        dot_colour : (int, int, int), optional
             colour (RGB) of the dots (default=experiment.foreground_colour)
+        background_colour : (int, int, int), optional
+            colour (RGB) of the background (default=experiment.background_colour)
         north_up_clockwise : bool, optional
             if true (default) all directional information refer to an
             north up and clockwise system
