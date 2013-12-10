@@ -20,6 +20,7 @@ import pygame
 import expyriment
 import defaults
 from _visual import Visual
+from expyriment.misc import to_str, to_unicode
 
 
 class Picture(Visual):
@@ -39,17 +40,11 @@ class Picture(Visual):
 
         if position is None:
             position = defaults.picture_position
-        Visual.__init__(self, position, log_comment=filename)
-        self._filename = filename
+        self._filename = to_unicode(filename, fse=True)
+        Visual.__init__(self, position, log_comment=self._filename)        
         if not(os.path.isfile(self._filename)):
-            if isinstance(self._filename, unicode):
-                import sys
-                ENCODING = sys.getfilesystemencoding()
-                if ENCODING is None:
-                    ENCODING = u"utf-8"
-                filename = self._filename.encode(ENCODING)
-            raise IOError("The picture file '{0}' does not exist".format(
-                filename))
+            raise IOError(u"The picture file '{0}' does not exist".format(
+                self._filename))
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -72,19 +67,11 @@ class Picture(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        if isinstance(self._filename, unicode):
-            import sys
-            filename = self._filename.encode(u"utf-8")
-            ENCODING = sys.getfilesystemencoding()
-            if ENCODING is None:
-                ENCODING = u"utf-8"
-            log_filename = self._filename.encode(ENCODING)
-        else:
-            filename = log_filename = self._filename
+        filename = to_str(self._filename, fse=True)
         surface = pygame.image.load(filename).convert_alpha()
         if self._logging:
             expyriment._active_exp._event_file_log("Picture,loaded,{0}"\
-                                   .format(log_filename), 1)
+                                   .format(filename), 1)
         return surface
 
 
