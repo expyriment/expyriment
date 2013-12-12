@@ -24,7 +24,7 @@ from copy import deepcopy
 import defaults
 import expyriment
 from expyriment.misc import constants
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 import randomize
 import permute
 
@@ -1397,7 +1397,7 @@ class Block(object):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         cnt = 0
         while True:
             cnt += 1
@@ -1406,7 +1406,7 @@ class Block(object):
                 (self.max_trial_repetitions <= max_repetitions):
                 return True
             else:
-                if (Clock._cpu_time() - start) * 1000 >= \
+                if (get_time() - start) * 1000 >= \
                                                     defaults.max_shuffle_time:
                     print "Warning: Could not find an appropriate trial " + \
                           "randomization ({0} attempts)!".format(cnt)
@@ -1717,10 +1717,10 @@ class Trial(object):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         for stim in self._stimuli:
             stim.preload()
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def unload_stimuli(self, keep_surface=False):
         """Unload all stimuli in trial.
@@ -1737,7 +1737,7 @@ class Trial(object):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         for stim in self._stimuli:
             stim.unload(keep_surface=keep_surface)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)

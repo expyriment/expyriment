@@ -13,7 +13,8 @@ __date__ = ''
 
 import defaults
 import expyriment
-from expyriment.misc import Clock, compare_codes
+from expyriment.misc import compare_codes
+from expyriment.misc._timer import get_time
 from _keyboard import Keyboard
 from _input_output import Input, Output
 
@@ -144,18 +145,18 @@ class StreamingButtonBox(Input, Output):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         if not no_clear_buffer:
             self.clear()
         while True:
             expyriment._active_exp._execute_wait_callback()
             if duration is not None:
-                if int((Clock._cpu_time() - start) * 1000) > duration:
+                if int((get_time() - start) * 1000) > duration:
                     return None, None
             found = self.check(codes, bitwise_comparison)
             if found is not None:
-                rt = int((Clock._cpu_time() - start) * 1000)
+                rt = int((get_time() - start) * 1000)
                 break
             if check_for_control_keys:
                 if Keyboard.process_control_keys():

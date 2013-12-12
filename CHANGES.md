@@ -8,6 +8,7 @@ New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
+- Clock: new method (static) monotonic time (this time should be always used)
 
 Fixed:
 - experiment clock with monotonic timing

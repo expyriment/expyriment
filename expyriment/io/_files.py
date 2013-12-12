@@ -23,7 +23,7 @@ from platform import uname
 
 import defaults
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 from _input_output import Input, Output
 
 
@@ -209,12 +209,12 @@ class OutputFile(Output):
     def save(self):
         """Save file to disk."""
 
-        start = Clock._cpu_time()
+        start = get_time()
         if self._buffer != []:
             with open(self._fullpath, 'a') as f:
                 f.write("".join(self._buffer))
             self._buffer = []
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def write(self, content):
         """Write to file.
@@ -463,7 +463,7 @@ class DataFile(OutputFile):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                         or self._variable_names_changed:
             # Re-write header and varnames
@@ -509,7 +509,7 @@ class DataFile(OutputFile):
             if self._logging:
                 expyriment._active_exp._event_file_log("Data,saved")
 
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     @staticmethod
     def get_next_subject_number():

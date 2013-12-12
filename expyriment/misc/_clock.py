@@ -51,8 +51,8 @@ class Clock(object) :
 
     @staticmethod
     def monotonic_time():
-        """Returns the time of he high-resolution monitonoic timer that is
-        used by Expyriment interally
+        """Returns the time of the high-resolution monitonoic timer that is
+        used by Expyriment interally.
 
         """
         return get_time()
