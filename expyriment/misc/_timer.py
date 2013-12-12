@@ -72,8 +72,8 @@ elif platform.startswith('linux'):
         get_time()
     except:
         _use_time_module = True
-        
-elif platform == 'win32': 
+
+elif platform == 'win32':
     # win32. Code adapted from the psychopy.core.clock source code.
     try:
         _fcounter = ctypes.c_int64()
@@ -92,7 +92,7 @@ elif platform == 'win32':
 else:
     # Android or something else
     _use_time_module = True
-    
+
 
 if _use_time_module:
     import time

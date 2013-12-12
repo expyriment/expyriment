@@ -24,7 +24,8 @@ import defaults
 
 import expyriment
 from expyriment import stimuli
-from expyriment.misc import constants, statistics, Clock
+from expyriment.misc import constants, statistics
+from expyriment.misc._timer import get_time
 
 
 def _make_graph(x, y, colour):
@@ -123,12 +124,12 @@ The estimated refreshrate should resemble your actual screen refreshrate (common
         times = []
         black.present()
         for _x in range(100):
-            start = Clock._cpu_time()
+            start = get_time()
             black.present()
-            times.append(Clock._cpu_time() - start)
-            start = Clock._cpu_time()
+            times.append(get_time() - start)
+            start = get_time()
             white.present()
-            times.append(Clock._cpu_time() - start)
+            times.append(get_time() - start)
         refresh_rate = 1000 / (statistics.mean(times) * 1000)
         info = """Your estimated refresh rate is {0} Hz.
 

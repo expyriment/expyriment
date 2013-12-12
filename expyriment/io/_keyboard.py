@@ -24,7 +24,7 @@ except ImportError:
 
 import defaults
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 
 from  _input_output import Input
 
@@ -195,7 +195,7 @@ class Keyboard(Input):
 
         if android_show_keyboard is not None:
             android_show_keyboard()
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         found_key = None
         self.clear()
@@ -217,15 +217,15 @@ class Keyboard(Input):
                 elif event.type == target_event:
                     if keys is not None:
                         if event.key in keys:
-                            rt = int((Clock._cpu_time() - start) * 1000)
+                            rt = int((get_time() - start) * 1000)
                             found_key = event.key
                             done = True
                     else:
-                        rt = int((Clock._cpu_time() - start) * 1000)
+                        rt = int((get_time() - start) * 1000)
                         found_key = event.key
                         done = True
             if duration and not done:
-                done = int((Clock._cpu_time() - start) * 1000) >= duration
+                done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
             expyriment._active_exp._event_file_log("Keyboard,received,{0},wait"\
@@ -259,7 +259,7 @@ class Keyboard(Input):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         found_char = None
         self.clear()
@@ -274,11 +274,11 @@ class Keyboard(Input):
                     done = True
                 elif event.type == pygame.KEYDOWN:
                     if event.unicode in char:
-                        rt = int((Clock._cpu_time() - start) * 1000)
+                        rt = int((get_time() - start) * 1000)
                         found_char = event.unicode
                         done = True
             if duration and not done:
-                done = int((Clock._cpu_time() - start) * 1000) >= duration
+                done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
             expyriment._active_exp._event_file_log(

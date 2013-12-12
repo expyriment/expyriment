@@ -12,7 +12,7 @@ __date__ = ''
 
 
 import sys
-from time import localtime, sleep
+import time
 import types
 from _timer import get_time
 
@@ -24,6 +24,12 @@ class Clock(object) :
     Unit of time is milliseconds.
 
     """
+
+    if sys.platform == 'win32':
+        _cpu_time = timeclock
+    else:
+        _cpu_time = time.time
+
 
     def __init__(self, sync_clock=None):
         """Create a clock.
@@ -40,8 +46,16 @@ class Clock(object) :
         else:
             self.__init_time = get_time()
 
-        self._init_localtime = localtime()
+        self._init_localtime = time.localtime()
         self.__start = get_time()
+
+    @staticmethod
+    def monotonic_time():
+        """Returns the time of he high-resolution monitonoic timer that is
+        used by Expyriment interally
+
+        """
+        return get_time()
 
     @property
     def init_time(self):
@@ -50,16 +64,16 @@ class Clock(object) :
         return self.__init_time * 1000
 
     @property
-    def cpu_time(self):
-        """Getter for CPU time."""
-
-        return get_time()
-
-    @property
     def time(self):
         """Getter for current time in milliseconds since clock init."""
 
         return int((get_time() - self.__init_time) * 1000)
+
+    @property
+    def cpu_time(self):
+        """Getter for CPU time."""
+
+        return self._cpu_time()
 
     @property
     def stopwatch_time(self):
@@ -106,7 +120,7 @@ class Clock(object) :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                sleep((waiting_time - looptime) / 1000)
+                time.sleep((waiting_time - looptime) / 1000)
             while (self.time < start + waiting_time):
                 pass
 

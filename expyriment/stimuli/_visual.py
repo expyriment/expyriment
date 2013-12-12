@@ -26,7 +26,8 @@ except ImportError:
 import defaults
 import expyriment
 from _stimulus import Stimulus
-from expyriment.misc import geometry, Clock
+from expyriment.misc import geometry
+from expyriment.misc._timer import get_time
 
 random.seed()
 
@@ -394,7 +395,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         moved = False
         x = offset[0]
         y = offset[1]
@@ -406,7 +407,7 @@ class Visual(Stimulus):
             moved = True
         if moved and self._ogl_screen is not None:
             self._ogl_screen.refresh_position()
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def inside_stimulus(self, stimulus, mode="visible"):
         """Check if stimulus is inside another stimulus.
@@ -608,7 +609,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if not stimulus._set_surface(stimulus._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "plot()"))
@@ -622,7 +623,7 @@ class Visual(Stimulus):
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,plotted,{0},{1}".format(self.id, stimulus.id), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def clear_surface(self):
         """Clear the stimulus surface.
@@ -644,7 +645,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if self.is_preloaded:
             self.unload(keep_surface=False)
         self._is_compressed = False
@@ -652,7 +653,7 @@ class Visual(Stimulus):
         if self._logging:
             expyriment._active_exp._event_file_log(
                             "Stimulus,surface cleared,{0}".format(self.id), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def compress(self):
         """"Compress the stimulus.
@@ -672,7 +673,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if self.is_compressed is False:
             if self._compression_filename is None:
                 fid, self._compression_filename = tempfile.mkstemp(
@@ -685,7 +686,7 @@ class Visual(Stimulus):
             if self._logging:
                 expyriment._active_exp._event_file_log(
                                 "Stimulus,compressed,{0}".format(self.id), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def decompress(self):
         """Decompress the stimulus.
@@ -702,7 +703,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if self.is_compressed:
             self._surface = pygame.image.load(
                 self._compression_filename).convert_alpha()
@@ -711,7 +712,7 @@ class Visual(Stimulus):
             if self._logging:
                 expyriment._active_exp._event_file_log(
                             "Stimulus,decompressed,{0}".format(self.id), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def preload(self, inhibit_ogl_compress=False):
         """Preload the stimulus to memory.
@@ -746,7 +747,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if not expyriment._active_exp.is_initialized:
             message = "Can't preload stimulus. Expyriment needs to be " + \
                       "initilized before preloading a stimulus."
@@ -767,7 +768,7 @@ class Visual(Stimulus):
             expyriment._active_exp._event_file_log(
                                 "Stimulus,preloaded,{0}".format(self.id), 2)
 
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def unload(self, keep_surface=False):
         """Unload the stimulus from memory.
@@ -799,7 +800,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if expyriment._active_exp.screen.open_gl:
             self._ogl_screen = None
             if self.is_preloaded and not self._was_compressed_before_preload \
@@ -820,7 +821,7 @@ class Visual(Stimulus):
                                        .format(self.id), 2)
 
         self._is_preloaded = False
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     @property
     def is_preloaded(self):
@@ -855,7 +856,7 @@ class Visual(Stimulus):
                              expyriment._active_exp.screen is None:
             raise RuntimeError("Cannot not find a screen!")
 
-        start = Clock._cpu_time()
+        start = get_time()
         preloading_required = not(self.is_preloaded)
 
         if clear:
@@ -882,7 +883,7 @@ class Visual(Stimulus):
         if preloading_required:
             self.unload(keep_surface=keep_surface)
 
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def save(self, filename):
         """Save the stimulus as image.
@@ -952,7 +953,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "rotate()"))
@@ -962,7 +963,7 @@ class Visual(Stimulus):
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,rotated,{0}, degree={1}".format(self.id, degree))
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def scale(self, factors):
         """Scale the stimulus.
@@ -991,7 +992,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "scale()"))
@@ -1016,7 +1017,7 @@ class Visual(Stimulus):
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,sclaed,{0}, factors={1}".format(self.id, factors), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def flip(self, booleans):
         """Flip the stimulus.
@@ -1040,7 +1041,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "flip()"))
@@ -1050,7 +1051,7 @@ class Visual(Stimulus):
         if self._logging:
             expyriment._active_exp._event_file_log(
             "Stimulus,flipped,{0}, booleans={1}".format(self.id, booleans), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def blur(self, level):
         """Blur the stimulus.
@@ -1075,13 +1076,13 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         self.scale((1.0 / level, 1.0 / level))
         self.scale((level, level))
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,blured,{0}, level={1}".format(self.id, level), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
 
     def scramble(self, grain_size):
@@ -1107,7 +1108,7 @@ class Visual(Stimulus):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         if type(grain_size) is int:
             grain_size = [grain_size, grain_size]
         # Make Rect list
@@ -1134,7 +1135,7 @@ class Visual(Stimulus):
             expyriment._active_exp._event_file_log(
                             "Stimulus,scrambled,{0}, grain_size={1}".format(
                                      self.id, grain_size), 2)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def add_noise(self, grain_size, percentage, colour):
         """Add visual noise on top of the stimulus.
@@ -1162,7 +1163,7 @@ class Visual(Stimulus):
 
         """
         import _rectangle
-        start = Clock._cpu_time()
+        start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "add_noise()"))
@@ -1184,4 +1185,4 @@ class Visual(Stimulus):
             expyriment._active_exp._event_file_log(
                     "Stimulus,noise added,{0}, grain_size={1}, percentage={2}"\
                         .format(self.id, grain_size, percentage))
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)

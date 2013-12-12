@@ -13,7 +13,7 @@ __date__ = ''
 
 import _midiin_defaults as defaults
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 from expyriment.io._keyboard import Keyboard
 from expyriment.io._input_output import Input
 
@@ -147,7 +147,7 @@ class MidiIn(Input):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         _event = None
         self.clear()
@@ -163,7 +163,7 @@ class MidiIn(Input):
             expyriment._active_exp._execute_wait_callback()
             event = self.read(1)
             if event is not None and event[0][0] in events:
-                rt = int((Clock._cpu_time() - start) * 1000)
+                rt = int((get_time() - start) * 1000)
                 _event = event[0][0]
                 done = True
                 break
@@ -171,7 +171,7 @@ class MidiIn(Input):
                 done = True
                 break
             if duration:
-                if int((Clock._cpu_time() - start) * 1000) >= duration:
+                if int((get_time() - start) * 1000) >= duration:
                     done = True
                     break
 
