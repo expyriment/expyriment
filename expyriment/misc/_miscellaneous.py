@@ -36,7 +36,7 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
                 return True
         return False
     else:
-        if input_code == standard_codes: # accounts also for (bitwise) 0==0 & None==None 
+        if input_code == standard_codes: # accounts also for (bitwise) 0==0 & None==None
             return True
         elif bitwise_comparison:
             return (input_code & standard_codes)
@@ -51,7 +51,7 @@ def list_fonts():
 
     """
 
-    
+
     import pygame
     pygame.font.init()
 
@@ -79,7 +79,7 @@ def find_font(font):
         If no font is found, an empty string will be returned.
 
     """
-    
+
     import pygame
     pygame.font.init()
 

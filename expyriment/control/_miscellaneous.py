@@ -271,6 +271,9 @@ def _set_stdout_logging(event_file):
                                                               repr(tmp)))
                 self._buffer = []
 
+        def flush(self): # required for some modules (e.g. multiprocessing)
+            pass
+
 
     if is_ipython_running():
         print "Standard output and error logging is switched off under IPython."

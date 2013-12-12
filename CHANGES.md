@@ -14,6 +14,7 @@ Fixed:
 - experiment clock with monotonic timing
 - bugfix: extras.CedrusResponseDevice
 - several fixes in documentation
+- bugfix: incompatibility with multiprocessing.Pool
 
 Changes:
 - several Android related changes (have no impact for normal use of Expyriment)
