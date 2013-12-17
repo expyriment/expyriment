@@ -159,19 +159,18 @@ class RandomDotKinematogram(Stimulus):
         self._canvas.clear_surface()
         if background_stimulus is not None:
             background_stimulus.plot(self._canvas)
-        new_dots = []
-        while len(self.dots)>0:
-            d = self.dots.pop()
+
+        def _process_dot(d):
             if d.is_dead or d.is_outside(self.area_radius):
                 if d.is_target:
                     d = self._make_random_dot(direction=d.direction)
                     d.is_target = True
                 else:
                     d = self._make_random_dot()
-            new_dots.append(d)
             Circle(position = d.position, diameter=self.dot_diameter,
                         colour=self.dot_colour).plot(self._canvas)
-        self.dots = new_dots
+            return d
+        self.dots = map(_process_dot, self.dots)
         return self._canvas
 
     def present_and_wait_keyboard(self, background_stimulus=None):
