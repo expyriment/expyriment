@@ -90,16 +90,39 @@ class RandomDotKinematogram(Stimulus):
         self.dot_diameter = dot_diameter
         self.dot_colour = dot_colour
         self.north_up_clockwise = north_up_clockwise
-        self.dots = []
+        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_diameter),
+                                    2*(self.area_radius + self.dot_diameter)),
+                                    position=position, colour=background_colour)
+        self.reset(n_dots=n_dots, target_direction=target_direction,
+                        target_dot_ratio=target_dot_ratio)
+        self.set_logging(False)
+
+    def reset(self, n_dots, target_direction, target_dot_ratio):
+        """Reset and recreate dot pattern
+
+        Parameters:
+        -----------
+        n_dots : int
+            number of moving dots
+        target_direction : int, float (0-360)
+            movement target direction in degrees
+        target_dot_ratio : float (0-1)
+            ratio of dots that move consistently in the same target direction
+            (the rest of the target moves in a random direction)
+            can be sometimes only approximated! self.target_dot_ratio returns the
+            precise actual target dot ratio
+
+        """
         self.target_direction = target_direction
         self.dots = map(lambda x : self._make_random_dot(direction=None,
                             extra_age=int(random.random() * self.dot_lifetime)),
                         range(n_dots))
         self.target_dot_ratio = target_dot_ratio
-        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_diameter),
-                                        2*(self.area_radius + self.dot_diameter)),
-                                    position=position, colour=background_colour)
-        self.set_logging(False)
+
+    @property
+    def n_dots(self):
+        """Getter for n_dots."""
+        return len(self.dots)
 
     @property
     def logging(self):
@@ -212,6 +235,7 @@ class RandomDotKinematogram(Stimulus):
         return self._canvas
 
     def present_and_wait_keyboard(self, background_stimulus=None,
+                        check_keys = None,
                         change_parameter=(None, None)):
         """Present the random dot kinematogram and wait for keyboard press.
 
@@ -220,6 +244,8 @@ class RandomDotKinematogram(Stimulus):
         background_stimulus : Expyriment stimulus, optional
             optional stimulus to be plotted in the background
             (default=None)
+        check_keys : int or list, optional
+            a specific key or list of keys to check
         change_parameter : tuple (int, int), optional, default = (None, None)
             [step size (target dot ratio), step interval (ms)]
             if both parameter are defined (not None), target dot ratio changes
@@ -238,7 +264,7 @@ class RandomDotKinematogram(Stimulus):
                                     change_parameter[0]
             self.make_frame(background_stimulus=background_stimulus).present()
 
-            key = _active_exp.keyboard.check()
+            key = _active_exp.keyboard.check(keys=check_keys)
             if key is not None:
                 break
         return key, RT.stopwatch_time
