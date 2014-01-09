@@ -131,7 +131,7 @@ class Keyboard(Input):
 
         Parameters
         ----------
-        default_keys : int or list, optional
+        keys : int or list, optional
             a specific key or list of keys to check
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default=True)
