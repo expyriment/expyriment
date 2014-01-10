@@ -15,7 +15,7 @@ Word fragment completion task
 -----------------------------
 Task as used for instance in `Weldon, 1991 <http://www.ncbi.nlm.nih.gov/pubmed/1829476>`_.
 The script read in a stimulus list file (:download:`demo stimulus list 
-<examples/word_fragment_completion_stimuluslist.csv>`).
+<../../examples/word_fragment_completion_stimuluslist.csv>`).
 
 .. literalinclude:: ../../examples/word_fragment_completion_task.py
 
