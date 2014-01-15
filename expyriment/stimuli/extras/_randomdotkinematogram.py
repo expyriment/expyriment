@@ -19,6 +19,7 @@ import random
 
 import defaults
 
+from expyriment.io import Keyboard
 from expyriment.stimuli import Canvas, Circle
 from expyriment.stimuli._stimulus import Stimulus
 from expyriment.misc import Clock
@@ -236,7 +237,8 @@ class RandomDotKinematogram(Stimulus):
 
     def present_and_wait_keyboard(self, background_stimulus=None,
                         check_keys = None,
-                        change_parameter=(None, None)):
+                        change_parameter=(None, None),
+                        duration=None, button_box=None):
         """Present the random dot kinematogram and wait for keyboard press.
 
         Parameters:
@@ -250,11 +252,18 @@ class RandomDotKinematogram(Stimulus):
             [step size (target dot ratio), step interval (ms)]
             if both parameter are defined (not None), target dot ratio changes
             accordingly while presentation
+        duration: int, optional
+            maximum duration to wait for keypress
+        button_box: expyriment io.ButtonBox object, optional
+            if not the keyboard but a button_box should be used
+            (e.g. io.StreamingButtonBox)
 
         """
         from expyriment import _active_exp
         RT = Clock()
-        _active_exp.keyboard.clear()
+        if button_box is None:
+            button_box = _active_exp.keyboard
+        button_box.clear()
         last_change_time = RT.stopwatch_time
         while(True):
             if None not in change_parameter:
@@ -264,9 +273,16 @@ class RandomDotKinematogram(Stimulus):
                                     change_parameter[0]
             self.make_frame(background_stimulus=background_stimulus).present()
 
-            key = _active_exp.keyboard.check(keys=check_keys)
+            if isinstance(button_box, Keyboard):
+                key = button_box.check(keys=check_keys)
+            else:
+                _active_exp.keyboard.process_control_keys()
+                key = button_box.check(codes=check_keys)
+                
             if key is not None:
                 break
+            if duration is not None and RT.stopwatch_time >= duration:
+                return (None, None)
         return key, RT.stopwatch_time
 
 class MovingPosition(object):
