@@ -47,3 +47,8 @@ Installation
 ============
 The usual setup.py for Python libraries is used for the source distribution.
 Windows installers are also available (see documentation).
+
+
+Reference
+=========
+Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive and neuroscientific experiments. *Behavior Research Methods*. `doi <http://dx.doi.org/10.3758/s13428-013-0390-6>`__: 10.3758/s13428-013-0390-6
