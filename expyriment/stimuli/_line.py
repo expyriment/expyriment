@@ -22,7 +22,6 @@ import defaults
 from _visual import Visual
 import expyriment
 from expyriment import misc
-from expyriment.misc._timer import get_time
 
 
 class Line(Visual):
@@ -160,7 +159,7 @@ class Line(Visual):
 
         """
 
-        start = get_time()
+        start = misc.Clock._cpu_time()
         moved = False
         x = offset[0]
         y = offset[1]
@@ -176,7 +175,7 @@ class Line(Visual):
         self._start_point[1] = self._start_point[1] + y
         self._end_point[0] = self._end_point[0] + x
         self._end_point[1] = self._end_point[1] + y
-        return int((get_time() - start) * 1000)
+        return int((misc.Clock._cpu_time() - start) * 1000)
 
     def _create_surface(self):
         """Create the surface of the stimulus."""
