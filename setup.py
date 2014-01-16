@@ -96,7 +96,7 @@ class Build(build_py):
         build_py.byte_compile(self, files)
 
 version_nr = "{0}"
-with open('CHANGES.txt') as f:
+with open('CHANGES.md') as f:
     for line in f:
         if line[0:8].lower() == "upcoming":
              version_nr += "+"
