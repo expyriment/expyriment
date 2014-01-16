@@ -297,7 +297,6 @@ def run_test_suite():
 
     results = expyriment.get_system_info()
 
-
     preselected_item = 0
     go_on = True
     while go_on:
