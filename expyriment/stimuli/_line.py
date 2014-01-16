@@ -185,18 +185,12 @@ class Line(Visual):
         d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
         aa_scaling = int((self._anti_aliasing / 5.0) + 1)
         if self._anti_aliasing > 0:
-            surface = pygame.surface.Surface((s.distance(e) * aa_scaling + 1,
-                                              self._line_width * aa_scaling + 1),
-                                         pygame.SRCALPHA).convert_alpha()
-            rect = pygame.draw.line(surface, self._colour,
-                                    (0,0), (s.distance(e) * aa_scaling,0),
-                                    self._line_width * aa_scaling)
+           surface = pygame.surface.Surface((s.distance(e)*aa_scaling,
+                self._line_width*aa_scaling), pygame.SRCALPHA).convert_alpha()
         else:
-            surface = pygame.surface.Surface((s.distance(e)+1, self._line_width+1),
-                                             pygame.SRCALPHA).convert_alpha()
-            rect = pygame.draw.line(surface, self._colour,
-                                    (0,0), (s.distance(e),0),
-                                    self._line_width)
+            surface = pygame.surface.Surface((s.distance(e),
+                self._line_width), pygame.SRCALPHA).convert_alpha()
+        surface.fill(self._colour)
         surface = pygame.transform.rotate(surface, math.atan2(d.y, d.x) * 180 / math.pi)
         if self._anti_aliasing > 0:
             size = surface.get_size()
