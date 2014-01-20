@@ -414,15 +414,16 @@ class Experiment(object):
         Parameters
         ----------
         loglevel : int
-            The log level (0, 1,3) of the experiment.
+            The log level (0, 1, 2) of the experiment.
 
         Notes
         -----
         There are three event logging levels:
-        * O no event logging
-        * 1 normal event logging (logging of all input & output events)
-        * 2 intensive logging. Logs much more. Please use this only for
-            debugging proposes.
+
+        - O no event logging
+        - 1 normal event logging (logging of all input & output events)
+        - 2 intensive logging. Logs much more. Please use this only for
+          debugging proposes.
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
         It log files become to big due to certain repetitive events, it is

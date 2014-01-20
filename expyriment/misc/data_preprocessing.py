@@ -621,8 +621,8 @@ The Python package 'numpy' is not installed."""
 
         Notes
         -----
-        The function can be only applied on data that in aggregator.data_files,
-        that is, on the files that in defined  data folder and the start with
+        The function can be only applied on data of aggregator.data_files,
+        that is, on the files in the defined data folder that start with
         the experiment name. According to the defined design, the result
         contains recoded data together with the new computed variables, and the
         subject variables from the headers of the Expyriment data files.
