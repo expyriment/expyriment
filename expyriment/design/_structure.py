@@ -24,7 +24,7 @@ from copy import deepcopy
 import defaults
 import expyriment
 from expyriment.misc import constants
-from expyriment.misc._timer import get_time
+from expyriment.misc import Clock
 import randomize
 import permute
 
@@ -414,15 +414,16 @@ class Experiment(object):
         Parameters
         ----------
         loglevel : int
-            The log level (0, 1,3) of the experiment.
+            The log level (0, 1, 2) of the experiment.
 
         Notes
         -----
         There are three event logging levels:
-        * O no event logging
-        * 1 normal event logging (logging of all input & output events)
-        * 2 intensive logging. Logs much more. Please use this only for
-            debugging proposes.
+
+        - O no event logging
+        - 1 normal event logging (logging of all input & output events)
+        - 2 intensive logging. Logs much more. Please use this only for
+          debugging proposes.
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
         It log files become to big due to certain repetitive events, it is
@@ -1397,7 +1398,7 @@ class Block(object):
 
         """
 
-        start = get_time()
+        start = Clock._cpu_time()
         cnt = 0
         while True:
             cnt += 1
@@ -1406,7 +1407,7 @@ class Block(object):
                 (self.max_trial_repetitions <= max_repetitions):
                 return True
             else:
-                if (get_time() - start) * 1000 >= \
+                if (Clock._cpu_time() - start) * 1000 >= \
                                                     defaults.max_shuffle_time:
                     print "Warning: Could not find an appropriate trial " + \
                           "randomization ({0} attempts)!".format(cnt)
@@ -1717,10 +1718,10 @@ class Trial(object):
 
         """
 
-        start = get_time()
+        start = Clock._cpu_time()
         for stim in self._stimuli:
             stim.preload()
-        return int((get_time() - start) * 1000)
+        return int((Clock._cpu_time() - start) * 1000)
 
     def unload_stimuli(self, keep_surface=False):
         """Unload all stimuli in trial.
@@ -1737,7 +1738,7 @@ class Trial(object):
 
         """
 
-        start = get_time()
+        start = Clock._cpu_time()
         for stim in self._stimuli:
             stim.unload(keep_surface=keep_surface)
-        return int((get_time() - start) * 1000)
+        return int((Clock._cpu_time() - start) * 1000)
