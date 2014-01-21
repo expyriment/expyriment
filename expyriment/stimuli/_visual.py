@@ -561,7 +561,7 @@ class Visual(Stimulus):
                 (-self.position[1] + screen_size[1] / 2) - self_size[1] / 2)
             pos = (position[0] + screen_size[0] / 2,
                    - position[1] + screen_size[1] / 2)
-            offset = (pos[0] - self_pos[0], pos[1] - self_pos[1])
+            offset = (int(pos[0] - self_pos[0]), int(pos[1] - self_pos[1]))
             self_mask = pygame.mask.from_surface(self._get_surface())
             overlap = False
             if 0 <= offset[0] < self_size[0] and 0 <= offset[1] < self_size[1]:
@@ -806,7 +806,7 @@ class Visual(Stimulus):
             if self.is_preloaded and not self._was_compressed_before_preload \
                 and keep_surface:
                 self.decompress()
-        else: # Pygame surface
+        else:  # Pygame surface
             if self.is_preloaded and self._was_compressed_before_preload \
                 and keep_surface:
                 self.compress()
