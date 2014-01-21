@@ -79,33 +79,33 @@ class TextMenu(Input):
         """
 
         if position is None:
-            position = defaults.menu_position
+            position = defaults.textmenu_position
         if gap is None:
-            gap = defaults.menu_gap
+            gap = defaults.textmenu_gap
         if heading_font is None:
-            heading_font = defaults.menu_text_font
+            heading_font = defaults.textmenu_text_font
         if text_font is None:
-            text_font = defaults.menu_text_font
+            text_font = defaults.textmenu_text_font
         if text_size is None:
-            text_size = defaults.menu_text_size
+            text_size = defaults.textmenu_text_size
         if background_colour is None:
-            background_colour = defaults.menu_background_colour
+            background_colour = defaults.textmenu_background_colour
         if text_colour is None:
-            text_colour = defaults.menu_text_colour
+            text_colour = defaults.textmenu_text_colour
         if heading_text_colour is None:
-            heading_text_colour = defaults.menu_heading_text_colour
+            heading_text_colour = defaults.textmenu_heading_text_colour
         if select_background_colour is None:
-            select_background_colour = defaults.menu_select_background_colour
+            select_background_colour = defaults.textmenu_select_background_colour
         if select_text_colour is None:
-            select_text_colour = defaults.menu_select_text_colour
+            select_text_colour = defaults.textmenu_select_text_colour
         if select_frame_colour is None:
-            select_frame_colour = defaults.menu_select_frame_colour
+            select_frame_colour = defaults.textmenu_select_frame_colour
         if select_frame_line_width is None:
-            select_frame_line_width = defaults.menu_select_frame_line_width
+            select_frame_line_width = defaults.textmenu_select_frame_line_width
         if justification is None:
-            justification = defaults.menu_justification
+            justification = defaults.textmenu_justification
         if scroll_menu is None:
-            scroll_menu = defaults.menu_scroll_menu
+            scroll_menu = defaults.textmenu_scroll_menu
 
         self._scroll_menu = abs(int(scroll_menu))
         if self._scroll_menu > 0 and self._scroll_menu < 5:
