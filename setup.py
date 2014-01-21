@@ -107,7 +107,7 @@ with open('CHANGES.md') as f:
 
 # Check if we are building/installing from the repository
 try:
-    proc = Popen(['git', 'rev-list', '-max-parents=0', 'HEAD'],
+    proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                  stdout=PIPE, stderr=PIPE)
     initial_revision = proc.stdout.readline()
     if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
