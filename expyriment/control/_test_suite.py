@@ -23,7 +23,7 @@ except:
 import defaults
 
 import expyriment
-from expyriment import stimuli
+from expyriment import stimuli, io
 from expyriment.misc import constants, statistics
 from expyriment.misc._timer import get_time
 
@@ -240,7 +240,15 @@ arrow keys up/down    -- Switch font size
                   i   -- Switch italic
                   b   -- Switch bold
                   c   -- Change text
-               return -- Quit""",
+                  h   -- Help
+               return -- Quit
+
+
+                 [Touch screen]
+click left/right side --  Switch font type
+click up/down side    --  Switch font size
+click center          --  Quit
+               """,
             text_font="freemono", text_bold=True,
             text_justification=0).present()
         exp.keyboard.wait()
@@ -255,7 +263,20 @@ abcdefghijklmnopqrstuvwxyz
     font_id = 0
     italic = False
     bold = False
-    quest = expyriment.io.TextInput(message="Please enter text: (Keep empty for default text)", length=35)
+    quest = io.TextInput(message="Please enter text: (Keep empty for default text)", length=35)
+    mouse = io.Mouse(show_cursor=True)
+
+    bs = (exp.screen.size[0] / 3.5, exp.screen.size[1] / 3.5)
+
+    # rects center, left, right, top, button]
+    cl = (20, 20, 20)
+    rects = [stimuli.Rectangle(size=bs, position=[0, 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[(bs[0] - exp.screen.size[0]) / 2.2, 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[(exp.screen.size[0] - bs[0]) / 2.2, 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, (bs[1] - exp.screen.size[1]) / 2.2], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, (exp.screen.size[1] - bs [1]) / 2.2], colour=cl)]
+    rect_key_mapping = [constants.K_RETURN, constants.K_LEFT, constants.K_RIGHT,
+                        constants.K_UP, constants.K_DOWN]
 
     info_screen()
     while True:
@@ -266,19 +287,35 @@ abcdefghijklmnopqrstuvwxyz
         if bold:
             font_description += ", bold"
 
+        canvas = stimuli.BlankScreen()
+        for r in rects:
+            r.plot(canvas)
         try:
             stimuli.TextScreen(
                 heading=font_description,
                 text=text,
                 text_font=font_str, text_size=size,
                 text_justification=0,
-                text_italic = italic,
-                text_bold = bold).present()
+                text_italic=italic,
+                text_bold=bold,
+                text_colour=(255, 255, 255)).plot(canvas)
         except:
             stimuli.TextLine(text="Sorry, I can't display the text with " +
                 "{0}".format(font_description),
-                text_colour = constants.C_EXPYRIMENT_ORANGE).present()
-        key,rtn = exp.keyboard.wait()
+                text_colour=constants.C_EXPYRIMENT_ORANGE).plot(canvas)
+        canvas.present()
+        mouse.clear()
+        exp.keyboard.clear()
+        while True:
+            key = exp.keyboard.check()
+            if mouse.get_last_button_down_event() is not None:
+                for cnt, r in enumerate(rects):
+                    if r.overlapping_with_position(mouse.position):
+                        print cnt
+                        key = rect_key_mapping[cnt]
+                        break
+            if key is not None:
+                break
 
         if (key == constants.K_RETURN):
             break
@@ -287,11 +324,11 @@ abcdefghijklmnopqrstuvwxyz
         elif key == constants.K_DOWN:
             size -= 2
         elif key == constants.K_LEFT:
-            font_id -=1
+            font_id -= 1
             if font_id < 0:
-                font_id = len(all_fonts)-1
+                font_id = len(all_fonts) - 1
         elif key == constants.K_RIGHT:
-            font_id +=1
+            font_id += 1
             if font_id >= len(all_fonts):
                 font_id = 0
         elif key == constants.K_i:
@@ -300,10 +337,11 @@ abcdefghijklmnopqrstuvwxyz
             bold = not(bold)
         elif key == constants.K_c:
             text = quest.get()
-            if len(text)<=0:
+            if len(text) <= 0:
                 text = default_text
         else:
             info_screen()
+    mouse.hide_cursor()
 
 
 def _write_protocol(exp, results):
@@ -327,7 +365,7 @@ def _write_protocol(exp, results):
         '"' + filename + '"' + "\n\n[Press RETURN to continue]")
     text.present()
     exp.keyboard.wait(constants.K_RETURN)
-    return []#required for event loop
+    return []  # required for event loop
 
 def _find_self_tests():
     classes = []
@@ -354,7 +392,7 @@ def run_test_suite():
     else:
         exp = expyriment._active_exp
 
-    #make menu and code for test functions
+    # make menu and code for test functions
     test_functions = ['', '', '']
     menu = ["1) Visual stimulus presentation",
             "2) Auditory stimulus presentation",
