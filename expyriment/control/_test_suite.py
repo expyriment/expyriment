@@ -311,7 +311,6 @@ abcdefghijklmnopqrstuvwxyz
             if mouse.get_last_button_down_event() is not None:
                 for cnt, r in enumerate(rects):
                     if r.overlapping_with_position(mouse.position):
-                        print cnt
                         key = rect_key_mapping[cnt]
                         break
             if key is not None:
