@@ -9,6 +9,8 @@ New Features:
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic time (this time should be always used)
+- data_preprocessing: new exclusion rule, which allows removing trials depending on
+  their deviation (std) from mean (e.g., 'RT > 1.5*std')
 
 Fixed:
 - experiment clock with monotonic timing

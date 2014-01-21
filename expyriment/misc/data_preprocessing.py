@@ -1,7 +1,7 @@
 """Data Preprocessing Module.
 
 This module contains several classes and functions that help
-to handle, peprocessing and aggregate expyriment data files.
+to handle, preprocessing and aggregate Expyriment data files.
 
 """
 
@@ -10,7 +10,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
-
 
 import os as _os
 import sys as _sys
@@ -29,7 +28,7 @@ def read_datafile(filename, only_header_and_variable_names=False):
     Parameters
     ----------
     filename : str
-        name (fullpath) of the expyriment data file
+        name (fullpath) of the Expyriment data file
     only_header_and_variable_names : bool, optional
         if True the function reads only the header and variable names
         (default=False)
@@ -130,7 +129,7 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     -----
     The function is useful to combine the experimental data and prepare for
     further processing with other software.
-    It basically wraps Aggregator.write_concatinated_data.
+    It basically wraps Aggregator.write_concatenated_data.
 
     Parameters
     ----------
@@ -151,10 +150,10 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
 
 
 class Aggregator(object):
-    """A class implementing a tool to aggregate expyriment data.
+    """A class implementing a tool to aggregate Expyriment data.
 
-    This class is used to handle the multiple data files of a experiment
-    and preprocess (i.e, aggregate) the data for further analysis
+    This class is used to handle the multiple data files of a Experiment
+    and process (i.e, aggregate) the data for further analysis
 
     Examples
     --------
@@ -170,7 +169,12 @@ class Aggregator(object):
                        "size = target_number > 65"])
         agg.set_independent_variables(["hand", "size" , "parity"])
 
-        agg.set_exclusions(["trial_counter < 0", "error != 0"])
+        agg.set_exclusions(["trial_counter < 0",
+                            "error != 0",
+                            "RT < 2*std",
+                            "RT > 2*std" # remove depending std in iv factor
+                                         # combination for each subject
+                            ])
         agg.set_dependent_variables(["mean(RT)", "median(RT)"])
         agg.aggregate(output_file="rts.csv")
 
@@ -359,7 +363,7 @@ The Python package 'numpy' is not installed."""
         It compares of column elements with a value or the elements of a second
         column, if value is a name of variable.
         The method deals with numerical and string comparisons and throws an
-        exception for invalied string comparisions.
+        exception for invalid string comparisons.
 
         Parameters
         ----------
@@ -381,32 +385,100 @@ The Python package 'numpy' is not installed."""
         # _add_exclusion
         try:
             col = _np.float64(data[:, column_id])
+        except:
+            # handling strings
+            col = data[:, column_id]
+        try:
             if second_var_id is not None:
                 val = _np.float64(data[:, second_var_id])
             else:
                 val = _np.float64(value)
         except:
             # handling strings
-            col = data[:, column_id]
             if second_var_id is not None:
                 val = data[:, second_var_id]
             else:
                 val = value
-        if relation == "!=":
-            comp = (col != val)
-        elif relation == "==":
-            comp = (col == val)
-        elif relation == "<":
-            comp = (col < val)
-        elif relation == ">":
-            comp = (col > val)
-        elif relation == "=<" or relation == "<=":
-            comp = (col <= val)
-        elif relation == "=>" or relation == ">=":
-            comp = (col >= val)
+
+        if value.endswith("std") and (value.find("*")>0):
+            # remove relative depending std
+            tmp = value.split("*")
+            fac = float(tmp[0])
+
+            mean_stds = self._dv_mean_std(data, column_id)
+            idx = []
+            if relation not in [">", "<", "=>", ">=", "=<", "<="]:
+                raise RuntimeError("Incorrect syntax for " + \
+                    "exception: '{0} {1}'".format(relation, value))
+            for cnt,row in enumerate(data):
+                #find name of combination
+                combi_str = self.variables[column_id]
+                for iv in self._iv:
+                    combi_str = combi_str + "_" + \
+                            "{0}{1}".format(self.variables[iv], row[iv])
+                deviation = float(row[column_id]) - mean_stds[combi_str][0]
+                if (relation == ">" and \
+                    deviation > fac * mean_stds[combi_str][1]) or \
+                   (relation == "=>" or relation == ">=" and \
+                    deviation >= fac * mean_stds[combi_str][1]) or \
+                   (relation == "<" and \
+                    deviation < -fac * mean_stds[combi_str][1]) or \
+                   (relation == "=<" or relation == "<=" and \
+                    deviation <= -fac * mean_stds[combi_str][1]):
+                        idx.append(cnt)
+            return idx
         else:
-            comp = None  # should never occur
-        return _np.flatnonzero(comp)
+            if relation == "!=":
+                comp = (col != val)
+            elif relation == "==":
+                comp = (col == val)
+            elif relation == "<":
+                comp = (col < val)
+            elif relation == ">":
+                comp = (col > val)
+            elif relation == "=<" or relation == "<=":
+                comp = (col <= val)
+            elif relation == "=>" or relation == ">=":
+                comp = (col >= val)
+            else:
+                comp = None  # should never occur
+            if isinstance(comp, bool):
+                raise RuntimeError("Incorrect syntax for " + \
+                    "exception: '{0} {1}'".format(relation, value))
+            return _np.flatnonzero(comp)
+
+    def _dv_mean_std(self, data, column_dv_id):
+        """ returns dict with std for iv_combinations """
+        # get all iv values
+        iv_values = []
+        for iv in self._iv:
+            tmp = list(set(data[:, iv]))
+            tmp.sort()
+            iv_values.append(tmp)
+
+        new_variable_names, combinations = self._get_new_variables(iv_values)
+        if len(combinations) == 0:
+            combinations = ["total"]
+        result = {}
+        for cnt, fac_cmb in enumerate(combinations):
+            if fac_cmb == "total":
+                idx = range(0, data.shape[0])
+            else:
+                # find idx of combinations
+                idx = None
+                for c, iv in enumerate(self._iv):
+                    tmp = _np.array(data[:, iv] == fac_cmb[c])
+                    if idx is None:
+                        idx = tmp.copy()
+                    else:
+                        idx = idx & tmp
+            # calc std over idx
+            if len(idx) > 0:
+                result[new_variable_names[cnt+1]] = [
+                    _np.mean(_np.float64(data[idx, column_dv_id])),
+                    _np.std(_np.float64(data[idx, column_dv_id]))]
+                    # ignore first new var name, which is subject_id
+        return result
 
     def _get_new_variables(self, iv_values):
         """Return the new variables names and factor_combinations.
@@ -484,10 +556,10 @@ The Python package 'numpy' is not installed."""
         data_folder : str
             folder which contains of data of the subjects
         file_name : str
-            name of the files. All files that start with this name 
+            name of the files. All files that start with this name
             will be considered for the analysis (cf. aggregator.data_files)
         suffix : str, optional
-            if specified only files that end with this particular suffix 
+            if specified only files that end with this particular suffix
             will be considered (default=.xpd)
 
         """
@@ -617,7 +689,7 @@ The Python package 'numpy' is not installed."""
 
     def get_data(self, filename, recode_variables=True,
                  compute_new_variables=True, exclude_trials=True):
-        """Read data from from Expyriment data file.
+        """Read data from from a single Expyriment data file.
 
         Notes
         -----
@@ -633,17 +705,17 @@ The Python package 'numpy' is not installed."""
             name of the Expyriment data file
         recode_variables : bool, optional
             set to False if defined variable recodings should not be applied
-            (default=False)
+            (default=True)
         compute_new_variables : bool, optional
             set to False if new defined variables should not be computed
-            (default=False)
+            (default=True)
         exclude_trials : bool, optional
             set to False if exclusion rules should not be applied
-            (default=False)
+            (default=True)
 
         Returns
         -------
-        data : numpy. arry
+        data : numpy.array
         var_names : list
             list of variable names
         info : str
@@ -735,9 +807,9 @@ The Python package 'numpy' is not installed."""
         result contains the new computed variables and the subject variables
         from the headers of the Expyriment data files.
 
-        If data have been loaded and no new variable or exclusion has been defined
-        the concatenated_data will merely return the previous data without
-        re-processing.
+        If data have been loaded and no new variable or exclusion has been
+        defined the concatenated_data will merely return the previous data
+        without re-processing.
 
         Returns
         -------
@@ -912,7 +984,7 @@ The Python package 'numpy' is not installed."""
         been added later via `add_variables` and results in a loss of all
         manually added variables. Setting exclusions requires re-reading of
         the data files and might be therefore time consuming. Thus, call this
-        mathod always at the beginning of your analysis script.
+        method always at the beginning of your analysis script.
 
         Parameters
         ----------
@@ -928,6 +1000,12 @@ The Python package 'numpy' is not installed."""
                 {variable}  -- a defined data variable
                 {relation}  --  ==, !=, >, <, >=, <=, => or <=
                 {value}     -- string or numeric
+
+                If value is "{numeric} * std", trails are excluded in which
+                the variable is below or above {numeric} standard deviations
+                from the mean. The relations "==" and "!=" are not allow in
+                this case. The exclusion criterion is apply for each subject
+                and factor combination separately.
 
         """
 
@@ -1077,8 +1155,8 @@ The Python package 'numpy' is not installed."""
         output_file : str, optional
             name of data output file. If this output_file is defined the
             function write the results as csv data file
-        subject variable : int, optional
-            data column containing the subject id (odefault=0)
+        column_subject_id : int, optional
+            data column containing the subject id (default=0)
 
         Returns
         -------
