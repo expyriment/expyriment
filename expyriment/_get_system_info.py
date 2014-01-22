@@ -252,8 +252,38 @@ def get_system_info(as_string=False):
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        hardware_audio_card = ""  # TODO
-        hardware_video_card = ""  # TODO
+        def parse_output(output):
+            """Parse XML output of system_profiler to find hardware devices"""
+
+            import xml.etree.ElementTree as ET
+
+            tree = ET.parse(output).iter()
+            # Get '_items' section of XML output
+            items = next(next(tree) for x in tree if x.text == '_items')
+            devices = []
+            # For each item, search for name of video card first string
+            # (assuming this is the video card)
+            for item in items:
+                devices.append(item.find('string').text)
+            return ", ".join(cards)
+
+        try:
+            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType',
+                                     '-xml'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            hardware_audio_card = parse_output(proc.stdout)
+        except:
+            hardware_audio_card = ""
+
+        try:
+            proc = subprocess.Popen(['system_profiler', 'SPDisplaysDataType',
+                                     '-xml'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            hardware_video_card = parse_output(proc.stdout)
+        except:
+            hardware_video_card = ""
 
     # Fill in info
     info["os_architecture"] = platform.architecture()[0]
