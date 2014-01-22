@@ -40,5 +40,5 @@ Notes
 .. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-py2.7-python.org-macosx10.3.dmg/download
 .. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1.zip#md5=15242f8eb56e19bdf20febd37f56a686
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.tar.gz/download
-.. _`Expyriment Source`: https://github.com/expyriment/expyriment/releases/latest
+.. _`Expyriment Source`: https://code.google.com/p/expyriment/downloads/list
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
