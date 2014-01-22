@@ -42,5 +42,5 @@ Notes
 .. _PyParallel: http://sourceforge.net/projects/pyserial/files/pyparallel/0.2/pyparallel-0.2.win32.exe/download 
 .. _giveio: http://sourceforge.net/projects/pyserial/files/pyparallel/giveio/giveio_setup.exe/download
 .. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-win32-superpack-python2.7.exe
-.. _`Expyriment downloads site`: https://github.com/expyriment/expyriment/releases/latest
+.. _`Expyriment downloads site`: https://code.google.com/p/expyriment/downloads/list
 
