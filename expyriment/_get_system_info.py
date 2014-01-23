@@ -239,7 +239,25 @@ def get_system_info(as_string=False):
         except:
             hardware_memory_total = ""
 
-        hardware_memory_free = ""  # TODO
+        try:
+            import re
+            proc = subprocess.Popen(['vm_stat'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            output = proc.stdout.read().split("\n")
+            for item in output:
+                x = item.find("Pages free:")
+                y = item.find("page size of")
+                if x > 0:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    free = int(non_decimal.sub('', item))
+                if y > 0:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    page = int(non_decimal.sub('', item))
+            hardware_memory_free = str((free * page) / 1024 ** 2) + "MB "
+
+        except:
+            hardware_memory_free = ""  # TODO
 
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
@@ -252,36 +270,25 @@ def get_system_info(as_string=False):
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        def parse_output(output):
-            """Parse XML output of system_profiler to find hardware devices"""
-
-            import xml.etree.ElementTree as ET
-
-            tree = ET.parse(output).iter()
-            # Get '_items' section of XML output
-            items = next(next(tree) for x in tree if x.text == '_items')
-            devices = []
-            # For each item, search for name of video card first string
-            # (assuming this is the video card)
-            for item in items:
-                devices.append(item.find('string').text)
-            return ", ".join(cards)
-
         try:
-            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType',
-                                     '-xml'],
+            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            hardware_audio_card = parse_output(proc.stdout)
+            hardware_audio_card = \
+                proc.stdout.read().split("\n")[2].strip(":")[:-1]
         except:
             hardware_audio_card = ""
 
         try:
+            import plistlib
             proc = subprocess.Popen(['system_profiler', 'SPDisplaysDataType',
                                      '-xml'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            hardware_video_card = parse_output(proc.stdout)
+            pl = plistlib.readPlist(proc.stdout.read())
+            hardware_video_card = []
+            for card in pl[0]['_items']:
+                hardware_video_card.append(card['sppci_model'])
         except:
             hardware_video_card = ""
 
