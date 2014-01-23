@@ -37,10 +37,9 @@ Notes
 .. _`Python 2`: http://www.python.org/ftp/python/2.7.3/python-2.7.3.msi
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
 .. _PyOpenGL: http://sourceforge.net/projects/pyopengl/files/PyOpenGL/3.0.1/PyOpenGL-3.0.1.win32.exe/download
-.. _PySerial: 
-   http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download
+.. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download
 .. _PyParallel: http://sourceforge.net/projects/pyserial/files/pyparallel/0.2/pyparallel-0.2.win32.exe/download 
 .. _giveio: http://sourceforge.net/projects/pyserial/files/pyparallel/giveio/giveio_setup.exe/download
 .. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-win32-superpack-python2.7.exe
-.. _`Expyriment downloads site`: http://code.google.com/p/expyriment/downloads/list
+.. _`Expyriment downloads site`: https://github.com/expyriment/expyriment/releases/latest
 

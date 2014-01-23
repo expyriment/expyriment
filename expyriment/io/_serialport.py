@@ -399,6 +399,8 @@ The Python package 'pySerial' is not installed."""
                     rtn_string = rtn_string + byte
                 elif byte == '\n':
                     break
+                elif byte == '\r':
+                    pass
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:

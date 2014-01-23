@@ -38,6 +38,6 @@ Notes
     presentation it is important to switch off desktop effects in your window 
     manager!
 
-.. _`Expyriment Source`: http://code.google.com/p/expyriment/downloads/list
+.. _`Expyriment Source`: https://github.com/expyriment/expyriment/releases/latest
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
 
