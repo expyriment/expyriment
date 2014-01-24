@@ -248,16 +248,16 @@ def get_system_info(as_string=False):
             for item in output:
                 x = item.find("Pages free:")
                 y = item.find("page size of")
-                if x > 0:
+                if x > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     free = int(non_decimal.sub('', item))
-                if y > 0:
+                if y > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     page = int(non_decimal.sub('', item))
             hardware_memory_free = str((free * page) / 1024 ** 2) + "MB "
 
         except:
-            hardware_memory_free = ""  # TODO
+            hardware_memory_free = ""
 
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
@@ -275,7 +275,7 @@ def get_system_info(as_string=False):
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
             hardware_audio_card = \
-                proc.stdout.read().split("\n")[2].strip(":")[:-1]
+                proc.stdout.read().split("\n")[2].strip(":").strip()
         except:
             hardware_audio_card = ""
 
@@ -285,7 +285,7 @@ def get_system_info(as_string=False):
                                      '-xml'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            pl = plistlib.readPlist(proc.stdout.read())
+            pl = plistlib.readPlist(proc.stdout)
             hardware_video_card = []
             for card in pl[0]['_items']:
                 hardware_video_card.append(card['sppci_model'])
