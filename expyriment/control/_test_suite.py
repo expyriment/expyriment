@@ -256,8 +256,8 @@ click center          --  Quit
 
 
     default_text = u"""The quick brown fox jumps over the lazy dog.
-ABCDEFGHIJKLMNOPQRSTUVWXYZi-ÄÖÜ
-abcdefghijklmnopqrstuvwxyz-äöü
+ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ
+abcdefghijklmnopqrstuvwxyz äöü
 1234567890.:,;ßéèê(*!?')"""
     text = default_text
     size = 14
