@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The expyriment testsuite.
 
 This module contains several functions to test the machine expyriment is
@@ -254,10 +255,10 @@ click center          --  Quit
         exp.keyboard.wait()
 
 
-    default_text = """The quick brown fox jumps over the lazy dog.
-ABCDEFGHIJKLMNOPQRSTUVWXYZ
-abcdefghijklmnopqrstuvwxyz
-1234567890.:,;(*!?')"""
+    default_text = u"""The quick brown fox jumps over the lazy dog.
+ABCDEFGHIJKLMNOPQRSTUVWXYZi-ÄÖÜ
+abcdefghijklmnopqrstuvwxyz-äöü
+1234567890.:,;ßéèê(*!?')"""
     text = default_text
     size = 14
     font_id = 0
