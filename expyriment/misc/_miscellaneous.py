@@ -14,6 +14,10 @@ __revision__ = ''
 __date__ = ''
 
 
+import sys
+import locale
+
+
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -43,6 +47,95 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
         else:
             return False
 
+
+def str2unicode(s, fse=False):
+
+    """
+    Converts an input str or unicode object to a unicode object without
+    throwing an exception. If fse is False, the first encoding that is tried is
+    the encoding according to the locale settings, falling back to utf-8
+    encoding if this throws an error. If fse is True, the filesystem encoding
+    is tried, falling back to utf-8. Unicode input objects are return
+    unmodified.
+
+    Parameters
+    ----------
+    s : str or unicode
+        input text
+    fse : bool
+        indicates whether the filesystem encoding should be tried first.
+        (default = False)
+
+    Returns
+    -------
+    A unicode-type string.
+    """
+
+    if isinstance(s, unicode):
+        return s
+
+    locale_enc = locale.getdefaultlocale()[1]
+    if locale_enc is None:
+        locale_enc = u'utf-8'
+    fs_enc = sys.getfilesystemencoding()
+    if fs_enc is None:
+        fs_enc = u'utf-8'
+    if fse:
+        try:
+            u = s.decode(fs_enc)
+        except UnicodeDecodeError:
+            u = s.decode(u'utf-8', u'ignore')
+    else:
+        try:
+            u = s.decode(locale_enc)
+        except UnicodeDecodeError:
+            u = s.decode(u'utf-8', u'ignore')
+    return u
+
+
+def unicode2str(u, fse=False):
+
+    """
+    Converts an input str or unicode object to a str object without throwing
+    an exception. If fse is False, the str is encoded according to the locale
+    (with utf-8 as a fallback), otherwise it is encoded with the
+    filesystemencoding. Str input objects are return unmodified.
+
+    Parameters
+    ----------
+    u : str or unicode
+    input text
+    fse : bool
+    indicates whether the filesystem encoding should used.
+    (default = False)
+
+    Returns
+    -------
+    A str-type string.
+    """
+
+    if isinstance(u, str):
+        return u
+
+    locale_enc = locale.getdefaultlocale()[1]
+    if locale_enc is None:
+        locale_enc = u'utf-8'
+    fs_enc = sys.getfilesystemencoding()
+    if fs_enc is None:
+        fs_enc = u'utf-8'
+    if fse:
+        try:
+            s = u.encode(fs_enc)
+        except UnicodeEncodeError:
+            s = u.encode(u'utf-8', u'ignore')
+    else:
+        try:
+            s = u.encode(locale_enc)
+        except UnicodeEncodeError:
+            s = u.encode(u'uff-8', u'ignore')
+    return s
+
+
 def list_fonts():
     """List all fonts installed on the system.
 
@@ -50,7 +143,6 @@ def list_fonts():
     absolute path to the font file.
 
     """
-
 
     import pygame
     pygame.font.init()
