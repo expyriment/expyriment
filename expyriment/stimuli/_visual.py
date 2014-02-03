@@ -1179,7 +1179,8 @@ class Visual(Stimulus):
             x = int(self.surface_size[0] / 2 - grain_size / 2 - x)
             y = (idx / number_of_pixel_x) * grain_size
             y = int(self.surface_size[1] / 2 - grain_size / 2 - y)
-            dot = _rectangle.Rectangle((grain_size, grain_size), (x, y), colour)
+            dot = _rectangle.Rectangle(size=(grain_size, grain_size),
+                            position=(x, y), colour=colour)
             dot.plot(self)
         if self._logging:
             expyriment._active_exp._event_file_log(

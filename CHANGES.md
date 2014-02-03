@@ -10,13 +10,14 @@ New Features:
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic time (this time should be always used)
 - data_preprocessing: new exclusion rule, which allows removing trials depending on
-  their deviation (std) from mean (e.g., 'RT > 1.5*std')
+  their deviation (std) from mean (e.g., 'RT > 1.5 * std')
 
 Fixed:
 - experiment clock with monotonic timing
 - bugfix: extras.CedrusResponseDevice
 - several fixes in documentation
 - bugfix: incompatibility with multiprocessing.Pool
+- bugfix: visual.add_noise
 
 Changes:
 - several Android related changes (have no impact for normal use of Expyriment)
