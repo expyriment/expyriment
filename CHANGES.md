@@ -24,6 +24,7 @@ Fixed:
 - bug in extras.CedrusResponseDevice
 - several bugs in documentation
 - incompatibility with multiprocessing.Pool
+- bugfix: visual.add_noise
 - bug in io.SerialPort.read_line()
 
 Changes:
