@@ -15,12 +15,13 @@ __date__ = ''
 
 
 import os
+import locale
 import re
 
 import pygame
 
 import defaults
-from expyriment.misc import find_font
+from expyriment.misc import find_font, unicode2str
 import expyriment
 from _visual import Visual
 
@@ -98,7 +99,8 @@ class TextBox(Visual):
         else:
             self._text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._text_font, 10)
+            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+                                     10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
@@ -129,8 +131,7 @@ class TextBox(Visual):
             self._background_colour = background_colour
         else:
             self._background_colour = \
-                    defaults.textbox_background_colour
-
+                defaults.textbox_background_colour
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -297,14 +298,27 @@ class TextBox(Visual):
         """Create the surface of the stimulus."""
 
         rect = pygame.Rect((0, 0), self.size)
-        _font = pygame.font.Font(self._text_font, self._text_size)
+
+        if os.path.isfile(self._text_font):
+            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+                                     self._text_size)
+        else:
+            _font = pygame.font.Font(self._text_font, self._text_size)
+
         _font.set_bold(self.text_bold)
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
-        surface = self.render_textrect(self.format_block(self.text),
-                                        _font, rect, self.text_colour,
-                                        self.background_colour,
-                                        self.text_justification)
+
+        if type(self.text) is not unicode:
+            # Pygame wants latin-1 encoding here for character strings
+            _text = self.text.decode(
+                locale.getdefaultlocale()[1]).encode('latin-1')
+        else:
+            _text = self.text
+        surface = self.render_textrect(self.format_block(_text),
+                                       _font, rect, self.text_colour,
+                                       self.background_colour,
+                                       self.text_justification)
         return surface
 
     # The following code is taken from the word-wrapped text display module by
@@ -345,8 +359,9 @@ class TextBox(Visual):
                 # if any of our words are too long to fit, return.
                 for word in words:
                     if font.size(word)[0] >= rect.width:
-                        raise Exception, "The word " + word + \
-                                " is too long to fit in the rect passed."
+                        raise Exception(
+                            "The word " + word +
+                            " is too long to fit in the rect passed.")
 
                 # Start a new line
                 accumulated_line = ""
@@ -370,24 +385,26 @@ class TextBox(Visual):
             surface.fill(background_colour)
         accumulated_height = 0
         for line in final_lines:
-            if accumulated_height + font.size(line)[1] > rect.height: # Changed from >= which led to crashes sometimes!
-                raise Exception, "Once word-wrapped," + \
-                        "the text string was too tall to fit in the rect."
+            # Changed from >= which led to crashes sometimes!
+            if accumulated_height + font.size(line)[1] > rect.height:
+                raise Exception(
+                    "Once word-wrapped," +
+                    "the text string was too tall to fit in the rect.")
             if line != "":
                 tempsurface = font.render(line, 1, text_colour)
                 if justification == 0:
                     surface.blit(tempsurface, (0, accumulated_height))
                 elif justification == 1:
                     surface.blit(tempsurface,
-                        ((rect.width - tempsurface.get_width()) / 2,
-                         accumulated_height))
+                                 ((rect.width - tempsurface.get_width()) / 2,
+                                  accumulated_height))
                 elif justification == 2:
                     surface.blit(tempsurface,
                                  (rect.width - tempsurface.get_width(),
                                   accumulated_height))
                 else:
-                    raise Exception, "Invalid justification argument: " + \
-                            str(justification)
+                    raise Exception("Invalid justification argument: " +
+                                    str(justification))
             accumulated_height += font.size(line)[1]
         return surface
 

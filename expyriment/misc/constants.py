@@ -12,9 +12,10 @@ __date__ = ''
 
 
 import os as _os
-import sys as _sys
+
 import pygame as _pygame
 
+from expyriment.misc import str2unicode as _str2unicode
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE
@@ -174,8 +175,4 @@ P_RANDOM = 'random'
 _tmp = _os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "..", "expyriment_logo.png"))
-_ENCODING = _sys.getfilesystemencoding()
-if _ENCODING is None:
-    _ENCODING = "utf-8"
-_tmp = _tmp.decode(_ENCODING)
-EXPYRIMENT_LOGO_FILE = u"{0}".format(_tmp)
+EXPYRIMENT_LOGO_FILE = _str2unicode(_tmp)

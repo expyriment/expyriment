@@ -95,7 +95,8 @@ class TextMenu(Input):
         if heading_text_colour is None:
             heading_text_colour = defaults.textmenu_heading_text_colour
         if select_background_colour is None:
-            select_background_colour = defaults.textmenu_select_background_colour
+            select_background_colour = \
+                defaults.textmenu_select_background_colour
         if select_text_colour is None:
             select_text_colour = defaults.textmenu_select_text_colour
         if select_frame_colour is None:
@@ -114,18 +115,18 @@ class TextMenu(Input):
         self._position = position
         self._bkg_colours = [background_colour, select_background_colour]
         self._text_colours = [text_colour, select_text_colour]
-        self._line_size = (width, expyriment.stimuli.TextLine(menu_items[0],
-                                 text_size=text_size).surface_size[1] + 2)
+        self._line_size = (width, expyriment.stimuli.TextLine(
+            menu_items[0], text_size=text_size).surface_size[1] + 2)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         self._frame = expyriment.stimuli.Frame(
-                        frame_line_width=select_frame_line_width,
-                        size=(self._line_size[0] + 2 * select_frame_line_width,
-                        self._line_size[1] + 2 * select_frame_line_width),
-                        colour=select_frame_colour)
+            frame_line_width=select_frame_line_width,
+            size=(self._line_size[0] + 2 * select_frame_line_width,
+                  self._line_size[1] + 2 * select_frame_line_width),
+            colour=select_frame_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         if background_stimulus is not None:
             if background_stimulus.__class__.__base__ == \
-                                            expyriment.stimuli._visual.Visual:
+                    expyriment.stimuli._visual.Visual:
                 self._background_stimulus = background_stimulus
             else:
                 raise AttributeError("{0} ".format(type(background_stimulus)) +
@@ -145,19 +146,20 @@ class TextMenu(Input):
         self._menu_items = []
         for item in menu_items:
             self._menu_items.append(expyriment.stimuli.TextBox(
-                              "{0}".format(item),
-                              text_size=text_size, text_font=text_font,
-                              text_justification=justification,
-                              size=self._line_size))
+                "{0}".format(item),
+                text_size=text_size, text_font=text_font,
+                text_justification=justification,
+                size=self._line_size))
             expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
-        self._heading = expyriment.stimuli.TextBox(heading,
-                                    text_size=text_size,
-                                    text_justification=justification,
-                                    text_font=heading_font,
-                                    text_colour=heading_text_colour,
-                                    text_bold=True,
-                                    background_colour=self._bkg_colours[0],
-                                    size=self._line_size)
+        self._heading = expyriment.stimuli.TextBox(
+            heading,
+            text_size=text_size,
+            text_justification=justification,
+            text_font=heading_font,
+            text_colour=heading_text_colour,
+            text_bold=True,
+            background_colour=self._bkg_colours[0],
+            size=self._line_size)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
 
     @property
@@ -267,12 +269,13 @@ class TextMenu(Input):
                 self._append_item(item, cnt == selected_item, y_pos)
                 if cnt == selected_item:
                     self._frame.position = (0, y_pos)
-        else: #scroll menu
+        else:  # scroll menu
             for cnt in range(selected_item - self._scroll_menu / 2,
                              selected_item + 1 + self._scroll_menu / 2):
                 y_pos -= (self._line_size[1] + self._gap)
                 if cnt >= 0 and cnt < len(self._menu_items):
-                    self._append_item(self._menu_items[cnt], cnt == selected_item,
+                    self._append_item(self._menu_items[cnt],
+                                      cnt == selected_item,
                                       y_pos)
                     if cnt == selected_item:
                         self._frame.position = (0, y_pos)
@@ -307,7 +310,7 @@ class TextMenu(Input):
                 elif key == expyriment.misc.constants.K_DOWN:
                     selected += 1
                 elif key in expyriment.misc.constants.K_ALL_DIGITS and\
-                            key > expyriment.misc.constants.K_0:
+                        key > expyriment.misc.constants.K_0:
                     selected = key - expyriment.misc.constants.K_1
                 elif key == expyriment.misc.constants.K_RETURN:
                     break
@@ -321,7 +324,6 @@ class TextMenu(Input):
             pressed = None
             while True:
                 pressed = None
-                print selected
                 self._redraw(selected)
                 event, pos, rt = self._mouse.wait_press()
                 if self._scroll_menu == 0:
@@ -349,7 +351,8 @@ if __name__ == "__main__":
     defaults.event_logging = 0
     exp = control.initialize()
 
-    menu = TextMenu(heading="Expyriment TextMenu", \
-                items=["Items 1", "Items 1", "Items 3", "Items 4", "Items 5"],
-                width=250)
+    menu = TextMenu(heading="Expyriment TextMenu",
+                    items=["Items 1", "Items 1", "Items 3", "Items 4",
+                           "Items 5"],
+                    width=250)
     print menu.get()

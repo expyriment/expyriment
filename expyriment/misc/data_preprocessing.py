@@ -12,15 +12,20 @@ __revision__ = ''
 __date__ = ''
 
 import os as _os
+import locale as _locale
 import sys as _sys
 import types as _types
 from copy import copy as _copy
+import codecs as _codecs
+import re as _re
 try:
     import numpy as _np
 except:
     _np = None
+from expyriment.misc import unicode2str as _unicode2str
 
-def read_datafile(filename, only_header_and_variable_names=False):
+
+def read_datafile(filename, only_header_and_variable_names=False, encoding=None):
     """Read an Expyriment data file.
 
     Returns the data, the variable names, the subject info & the comments:
@@ -44,6 +49,8 @@ def read_datafile(filename, only_header_and_variable_names=False):
         subject factors)
     comments : str
         string with remaining comments
+    encoding : str, optional
+        the encoding with which the contents of the file will be read
 
     """
 
@@ -52,7 +59,18 @@ def read_datafile(filename, only_header_and_variable_names=False):
     subject_info = {}
     comments = ""
     data = []
-    fl = open(filename)
+
+    if encoding is None:
+        with open(filename, 'r') as fl:
+            first_line = fl.readline()
+            encoding = _re.findall("coding[:=]\s*([-\w.]+)", first_line)
+            if encoding == []:
+                second_line = fl.readline()
+                encoding = _re.findall("coding[:=]\s*([-\w.]+)",
+                                       second_line)
+                if encoding == []:
+                    encoding = [None]
+    fl = _codecs.open(filename, 'rb', encoding[0])
     for ln in fl:
         # parse infos
         ln = ln.strip()
@@ -83,6 +101,7 @@ def read_datafile(filename, only_header_and_variable_names=False):
         variables[x] = variables[x].strip()
     return data, variables, subject_info, comments
 
+
 def write_csv_file(filename, data, varnames=None, delimiter=','):
     """Write 2D data array to csv file.
 
@@ -92,7 +111,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
         name (fullpath) of the data file
     data : list of list
         2D array with data (list of list)
-    variables : list of str, optional
+    varnames : list of str, optional
         array of strings representing variable names
     delimiter : str, optional
         delimiter character (default=",")
@@ -101,22 +120,28 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
     _sys.stdout.write("write file: {0}".format(filename))
     with open(filename, 'w') as f:
+        header = "# -*- coding: {0} -*-\n".format(
+            _locale.getdefaultlocale()[1])
+        f.write(header)
         if varnames is not None:
             for c, v in enumerate(varnames):
                 if c > 0:
                     f.write(delimiter)
-                f.write(v)
+                f.write(_unicode2str(v))
             f.write("\n")
         cnt = 0
         for row in data:
             for c, v in enumerate(row):
                 if c > 0:
                     f.write(delimiter)
+                if isinstance(v, unicode):
+                    _unicode2str(v)
                 f.write(v)
                 cnt += 1
             f.write("\n")
 
     print " ({0} cells in {1} rows)".format(cnt, len(data))
+
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
                             delimiter=','):
@@ -146,7 +171,7 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     """
 
     return Aggregator(data_folder=data_folder, file_name=file_name)\
-      .write_concatenated_data(output_file=output_file, delimiter=delimiter)
+        .write_concatenated_data(output_file=output_file, delimiter=delimiter)
 
 
 class Aggregator(object):
@@ -185,7 +210,7 @@ class Aggregator(object):
     """
 
     _relations = ["==", "!=", ">", "<", ">=", "<=", "=>", "<="]
-    _operations = [ "+", "-", "*", "/", "%"]
+    _operations = ["+", "-", "*", "/", "%"]
     _dv_functions = ["mean", "median", "sum", "std", "n_trials"]
 
     _default_suffix = ".xpd"
@@ -214,9 +239,9 @@ The Python package 'numpy' is not installed."""
         _version = _np.version.version.split(".")
         if not _version[0] == 1 and _version[1] < 6:
             raise ImportError("Expyriment {0} ".format(__version__) +
-                    "is not compatible with Numpy {0}.".format(
-                        _np.version.version) +
-                      "\nPlease install Numpy 1.6 or higher.")
+                              "is not compatible with Numpy {0}.".format(
+                                  _np.version.version) +
+                              "\nPlease install Numpy 1.6 or higher.")
 
         print "** Expyriment Data Preprocessor **"
         self.reset(data_folder, file_name, suffix)
@@ -224,23 +249,23 @@ The Python package 'numpy' is not installed."""
     def __str__(self):
         """Getter for the current design as text string."""
         design_str = "Data\n"
-        design_str = design_str + "- file name: " + self._file_name + "\n"
-        design_str = design_str + "- folder: " + self._data_folder + "\n"
-        design_str = design_str + "- {0} subject_data sets\n".format(
-                                                           len(self._data_files))
-        design_str = design_str + "- {0} variables: {1}\n".format(
-                                    len(self.variables), self.variables)
-        design_str = design_str + "- recoded variables: {0}\n".format(
-                                                            self._recode_txt)
-        design_str = design_str + "- computed variables: {0}\n".format(
-                                                            self._computes_txt)
-        design_str = design_str + "Design\n"
-        design_str = design_str + "- independent Variables: {0}\n".format(
-                                                        self._iv_txt)
-        design_str = design_str + "- dependent Variables: {0}\n".format(
-                                                        self._dv_txt)
-        design_str = design_str + "- exclude: {0}\n".format(
-                                                        self._exclusions_txt)
+        design_str = design_str + u"- file name: " + self._file_name + "\n"
+        design_str = design_str + u"- folder: " + self._data_folder + "\n"
+        design_str = design_str + u"- {0} subject_data sets\n".format(
+            len(self._data_files))
+        design_str = design_str + u"- {0} variables: {1}\n".format(
+            len(self.variables), self.variables)
+        design_str = design_str + u"- recoded variables: {0}\n".format(
+            self._recode_txt)
+        design_str = design_str + u"- computed variables: {0}\n".format(
+            self._computes_txt)
+        design_str = design_str + u"Design\n"
+        design_str = design_str + u"- independent Variables: {0}\n".format(
+            self._iv_txt)
+        design_str = design_str + u"- dependent Variables: {0}\n".format(
+            self._dv_txt)
+        design_str = design_str + u"- exclude: {0}\n".format(
+            self._exclusions_txt)
         return design_str
 
     def _parse_syntax(self, syntax, throw_exception):
@@ -259,7 +284,8 @@ The Python package 'numpy' is not installed."""
                 break
         if found is None:
             if throw_exception:
-                raise RuntimeError("Incorrect syntax: '{0}'".format(syntax))
+                raise RuntimeError("Incorrect syntax: '{0}'".format(
+                    _unicode2str(syntax)))
             else:
                 return None
         else:
@@ -272,7 +298,8 @@ The Python package 'numpy' is not installed."""
             if variables == v:
                 return cnt
         if (throw_exception):
-            raise RuntimeError("Unknown variable name '{0}'".format(variables))
+            raise RuntimeError("Unknown variable name '{0}'".format(
+                _unicode2str(variables)))
         return None
 
     def _add_independent_variable(self, variable):
@@ -288,14 +315,15 @@ The Python package 'numpy' is not installed."""
             try:
                 dv_txt = tmp[1].strip()
             except:
-                raise RuntimeError("Incorrect syntax for DV: '{0}'".format(
-                                                                    variable))
+                raise RuntimeError(
+                    "Incorrect syntax for DV: '{0}'".format(
+                        _unicode2str(variable)))
             var_id = self._get_variable_id(dv_txt, True)
             if dv_fnc in self._dv_functions:
                 self._dv.append([dv_fnc, var_id])
             else:
                 raise RuntimeError("Unknown function for dependent variable:" +
-                                   " '{0}'".format(dv_fnc))
+                                   " '{0}'".format(_unicode2str(dv_fnc)))
 
     def _add_compute_variable(self, compute_syntax):
         """Add a new variable to be computed."""
@@ -310,14 +338,14 @@ The Python package 'numpy' is not installed."""
             syntax = syntax.replace("##", "==")
         except:
             raise RuntimeError("Incorrect compute syntax: '{0}'".format(
-                                                            compute_syntax))
+                _unicode2str(compute_syntax)))
 
         variable_def = self._parse_syntax(syntax, throw_exception=True)
         if variable_def is None:
             variable_def = self._parse_operation(syntax, throw_exception=True)
         if self._get_variable_id(variable_name) is not None:
             raise RuntimeError("Variable already defined '{0}'".format(
-                                            variable_name))
+                _unicode2str(variable_name)))
         else:
             self._variables.append(variable_name)
             self._computes.append([variable_name, variable_def])
@@ -330,7 +358,7 @@ The Python package 'numpy' is not installed."""
             self._exclusions.append(relation)
         else:
             raise RuntimeError("Incorrect exclusion syntax: '{0}'".format(
-                                                relation_syntax))
+                _unicode2str(relation_syntax)))
 
     def _add_variable_recoding(self, recode_syntax):
         """Add a new variable recoding rule."""
@@ -351,7 +379,7 @@ The Python package 'numpy' is not installed."""
 
         if error:
             raise RuntimeError("Incorrect recoding syntax: '{0}'".format(
-                                                recode_syntax))
+                _unicode2str(recode_syntax)))
         else:
             self._recode.append([var_id, excl_array])
 
@@ -400,7 +428,7 @@ The Python package 'numpy' is not installed."""
             else:
                 val = value
 
-        if value.endswith("std") and (value.find("*")>0):
+        if value.endswith("std") and (value.find("*") > 0):
             # remove relative depending std
             tmp = value.split("*")
             fac = float(tmp[0])
@@ -408,23 +436,30 @@ The Python package 'numpy' is not installed."""
             mean_stds = self._dv_mean_std(data, column_id)
             idx = []
             if relation not in [">", "<", "=>", ">=", "=<", "<="]:
-                raise RuntimeError("Incorrect syntax for " + \
-                    "exception: '{0} {1}'".format(relation, value))
-            for cnt,row in enumerate(data):
+                raise RuntimeError("Incorrect syntax for " +
+                                   "exception: '{0} {1}'".format(
+                                       _unicode2str(relation),
+                                       _unicode2str(value)))
+            for cnt, row in enumerate(data):
                 #find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
+                    if isinstance(row[iv], unicode):
+                        _row_data = _unicode2str(row[iv])
+                    else:
+                        _row_data = row[iv]
                     combi_str = combi_str + "_" + \
-                            "{0}{1}".format(self.variables[iv], row[iv])
+                        "{0}{1}".format(_unicode2str(self.variables[iv]),
+                                        _row_data)
                 deviation = float(row[column_id]) - mean_stds[combi_str][0]
-                if (relation == ">" and \
+                if (relation == ">" and
                     deviation > fac * mean_stds[combi_str][1]) or \
-                   (relation == "=>" or relation == ">=" and \
+                   (relation == "=>" or relation == ">=" and
                     deviation >= fac * mean_stds[combi_str][1]) or \
-                   (relation == "<" and \
+                   (relation == "<" and
                     deviation < -fac * mean_stds[combi_str][1]) or \
-                   (relation == "=<" or relation == "<=" and \
-                    deviation <= -fac * mean_stds[combi_str][1]):
+                   (relation == "=<" or relation == "<=" and
+                        deviation <= -fac * mean_stds[combi_str][1]):
                         idx.append(cnt)
             return idx
         else:
@@ -443,8 +478,9 @@ The Python package 'numpy' is not installed."""
             else:
                 comp = None  # should never occur
             if isinstance(comp, bool):
-                raise RuntimeError("Incorrect syntax for " + \
-                    "exception: '{0} {1}'".format(relation, value))
+                raise RuntimeError(
+                    "Incorrect syntax for " + "exception: '{0} {1}'".format(
+                        _unicode2str(relation), _unicode2str(value)))
             return _np.flatnonzero(comp)
 
     def _dv_mean_std(self, data, column_dv_id):
@@ -525,7 +561,7 @@ The Python package 'numpy' is not installed."""
                     comb_values.append(iv_values[c][x])
                     if len(txt) > 0:
                         txt = txt + "_"
-                    txt = txt + "{0}{1}".format(self.variables[self._iv[c]],
+                    txt = txt + u"{0}{1}".format(self.variables[self._iv[c]],
                                 comb_values[-1])
                 names.append(txt)
                 factor_combinations.append(comb_values)
@@ -533,7 +569,7 @@ The Python package 'numpy' is not installed."""
 
         new_variable_names = ["subject_id"]
         for sv in self.subject_variables:
-            new_variable_names.append("{0}".format(sv))
+            new_variable_names.append(u"{0}".format(sv))
 
         for dv in self._dv:
             if dv[0] == "n_trials":
@@ -542,9 +578,9 @@ The Python package 'numpy' is not installed."""
                 dv_txt = self.variables[dv[1]]
             if len(names) > 0:
                 for n in names:
-                    new_variable_names.append("{0}_{1}".format(dv_txt, n))
+                    new_variable_names.append(u"{0}_{1}".format(dv_txt, n))
             else:
-                new_variable_names.append("{0}_total".format(dv_txt))
+                new_variable_names.append(u"{0}_total".format(dv_txt))
 
         return new_variable_names, factor_combinations
 
@@ -585,38 +621,39 @@ The Python package 'numpy' is not installed."""
         self._suffix = suffix
 
         for flname in _os.listdir(_os.path.dirname(self._data_folder + "/")):
-            if flname.endswith(self._suffix) and flname.startswith(
-                                                    self._file_name):
+            if flname.endswith(self._suffix) and \
+                    flname.startswith(self._file_name):
                 _data, vnames, _subject_info, _comments = \
-                            read_datafile(self._data_folder + "/" + flname)
+                    read_datafile(self._data_folder + "/" + flname)
 
                 if len(self._variables) < 1:
                     self._variables = vnames
                 else:
                     if vnames != self._variables:
-                        message = "Different variables in ".format(flname)
-                        message = message + "\n{0}".format(vnames)
-                        message = message + "\ninstead of\n{0}".format(
-                                                            self._variables)
-                        raise RuntimeError(message)
+                        message = u"Different variables in ".format(flname)
+                        message = message + u"\n{0}".format(vnames)
+                        message = message + u"\ninstead of\n{0}".format(
+                            self._variables)
+                        raise RuntimeError(_unicode2str(message))
                 self._data_files.append(flname)
 
         if len(self._data_files) < 1:
             raise Exception("No data files found in {0}".format(
-                                                        self._data_folder))
+                _unicode2str(self._data_folder)))
 
         print "found {0} subject_data sets".format(len(self._data_files))
         print "found {0} variables: {1}".format(len(self._variables),
-                                                self._variables)
+                                                [_unicode2str(x) for x
+                                                 in self._variables])
 
     @property
-    def data_folder (self):
+    def data_folder(self):
         """Getter for data_folder."""
 
         return self._data_folder
 
     @property
-    def data_files (self):
+    def data_files(self):
         """Getter for data_files.
 
         The list of the data files considered for the analysis.
@@ -626,13 +663,13 @@ The Python package 'numpy' is not installed."""
         return self._data_files
 
     @property
-    def file_name (self):
+    def file_name(self):
         """Getter for file_name."""
 
         return self._file_name
 
     @property
-    def variables (self):
+    def variables(self):
         """Getter for variables.
 
         The specified variables including the new computer variables and
@@ -727,12 +764,12 @@ The Python package 'numpy' is not installed."""
 
         # check filename
         if filename not in self._data_files:
-            raise RuntimeError("'{0}' is not in the data list\n".format(\
-                                    filename, self._data_files))
+            raise RuntimeError("'{0}' is not in the data list\n".format(
+                _unicode2str(filename)))
 
         data, _vnames, subject_info, comments = \
-                        read_datafile(self._data_folder + "/" + filename)
-        print "   reading {0}".format(filename)
+            read_datafile(self._data_folder + "/" + filename)
+        print "   reading {0}".format(_unicode2str(filename))
 
         if recode_variables:
             for var_id, recoding in self._recode:
@@ -748,15 +785,18 @@ The Python package 'numpy' is not installed."""
                 if var_def[1] in self._relations:
                     # relations are true or false
                     col = _np.zeros([data.shape[0], 1], dtype=int)
-                    idx = self._find_idx(data, var_def[0], var_def[1], var_def[2])
+                    idx = self._find_idx(data, var_def[0],
+                                         var_def[1], var_def[2])
                     col[idx, 0] = 1
                 else:
                     # operations
                     try:
                         a = _np.float64([data[:, var_def[0]]]).transpose()
-                        second_var_id = self._get_variable_id(var_def[2], False)
+                        second_var_id = self._get_variable_id(var_def[2],
+                                                              False)
                         if second_var_id is not None:
-                            b = _np.float64([data[:, second_var_id ]]).transpose()
+                            b = _np.float64(
+                                [data[:, second_var_id]]).transpose()
                         else:
                             b = _np.float64(var_def[2])
                     except:
@@ -896,7 +936,8 @@ The Python package 'numpy' is not installed."""
             variable_names = [variable_names]
 
         if len(variable_names) != data_shape[1]:
-            raise RuntimeError("Amount of variables and added colums doesn't fit.")
+            raise RuntimeError(
+                "Amount of variables and added colums doesn't fit.")
         if data_shape[0] != _np.shape(self.concatenated_data[0])[0]:
             raise RuntimeError("Number of rows doesn't match.")
 
@@ -921,11 +962,11 @@ The Python package 'numpy' is not installed."""
         """
 
         if output_file is None:
-            output_file = "{0}.csv".format(self.file_name)
+            output_file = u"{0}.csv".format(self.file_name)
 
         data = self.concatenated_data
         write_csv_file(filename=output_file, data=data[0], varnames=data[1],
-                                         delimiter=delimiter)
+                       delimiter=delimiter)
 
     def set_independent_variables(self, variables):
         """Set the independent variables.
@@ -1107,8 +1148,8 @@ The Python package 'numpy' is not installed."""
 
         self._computes = []
         self._variables = read_datafile(self._data_folder + "/" +
-                                    self._data_files[0],
-                                    only_header_and_variable_names=True)[1]  # original variables
+                                        self._data_files[0],
+                                        only_header_and_variable_names=True)[1]  # original variables
         for syntax in self._computes_txt:
             self._add_compute_variable(syntax)
         self._last_data = []
@@ -1139,7 +1180,11 @@ The Python package 'numpy' is not installed."""
             print "Subject {0}".format(row[0])
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
-                    print "\t{0}:\t{1}".format(var[4:], row[cnt])
+                    if isinstance(row[cnt], unicode):
+                        _row_data = _unicode2str(row[cnt])
+                    else:
+                        _row_data = row[cnt]
+                    print "\t{0}:\t{1}".format(var[4:], _row_data)
         print "\n"
         self._dv = old_dv
         self._iv = old_iv

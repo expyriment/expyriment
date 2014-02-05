@@ -15,10 +15,15 @@ __date__ = ''
 import os
 
 import pygame
+try:
+    import android.mixer as mixer
+except:
+    import pygame.mixer as mixer
 
 import defaults
 import _visual
 from expyriment.io import Keyboard
+from expyriment.misc import unicode2str
 import expyriment
 
 
@@ -30,9 +35,9 @@ class Video(_visual.Stimulus):
     However, it seems that Pygame's video support is quite limited and poor.
 
     When the audio from the video should be played as well, the audiosystem
-    has to be stopped (by calling expyriment.control.stop_audiosystem() ) BEFORE
-    the video stimulus is preloaded! After the stimulus has been played the
-    audiosystem can be started again (by calling
+    has to be stopped (by calling expyriment.control.stop_audiosystem() )
+    BEFORE the video stimulus is preloaded! After the stimulus has been played
+    the audiosystem can be started again (by calling
     expyriment.control.start_audiosystem() ).
 
     When showing videos in large dimensions, and your computer is not fast
@@ -64,11 +69,8 @@ class Video(_visual.Stimulus):
         else:
             self._position = defaults.video_position
         if not(os.path.isfile(self._filename)):
-            if isinstance(self._filename, unicode):
-                import sys
-                filename = self._filename.encode(sys.getfilesystemencoding())
-
-            raise IOError("The video file {0} does not exists".format(filename))
+            raise IOError("The video file {0} does not exists".format(
+                unicode2str(self._filename)))
 
     def __del__(self):
         """Destructor for the video stimulus."""
@@ -158,18 +160,13 @@ class Video(_visual.Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            if isinstance(self._filename, unicode):
-                import sys
-                filename = self._filename.encode(sys.getfilesystemencoding())
-            else:
-                filename = self._filename
-
-            self._file = pygame.movie.Movie(filename)
+            self._file = pygame.movie.Movie(unicode2str(self._filename,
+                                                        fse=True))
             screen_size = expyriment._active_exp.screen.surface.get_size()
-            self._pos = [screen_size[0] / 2 - self._file.get_size()[0] / 2 + \
-                   self._position[0],
-                   screen_size[1] / 2 - self._file.get_size()[1] / 2 - \
-                   self._position[1]]
+            self._pos = [screen_size[0] / 2 - self._file.get_size()[0] / 2 +
+                         self._position[0],
+                         screen_size[1] / 2 - self._file.get_size()[1] / 2 -
+                         self._position[1]]
             size = self._file.get_size()
             self._surface = pygame.surface.Surface(size)
             self._file.set_display(self._surface)
@@ -191,24 +188,19 @@ class Video(_visual.Stimulus):
     def play(self):
         """Play the video stimulus from the current position."""
 
-        if pygame.mixer.get_init() is not None:
+        if mixer.get_init() is not None:
             message = "Mixer is still initialized, cannot play audio! Call \
 expyriment.control.stop_audiosystem() before preloading the video."
             print "Warning: ", message
             if self._logging:
-                expyriment._active_exp._event_file_log("Video,warning," + message)
+                expyriment._active_exp._event_file_log(
+                    "Video,warning," + message)
 
         if not self._is_preloaded:
             self.preload()
         if self._logging:
-            if isinstance(self._filename, unicode):
-                import sys
-                filename = self._filename.encode(sys.getfilesystemencoding())
-            else:
-                filename = self._filename
-
-            expyriment._active_exp._event_file_log("Video,playing,{0}".format(
-                                                    filename))
+            expyriment._active_exp._event_file_log(
+                "Video,playing,{0}".format(unicode2str(self._filename)))
         self._file.play()
 
     def stop(self):
@@ -275,7 +267,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
                     ogl_screen.display()
                 else:
                     expyriment._active_exp._screen.surface.blit(self._surface,
-                                                 self._pos)
+                                                                self._pos)
                 expyriment._active_exp._screen.update()
 
     def _wait(self, frame=None):
@@ -301,10 +293,10 @@ expyriment.control.stop_audiosystem() before preloading the video."
                 warn_message = repr(diff - 1) + " video frames dropped!"
                 print warn_message
                 expyriment._active_exp._event_file_warn(
-                                            "Video,warning," + warn_message)
+                    "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
-                if event.type == pygame.KEYDOWN and (\
-                   event.key == expyriment.control.defaults.quit_key or \
+                if event.type == pygame.KEYDOWN and (
+                   event.key == expyriment.control.defaults.quit_key or
                    event.key == expyriment.control.defaults.pause_key):
                     self.stop()
                     Keyboard.process_control_keys(event)

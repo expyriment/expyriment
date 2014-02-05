@@ -14,6 +14,9 @@ __date__ = ''
 
 import atexit
 import os
+import locale
+import codecs
+import re
 import types
 import sys
 import uuid
@@ -24,13 +27,14 @@ from platform import uname
 import defaults
 import expyriment
 from expyriment.misc._timer import get_time
+from expyriment.misc import unicode2str
 from _input_output import Input, Output
 
 
 class InputFile(Input):
     """A class implementing an input file."""
 
-    def __init__(self, filename):
+    def __init__(self, filename, encoding=None):
         """Create an input file.
 
         All lines in the specified text file will be read into a list of
@@ -41,20 +45,29 @@ class InputFile(Input):
         filename : str, optional
             name of the input file
 
+        encoding : str, optional
+            the encoding used to read the content of the file
+
         """
 
         self._filename = filename
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            if isinstance(self.filename, unicode):
-                import sys
-                filename = self.filename.encode(sys.getfilesystemencoding())
-
             raise IOError("The input file '{0}' does not exist.".format(
-                filename))
+                unicode2str(self._filename)))
 
-        with open(self._filename) as f:
+        if encoding is None:
+            with open(filename, 'r') as fl:
+                first_line = fl.readline()
+                encoding = re.findall("coding[:=]\s*([-\w.]+)", first_line)
+                if encoding == []:
+                    second_line = fl.readline()
+                    encoding = re.findall("coding[:=]\s*([-\w.]+)",
+                                          second_line)
+                    if encoding == []:
+                        encoding = [None]
+        with codecs.open(self._filename, 'rb', encoding[0]) as f:
             for line in f:
                 self._lines.append(line.rstrip('\r\n'))
 
@@ -157,9 +170,9 @@ class OutputFile(Output):
         # Create new file
         fl = open(self._fullpath, 'w+')
         fl.close()
-        self.write_comment("Expyriment {0}, {1}-file".format(
-                                                    expyriment.get_version(),
-                                                            self._suffix))
+        self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
+            expyriment.get_version(), self._suffix,
+            locale.getdefaultlocale()[1]))
         if expyriment._active_exp.is_initialized:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
@@ -202,8 +215,8 @@ class OutputFile(Output):
         if expyriment._active_exp.is_started:
             rtn = rtn + '_' + repr(expyriment._active_exp.subject).zfill(2)
         if self._time_stamp:
-            rtn = rtn + '_' + strftime("%Y%m%d%H%M", expyriment._active_exp.\
-                                       clock.init_localtime)
+            rtn = rtn + '_' + strftime(
+                "%Y%m%d%H%M", expyriment._active_exp.clock.init_localtime)
         return rtn + self.suffix
 
     def save(self):
@@ -226,7 +239,10 @@ class OutputFile(Output):
 
         """
 
-        self._buffer.append(str(content))
+        if type(content) is unicode:
+            self._buffer.append(unicode2str(content))
+        else:
+            self._buffer.append(str(content))
 
     def write_line(self, content):
         """Write a text line to files.
@@ -238,7 +254,7 @@ class OutputFile(Output):
 
         """
         self.write(content)
-        self.write(defaults.outputfile_eol)
+        self.write(unicode2str(defaults.outputfile_eol))
 
     def write_list(self, list_):
         """Write a list in a row. Data are separated by a delimiter.
@@ -250,7 +266,11 @@ class OutputFile(Output):
 
         """
 
-        self.write_line(repr(list_)[1:-1].replace(" ", ""))
+        for elem in list:
+            self.write(elem)
+            self.write(',')
+        self.write(unicode2str(defaults.outputfile_eol))
+        # self.write_line(repr(list_)[1:-1].replace(" ", ""))
 
     def write_comment(self, comment):
         """Write a comment line to files.
@@ -264,7 +284,7 @@ class OutputFile(Output):
 
         """
 
-        self.write(self.comment_char)
+        self.write(unicode2str(self.comment_char))
         self.write_line(comment)
 
     def rename(self, new_filename):
@@ -301,7 +321,7 @@ class DataFile(OutputFile):
 
         """
 
-        if  expyriment._active_exp.is_initialized:
+        if expyriment._active_exp.is_initialized:
             self._subject = expyriment._active_exp.subject
         else:
             self._subject = None
@@ -343,8 +363,11 @@ class DataFile(OutputFile):
         """Check if data are string or numeric and cast to string"""
         if data is None:
             data = "None"
-        if type(data) in [types.StringType, types.IntType,
-                         types.LongType, types.FloatType, types.BooleanType]:
+        if isinstance(data, types.UnicodeType):
+            return unicode2str(data)
+        elif type(data) in [types.StringType, types.IntType,
+                            types.LongType, types.FloatType,
+                            types.BooleanType]:
             return str(data)
         else:
             message = "Data to be added must to be " + \
@@ -393,8 +416,9 @@ class DataFile(OutputFile):
 
         """
 
-        self._subject_info.append("{0}s {1}{2}".format(self.comment_char,
-                                    text, defaults.outputfile_eol))
+        self._subject_info.append("{0}s {1}{2}".format(
+            unicode2str(self.comment_char), unicode2str(text),
+            unicode2str(defaults.outputfile_eol)))
 
     def add_experiment_info(self, text):
         """Adds a text the subject info header.
@@ -405,20 +429,21 @@ class DataFile(OutputFile):
 
         """
 
-        if type(text) is not str:
+        if isinstance(text, types.UnicodeType):
+            text = "{0}".format(unicode2str(text))
+        elif type(text) is not str:
             text = "{0}".format(text)
         for line in text.splitlines():
             self._experiment_info.append("{0}e {1}{2}".format(
-                                        self.comment_char, line,
-                                        defaults.outputfile_eol))
+                unicode2str(self.comment_char), line,
+                unicode2str(defaults.outputfile_eol)))
 
     @property
     def variable_names(self):
         """Getter for variable_names."""
 
         vn = self.delimiter.join(self._variable_names)
-        return "subject_id,{0}".format(vn)
-
+        return u"subject_id,{0}".format(vn)
 
     def clear_variable_names(self):
         """Remove all variable names from data file.
@@ -465,7 +490,7 @@ class DataFile(OutputFile):
 
         start = get_time()
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
-                        or self._variable_names_changed:
+                or self._variable_names_changed:
             # Re-write header and varnames
             tmpfile_name = "{0}/{1}".format(self.directory, uuid.uuid4())
             os.rename(self._fullpath, tmpfile_name)
@@ -493,9 +518,10 @@ class DataFile(OutputFile):
                         section = None
 
                         # Re-write variable names after #s-section
-                        fl.write(self.variable_names + defaults.outputfile_eol)
+                        fl.write(unicode2str(
+                            self.variable_names + defaults.outputfile_eol))
                         self._variable_names_changed = False
-                        line = '' # Skip old varnames
+                        line = ''  # Skip old varnames
                 fl.write(line)
             tmpfl.close()
             fl.close()
@@ -577,7 +603,8 @@ class EventFile(OutputFile):
             self._clock = clock
         else:
             if not expyriment._active_exp.is_initialized:
-                raise RuntimeError("Cannot find a clock. Initialize Expyriment!")
+                raise RuntimeError(
+                    "Cannot find a clock. Initialize Expyriment!")
             self._clock = expyriment._active_exp.clock
 
         try:
@@ -590,7 +617,7 @@ class EventFile(OutputFile):
             opengl = "unknown"
 
         self.write_comment("display: size={0}, window_mode={1}, opengl={2}"
-                    .format(display, window_mode, opengl))
+                           .format(display, window_mode, opengl))
         self.write_comment("os: {0}".format(uname()))
 
         self.write_line("Time,Type,Event,Value,Detail,Detail2")
@@ -616,6 +643,8 @@ class EventFile(OutputFile):
 
         """
 
+        if isinstance(event, types.UnicodeType):
+            event = unicode2str(event)
         line = repr(self._clock.time) + self.delimiter + str(event)
         self.write_line(line)
 

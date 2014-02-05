@@ -13,9 +13,10 @@ __revision__ = ''
 __date__ = ''
 
 
-import constants
 import defaults
-from _miscellaneous import compare_codes, list_fonts, find_font
+from _miscellaneous import compare_codes, add_fonts, list_fonts, find_font
+from _miscellaneous import unicode2str, str2unicode
+import constants
 from _buffer import  Buffer, ByteBuffer
 from _clock import Clock
 import geometry

@@ -34,6 +34,7 @@ __date__ = ''
 
 
 import sys as _sys
+import os as _os
 
 
 class _Expyriment_object(object):
@@ -136,6 +137,10 @@ import control
 import stimuli
 import io
 import misc
+misc.add_fonts(misc.str2unicode(_os.path.abspath(
+    _os.path.join(_os.path.dirname(__file__),
+                  "_fonts"))))
+
 try:
     import android
 except ImportError:

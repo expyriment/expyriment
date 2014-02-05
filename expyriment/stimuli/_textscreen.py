@@ -20,7 +20,7 @@ import defaults
 from _visual import Visual
 from _textline import TextLine
 from _textbox import TextBox
-from expyriment.misc import find_font
+from expyriment.misc import find_font, unicode2str
 import expyriment
 
 
@@ -86,9 +86,10 @@ class TextScreen(Visual):
         if heading_font is not None:
             self._heading_font = find_font(heading_font)
         else:
-            self._heading_font = expyriment._active_exp.text_font
+            self._heading_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._heading_font, 10)
+            _font = pygame.font.Font(
+                unicode2str(self._heading_font, fse=True), 10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(heading_font))
@@ -97,8 +98,8 @@ class TextScreen(Visual):
         if heading_size:
             self._heading_size = heading_size
         else:
-            self._heading_size = int(expyriment._active_exp.text_size\
-                                      * 1.2)
+            self._heading_size = int(expyriment._active_exp.text_size
+                                     * 1.2)
         if heading_bold is not None:
             self._heading_bold = heading_bold
         else:
@@ -107,12 +108,12 @@ class TextScreen(Visual):
             self._heading_italic = heading_italic
         else:
             self._heading_italic = \
-                    defaults.textscreen_heading_italic
+                defaults.textscreen_heading_italic
         if heading_underline is not None:
             self._heading_underline = heading_underline
         else:
             self._heading_underline = \
-                    defaults.textscreen_heading_underline
+                defaults.textscreen_heading_underline
         if heading_colour is None:
             heading_colour = defaults.textscreen_heading_colour
         if heading_colour is not None:
@@ -124,9 +125,10 @@ class TextScreen(Visual):
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = expyriment._active_exp.text_font
+            self._text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._text_font, 10)
+            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+                                     10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
@@ -158,7 +160,7 @@ class TextScreen(Visual):
             self._text_justification = text_justification
         else:
             self._text_justification = \
-                    defaults.textscreen_text_justification
+                defaults.textscreen_text_justification
         if size is not None:
             self._size = size
         else:
@@ -167,9 +169,11 @@ class TextScreen(Visual):
                 try:
                     self._size = (
                         expyriment._active_exp.screen.surface.get_size()[0] -
-                        expyriment._active_exp.screen.surface.get_size()[0] / 5,
+                        expyriment._active_exp.screen.surface.get_size()[0]
+                        / 5,
                         expyriment._active_exp.screen.surface.get_size()[1] -
-                        expyriment._active_exp.screen.surface.get_size()[1] / 5)
+                        expyriment._active_exp.screen.surface.get_size()[1]
+                        / 5)
                 except:
                     raise RuntimeError("Cannot get size of screen!")
 
@@ -177,7 +181,7 @@ class TextScreen(Visual):
             self._background_colour = background_colour
         else:
             self._background_colour = \
-                    defaults.textscreen_background_colour
+                defaults.textscreen_background_colour
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 

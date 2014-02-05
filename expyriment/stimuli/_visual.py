@@ -27,6 +27,7 @@ import defaults
 import expyriment
 from _stimulus import Stimulus
 from expyriment.misc import geometry
+from expyriment.misc import unicode2str
 from expyriment.misc._timer import get_time
 
 random.seed()
@@ -907,7 +908,7 @@ class Visual(Stimulus):
         else:
             parts.append("tga")
         filename = ".".join(parts)
-        pygame.image.save(self._get_surface(), filename)
+        pygame.image.save(self._get_surface(), unicode2str(filename))
 
     def picture(self):
         """Return the stimulus as Picture stimulus.
@@ -1083,7 +1084,6 @@ class Visual(Stimulus):
             expyriment._active_exp._event_file_log(
                 "Stimulus,blured,{0}, level={1}".format(self.id, level), 2)
         return int((get_time() - start) * 1000)
-
 
     def scramble(self, grain_size):
         """Scramble the stimulus.
