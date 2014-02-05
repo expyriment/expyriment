@@ -26,7 +26,7 @@ class Clock(object) :
     """
 
     if sys.platform == 'win32':
-        _cpu_time = timeclock
+        _cpu_time = time.clock
     else:
         _cpu_time = time.time
 
