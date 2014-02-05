@@ -137,7 +137,7 @@ def start(experiment=None, auto_create_subject_id=None):
     while number > 0:
         counter = stimuli.TextLine(
             "{num:02d}".format(num=number),
-            text_font='Monospace',
+            text_font='FreeMono',
             text_size=18,
             text_bold=True,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
