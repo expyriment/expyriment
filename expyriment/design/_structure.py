@@ -776,7 +776,7 @@ type".format(permutation_type))
                         encoding = [None]
         else:
             encoding = [encoding]
-        with codecs.open(filename, 'rb', encoding[0]) as fl:
+        with codecs.open(filename, 'rb', encoding[0], errors='replace') as fl:
             for ln in fl:
                 ln = str2unicode(ln)
                 if ln[0] == "#":
@@ -1350,7 +1350,7 @@ class Block(object):
                         encoding = [None]
         else:
             encoding = [encoding]
-        with codecs.open(filename, "rb", encoding[0]) as f:
+        with codecs.open(filename, "rb", encoding[0], errors='replace') as f:
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:

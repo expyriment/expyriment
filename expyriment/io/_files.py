@@ -69,7 +69,8 @@ class InputFile(Input):
                         encoding = [None]
         else:
             encoding = [encoding]
-        with codecs.open(self._filename, 'rb', encoding[0]) as f:
+        with codecs.open(self._filename, 'rb', encoding[0],
+                         errors='replace') as f:
             for line in f:
                 self._lines.append(str2unicode(line.rstrip('\r\n')))
 

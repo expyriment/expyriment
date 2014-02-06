@@ -74,7 +74,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
     else:
         encoding = [encoding]
 
-    fl = _codecs.open(filename, 'rb', encoding[0])
+    fl = _codecs.open(filename, 'rb', encoding[0], errors='replace')
     for ln in fl:
         # parse infos
         ln = _str2unicode(ln.strip())
