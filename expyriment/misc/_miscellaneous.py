@@ -89,12 +89,12 @@ def str2unicode(s, fse=False):
         try:
             u = s.decode(fs_enc)
         except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'ignore')
+            u = s.decode(u'utf-8', u'replace')
     else:
         try:
             u = s.decode(locale_enc)
         except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'ignore')
+            u = s.decode(u'utf-8', u'replace')
     return u
 
 
@@ -133,12 +133,12 @@ def unicode2str(u, fse=False):
         try:
             s = u.encode(fs_enc)
         except UnicodeEncodeError:
-            s = u.encode(u'utf-8', u'ignore')
+            s = u.encode(u'utf-8', u'replace')
     else:
         try:
             s = u.encode(locale_enc)
         except UnicodeEncodeError:
-            s = u.encode(u'uff-8', u'ignore')
+            s = u.encode(u'uff-8', u'replace')
     return s
 
 
