@@ -27,7 +27,7 @@ from platform import uname
 import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2str, str2unicode
 from _input_output import Input, Output
 
 
@@ -69,7 +69,7 @@ class InputFile(Input):
                         encoding = [None]
         with codecs.open(self._filename, 'rb', encoding[0]) as f:
             for line in f:
-                self._lines.append(line.rstrip('\r\n'))
+                self._lines.append(str2unicode(line.rstrip('\r\n')))
 
     @property
     def filename(self):

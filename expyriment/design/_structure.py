@@ -28,7 +28,7 @@ import defaults
 import expyriment
 from expyriment.misc import constants
 from expyriment.misc import Clock
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2str, str2unicode
 import randomize
 import permute
 
@@ -776,6 +776,7 @@ type".format(permutation_type))
                         encoding = [None]
         with codecs.open(filename, 'rb', encoding[0]) as fl:
             for ln in fl:
+                ln = str2unicode(ln)
                 if ln[0] == "#":
                     if ln.startswith("#exp:"):
                         self._name = ln[6:].strip()
@@ -1349,11 +1350,12 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = deepcopy(row)
+                    factor_names = deepcopy(str2unicode(row))
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
-                        trial.set_factor(factor_names[c_cnt], row[c_cnt])
+                        trial.set_factor(str2unicode(factor_names[c_cnt]),
+                                         str2unicode(row[c_cnt]))
                     self.add_trial(trial)
 
     def order_trials(self, order):

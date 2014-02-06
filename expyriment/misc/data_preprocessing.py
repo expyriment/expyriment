@@ -23,6 +23,7 @@ try:
 except:
     _np = None
 from expyriment.misc import unicode2str as _unicode2str
+from expyriment.misc import str2unicode as _str2unicode
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None):
@@ -73,7 +74,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
     fl = _codecs.open(filename, 'rb', encoding[0])
     for ln in fl:
         # parse infos
-        ln = ln.strip()
+        ln = _str2unicode(ln.strip())
         if not(ln.startswith("#")):
             if variables is None:
                 variables = ln.split(delimiter)
