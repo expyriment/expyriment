@@ -71,6 +71,9 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
                                        second_line)
                 if encoding == []:
                     encoding = [None]
+    else:
+        encoding = [encoding]
+
     fl = _codecs.open(filename, 'rb', encoding[0])
     for ln in fl:
         # parse infos

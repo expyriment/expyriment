@@ -774,6 +774,8 @@ type".format(permutation_type))
                                           second_line)
                     if encoding == []:
                         encoding = [None]
+        else:
+            encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0]) as fl:
             for ln in fl:
                 ln = str2unicode(ln)
@@ -1346,6 +1348,8 @@ class Block(object):
                                           second_line)
                     if encoding == []:
                         encoding = [None]
+        else:
+            encoding = [encoding]
         with codecs.open(filename, "rb", encoding[0]) as f:
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
