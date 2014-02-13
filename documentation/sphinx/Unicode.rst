@@ -1,22 +1,22 @@
-Using non-english characters
+Using non-English characters
 ============================
-Expyriment has full unicode support. This means that, in principle, non-english
+Expyriment has full unicode support. This means that, in principle, non-English
 characters can be used in strings throughout the library. Two different forms
-of using non-english characters have to be dissociated::
+of using non-English characters have to be dissociated::
 
-1. Non-english characters in strings in the Expyriment script file
+1. Non-English characters in strings in the Expyriment script file
 ------------------------------------------------------------------
-When attempting to use non-english characters in strings in your Expyriment
+When attempting to use non-English characters in strings in your Expyriment
 script file, the following three conditions have to be met:
 
-a. Only use non-english charactes in unicode strings!
+a. Only use non-English charactes in unicode strings!
    
    For example: Use u"hello" instead of "hello".
 
 b. Know the encoding with which your editor will save the script file!
    
    For example: IDLE will automatically suggest to save in utf-8 encoding when
-   non-english characters are found in the script file.
+   non-English characters are found in the script file.
 
 c. Define the encoding with which the file will saved in one of the first two
    lines with::
@@ -26,7 +26,7 @@ c. Define the encoding with which the file will saved in one of the first two
   For example:::
    # -*- coding: utf-8 -*-
 
-2. Non-english characters in other text files (e.g. stimuli lists)
+2. Non-English characters in other text files (e.g. stimuli lists)
 ------------------------------------------------------------------
 When an Expyriment method saves a text file, it will always automatically add a
 header line specifying the encoding with which the file was saved. Which
