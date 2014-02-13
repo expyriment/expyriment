@@ -6,7 +6,7 @@
 Expyriment documentation
 ========================
 .. image:: expyriment_logo.png
-*A Python library for behavioural and neuroimaging experiments*. :doc:`Read 
+*A Python library for cognitive and neuroscientific experiments*. :doc:`Read 
 more ...<Overview>`
 
 Contents
@@ -43,6 +43,7 @@ Contents
     Command line interface <CommandLineInterface>
     Data preprocessing <DataPreprocessing>
     Importing data into R <ImportDataIntoR>
+    Using non-english characters <Unicode>
 
 **Technical**
 
