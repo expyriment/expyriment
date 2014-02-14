@@ -43,7 +43,7 @@ Contents
     Command line interface <CommandLineInterface>
     Data preprocessing <DataPreprocessing>
     Importing data into R <ImportDataIntoR>
-    Using non-english characters <Unicode>
+    Using non-English characters <Unicode>
 
 **Technical**
 

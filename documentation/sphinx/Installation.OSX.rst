@@ -20,7 +20,7 @@ and, if needed:
 
 Installing Expyriment
 ---------------------
-Download the `Expyriment source`_ (.zip) and install as described here_.
+Download "expyriment-|release|.zip from the `Release page`_ and install as described here_.
 
 Notes
 -----
@@ -32,13 +32,13 @@ Notes
     lead to improper timing!
 
     We therefore strongly suggest to run Expyriment programmes from the command 
-    line if testing subjects.
+    line when testing participants.
 
-.. _`Python 2`: http://python.org/ftp/python/2.7.3/python-2.7.3-macosx10.3.dmg
+.. _`Python 2`: http://python.org/ftp/python/2.7.6/python-2.7.6-macosx10.3.dmg
 .. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
-.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-py2.7-python.org-macosx10.3.dmg/download
-.. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.1.zip#md5=15242f8eb56e19bdf20febd37f56a686
-.. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.tar.gz/download
-.. _`Expyriment Source`: https://github.com/expyriment/expyriment/releases/latest
+.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-py2.7-python.org-macosx10.3.dmg/download
+.. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.2.zip
+.. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.tar.gz/download
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
+.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest

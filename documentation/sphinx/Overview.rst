@@ -80,7 +80,11 @@ Licence
 -------
 Expyriment is free software and released under the Open Source `GNU General 
 Public Licence <http://www.gnu.org/copyleft/gpl.html>`_ of the Free Software 
-Foundation. If you have used Expyriment in your work, please cite the follwing 
+Foundation.
+
+Publications & Citation
+-----------------------
+If you have used Expyriment in your work, please cite the follwing 
 publication:
     
 Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive 
@@ -93,19 +97,19 @@ Development repository
 ----------------------
 
 The `Expyriment development repository 
-<https://code.google.com/p/expyriment/source/browse/>`_ is currently hosted on 
-Google Code. Get a local copy of this repository with this command::
+<https://github.com/expyriment/expyriment>`_ is currently hosted on 
+GitHub. Get a local copy of this repository with this command::
 
-    hg clone https://code.google.com/p/expyriment/
+    git clone https://github.com/expyriment/expyriment.git
     
 
 Mailing lists
 -------------
 **Expyriment newletter**: All users of Expyriment should subscribe to the 
-Expyriment newsletter, since the project is still under development.  All 
-modifications and new versions will be announce via this mailing list. (visit 
+Expyriment newsletter, since the project is still under development. All 
+modifications and new versions will be announce via this mailing list. (Visit 
 `website <http://groups.google.com/group/expyriment>`_ or send an email 
-to expyriment+subscribe@googlegroups.com) 
+to expyriment+subscribe@googlegroups.com). 
     
 **Expyriment users mailing list**: If you have questions regarding the 
 installation, usage or documentation of Expyriment please don't hesitate to 
@@ -118,7 +122,7 @@ Suggestions and bug tracking
 ----------------------------
 If you want to make suggestions to improve Expyriment or you found a bug, 
 please post your comments to the `Expyriment issues page 
-<https://code.google.com/p/expyriment/issues/list>`_ or contact us directly by 
+<https://github.com/expyriment/expyriment/issues>`_ or contact us directly by 
 sending an email to info@expyriment.org.  
 
 Related Projects
