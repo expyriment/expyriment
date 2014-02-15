@@ -102,7 +102,8 @@ with open('CHANGES.md') as f:
         if line[0:8].lower() == "upcoming":
             version_nr += "+"
         if line[0:7] == "Version":
-            version_nr = version_nr.format(line[8:13])
+            length = line[8:].find(" ")
+            version_nr = version_nr.format(line[8:8+length])
             break
 
 # Check if we are building/installing from the repository
