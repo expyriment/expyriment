@@ -68,7 +68,7 @@ class TextMenu(Input):
             maximum length of a item list before a scroll menu will
             be display. If the parameter is 0 of False scroll menu
             will not be displayed
-        background_stimulus : expyriment stimulus, optional
+        background_stimulus : visual expyriment stimulus, optional
             The background stimulus is a second stimulus that will be presented
             together with the TextMenu. For both stimuli overlap TextMenu
             will appear on top of the background_stimulus
