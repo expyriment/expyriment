@@ -303,9 +303,8 @@ class Mouse(Input):
             if btn_id in buttons or motion_occured:
                 rt = int((get_time() - start) * 1000)
                 break
-            elif Keyboard.process_control_keys() or (duration is not None and
-                int((get_time() - start) * 1000)\
-                                                     >= duration):
+            elif Keyboard.process_control_keys() or (duration is not None and \
+                int((get_time() - start) * 1000) >= duration):
                 break
 
         position_in_expy_coordinates = self.position
