@@ -18,9 +18,9 @@ import os
 
 import pygame
 import expyriment
+from expyriment.misc import unicode2str
 import defaults
 from _visual import Visual
-from expyriment.misc import to_str, to_unicode
 
 
 class Picture(Visual):
@@ -40,11 +40,11 @@ class Picture(Visual):
 
         if position is None:
             position = defaults.picture_position
-        self._filename = to_unicode(filename, fse=True)
-        Visual.__init__(self, position, log_comment=self._filename)        
+        Visual.__init__(self, position, log_comment=filename)
+        self._filename = filename
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The picture file '{0}' does not exist".format(
-                self._filename))
+            raise IOError("The picture file '{0}' does not exist".format(
+                unicode2str(filename)))
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -67,11 +67,11 @@ class Picture(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        filename = to_str(self._filename, fse=True)
-        surface = pygame.image.load(filename).convert_alpha()
+        surface = pygame.image.load(unicode2str(self._filename,
+                                                fse=True)).convert_alpha()
         if self._logging:
-            expyriment._active_exp._event_file_log("Picture,loaded,{0}"\
-                                   .format(filename), 1)
+            expyriment._active_exp._event_file_log(
+                "Picture,loaded,{0}".format(unicode2str(self._filename)), 1)
         return surface
 
 

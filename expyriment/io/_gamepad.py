@@ -14,7 +14,7 @@ __date__ = ''
 import pygame
 import time
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 from _keyboard import Keyboard
 from  _input_output import Input, Output
 
@@ -224,7 +224,7 @@ class GamePad(Input, Output):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         _button = None
         self.clear()
@@ -238,14 +238,14 @@ class GamePad(Input, Output):
             for button in buttons:
                 if self.get_button(button):
                     _button = button
-                    rt = int((Clock._cpu_time() - start) * 1000)
+                    rt = int((get_time() - start) * 1000)
                     done = True
                     break
                 if _button is not None or Keyboard.process_control_keys():
                     done = True
                     break
                 if duration:
-                    if int((Clock._cpu_time() - start) * 1000) >= duration:
+                    if int((get_time() - start) * 1000) >= duration:
                         done = True
                         break
 

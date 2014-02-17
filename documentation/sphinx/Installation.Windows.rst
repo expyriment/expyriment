@@ -18,9 +18,8 @@ and, if needed:
 
 Installing Expyriment
 ---------------------
-Download the current Windows installer (.exe) from the `Expyriment downloads site`_ 
-and execute it.
-
+To install the latest version of Expyriment, download
+"expyriment-|release|-win32.exe" from the `Release page`_ and execute it.
 
 Notes
 -----
@@ -32,15 +31,13 @@ Notes
     lead to improper timing!
 
     We therefore strongly suggest to run Expyriment programmes from the command 
-    line if testing subjects.
+    line when testing participants.
 
-.. _`Python 2`: http://www.python.org/ftp/python/2.7.3/python-2.7.3.msi
+.. _`Python 2`: http://www.python.org/ftp/python/2.7.6/python-2.7.6.msi
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
-.. _PyOpenGL: http://sourceforge.net/projects/pyopengl/files/PyOpenGL/3.0.1/PyOpenGL-3.0.1.win32.exe/download
-.. _PySerial: 
-   http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download
+.. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.0.2.win32.exe 
+.. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
 .. _PyParallel: http://sourceforge.net/projects/pyserial/files/pyparallel/0.2/pyparallel-0.2.win32.exe/download 
 .. _giveio: http://sourceforge.net/projects/pyserial/files/pyparallel/giveio/giveio_setup.exe/download
-.. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.6.1/numpy-1.6.1-win32-superpack-python2.7.exe
-.. _`Expyriment downloads site`: https://code.google.com/p/expyriment/downloads/list
-
+.. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-win32-superpack-python2.7.exe
+.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest

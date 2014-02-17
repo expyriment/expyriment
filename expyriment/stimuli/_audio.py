@@ -14,12 +14,12 @@ __date__ = ''
 
 import os
 
-import pygame
 try:
     import android.mixer as mixer
 except:
     import pygame.mixer as mixer
 import expyriment
+from expyriment.misc import unicode2str
 from _stimulus import Stimulus
 
 
@@ -52,11 +52,8 @@ class Audio(Stimulus):
         self._file = None
         self._is_preloaded = False
         if not(os.path.isfile(self._filename)):
-            if isinstance(self._filename, unicode):
-                import sys
-                filename = self._filename.encode(sys.getfilesystemencoding())
-
-            raise IOError("The audio file {0} does not exists".format(filename))
+            raise IOError("The audio file {0} does not exists".format(
+                unicode2str(self._filename)))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
 
@@ -103,13 +100,7 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            if isinstance(self._filename, unicode):
-                import sys
-                filename = self._filename.encode(sys.getfilesystemencoding())
-            else:
-                filename = self._filename
-
-            self._file = mixer.Sound(filename)
+            self._file = mixer.Sound(unicode2str(self._filename, fse=True))
             self._is_preloaded = True
 
     def unload(self):
@@ -151,8 +142,8 @@ class Audio(Stimulus):
             else:
                 filename = self._filename
 
-            expyriment._active_exp._event_file_log("Stimulus,played,{0}"\
-                                   .format(filename), 1)
+            expyriment._active_exp._event_file_log(
+                "Stimulus,played,{0}".format(filename), 1)
         return rtn
 
     def stop(self):

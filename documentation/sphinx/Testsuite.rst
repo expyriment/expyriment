@@ -33,21 +33,25 @@ Here is a brief explanation of the available options:
 
   * Tests functionality of audio playback
 
-3. *Mouse test*
+3. *Font viewer*
+
+ * Test installed fonts
+
+4. *Mouse test*
 
  * Tests mouse accuracy (polling time)
  * Tests functionality of mouse buttons
 
-4. *Serial port test*
+5. *Serial port test*
 
  * Tests functionality of devices connected via the serial port
 
-5. *Write protocol*
+6. *Write protocol*
 
  * Saves all test results, as well as information about the system, as a text 
    file.
 
-6. *Quit*
+7. *Quit*
 
  * Quits the test suite
 

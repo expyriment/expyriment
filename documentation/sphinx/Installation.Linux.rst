@@ -15,10 +15,12 @@ Installing Expyriment
 ---------------------
 You can then install Expyriment with the online installer::
 
-    wget -P /tmp 'http://expyriment.googlecode.com/files/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
+    wget -P /tmp 
+    'https://raw2.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' 
+    && sh /tmp/expyriment_online_install_linux.sh
 
-Alternatively, you can download the `Expyriment source`_ (.zip) and install as 
-described here_.
+Alternatively, you can download "expyriment-|release|.zip from the
+`Release page` and install as described here_.
 
 For Ubuntu, there is furthermore an Expyriment package available through the 
 following third-party PPA: https://launchpad.net/~smathot/+archive/cogscinl)
@@ -32,5 +34,5 @@ Notes
     presentation it is important to switch off desktop effects in your window 
     manager!
 
-.. _`Expyriment Source`: https://code.google.com/p/expyriment/downloads/list
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
+.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest

@@ -17,6 +17,13 @@ experience.
 
 Website: http://www.expyriment.org
 
+To cite Expyriment in publications, please refer to the following article:
+
+  Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive
+  and neuroscientific experiments. Behavior Research Methods.
+
+  see http://dx.doi.org/10.3758/s13428-013-0390-6
+
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -27,6 +34,7 @@ __date__ = ''
 
 
 import sys as _sys
+import os as _os
 
 
 class _Expyriment_object(object):
@@ -129,6 +137,10 @@ import control
 import stimuli
 import io
 import misc
+misc.add_fonts(misc.str2unicode(_os.path.abspath(
+    _os.path.join(_os.path.dirname(__file__),
+                  "_fonts"))))
+
 try:
     import android
 except ImportError:

@@ -18,8 +18,14 @@ try:
 except ImportError:
     android = None
 
+try:
+    import android.show_keyboard as android_show_keyboard
+    import android.hide_keyboard as android_hide_keyboard
+except ImportError:
+    android_show_keyboard = android_hide_keyboard = None
+
 import defaults
-from expyriment.misc import find_font
+from expyriment.misc import find_font, unicode2str
 import expyriment
 from _input_output import Input
 
@@ -27,8 +33,8 @@ from _input_output import Input
 class TextInput(Input):
     """A class implementing a text input box."""
 
-    def __init__(self, message="", position=None, ascii_filter=None, length=None,
-                 message_text_size=None, message_colour=None,
+    def __init__(self, message="", position=None, ascii_filter=None,
+                 length=None, message_text_size=None, message_colour=None,
                  message_font=None, message_bold=None, message_italic=None,
                  user_text_size=None, user_text_bold=None, user_text_font=None,
                  user_text_colour=None, background_colour=None,
@@ -46,6 +52,8 @@ class TextInput(Input):
             message to show
         position : (int, int), optional
             position of the TextInput canvas
+        length : int, optional
+            the length of the text input frame in number of charaters
         ascii_filter : list, optional
             list of ASCII codes to filter for
         message_text_size : int, optional
@@ -116,7 +124,8 @@ class TextInput(Input):
         else:
             self._message_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._message_font, 10)
+            _font = pygame.font.Font(
+                unicode2str(self._message_font, fse=True), 10)
         except:
             raise IOError("Font '{0}' not found!".format(message_font))
         if message_bold is not None:
@@ -145,7 +154,8 @@ class TextInput(Input):
         else:
             self._user_text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._user_text_font, 10)
+            _font = pygame.font.Font(
+                unicode2str(self._user_text_font, fse=True), 10)
         except:
             raise IOError("Font '{0}' not found!".format(user_text_font))
         if user_text_colour is None:
@@ -156,12 +166,12 @@ class TextInput(Input):
             self._user_text_colour = expyriment._active_exp.foreground_colour
         if background_colour is None:
             background_colour = \
-                    defaults.textinput_background_colour
+                defaults.textinput_background_colour
         if background_colour is not None:
             self._background_colour = background_colour
         else:
             self._background_colour = \
-                    expyriment._active_exp.background_colour
+                expyriment._active_exp.background_colour
         if frame_colour is None:
             frame_colour = defaults.textinput_frame_colour
         if frame_colour is not None:
@@ -178,7 +188,7 @@ class TextInput(Input):
             self._screen = expyriment._active_exp.screen
         if background_stimulus is not None:
             if background_stimulus.__class__.__base__ == \
-                                            expyriment.stimuli._visual.Visual:
+                    expyriment.stimuli._visual.Visual:
                 self._background_stimulus = background_stimulus
             else:
                 raise AttributeError("{0} ".format(type(background_stimulus)) +
@@ -302,9 +312,9 @@ class TextInput(Input):
         """Create the input box."""
 
         tmp = expyriment.stimuli.TextLine(text=self._length * "X",
-                               text_font=self.user_text_font,
-                               text_size=self.user_text_size,
-                               text_bold=self.user_text_bold)
+                                          text_font=self.user_text_font,
+                                          text_size=self.user_text_size,
+                                          text_bold=self.user_text_bold)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         self._max_size = tmp.surface_size
         message_text = expyriment.stimuli.TextLine(
@@ -314,7 +324,6 @@ class TextInput(Input):
             background_colour=self._background_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         self._message_surface_size = message_text.surface_size
-
 
         self._canvas = expyriment.stimuli.Canvas(size=(
             max(self._max_size[0] + 12, self._message_surface_size[0]),
@@ -337,7 +346,7 @@ class TextInput(Input):
         if len(self._message) != 0:
                     self._canvas._get_surface().blit(
                         message_text._get_surface(),
-                        (self._canvas.surface_size[0] / 2 - \
+                        (self._canvas.surface_size[0] / 2 -
                          self._message_surface_size[0] / 2, 0))
         background = expyriment.stimuli.BlankScreen(
             colour=self._background_colour)
@@ -345,8 +354,8 @@ class TextInput(Input):
             self._background_stimulus.plot(background)
         self._canvas.plot(background)
         background.present()
-        background.present() # for flipping with double buffer
-        background.present() # for flipping with tripple buffer
+        background.present()  # for flipping with double buffer
+        background.present()  # for flipping with tripple buffer
 
     def _update(self):
         """Update the input box."""
@@ -358,10 +367,11 @@ class TextInput(Input):
         user_canvas_size = user_canvas.surface_size
         offset = 2 + user_canvas_size[1] % 2
         user_canvas.position = (self._canvas.absolute_position[0],
-                                     self._canvas.absolute_position[1] + \
-                                     self._canvas_size[1] / 2 - \
-                                     user_canvas_size[1] / 2 - \
-                                     self._message_surface_size[1] - self._gap - offset)
+                                self._canvas.absolute_position[1] +
+                                self._canvas_size[1] / 2 -
+                                user_canvas_size[1] / 2 -
+                                self._message_surface_size[1] -
+                                self._gap - offset)
         user_text = expyriment.stimuli.TextLine(
             text="".join(self._user),
             text_font=self.user_text_font, text_size=self.user_text_size,
@@ -387,6 +397,8 @@ class TextInput(Input):
 
         """
 
+        if android_show_keyboard is not None:
+            android_show_keyboard()
         self._user = []
         for char in default_input:
             self._user.append(char)
@@ -413,8 +425,10 @@ class TextInput(Input):
             self._update()
         got = "".join(self._user)
         if self._logging:
-            expyriment._active_exp._event_file_log("TextInput,entered,{0}"\
-                                              .format(got))
+            expyriment._active_exp._event_file_log("TextInput,entered,{0}"
+                                                   .format(unicode2str(got)))
+        if android_hide_keyboard is not None:
+            android_hide_keyboard()
         return got
 
 

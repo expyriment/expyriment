@@ -22,7 +22,7 @@ try:
     import Tkinter as _tk
 except:
     try:
-        import tkinter as _tk # for future (Python 3)
+        import tkinter as _tk  # for future (Python 3)
     except:
         _tk = None
 
@@ -32,7 +32,7 @@ try:
     _root = _ttk.Tk()
     _root.destroy()
 except:
-    _ttk = _tk # for Python < 2.7
+    _ttk = _tk  # for Python < 2.7
 
 import expyriment
 
@@ -517,17 +517,17 @@ def show_documentation(docu_type=None):
         print "Welcome to Expyriment {0}".format(get_version())
         print ""
         author = __author__.replace(",", ",\n        ")
-        print "Website: http://expyriment.googlecode.com"
+        print "Website: http://expyriment.org"
         print "License: GNU GPL v3"
         print "Authors: {0}".format(author)
         call_info()
     elif docu_type == 1:
         webbrowser.open(
-            "http://code.google.com/p/expyriment/wiki/GettingStarted",
+            "http://expyriment.org",
             new=1)
     elif docu_type == 2:
         webbrowser.open(
-            "http://documentation.expyriment.googlecode.com/hg/api/expyriment.html",
+            "http://docs.expyriment.org/",
             new=1)
     elif docu_type == 3:
         python_executable = sys.executable.replace("pythonw.exe", "python.exe")

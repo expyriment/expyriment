@@ -15,14 +15,16 @@ __date__ = ''
 import time, sys
 
 import pygame
+
 try:
-    import android
+    import android.show_keyboard as android_show_keyboard
+    import android.hide_keyboard as android_hide_keyboard
 except ImportError:
-    android = None
+    android_show_keyboard = android_hide_keyboard = None
 
 import defaults
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 
 from  _input_output import Input
 
@@ -129,7 +131,7 @@ class Keyboard(Input):
 
         Parameters
         ----------
-        default_keys : int or list, optional
+        keys : int or list, optional
             a specific key or list of keys to check
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default=True)
@@ -182,11 +184,18 @@ class Keyboard(Input):
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default=True)
 
+        Returns
+        -------
+        found : char
+            pressed charater
+        rt : int
+            reaction time in ms
+
         """
 
-        if android is not None:
-            android.show_keyboard()
-        start = Clock._cpu_time()
+        if android_show_keyboard is not None:
+            android_show_keyboard()
+        start = get_time()
         rt = None
         found_key = None
         self.clear()
@@ -208,21 +217,21 @@ class Keyboard(Input):
                 elif event.type == target_event:
                     if keys is not None:
                         if event.key in keys:
-                            rt = int((Clock._cpu_time() - start) * 1000)
+                            rt = int((get_time() - start) * 1000)
                             found_key = event.key
                             done = True
                     else:
-                        rt = int((Clock._cpu_time() - start) * 1000)
+                        rt = int((get_time() - start) * 1000)
                         found_key = event.key
                         done = True
             if duration and not done:
-                done = int((Clock._cpu_time() - start) * 1000) >= duration
+                done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
             expyriment._active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
-        if android is not None:
-            android.hide_keyboard()
+        if android_hide_keyboard is not None:
+            android_hide_keyboard()
         return found_key, rt
 
     def wait_char(self, char, duration=None, check_for_control_keys=True):
@@ -250,7 +259,7 @@ class Keyboard(Input):
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         rt = None
         found_char = None
         self.clear()
@@ -265,11 +274,11 @@ class Keyboard(Input):
                     done = True
                 elif event.type == pygame.KEYDOWN:
                     if event.unicode in char:
-                        rt = int((Clock._cpu_time() - start) * 1000)
+                        rt = int((get_time() - start) * 1000)
                         found_char = event.unicode
                         done = True
             if duration and not done:
-                done = int((Clock._cpu_time() - start) * 1000) >= duration
+                done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
             expyriment._active_exp._event_file_log(

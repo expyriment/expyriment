@@ -14,6 +14,7 @@ __date__ = ''
 import sys
 import time
 import types
+from _timer import get_time
 
 import expyriment
 
@@ -29,6 +30,7 @@ class Clock(object) :
     else:
         _cpu_time = time.time
 
+
     def __init__(self, sync_clock=None):
         """Create a clock.
 
@@ -39,14 +41,21 @@ class Clock(object) :
 
         """
 
-        self.__cpu_time = Clock._cpu_time
         if (sync_clock.__class__.__name__ == "Clock"):
             self.__init_time = sync_clock.init_time / 1000
         else:
-            self.__init_time = self.__cpu_time()
+            self.__init_time = get_time()
 
         self._init_localtime = time.localtime()
-        self.__start = self.__cpu_time()
+        self.__start = get_time()
+
+    @staticmethod
+    def monotonic_time():
+        """Returns the time of the high-resolution monitonoic timer that is
+        used by Expyriment interally.
+
+        """
+        return get_time()
 
     @property
     def init_time(self):
@@ -55,16 +64,16 @@ class Clock(object) :
         return self.__init_time * 1000
 
     @property
-    def cpu_time(self):
-        """Getter for CPU time."""
-
-        return self.__cpu_time
-
-    @property
     def time(self):
         """Getter for current time in milliseconds since clock init."""
 
-        return int((self.__cpu_time() - self.__init_time) * 1000)
+        return int((get_time() - self.__init_time) * 1000)
+
+    @property
+    def cpu_time(self):
+        """Getter for CPU time."""
+
+        return self._cpu_time()
 
     @property
     def stopwatch_time(self):
@@ -73,7 +82,7 @@ class Clock(object) :
         The use of the stopwatch does not affect the clock time.
         """
 
-        return int((self.__cpu_time() - self.__start) * 1000)
+        return int((get_time() - self.__start) * 1000)
 
     @property
     def init_localtime(self):
@@ -87,7 +96,7 @@ class Clock(object) :
         The use of the stopwatch does not affect the clock time.
         """
 
-        self.__start = self.__cpu_time()
+        self.__start = get_time()
 
     def wait(self, waiting_time, function=None):
         """Wait for a certain amout of milliseconds.

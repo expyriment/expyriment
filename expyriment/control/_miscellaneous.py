@@ -18,14 +18,21 @@ from expyriment.control import defaults as control_defaults
 
 
 def start_audiosystem():
-    """Start the audio system."""
+    """Start the audio system.
+
+    NOTE: The audiosystem is automatically started when initializing an
+    Experiment!
+
+    """
 
     pygame.mixer.init()
+
 
 def stop_audiosystem():
     """Stop the audio system."""
 
     pygame.mixer.quit()
+
 
 def get_audiosystem_is_playing(channel=None):
     """Check if the audiosystem is busy playing sounds.
@@ -52,6 +59,7 @@ def get_audiosystem_is_playing(channel=None):
         rtn = True
     return rtn
 
+
 def wait_end_audiosystem(channel=None):
     """Wait until audiosystem has ended playing sounds.
 
@@ -66,14 +74,15 @@ def wait_end_audiosystem(channel=None):
 
     while get_audiosystem_is_playing(channel):
             for event in pygame.event.get(pygame.KEYDOWN):
-                if event.type == pygame.KEYDOWN and (\
-                   event.key == control_defaults.quit_key or \
-                   event.key == control_defaults.pause_key):
+                if event.type == pygame.KEYDOWN and \
+                        (event.key == control_defaults.quit_key or
+                         event.key == control_defaults.pause_key):
                     if channel is None:
                         pygame.mixer.stop()
                     else:
                         channel.stop()
                     expyriment.io.Keyboard.process_control_keys(event)
+
 
 def set_develop_mode(onoff, intensive_logging=False):
     """Set defaults for a more convenient develop mode.
@@ -85,7 +94,7 @@ def set_develop_mode(onoff, intensive_logging=False):
     >>> expyriment.control.defaults.initialize_delay = 0
     >>> expyriment.control.defaults.window_mode = True
     >>> expyriment.control.defaults.fast_quit = True
-    >>> exypriment.control.defaults.auto_create_subject_id = True
+    >>> expyriment.control.defaults.auto_create_subject_id = True
     >>> expyriment.io.defaults.outputfile_time_stamp = False
 
     Parameters
@@ -118,15 +127,16 @@ def set_develop_mode(onoff, intensive_logging=False):
             defaults.window_mode = defaults._mode_settings[1]
             defaults.fast_quit = defaults._mode_settings[2]
             expyriment.io.defaults.outputfile_time_stamp = \
-                    defaults._mode_settings[3]
+                defaults._mode_settings[3]
             defaults.auto_create_subject_id = defaults._mode_settings[4]
             defaults._mode_settings = None
 
         else:
-            pass # Nothing to do
+            pass  # Nothing to do
 
     if intensive_logging:
         expyriment.control.defaults.event_logging = 2
+
 
 def _get_module_values(goal_dict, module):
     value = None
@@ -135,6 +145,7 @@ def _get_module_values(goal_dict, module):
             exec("value = {0}.{1}".format(module.__name__, var))
             goal_dict["{0}.{1}".format(module.__name__, var)] = value
     return goal_dict
+
 
 def get_defaults(search_str="", as_string=False):
     """Return a dictionary with all default values in the current Expyriment
@@ -177,6 +188,7 @@ def get_defaults(search_str="", as_string=False):
 
     return rtn
 
+
 def register_wait_callback_function(function, exp=None):
     """Register a wait callback function.
 
@@ -212,6 +224,7 @@ def register_wait_callback_function(function, exp=None):
     else:
         expyriment._active_exp.register_wait_callback_function(function)
 
+
 def unregister_wait_callback_function(exp=None):
     """Unregister wait function.
 
@@ -227,6 +240,7 @@ def unregister_wait_callback_function(exp=None):
     else:
         expyriment._active_exp.unregister_wait_callback_function()
 
+
 def is_ipython_running():
     """Return True if IPython is running."""
 
@@ -236,11 +250,12 @@ def is_ipython_running():
     except NameError:
         return False
 
+
 def is_idle_running():
     """Return True if IDLE is running."""
 
-    import sys
     return "idlelib.run" in sys.modules
+
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.
@@ -271,6 +286,8 @@ def _set_stdout_logging(event_file):
                                                               repr(tmp)))
                 self._buffer = []
 
+        def flush(self):  # required for some modules (e.g. multiprocessing)
+            pass
 
     if is_ipython_running():
         print "Standard output and error logging is switched off under IPython."

@@ -239,7 +239,25 @@ def get_system_info(as_string=False):
         except:
             hardware_memory_total = ""
 
-        hardware_memory_free = ""  # TODO
+        try:
+            import re
+            proc = subprocess.Popen(['vm_stat'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            output = proc.stdout.read().split("\n")
+            for item in output:
+                x = item.find("Pages free:")
+                y = item.find("page size of")
+                if x > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    free = int(non_decimal.sub('', item))
+                if y > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    page = int(non_decimal.sub('', item))
+            hardware_memory_free = str((free * page) / 1024 ** 2) + "MB "
+
+        except:
+            hardware_memory_free = ""
 
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
@@ -252,8 +270,27 @@ def get_system_info(as_string=False):
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        hardware_audio_card = ""  # TODO
-        hardware_video_card = ""  # TODO
+        try:
+            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            hardware_audio_card = \
+                proc.stdout.read().split("\n")[2].strip(":").strip()
+        except:
+            hardware_audio_card = ""
+
+        try:
+            import plistlib
+            proc = subprocess.Popen(['system_profiler', 'SPDisplaysDataType',
+                                     '-xml'],
+                                    stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE)
+            pl = plistlib.readPlist(proc.stdout)
+            hardware_video_card = []
+            for card in pl[0]['_items']:
+                hardware_video_card.append(card['sppci_model'])
+        except:
+            hardware_video_card = ""
 
     # Fill in info
     info["os_architecture"] = platform.architecture()[0]

@@ -30,7 +30,7 @@ class CedrusResponseDevice(Input):
     The  CedrusResponseDevice class requires a free Python package for Cedrus
     devices called "pyxid".
     For installation instructions see Expyriment online documentation:
-        http://code.google.com/p/expyriment/wiki/CedrusResponseDevices
+        http://docs.expyriment.org/Hardware.html
     The class does not use the hardware timer, due to the known bug in the
     Cedrus hardware. Events will be time stamped by Expyriment. Thus, ensure
     constant polling / checking when not using the wait function.
@@ -64,6 +64,7 @@ class CedrusResponseDevice(Input):
 
         """
 
+        Input.__init__(self)
         if type(_pyxid) is not types.ModuleType:
             message = """CedrusDevice can not be initialized, because the Python package
             'pyxid' is not installed. See Expyriment online documentation."""
@@ -133,7 +134,7 @@ class CedrusResponseDevice(Input):
         self._xid.poll_for_response()
         new_event = False
 
-        #copy xid cue to _buffer and poll
+        # copy xid cue to _buffer and poll
         while self._xid.response_queue_size() > 0:
             new_event = True
             response = self._xid.get_next_response()
@@ -252,5 +253,5 @@ class CedrusResponseDevice(Input):
         @staticmethod
         def _self_test(experiment):
             result = {}
-            result['CedrusResponseDevice'] = "" # TODO: Implement test!
+            result['CedrusResponseDevice'] = ""  # TODO: Implement test!
             return result

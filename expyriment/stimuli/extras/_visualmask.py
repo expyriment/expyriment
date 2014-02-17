@@ -24,7 +24,7 @@ except:
     Image = None
 
 import expyriment
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 from expyriment.stimuli._picture import Picture
 import defaults
 
@@ -109,7 +109,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
         """
 
-        start = Clock._cpu_time()
+        start = get_time()
         was_preloaded = self.is_preloaded
         if was_preloaded:
             self.unload()
@@ -144,7 +144,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
         if was_preloaded:
             self.preload()
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
 
 if __name__ == "__main__":

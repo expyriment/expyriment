@@ -24,10 +24,11 @@ except ImportError:
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
-from expyriment.io import  DataFile, EventFile, TextInput, Keyboard
+from expyriment.io import DataFile, EventFile, TextInput, Keyboard
 from expyriment.io import _keyboard
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
+from expyriment.misc import unicode2str
 
 
 def start(experiment=None, auto_create_subject_id=None):
@@ -79,17 +80,18 @@ def start(experiment=None, auto_create_subject_id=None):
         if android is not None:
             position = (0, 200)
         else:
-            position = None
+            position = (0, 0)
         while True:
-            ask_for_subject = TextInput(message="Subject Number:",
-                            position=position,
-                            message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                            message_text_size=24,
-                            user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                            user_text_size=20,
-                            background_colour=(0, 0, 0),
-                            frame_colour=(70, 70, 70),
-                            ascii_filter=misc.constants.K_ALL_DIGITS)
+            ask_for_subject = TextInput(
+                message="Subject Number:",
+                position=position,
+                message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                message_text_size=24,
+                user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                user_text_size=20,
+                background_colour=(0, 0, 0),
+                frame_colour=(70, 70, 70),
+                ascii_filter=misc.constants.K_ALL_DIGITS)
             subject_id = ask_for_subject.get(repr(default_number))
             try:
                 experiment._subject = int(subject_id)
@@ -110,8 +112,13 @@ def start(experiment=None, auto_create_subject_id=None):
         experiment.data.add_experiment_info(line)
 
     for f in experiment.bws_factor_names:
-            experiment.data.add_subject_info("{0} = {1}".format(f,
-                            experiment.get_permuted_bws_factor_condition(f)))
+        _permuted_bws_factor_condition = \
+            experiment.get_permuted_bws_factor_condition(f)
+        if isinstance(_permuted_bws_factor_condition, unicode):
+            _permuted_bws_factor_condition = \
+                unicode2str(_permuted_bws_factor_condition)
+        experiment.data.add_subject_info("{0} = {1}".format(
+            unicode2str(f), _permuted_bws_factor_condition))
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp
@@ -128,23 +135,27 @@ def start(experiment=None, auto_create_subject_id=None):
         text.present()  # for flipping with double buffer
         text.present()  # for flipping with tripple buffer
     while number > 0:
-        counter = stimuli.TextLine("{num:02d}".format(num=number),
-                               text_font='Monospace',
-                               text_size=18,
-                               text_bold=True,
-                               text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                               position=(0, -50),
-                               background_colour=(0, 0, 0))
+        counter = stimuli.TextLine(
+            "{num:02d}".format(num=number),
+            text_font='FreeMono',
+            text_size=18,
+            text_bold=True,
+            text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+            position=(0, -50),
+            background_colour=(0, 0, 0))
 
         stimuli._stimulus.Stimulus._id_counter -= 1
         counter.present(clear=False)
         number -= 1
         key = experiment.keyboard.wait(pygame.K_ESCAPE, duration=1000,
-                     check_for_control_keys=False)
+                                       check_for_control_keys=False)
         if key[0] is not None:
             break
-
-    stimuli.TextLine("Ready", text_size=24,
+    if android is not None:
+        position = (0, 200)
+    else:
+        position = (0, 0)
+    stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
     stimuli._stimulus.Stimulus._id_counter -= 1
     experiment.keyboard.wait()
@@ -171,8 +182,13 @@ def pause():
     experiment._screen.colour = [0, 0, 0]
     old_logging = experiment.log_level
     experiment.set_log_level(0)
-    stimuli.TextLine("Paused", text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                    text_size=24).present()
+    if android is not None:
+        position = (0, 200)
+    else:
+        position = (0, 0)
+    stimuli.TextLine("Paused", position=position,
+                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                     text_size=24).present()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
@@ -217,7 +233,11 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
         experiment._screen.colour = [0, 0, 0]
-        stimuli.TextLine("Quitting Experiment? (y/n)",
+        if android is not None:
+            position = (0, 200)
+        else:
+            position = (0, 0)
+        stimuli.TextLine("Quitting Experiment? (y/n)", position=position,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                          text_size=24).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
@@ -238,12 +258,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     if fast_quit is None:
         fast_quit = defaults.fast_quit
     if fast_quit and experiment.is_started:
-        if  experiment.screen.window_mode:
+        if experiment.screen.window_mode:
             pygame.display.set_mode(experiment.screen._window_size)
             pygame.display.iconify()
 
     experiment._screen.colour = [0, 0, 0]
-    stimuli.TextLine(goodbye_text,
+    stimuli.TextLine(goodbye_text, position=(0, 0),
                      text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                      text_size=24).present()
     stimuli._stimulus.Stimulus._id_counter -= 1
@@ -311,6 +331,7 @@ def initialize(experiment=None):
     if is_idle_running() and sys.argv[0] != "":
         try:
             import idlelib.run
+
             def wrap(orig_func):
                 def newfunc(*a, **kw):
                     pygame.quit()
@@ -326,8 +347,8 @@ def initialize(experiment=None):
     experiment._subject = None
     experiment._is_initialized = True  # required before EventFile
     if defaults.event_logging > 0:
-        experiment._events = EventFile(additional_suffix=experiment.filename_suffix,
-                                       time_stamp=True)
+        experiment._events = EventFile(
+            additional_suffix=experiment.filename_suffix, time_stamp=True)
         if stdout_logging:
             _set_stdout_logging(experiment._events)
     else:
@@ -359,7 +380,7 @@ def initialize(experiment=None):
             canvas2.present()
             experiment.clock.wait(1)
             key = experiment.keyboard.check(pygame.K_ESCAPE,
-                                      check_for_control_keys=False)
+                                            check_for_control_keys=False)
             if key is not None:
                 stopped = True
                 break
@@ -368,7 +389,7 @@ def initialize(experiment=None):
             start = experiment.clock.time
             while experiment.clock.time - start < 2000:
                 key = experiment.keyboard.check(pygame.K_ESCAPE,
-                                          check_for_control_keys=False)
+                                                check_for_control_keys=False)
                 if key is not None:
                     stopped = True
                     break
@@ -381,7 +402,7 @@ def initialize(experiment=None):
                 canvas2.present()
                 experiment.clock.wait(1)
                 key = experiment.keyboard.check(pygame.K_ESCAPE,
-                                          check_for_control_keys=False)
+                                                check_for_control_keys=False)
                 if key is not None:
                     break
     stimuli.TextLine("Preparing experiment...", text_size=24,

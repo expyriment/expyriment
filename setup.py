@@ -21,18 +21,17 @@ packages = ['expyriment',
             'expyriment.stimuli', 'expyriment.stimuli.extras',
             'expyriment.design', 'expyriment.design.extras']
 
-package_data = {'expyriment':['expyriment_logo.png']}
+package_data = {'expyriment': ['expyriment_logo.png']}
 
 
 # Clear old installation when installing
 class Install(install):
     """Specialized installer."""
 
-
     def run(self):
         # Clear old installation
         olddir = path.abspath(self.install_lib + path.sep + "expyriment")
-        oldegginfo = glob(path.abspath(self.install_lib) + path.sep + \
+        oldegginfo = glob(path.abspath(self.install_lib) + path.sep + 
                           "expyriment*.egg-info")
         for egginfo in oldegginfo:
             remove(egginfo)
@@ -62,7 +61,8 @@ if os.path.isdir(old_installation):
         bdist_wininst.run(self)
 
 
-# Manipulate the header of all files (only for building/installing from repository)
+# Manipulate the header of all files (only for building/installing from
+# repository)
 class Build(build_py):
     """Specialized Python source builder."""
 
@@ -75,11 +75,11 @@ class Build(build_py):
                 old_file = open(f, 'rU')
                 for line in old_file:
                     if line[0:11] == '__version__':
-                        new_file.write("__version__ = '" + version_nr + "'" + \
+                        new_file.write("__version__ = '" + version_nr + "'" +
                                        '\n')
                     elif line[0:12] == '__revision__':
-                        new_file.write("__revision__ = '" + revision_nr + "'"\
-                                      + '\n')
+                        new_file.write("__revision__ = '" + revision_nr + "'"
+                                       + '\n')
                     elif line[0:8] == '__date__':
                         new_file.write("__date__ = '" + date + "'" + '\n')
                     else:
@@ -92,33 +92,32 @@ class Build(build_py):
                 remove(f)
                 # Move new file
                 move(abs_path, f)
-                chmod(f, stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
+                chmod(f,
+                      stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
         build_py.byte_compile(self, files)
 
 version_nr = "{0}"
 with open('CHANGES.md') as f:
     for line in f:
         if line[0:8].lower() == "upcoming":
-             version_nr += "+"
+            version_nr += "+"
         if line[0:7] == "Version":
-            version_nr = version_nr.format(line[8:13])
+            length = line[8:].find(" ")
+            version_nr = version_nr.format(line[8:8+length])
             break
 
 # Check if we are building/installing from the repository
 try:
-    proc = Popen(['hg', 'log', '-r0'], stdout=PIPE, stderr=PIPE)
-    if not proc.stdout.readline() == 'changeset:   0:9b8d198ba90f\n':
+    proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                 stdout=PIPE, stderr=PIPE)
+    initial_revision = proc.stdout.readline()
+    if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
         raise Exception
-    proc = Popen(['hg', 'id', '-i'], stdout=PIPE, stderr=PIPE)
-    revision_nr = proc.stdout.read()
-    if revision_nr[-1] == '\n':
-        revision_nr = revision_nr[:-1]
-    proc = Popen(['hg', 'log', '-l1'], stdout=PIPE, stderr=PIPE)
-    while True:
-        line = proc.stdout.readline()
-        if line[0:5] == 'date:':
-            break
-    date = line[5:].lstrip()[0:30]
+    proc = Popen(['git', 'log', '--format=%H', '-1'], stdout=PIPE, stderr=PIPE)
+    revision_nr = proc.stdout.read().strip()
+    proc = Popen(['git', 'log', '--format=%cd', '-1'],
+                 stdout=PIPE, stderr=PIPE)
+    date = proc.stdout.readline().strip()
 
     # Build
     setup(name='expyriment',
@@ -129,10 +128,11 @@ try:
           license='GNU GPLv3',
           url='http://www.expyriment.org',
           packages=packages,
-          package_dir={'expyriment':'expyriment'},
+          package_dir={'expyriment': 'expyriment'},
           package_data=package_data,
-          cmdclass={'build_py': Build, 'install': Install, 'bdist_wininst': Wininst}
-         )
+          cmdclass={'build_py': Build, 'install': Install,
+                    'bdist_wininst': Wininst}
+          )
 
     print ""
     print "Expyriment Version:", version_nr, "(from repository)"
@@ -148,10 +148,10 @@ except:
           license='GNU GPLv3',
           url='http://www.expyriment.org',
           packages=packages,
-          package_dir={'expyriment':'expyriment'},
+          package_dir={'expyriment': 'expyriment'},
           package_data=package_data,
           cmdclass={'install': Install, 'bdist_wininst': Wininst}
-         )
+          )
 
     print ""
     print "Expyriment Version:", version_nr

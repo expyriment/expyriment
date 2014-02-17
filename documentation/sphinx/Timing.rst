@@ -7,7 +7,7 @@ In general, the Expyriment clock can feature up to 1 ms accuracy. The exact
 timing, however, is subject to various factors, which we discuss here.
 
 Time and compatibility issues can be conveniently tested using the 
-:doc:`Expyriment test suite <Tools>`.
+:doc:`Expyriment test suite <Testsuite>`.
 
 
 Stimulus presentation

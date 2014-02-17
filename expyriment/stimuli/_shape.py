@@ -20,7 +20,7 @@ import pygame
 import defaults
 from _visual import Visual
 import expyriment
-
+from expyriment.misc._timer import get_time
 
 class Shape(Visual):
     """A class implementing a shape."""
@@ -500,10 +500,10 @@ class Shape(Visual):
 
         """
 
-        start = expyriment.misc.Clock._cpu_time()
+        start = get_time()
         self.scale((1.0 / level, 1.0 / level))
         self.scale((level, level))
-        return int((expyriment.misc.Clock._cpu_time() - start) * 1000)
+        return int((get_time() - start) * 1000)
 
     def _update_points(self):
         """Updates the points of the shape and the drawing rect.

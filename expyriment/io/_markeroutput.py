@@ -15,7 +15,7 @@ __date__ = ''
 import defaults
 import expyriment
 from  _input_output  import Output
-from expyriment.misc import Clock
+from expyriment.misc._timer import get_time
 
 
 class MarkerOutput(Output):
@@ -111,8 +111,8 @@ class MarkerOutput(Output):
             duration = self.default_duration
         self._interface.send(code)
         if duration:
-            start = Clock._cpu_time()
-            while (Clock._cpu_time() - start) * 1000 < duration:
+            start = get_time()
+            while (get_time() - start) * 1000 < duration:
                 pass
         self._interface.send(0)
         if self._logging:

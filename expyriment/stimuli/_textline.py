@@ -15,12 +15,13 @@ __date__ = ''
 
 
 import os
+import locale
 
 import pygame
 
 import defaults
 from _visual import Visual
-from expyriment.misc import find_font
+from expyriment.misc import find_font, unicode2str
 import expyriment
 
 
@@ -81,7 +82,8 @@ class TextLine(Visual):
         else:
             self._text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(self._text_font, 10)
+            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+                                     10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
@@ -107,7 +109,7 @@ class TextLine(Visual):
             self._background_colour = background_colour
         else:
             self._background_colour = \
-                    defaults.textline_background_colour
+                defaults.textline_background_colour
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -242,16 +244,26 @@ class TextLine(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        _font = pygame.font.Font(self._text_font, self._text_size)
+        if os.path.isfile(self._text_font):
+            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+                                     self._text_size)
+        else:
+            _font = pygame.font.Font(self._text_font, self._text_size)
 
         _font.set_bold(self.text_bold)
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
-        if self.background_colour:
-            text = _font.render(self.text, True, self.text_colour,
-                                     self.background_colour)
+        if type(self.text) is not unicode:
+            # Pygame wants latin-1 encoding here for character strings
+            _text = self.text.decode(
+                locale.getdefaultlocale()[1]).encode('latin-1')
         else:
-            text = _font.render(self.text, True, self.text_colour)
+            _text = self.text
+        if self.background_colour:
+            text = _font.render(_text, True, self.text_colour,
+                                self.background_colour)
+        else:
+            text = _font.render(_text, True, self.text_colour)
         text.convert_alpha()
         surface = text
         return surface

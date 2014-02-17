@@ -180,19 +180,40 @@ machine!")
 
     @property
     def center_x(self):
-        """Getter for X-coordinate of the screen center."""
+        """Getter for X-coordinate of the screen center.
+
+        Notes
+        -----
+        Each initialized experiment has its one screen (exp.screen). Please use always the
+        screen of your current  experiment.
+
+        """
 
         return self._window_size[0] / 2
 
     @property
     def center_y(self):
-        """Getter for the Y-coordinate of the screen center."""
+        """Getter for the Y-coordinate of the screen center.
 
+        Notes
+        -----
+        Each initialized experiment has its one screen (exp.screen). Please use always the
+        screen of your current  experiment.
+
+        """
+        
         return self._window_size[1] / 2
 
     @property
     def size(self):
-        """Getter for the size of the screen."""
+        """Getter for the size of the screen.
+        
+        Notes
+        -----
+        Each initialized experiment has its one screen (exp.screen). Please use always the
+        screen of your current  experiment.
+
+        """
 
         return self._window_size
 

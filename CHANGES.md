@@ -2,6 +2,34 @@
 Expyriment Release Notes
 ========================
 
+Version 0.7.0b1 (15 Feb 2014)
+-----------------------------
+New Features:
+- new feature in testsuite: Font viewer 
+- new extra stimulus: stimuli.extras.RandomDotKinematogram
+- new timer and experiment clock to ensure monotonic timing
+- Clock: new method (static) monotonic_time (this time should be always used)
+- data_preprocessing: new exclusion rule, which allows removing trials
+  depending on their deviation (std) from mean (e.g., 'RT > 1.5*std')
+- improvements for OS X in get_system_info
+- proper unicode handling: use unicode strings whenever unicode characters
+  are needed
+- files: the character encoding is now written to files and used when opening
+  them
+- FreeFonts are now part of the Expyriment distribution to guarantee the same
+  fonts across platforms
+
+Fixed:
+- experiment clock with monotonic timing
+- bug in extras.CedrusResponseDevice
+- several bugs in documentation
+- incompatibility with multiprocessing.Pool
+- bug in visual.add_noise
+- bug in io.SerialPort.read_line
+
+Changes:
+- several Android related changes (have no impact for normal use of Expyriment)
+
 Version 0.6.4 (5 Aug 2013)
 --------------------------
 New Features:

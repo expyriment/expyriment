@@ -16,6 +16,7 @@ import pygame
 
 import defaults
 import expyriment
+from expyriment.misc._timer import get_time
 from _keyboard import Keyboard
 from _input_output  import Input
 
@@ -254,7 +255,7 @@ class Mouse(Input):
         buttons : int or list, optional
             a specific button or list of buttons to wait for
         duration : int, optional
-            the maximal time to wait in ms 
+            the maximal time to wait in ms
         wait_for_buttonup : bool, optional
             if True it waits for button-up default=False)
 
@@ -280,7 +281,7 @@ class Mouse(Input):
 
         """
 
-        start = expyriment.misc.Clock._cpu_time()
+        start = get_time()
         self.clear()
         old_pos = pygame.mouse.get_pos()
         btn_id = None
@@ -300,10 +301,10 @@ class Mouse(Input):
                 else:
                     btn_id = self.get_last_button_down_event()
             if btn_id in buttons or motion_occured:
-                rt = int((expyriment.misc.Clock._cpu_time() - start) * 1000)
+                rt = int((get_time() - start) * 1000)
                 break
             elif Keyboard.process_control_keys() or (duration is not None and
-                int((expyriment.misc.Clock._cpu_time() - start) * 1000)\
+                int((get_time() - start) * 1000)\
                                                      >= duration):
                 break
 
@@ -339,7 +340,7 @@ class Mouse(Input):
         Notes
         ------
         button id coding
-        
+
         - None    for no mouse button event or
         - 0,1,2   for left. middle and right button or
         - 3       for wheel up or
