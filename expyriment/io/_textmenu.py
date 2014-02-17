@@ -125,8 +125,8 @@ class TextMenu(Input):
             colour=select_frame_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         if background_stimulus is not None:
-            if background_stimulus.__class__.__base__ == \
-                    expyriment.stimuli._visual.Visual:
+            if background_stimulus.__class__.__base__ in \
+                     [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
                 raise AttributeError("{0} ".format(type(background_stimulus)) +

@@ -187,8 +187,8 @@ class TextInput(Input):
         else:
             self._screen = expyriment._active_exp.screen
         if background_stimulus is not None:
-            if background_stimulus.__class__.__base__ == \
-                    expyriment.stimuli._visual.Visual:
+            if background_stimulus.__class__.__base__ in \
+                     [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
                 raise AttributeError("{0} ".format(type(background_stimulus)) +
