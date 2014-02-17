@@ -180,7 +180,7 @@ class Experiment(object):
 
     @property
     def subject(self):
-        """Getter for global subject."""
+        """Getter for global subject id."""
 
         return self._subject
 

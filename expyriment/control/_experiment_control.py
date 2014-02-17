@@ -31,7 +31,7 @@ from _miscellaneous import _set_stdout_logging, is_idle_running
 from expyriment.misc import unicode2str
 
 
-def start(experiment=None, auto_create_subject_id=None):
+def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     """Start an experiment.
 
     This starts an experiment defined by 'experiment' and asks for the subject
@@ -51,8 +51,11 @@ def start(experiment=None, auto_create_subject_id=None):
         Don't use this parameter, it only exists to keep backward compatibility.
     auto_create_subject_id : bool
         if true new subject id will be created automatically
+    subject_id : integer
+        start with a specify a the subject_id. Subject_id MUST be an integer.
+        Setting this paramter overrules auto_create_subject_id.
 
-    Returns
+ Returns
     -------
     exp : design.Experiment
         The started experiment will be returned.
@@ -66,7 +69,12 @@ def start(experiment=None, auto_create_subject_id=None):
                         "experiment!")
     if experiment.is_started:
         raise Exception("Experiment is already started!")
-    if auto_create_subject_id is None:
+    if subject_id is not None:
+        if not isinstance(subject_id, int):
+            raise Exception("Suject_id must be an integer. " +
+                    "{0} is not allowed.".format(type(subject_id)))
+        auto_create_subject_id = True
+    elif auto_create_subject_id is None:
         auto_create_subject_id = defaults.auto_create_subject_id
 
     experiment._is_started = True
@@ -75,7 +83,11 @@ def start(experiment=None, auto_create_subject_id=None):
     experiment.set_log_level(0)
     screen_colour = experiment.screen.colour
     experiment._screen.colour = [0, 0, 0]
-    default_number = DataFile.get_next_subject_number()
+    if subject_id is None:
+        default_number = DataFile.get_next_subject_number()
+    else:
+        default_number = subject_id
+
     if not auto_create_subject_id:
         if android is not None:
             position = (0, 200)
