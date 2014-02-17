@@ -20,15 +20,24 @@ from _input_output import Input
 class TextInput(Input):
     """A class implementing a text input box."""
 
-    def __init__(self, fields):
+    def __init__(self, button_fields):
         """Create a touchscreen button box.
 
 		TODO 
 
         """
+		
+		self._button_fields = button_fields
+
+    def add_button_field(self, button_field):
+		if not isinstance(button_field, expyriment.stimuli._visual.Visual):
+		   raise TypeError("Button_field have to be visual Expyriment stimulus")
+
+		background_stimulus.__class__.__base__ in \
+            [, expyriment.stimuli.Shape]:
 
 
-    def present(self, background_stimulus):
+	def present(self, background_stimulus):
         """
 
 		TODO 
