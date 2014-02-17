@@ -55,7 +55,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
         start with a specify a the subject_id. Subject_id MUST be an integer.
         Setting this paramter overrules auto_create_subject_id.
 
- Returns
+    Returns
     -------
     exp : design.Experiment
         The started experiment will be returned.
