@@ -81,7 +81,7 @@ class TextInput(Input):
             gap between message and user input
         screen : io.Screen, optional
             screen to present on
-        background_stimulus : expyriment stimulus, optional
+        background_stimulus : visual Expyriment stimulus, optional
             The background stimulus is a second stimulus that will be presented
             together with the TextInput. For both stimuli overlap TextInput
             will appear on top of the background_stimulus
