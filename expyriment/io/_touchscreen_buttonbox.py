@@ -21,35 +21,69 @@ class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButton."""
 
     def __init__(self, button_fields):
-        """Create a touchscreen button box.
+        """Initialize a touchscreen button box.
 
-        TODO
+        Parameters
+        ----------
+        button_field : visual Expyriment stimulus or list of stimuli
+
+        Notes
+        -----
+        Every visual Expyriment stimulus can serve as a touchscreen button field.
+        If the TouchScreenButtonBox is presented, it can be checked for events
+        using the methods 'check' and 'wait'. Methods return the id of the
+        button field. Added field will be numbered starting with 0.
 
         """
+
         Input.__init__(self)
+
+        if type(button_fields) is not list:
+            button_fields = [button_fields]
 
         self._button_fields = []
         self._mouse = None
         map(self.add_button_field, button_fields)
 
     def add_button_field(self, button_field):
-        """TODO"""
+        """Add a touchscreen button fields.
+
+        Parameters
+        ----------
+        button_field : visual expyriment stimulus
+
+        Notes
+        -----
+        First add field get the id=0, the second the id=1 and so on...
+
+        """
+
         if not isinstance(button_field, expyriment.stimuli._visual.Visual):
             raise TypeError("Button field has to a visual Expyriment stimulus")
         self._button_fields.append(button_field)
 
 
-    def clear(self):
-        """
+    @property
+    def button_field(self):
+        """getter of button fields (list of visual Expyriment stimuli)"""
+        return self._button_fields
 
-        """
+    def clear(self):
+        """Clear the event buffer of the touchscreen/mouse input device."""
+
         if self._mouse is not None:
             self._mouse.clear()
 
     def present(self, background_stimulus=None, show_cursor=True):
-        """
+        """Present touchscreen buttons.
 
-        TODO
+        Parameters
+        ----------
+        background_stimulus : visual Expyriment stimulus, optional
+            The background stimulus on which the the touschscreen button fields
+            are presented
+        show_cursor : bool, optional
+            shows mouse cursor (default = True)
 
         """
 
@@ -71,7 +105,8 @@ class TouchScreenButtonBox(Input):
         stim.present()
 
     def check(self, button_field_ids=None, check_for_control_keys=True):
-        """
+        """Check if a button field is clicked.
+
         Parameters
         ----------
         button_field_ids : int or list, optional
@@ -85,6 +120,11 @@ class TouchScreenButtonBox(Input):
         pressed_button : int
             id of the clicked button field
             (i.e., position in button field list)
+
+        Notes
+        -----
+        Don't forget to present the TouchScreenButtonBox before checking for
+        events.
 
         """
 
@@ -103,7 +143,6 @@ class TouchScreenButtonBox(Input):
                     button_field_ids)
 
             if self._logging and pressed_button is not None:
-                print pressed_button
                 expyriment._active_exp._event_file_log(
                                 "{0},received,{1},check".format(
                                     self.__class__.__name__, pressed_button))
@@ -122,8 +161,8 @@ class TouchScreenButtonBox(Input):
 
     def wait(self, duration=None, button_field_ids=None,
                 check_for_control_keys=True):
+        """Wait for a touchscreen button box click.
 
-        """
         Parameters
         ----------
         button_field_ids : int or list, optional
@@ -141,6 +180,11 @@ class TouchScreenButtonBox(Input):
             (i.e., position in button field list)
         rt : int
             reaction time
+
+        Notes
+        -----
+        Don't forget to present the TouchScreenButtonBox before waiting for
+        events.
 
         """
 
