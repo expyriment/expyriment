@@ -52,7 +52,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     auto_create_subject_id : bool
         if true new subject id will be created automatically
     subject_id : integer
-        start with a specify a the subject_id. Subject_id MUST be an integer.
+        start with a specific subject_id. Subject_id MUST be an integer.
         Setting this paramter overrules auto_create_subject_id.
 
     Returns
@@ -71,7 +71,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
         raise Exception("Experiment is already started!")
     if subject_id is not None:
         if not isinstance(subject_id, int):
-            raise Exception("Suject_id must be an integer. " +
+            raise Exception("Subject id must be an integer. " +
                     "{0} is not allowed.".format(type(subject_id)))
         auto_create_subject_id = True
     elif auto_create_subject_id is None:
