@@ -2,6 +2,16 @@
 Expyriment Release Notes
 ========================
 
+Upcomming Version
+-----------------
+New Features:
+- new io class: TouchScreen Button
+- control.start() can now be called with a predefined subject id
+
+Fixed:
+- shapes can now be used as background stimuli in bug for io.TextInput & 
+  io.TextMenue
+
 Version 0.7.0b1 (15 Feb 2014)
 -----------------------------
 New Features:
