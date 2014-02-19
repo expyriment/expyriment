@@ -31,7 +31,7 @@ class TouchScreenButtonBox(Input):
             registered. Added field will be numbered starting with 0.
         stimuli : visual Expyriment stimulus or list of stimuli, optional
             Additonal visual stimuli that will be presented together with the button
-            fields. Stimuli are plotted ontop of the button_fields
+            fields. Stimuli are plotted ontop of the button_fields.
         background_stimulus : visual Expyriment stimulus, optional
             The background stimulus on which the the touschscreen button fields
             are presented. Importantly, background_stimulus has to have the size of
