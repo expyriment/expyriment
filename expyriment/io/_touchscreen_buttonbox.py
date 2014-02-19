@@ -31,10 +31,11 @@ class TouchScreenButtonBox(Input):
             registered. Added field will be numbered starting with 0.
         stimuli : visual Expyriment stimulus or list of stimuli, optional
             Additonal visual stimuli that will be presented together with the button
-            fields
+            fields. Stimuli are plotted ontop of the button_fields
         background_stimulus : visual Expyriment stimulus, optional
             The background stimulus on which the the touschscreen button fields
-            are presented
+            are presented. Importantly, background_stimulus has to have the size of
+            the screen.
 
         Notes
         -----
@@ -45,6 +46,7 @@ class TouchScreenButtonBox(Input):
 
         """
 
+        #FIXME: What to do if the backgorund stimulus has not the size of the screen
         Input.__init__(self)
 
         if type(button_fields) is not list:
