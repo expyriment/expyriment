@@ -11,16 +11,13 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-# retrun xy, coordiante als property last touch position
-# absolut position
-
 import defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from _input_output import Input
 
 class TouchScreenButtonBox(Input):
-    """A class implementing a TouchScreenButton."""
+    """A class implementing a TouchScreenButtonBox."""
 
     def __init__(self, button_fields,
                 stimuli=[], background_stimulus=None):
@@ -32,10 +29,10 @@ class TouchScreenButtonBox(Input):
             The button fields defines the area on which a click action will be
             registered.
         stimuli : visual Expyriment stimulus or list of stimuli, optional
-            Additonal visual stimuli that will be presented together with the button
-            fields. Stimuli are plotted ontop of the button_fields.
+            Additional visual stimuli that will be presented together with the button
+            fields. Stimuli are plotted on top of the button_fields.
         background_stimulus : visual Expyriment stimulus, optional
-            The background stimulus on which the the touschscreen button fields
+            The background stimulus on which the touschscreen button fields
             are presented. Importantly, background_stimulus has to have the size of
             the screen.
 
@@ -47,8 +44,6 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        #FIXME: What to do if the backgorund stimulus has not the size of the screen
-
         Input.__init__(self)
 
         if type(button_fields) is not list:
@@ -56,7 +51,8 @@ class TouchScreenButtonBox(Input):
         if type(stimuli) is not list:
             stimuli = [stimuli]
 
-        self._mouse = None
+        self._mouse = expyriment._active_exp.mouse
+        self._last_touch_position = None
         self._canvas = None
         self._button_fields = []
         self._stimuli = []
@@ -69,7 +65,7 @@ class TouchScreenButtonBox(Input):
 
         Parameters
         ----------
-        button_field : visual expyriment stimulus
+        button_field : visual Expyriment stimulus
 
         """
 
@@ -79,12 +75,12 @@ class TouchScreenButtonBox(Input):
         self._canvas = None
 
     def add_stimulus(self, stimulus):
-        """Add additonal stimulus that will be presented together with the button
+        """Add additional stimulus that will be presented together with the button
         fields.
 
         Parameters
         ----------
-        stimulus : visual expyriment stimulus
+        stimulus : visual Expyriment stimulus
 
         """
         if not isinstance(stimulus, expyriment.stimuli._visual.Visual):
@@ -93,20 +89,25 @@ class TouchScreenButtonBox(Input):
         self._canvas = None
 
     @property
+    def last_touch_position(self):
+        """getter for the last touch position (x,y)"""
+        return self._last_touch_position
+
+    @property
     def button_field(self):
         """getter of button fields (list of visual Expyriment stimuli)"""
         return self._button_fields
 
     @property
     def stimuli(self):
-        """getter of additonal stimuli (list of visual Expyriment stimuli)"""
+        """getter of additional stimuli (list of visual Expyriment stimuli)"""
         return self._stimuli
 
     @property
     def background_stimulus(self):
         """Getter of background stimulus.
 
-        Background stimulus, on which the button fields and the addtional stimuli
+        Background stimulus, on which the button fields and the additional stimuli
         will be presented. (visual Expyriment stimuli)
 
         """
@@ -131,7 +132,7 @@ class TouchScreenButtonBox(Input):
             self._mouse.clear()
 
     def preload(self):
-        """Prepare and preload the button fields and addtional stimuli for
+        """Prepare and preload the button fields and additional stimuli for
         presentation.
 
         """
@@ -148,26 +149,13 @@ class TouchScreenButtonBox(Input):
             self._canvas.unload()
         self._canvas = None
 
-    def show(self, show_cursor=True):
-        """Present touchscreen buttons.
-
-        Parameters
-        ----------
-        show_cursor : bool, optional
-            shows mouse cursor (default = True)
+    def show(self):
+        """Present touchscreen button box.
 
         """
 
         if self._canvas is None:
             self.preload()
-        if self._mouse is None:
-            self._mouse = expyriment.io.Mouse()
-            self._mouse.set_logging(False)
-        if show_cursor:
-            self._mouse.show_cursor()
-        else:
-            self._mouse.hide_cursor()
-        self._mouse.clear()
         self._canvas.present()
 
     def check(self, button_fields=None, check_for_control_keys=True):
@@ -182,37 +170,37 @@ class TouchScreenButtonBox(Input):
 
         Returns
         -------
-        pressed_button_field : int
-            id of the clicked button field
-            (i.e., position in button field list)
+        pressed_button_field : Expyriment stimulus or list of stimuli, optional
+            The button fields that will be checked for.
+        touch_time : integer
+            The time when the button was touched. Function might return delayed,
+            because button field comparison (after touch) takes time. The
+            return time is most accurate.
+
 
         Notes
         -----
-        Don't forget to show the TouchScreenButtonBox before checking for
-        events.
+        Don't forget to show the TouchScreenButtonBox.
 
         """
 
-        # TODO: return also touch coordinate (xy)
-
         if button_fields is not None and type(button_fields) is not list:
             button_fields = [button_fields]
-        if self._mouse is None:
-            raise RuntimeError("Wait or check touchscreen buttonbox " + \
-                                "before show.")
         if check_for_control_keys:
             expyriment.io.Keyboard.process_control_keys()
 
         pressed_button_field = None
         if self._mouse.get_last_button_down_event() is not None:
-            pressed_button_field = self._get_button_field(self._mouse.position,
+            touch_time = get_time()
+            self._last_touch_position = self._mouse.position
+            pressed_button_field = self._get_button_field(self._last_touch_position,
                     button_fields)
 
             if self._logging and pressed_button_field is not None:
                 expyriment._active_exp._event_file_log(
-                                "{0},received,{1},check".format(
-                                    self.__class__.__name__, pressed_button_field))
-        return pressed_button_field
+                                "{0},received, button press,check".format(
+                                    self.__class__.__name__))
+        return pressed_button_field, touch_time
 
     def _get_button_field(self, position, button_fields):
         """ helper function return the button field of the position"""
@@ -234,8 +222,6 @@ class TouchScreenButtonBox(Input):
             The button fields that will be checked for.
         duration : int, optional
             maximal time to wait in ms
-        wait_for_buttonup : bool, optional
-            if True it waits for button-up
 
         Returns
         -------
@@ -246,20 +232,17 @@ class TouchScreenButtonBox(Input):
 
         Notes
         -----
-        Don't forget to show the TouchScreenButtonBox before waiting for
-        events.
+        Don't forget to show the TouchScreenButtonBox.
 
         """
-
-        # TODO: return also touch coordinate (xy)
 
         start = get_time()
         self.clear_event_buffer()
         while True:
             expyriment._active_exp._execute_wait_callback()
-            pressed_button_field = self.check(button_fields,
+            pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
-            rt = int((get_time() - start) * 1000)
+            rt = int((touch_time - start) * 1000)
             if pressed_button_field is not None:
                 break
             elif (duration is not None and rt>= duration):
