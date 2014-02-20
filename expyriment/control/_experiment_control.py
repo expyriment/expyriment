@@ -20,7 +20,7 @@ try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
-android = True # FIXME
+
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
@@ -110,7 +110,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                                 text_size=28)
                 btn = TouchScreenButtonBox(button_fields=fields,
                                 stimuli=plusminus+[text])
-                btn.present()
+                btn.show(show_cursor=True)
                 key, rt = btn.wait()
                 if key==fields[0]:
                     subject_id += 1

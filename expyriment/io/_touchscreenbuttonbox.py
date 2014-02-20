@@ -149,13 +149,23 @@ class TouchScreenButtonBox(Input):
             self._canvas.unload()
         self._canvas = None
 
-    def show(self):
-        """Present touchscreen button box.
+
+    def show(self, show_cursor=True):
+        """Present touchscreen buttons.
+
+        Parameters
+        ----------
+        show_cursor : bool, optional
+            shows mouse cursor (default = True)
 
         """
 
         if self._canvas is None:
             self.preload()
+        if show_cursor:
+            self._mouse.show_cursor()
+        else:
+            self._mouse.hide_cursor()
         self._canvas.present()
 
     def check(self, button_fields=None, check_for_control_keys=True):
@@ -190,6 +200,7 @@ class TouchScreenButtonBox(Input):
             expyriment.io.Keyboard.process_control_keys()
 
         pressed_button_field = None
+        touch_time = None
         if self._mouse.get_last_button_down_event() is not None:
             touch_time = get_time()
             self._last_touch_position = self._mouse.position
@@ -242,8 +253,8 @@ class TouchScreenButtonBox(Input):
             expyriment._active_exp._execute_wait_callback()
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
-            rt = int((touch_time - start) * 1000)
             if pressed_button_field is not None:
+                rt = int((touch_time - start) * 1000)
                 break
             elif (duration is not None and rt>= duration):
                 pressed_button_field, rt = None, None
