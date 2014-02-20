@@ -6,7 +6,9 @@ Upcomming Version
 -----------------
 New Features:
 - new io class: TouchScreenButtonBox
-- control.start() can now be called with a predefined subject id
+- new options for control.start(): skip_ready_screen and subject_id to start with
+  predefined subject id
+  
 
 Fixed:
 - bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 

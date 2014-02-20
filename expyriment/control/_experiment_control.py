@@ -31,7 +31,8 @@ from _miscellaneous import _set_stdout_logging, is_idle_running
 from expyriment.misc import unicode2str
 
 
-def start(experiment=None, auto_create_subject_id=None, subject_id=None):
+def start(experiment=None, auto_create_subject_id=None, subject_id=None,
+            skip_ready_screen=False):
     """Start an experiment.
 
     This starts an experiment defined by 'experiment' and asks for the subject
@@ -49,11 +50,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     ----------
     experiment : design.Experiment, optional (DEPRECATED)
         Don't use this parameter, it only exists to keep backward compatibility.
-    auto_create_subject_id : bool
-        if true new subject id will be created automatically
-    subject_id : integer
-        start with a specific subject_id. Subject_id MUST be an integer.
-        Setting this paramter overrules auto_create_subject_id.
+    auto_create_subject_id : bool, optional
+        if True new subject id will be created automatically.
+    subject_id : integer, optional
+        start with a specific subject_id. No subject id input mask will be
+        presented.  Subject_id must be an integer.  Setting this paramter
+        overrules auto_create_subject_id.
+    skip_ready_screen : boolen, optional
+        if True ready screen will be skipped. default=False
 
     Returns
     -------
@@ -167,10 +171,11 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
         position = (0, 200)
     else:
         position = (0, 0)
-    stimuli.TextLine("Ready", position=position, text_size=24,
+    if not skip_ready_screen:
+        stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
-    experiment.keyboard.wait()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+        experiment.keyboard.wait()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
