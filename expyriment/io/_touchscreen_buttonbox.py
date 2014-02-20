@@ -217,8 +217,8 @@ class TouchScreenButtonBox(Input):
         if button_fields is None:
             button_fields = self._button_fields
         for bf in button_fields:
-            if x.overlapping_with_position(position):
-                return x
+            if bf.overlapping_with_position(position):
+                return bf
         return None
 
 

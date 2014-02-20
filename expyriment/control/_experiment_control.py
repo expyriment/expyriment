@@ -91,7 +91,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     if not auto_create_subject_id:
         if android is not None:
             fields = [stimuli.Circle(diameter=50, line_width=0, position=(0,70)),
-                      stimuli.Rectangle(diameter=50, line_width=0, position=(0,-70)),
+                      stimuli.Circle(diameter=50, line_width=0, position=(0,-70)),
                       stimuli.Rectangle(size=(50,50), position=(120,0))]
             plusminus = [
                 stimuli.TextLine(text="+", text_size=36, position=(0,70),
