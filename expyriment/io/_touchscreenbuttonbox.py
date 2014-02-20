@@ -11,7 +11,6 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-# present --> show
 # retrun xy, coordiante als property last touch position
 # absolut position
 
@@ -149,7 +148,7 @@ class TouchScreenButtonBox(Input):
             self._canvas.unload()
         self._canvas = None
 
-    def present(self, show_cursor=True):
+    def show(self, show_cursor=True):
         """Present touchscreen buttons.
 
         Parameters
@@ -189,7 +188,7 @@ class TouchScreenButtonBox(Input):
 
         Notes
         -----
-        Don't forget to present the TouchScreenButtonBox before checking for
+        Don't forget to show the TouchScreenButtonBox before checking for
         events.
 
         """
@@ -200,7 +199,7 @@ class TouchScreenButtonBox(Input):
             button_fields = [button_fields]
         if self._mouse is None:
             raise RuntimeError("Wait or check touchscreen buttonbox " + \
-                                "before present.")
+                                "before show.")
         if check_for_control_keys:
             expyriment.io.Keyboard.process_control_keys()
 
@@ -247,7 +246,7 @@ class TouchScreenButtonBox(Input):
 
         Notes
         -----
-        Don't forget to present the TouchScreenButtonBox before waiting for
+        Don't forget to show the TouchScreenButtonBox before waiting for
         events.
 
         """
