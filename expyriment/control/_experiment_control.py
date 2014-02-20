@@ -20,7 +20,7 @@ try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
-
+android = True # FIXME
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
@@ -108,13 +108,13 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
                                 stimuli=plusminus+[text])
                 btn.present()
                 key, rt = btn.wait()
-                if key==0:
+                if key==fields[0]:
                     subject_id += 1
-                elif key == 1:
+                elif key == fields[1]:
                     subject_id -= 1
                     if subject_id <= 0:
                         subject_id = 0
-                elif key == 2:
+                elif key == fields[2]:
                     break
             experiment._subject = int(subject_id)
 
