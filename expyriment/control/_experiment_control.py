@@ -20,11 +20,11 @@ try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
-
+android = True # FIXME
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
-from expyriment.io import DataFile, EventFile, TextInput, Keyboard
+from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
