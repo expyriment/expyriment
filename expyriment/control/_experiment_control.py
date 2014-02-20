@@ -175,7 +175,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        experiment.keyboard.wait()
+        if android is None:
+            experiment.keyboard.wait()
+        else:
+            experiment.mouse.wait_press()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
