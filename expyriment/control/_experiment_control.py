@@ -20,7 +20,6 @@ try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
-android = True # FIXME
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
