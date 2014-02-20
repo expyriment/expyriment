@@ -21,7 +21,7 @@ packages = ['expyriment',
             'expyriment.stimuli', 'expyriment.stimuli.extras',
             'expyriment.design', 'expyriment.design.extras']
 
-package_data = {'expyriment': ['expyriment_logo.png']}
+package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
 
 
 # Clear old installation when installing
