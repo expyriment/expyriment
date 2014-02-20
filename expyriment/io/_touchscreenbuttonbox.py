@@ -11,6 +11,9 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+# present --> show
+# retrun xy, coordiante als property last touch position
+# absolut position
 
 import defaults
 import expyriment
