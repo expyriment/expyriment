@@ -240,7 +240,10 @@ def pause():
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
-    key = Keyboard().wait(pygame.K_RETURN)
+    if android is None:
+        experiment.keyboard.wait()
+    else:
+        experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
     return key
 
