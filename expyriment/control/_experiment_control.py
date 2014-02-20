@@ -20,6 +20,7 @@ try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
+
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
@@ -30,7 +31,8 @@ from _miscellaneous import _set_stdout_logging, is_idle_running
 from expyriment.misc import unicode2str
 
 
-def start(experiment=None, auto_create_subject_id=None, subject_id=None):
+def start(experiment=None, auto_create_subject_id=None, subject_id=None,
+            skip_ready_screen=False):
     """Start an experiment.
 
     This starts an experiment defined by 'experiment' and asks for the subject
@@ -48,11 +50,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     ----------
     experiment : design.Experiment, optional (DEPRECATED)
         Don't use this parameter, it only exists to keep backward compatibility.
-    auto_create_subject_id : bool
-        if true new subject id will be created automatically
-    subject_id : integer
-        start with a specific subject_id. Subject_id MUST be an integer.
-        Setting this paramter overrules auto_create_subject_id.
+    auto_create_subject_id : bool, optional
+        if True new subject id will be created automatically.
+    subject_id : integer, optional
+        start with a specific subject_id. No subject id input mask will be
+        presented.  Subject_id must be an integer.  Setting this paramter
+        overrules auto_create_subject_id.
+    skip_ready_screen : boolen, optional
+        if True ready screen will be skipped. default=False
 
     Returns
     -------
@@ -193,10 +198,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
         position = (0, 200)
     else:
         position = (0, 0)
-    stimuli.TextLine("Ready", position=position, text_size=24,
+    if not skip_ready_screen:
+        stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
-    experiment.keyboard.wait()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+        if android is None:
+            experiment.keyboard.wait()
+        else:
+            experiment.mouse.wait_press()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
@@ -221,7 +230,7 @@ def pause():
     old_logging = experiment.log_level
     experiment.set_log_level(0)
     if android is not None:
-        position = (0, 200) # TODO touchscreen button?
+        position = (0, 200)
     else:
         position = (0, 0)
     stimuli.TextLine("Paused", position=position,
@@ -271,7 +280,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
         experiment._screen.colour = [0, 0, 0]
-        if android is not None: #FIXME confirmation never occurs under Android
+        if android is not None:
             position = (0, 200)
         else:
             position = (0, 0)
@@ -329,6 +338,7 @@ def initialize(experiment=None):
     - experiment.screen   -- the current screen
     - experiment.clock    -- the main clock
     - experiment.keyboard -- the main keyboard
+    - experiment.mouse    -- the main mouse
     - experiment.event    -- the main event file
 
     Parameters
@@ -392,6 +402,7 @@ def initialize(experiment=None):
     else:
         experiment._events = None
     experiment._keyboard = Keyboard()
+    experiment._mouse = Mouse(show_cursor=False)
 
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))

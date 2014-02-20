@@ -256,8 +256,8 @@ class Visual(Stimulus):
         """Getter for absolute_position."""
 
         if self._parent:
-            return (self._parent.position[0] + self.position[0],
-                    self._parent.position[1] + self.position[1])
+            return (self._parent.absolute_position[0] + self.position[0],
+                    self._parent.absolute_position[1] + self.position[1])
         else:
             return self.position
 
