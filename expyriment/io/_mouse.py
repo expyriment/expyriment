@@ -22,7 +22,12 @@ from _input_output  import Input
 
 
 class Mouse(Input):
-    """A class implementing a mouse input."""
+    """A class implementing a mouse input.
+
+    Calling `expyriment.control.intialize(exp)` will automatically create a
+    mouse instance and will reference it in exp.mouse for easy access.
+
+    """
 
     def __init__(self, show_cursor=True, track_button_events=None,
                  track_motion_events=None):
