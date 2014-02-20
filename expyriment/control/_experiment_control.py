@@ -110,7 +110,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                                 text_size=28)
                 btn = TouchScreenButtonBox(button_fields=fields,
                                 stimuli=plusminus+[text])
-                btn.show(show_cursor=True)
+                btn.show()
                 key, rt = btn.wait()
                 if key==fields[0]:
                     subject_id += 1

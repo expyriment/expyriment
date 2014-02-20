@@ -150,22 +150,11 @@ class TouchScreenButtonBox(Input):
         self._canvas = None
 
 
-    def show(self, show_cursor=True):
-        """Present touchscreen buttons.
-
-        Parameters
-        ----------
-        show_cursor : bool, optional
-            shows mouse cursor (default = True)
-
-        """
+    def show(self):
+        """Present touchscreen buttons"""
 
         if self._canvas is None:
             self.preload()
-        if show_cursor:
-            self._mouse.show_cursor()
-        else:
-            self._mouse.hide_cursor()
         self._canvas.present()
 
     def check(self, button_fields=None, check_for_control_keys=True):
