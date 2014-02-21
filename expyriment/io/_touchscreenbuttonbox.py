@@ -1,7 +1,7 @@
 """
 A touchscreen button box.
 
-This module contains a class implementing a text input box for user input.
+This module contains a class implementing a touchscreen button box.
 
 """
 
@@ -11,16 +11,16 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import defaults
+
 import expyriment
 from expyriment.misc._timer import get_time
 from _input_output import Input
 
+
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
 
-    def __init__(self, button_fields,
-                stimuli=[], background_stimulus=None):
+    def __init__(self, button_fields, stimuli=[], background_stimulus=None):
         """Initialize a touchscreen button box.
 
         Parameters
@@ -29,16 +29,17 @@ class TouchScreenButtonBox(Input):
             The button fields defines the area on which a click action will be
             registered.
         stimuli : visual Expyriment stimulus or list of stimuli, optional
-            Additional visual stimuli that will be presented together with the button
-            fields. Stimuli are plotted on top of the button_fields.
+            Additional visual stimuli that will be presented together with the
+            button fields. Stimuli are plotted on top of the button_fields.
         background_stimulus : visual Expyriment stimulus, optional
             The background stimulus on which the touschscreen button fields
-            are presented. Importantly, background_stimulus has to have the size of
-            the screen.
+            are presented. Importantly, background_stimulus has to have
+            size of the screen.
 
         Notes
         -----
-        Every visual Expyriment stimulus can serve as a touchscreen button field.
+        Every visual Expyriment stimulus can serve as a touchscreen button
+        field.
         If the TouchScreenButtonBox is presented, it can be checked for events
         using the methods 'check' and 'wait'.
 
@@ -75,8 +76,9 @@ class TouchScreenButtonBox(Input):
         self._canvas = None
 
     def add_stimulus(self, stimulus):
-        """Add additional stimulus that will be presented together with the button
-        fields.
+        """Add additional stimulus
+
+        The added stimulus will be presented together with the button fields.
 
         Parameters
         ----------
@@ -107,8 +109,8 @@ class TouchScreenButtonBox(Input):
     def background_stimulus(self):
         """Getter of background stimulus.
 
-        Background stimulus, on which the button fields and the additional stimuli
-        will be presented. (visual Expyriment stimuli)
+        Background stimulus, on which the button fields and the additional
+        stimuli will be presented. (visual Expyriment stimuli)
 
         """
         return self._background_stimulus
@@ -119,7 +121,7 @@ class TouchScreenButtonBox(Input):
         if stimulus is None:
             self._background_stimulus = expyriment.stimuli.BlankScreen()
         elif not isinstance(stimulus, expyriment.stimuli._visual.Visual):
-            raise TypeError("Background stimulus has to be be a " +\
+            raise TypeError("Background stimulus has to be be a " +
                             "visual Expyriment stimulus")
         else:
             self._background_stimulus = stimulus
@@ -131,30 +133,31 @@ class TouchScreenButtonBox(Input):
         if self._mouse is not None:
             self._mouse.clear()
 
-    def preload(self):
-        """Prepare and preload the button fields and additional stimuli for
+    def create(self):
+        """Create the touchscreen buttonbox.
+
+        Prepares the button fields and additional stimuli for fast
         presentation.
 
         """
 
         self._canvas = self._background_stimulus.copy()
-        if len(self._button_fields)<1:
+        if len(self._button_fields) < 1:
             raise RuntimeError("No button field defined!")
         map(lambda x:x.plot(self._canvas), self._button_fields)
         map(lambda x:x.plot(self._canvas), self._stimuli)
         self._canvas.preload()
 
-    def unload(self):
+    def destroy(self):
         if self._canvas is not None:
             self._canvas.unload()
         self._canvas = None
 
-
     def show(self):
-        """Present touchscreen buttons"""
+        """Present touchscreen buttons."""
 
         if self._canvas is None:
-            self.preload()
+            self.create()
         self._canvas.present()
 
     def check(self, button_fields=None, check_for_control_keys=True):
