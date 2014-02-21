@@ -14,6 +14,9 @@ Fixed:
 - bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
   io.TextMenu
 
+Changes:
+- overlapping methods of stimuli now work on absolute_position by default
+
 Version 0.7.0b1 (15 Feb 2014)
 -----------------------------
 New Features:
