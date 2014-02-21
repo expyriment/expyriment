@@ -125,6 +125,14 @@ class Mouse(Input):
         pygame.event.pump()
         return pygame.mouse.get_pressed()
 
+    @property
+    def is_cursor_visible(self):
+        """returns if cursor is visible"""
+
+        visible = pygame.mouse.set_visible(False)
+        pygame.mouse.set_visible(visible)
+        return visible
+
     def get_last_button_down_event(self):
         """Get the last button down event.
 
