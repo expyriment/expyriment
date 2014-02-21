@@ -42,5 +42,5 @@ nosetests.xml
 test_suite_protocol.xpp
 data/
 events/
-_build
-*.html
+_build/
+documentation/sphinx/expyriment*.rst
