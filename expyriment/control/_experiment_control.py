@@ -24,7 +24,7 @@ except ImportError:
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
-from expyriment.io import DataFile, EventFile, TextInput, Keyboard
+from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
@@ -175,7 +175,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        experiment.keyboard.wait()
+        if android is None:
+            experiment.keyboard.wait()
+        else:
+            experiment.mouse.wait_press()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
@@ -210,7 +213,10 @@ def pause():
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
-    key = Keyboard().wait(pygame.K_RETURN)
+    if android is None:
+        experiment.keyboard.wait()
+    else:
+        experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
     return key
 
@@ -308,6 +314,7 @@ def initialize(experiment=None):
     - experiment.screen   -- the current screen
     - experiment.clock    -- the main clock
     - experiment.keyboard -- the main keyboard
+    - experiment.mouse    -- the main mouse
     - experiment.event    -- the main event file
 
     Parameters
@@ -371,6 +378,7 @@ def initialize(experiment=None):
     else:
         experiment._events = None
     experiment._keyboard = Keyboard()
+    experiment._mouse = Mouse(show_cursor=False)
 
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
