@@ -92,6 +92,7 @@ class Experiment(object):
         self._is_started = False
         self._is_initialized = False
         self._keyboard = None
+        self._mouse = None
         self._clock = None
         self._subject = None
         self._screen = None
@@ -177,6 +178,12 @@ class Experiment(object):
         """Getter for global keyboard."""
 
         return self._keyboard
+
+    @property
+    def mouse(self):
+        """Getter for global keyboard."""
+
+        return self._mouse
 
     @property
     def subject(self):

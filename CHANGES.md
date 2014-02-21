@@ -8,7 +8,7 @@ New Features:
 - new io class: TouchScreenButtonBox
 - new options for control.start(): skip_ready_screen and subject_id to start with
   predefined subject id
-  
+- experiment have now also a global mouse object: experiment.mouse 
 
 Fixed:
 - bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
