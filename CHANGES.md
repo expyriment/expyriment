@@ -15,7 +15,7 @@ Fixed:
 - bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
   io.TextMenu
 
-Changes:
+Changed:
 - overlapping methods of stimuli now work on absolute_position by default
 
 Version 0.7.0b1 (15 Feb 2014)
@@ -43,7 +43,7 @@ Fixed:
 - bug in visual.add_noise
 - bug in io.SerialPort.read_line
 
-Changes:
+Changed:
 - several Android related changes (have no impact for normal use of Expyriment)
 
 Version 0.6.4 (5 Aug 2013)
@@ -85,7 +85,7 @@ Fixed:
 - API reference tool should now also open when there are whitespaces in Python
   executable path
 
-Changes:
+Changed:
 - renamed TextInput.user_colour --> user_text_colour
 - FixCross.cross_size has been renamed to FixCross.size. FixCross.size is 
   now a tuple (int, int) and defines both dimensions (x, y) separately.  
