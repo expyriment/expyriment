@@ -25,7 +25,7 @@ import defaults
 import expyriment
 from expyriment import design, stimuli, misc
 from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
-from expyriment.io import _keyboard
+from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
 from expyriment.misc import unicode2str
@@ -94,26 +94,53 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
 
     if not auto_create_subject_id:
         if android is not None:
-            position = (0, 200)
+            fields = [stimuli.Circle(diameter=50, line_width=0, position=(0,70)),
+                      stimuli.Circle(diameter=50, line_width=0, position=(0,-70)),
+                      stimuli.Rectangle(size=(50,50), position=(120,0))]
+            plusminus = [
+                stimuli.TextLine(text="+", text_size=36, position=(0,70),
+                                text_colour=(0,0,0), text_bold=True),
+                stimuli.TextLine(text="-", text_size=36, position=(0,-70),
+                                text_colour=(0,0,0), text_bold=True),
+                stimuli.TextLine(text = "OK", text_size=24, position=(120,0),
+                                text_colour=(0,0,0))]
+            subject_id = default_number
+            while True:
+                text = stimuli.TextLine(text="{0}".format(subject_id),
+                                text_size=28)
+                btn = TouchScreenButtonBox(button_fields=fields,
+                                stimuli=plusminus+[text])
+                btn.show()
+                key, rt = btn.wait()
+                if key==fields[0]:
+                    subject_id += 1
+                elif key == fields[1]:
+                    subject_id -= 1
+                    if subject_id <= 0:
+                        subject_id = 0
+                elif key == fields[2]:
+                    break
+            experiment._subject = int(subject_id)
+
         else:
             position = (0, 0)
-        while True:
-            ask_for_subject = TextInput(
-                message="Subject Number:",
-                position=position,
-                message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                message_text_size=24,
-                user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                user_text_size=20,
-                background_colour=(0, 0, 0),
-                frame_colour=(70, 70, 70),
-                ascii_filter=misc.constants.K_ALL_DIGITS)
-            subject_id = ask_for_subject.get(repr(default_number))
-            try:
-                experiment._subject = int(subject_id)
-                break
-            except:
-                pass
+            while True:
+                ask_for_subject = TextInput(
+                    message="Subject Number:",
+                    position=position,
+                    message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                    message_text_size=24,
+                    user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                    user_text_size=20,
+                    background_colour=(0, 0, 0),
+                    frame_colour=(70, 70, 70),
+                    ascii_filter=misc.constants.K_ALL_DIGITS)
+                subject_id = ask_for_subject.get(repr(default_number))
+                try:
+                    experiment._subject = int(subject_id)
+                    break
+                except:
+                    pass
 
     else:
         experiment._subject = default_number

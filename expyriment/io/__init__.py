@@ -28,5 +28,5 @@ from _triggerinput import TriggerInput
 from _markeroutput import MarkerOutput
 from _textinput import TextInput
 from _textmenu import TextMenu
-from _touchscreen_buttonbox import TouchScreenButtonBox
+from _touchscreenbuttonbox import TouchScreenButtonBox
 import extras
