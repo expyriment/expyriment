@@ -36,6 +36,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)/*
 	rm -f expyriment.*
+	rm -f Changelog.rst
 
 tar:
 	make html

@@ -91,6 +91,38 @@ def create_module_rst(mod_name, no_members=False):
         #fl.write(".. "+repr(attributes) + "\n")
 
 
+def create_change_log_rst():
+    """create well shaped Change_log.rst from CHANGES.md"""
+
+    changes_md = "../../CHANGES.md"
+    changelog_rst = "Changelog.rst"
+
+    fl = open(changes_md, 'r')
+    out = open(changelog_rst, 'w')
+
+    out.write("""Change log
+==========
+
+""")
+
+    version_found = False
+    for line in fl:
+        if line.startswith("Version"):
+            version_found = True
+        if version_found:
+            if line.startswith("New Feature") or line.startswith("Fixed") or\
+                    line.startswith("Changes") or line.startswith("Changed"):
+                out.write("\n" + line + "\n") # additonal blanklines
+            elif line.startswith("--"):
+                out.write(line + "\n")
+            elif line.startswith("  - "):
+                out.write("\n" + line)
+            else:
+                out.write(line)
+
+    out.close()
+    fl.close()
+
 
 
 # main module
@@ -130,3 +162,4 @@ sub_modules = ["expyriment.io", "expyriment.design", "expyriment.stimuli",
 for mod_name in sub_modules:
     create_module_rst(mod_name)
 
+create_change_log_rst()
