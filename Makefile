@@ -3,24 +3,23 @@
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
 
-html_documentation: build
+html_documentation:
 	make --directory=documentation/sphinx html
-	ln -fs ../documentation/sphinx/build/html build/html
+	rm -rf documentation/html
+	mv documentation/sphinx/_build/html documentation/html 
 
-pdf_documentation: build
+pdf_documentation:
 	make --directory=documentation/sphinx pdf
-	ln -fs ../documentation/sphinx/build/latex build/latex
+	rm -rf documentation/latex
+	mv -f documentation/sphinx/_build/latex documentation/latex
 
-old_html_api: build
+api_ref_html:
 	make --directory=documentation/api html
-	mv documentation/api/_build build/old_html_api
+	rm -rf documentation/api_ref_html
+	mv -f documentation/api/_build documentation/api_ref_html
 
-install:
-	@echo "TODO"
-
-release: build
+release: html_documentation api_ref_html
 	python setup.py build
-	@echo "TODO"
 
 build:
 	mkdir build
@@ -28,4 +27,4 @@ build:
 clean:
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
-	rm -rf build
+	rm -rf build documentation/latex documentation/api_ref documentation/html 
