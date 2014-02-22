@@ -36,7 +36,7 @@ class Install(install):
     def run(self):
         # Clear old installation
         olddir = path.abspath(self.install_lib + path.sep + "expyriment")
-        oldegginfo = glob(path.abspath(self.install_lib) + path.sep + 
+        oldegginfo = glob(path.abspath(self.install_lib) + path.sep +
                           "expyriment*.egg-info")
         for egginfo in oldegginfo:
             remove(egginfo)
@@ -125,7 +125,7 @@ try:
     date = proc.stdout.readline().strip()
 
     # Build
-    setup(name='expyriment',
+    x = setup(name='expyriment',
           version=version_nr,
           description='A Python library for cognitive and neuroscientific experiments',
           author='Florian Krause, Oliver Lindemann',

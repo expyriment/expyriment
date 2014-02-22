@@ -130,29 +130,3 @@ Related Projects
 ----------------
 If you are looking for a graphical experiment builder, we suggest OpenSesame, 
 which uses Expyriment as the default back-end:  http://www.osdoc.cogsci.nl/.
-
-Contents
---------
-
-**About Expyriment**
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   Overview
-   API Reference <expyriment>
-   Advanced
-   Technical issues <Technical>
-   Changelog
-
-**Getting Started**
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-
-   Installation
-   Beginner`s tutorial <Tutorial>
-   Example experiments <Examples>
-
