@@ -34,10 +34,10 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	rm -rf $(BUILDDIR)/*
+	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
 	rm -f Changelog.rst
-	rm -f expyriment/
+	rm -f expyriment
 
 rst:
 	make expyriment.rst
@@ -45,7 +45,7 @@ rst:
 expyriment.rst:
 	ln -fs ../../expyriment/ ./
 	./create_rst_api_reference.py
-	rm -rf expyriment/
+	rm -f expyriment
 
 html: expyriment.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
