@@ -44,4 +44,5 @@ data/
 events/
 _build/
 documentation/sphinx/expyriment*.rst
+documentation/sphinx/expyriment
 documentation/sphinx/Changelog.rst

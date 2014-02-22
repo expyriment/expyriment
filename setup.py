@@ -1,5 +1,10 @@
 #!/usr/bin/env python
+"""
+Setup file for Expyriment
+"""
 
+__author__ = 'Florian Krause <florian@expyriment.org>, \
+Oliver Lindemann <oliver@expyriment.org>'
 
 import stat
 from subprocess import Popen, PIPE

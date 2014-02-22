@@ -37,16 +37,15 @@ clean:
 	rm -rf $(BUILDDIR)/*
 	rm -f expyriment.*
 	rm -f Changelog.rst
-
-tar:
-	make html
-	tar czf html.tar.gz -C _build html
+	rm -f expyriment/
 
 rst:
 	make expyriment.rst
 
 expyriment.rst:
-	./create_rst_api_reference.py 
+	ln -fs ../../expyriment/ ./
+	./create_rst_api_reference.py
+	rm -rf expyriment/
 
 html: expyriment.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
