@@ -83,7 +83,7 @@ class Build(build_py):
                         new_file.write("__version__ = '" + version_nr + "'" +
                                        '\n')
                     elif line[0:12] == '__revision__':
-                        new_file.write("__revision__ = '" + revision_nr + "'"
+                        new_file.write("__revision__ = '" + revision_nr + "'" # TODO: shorten revision_nr[-6:]
                                        + '\n')
                     elif line[0:8] == '__date__':
                         new_file.write("__date__ = '" + date + "'" + '\n')
