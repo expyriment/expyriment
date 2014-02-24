@@ -937,6 +937,8 @@ type".format(permutation_type))
         - io.mouse.wait_press
         - io.serialport.read_line
         - io.textinput.get
+        - io.TouchScreenButtonBox.wait
+        - io.extras.CedrusResponseDevice.wait
         - stimulus.video.wait_frame
         - stimulus.video.wait_end
 
