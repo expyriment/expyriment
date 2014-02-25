@@ -17,18 +17,23 @@ Installing Expyriment
 ---------------------
 The easiest way to run experiments on Android devices is to use our "Expyriment
 Android Runtime" appplication.
-At the moment you can only download an experimental version from our `download
-page`_. In the future, 
-once a stable version is released, it will be available in the Google Play 
+You can only download the current version from our `Android download
+page`_. In the future it will also be available in the Google Play 
 Store.
+
+Installing experiment scripts
+-----------------------------
+Once installed, the application will look for experiment scripts (each in its own
+subdirectory) in a directory called 'expyriment', located at the root level of
+either storage device under 'mnt' (i.e. the internal or external SD card).
+For example:
+    /mnt/sdcard0/expyriment/exp1/exp1.py
+    /mnt/extSdCard/expyriment/exp2/exp2.py
 
 Notes
 -----
-**Experimental version**
-    The current version of the "Expyriment Android Runtime" application is an 
-    experimental version and in an early development stage! This means that not 
-    all features are supported (e.g. no extras plugins) and that there might be
-    bugs and other potential problems and limitations.
+**Extra plugins not supported**
+    The current version of the "Expyriment Android Runtime" does not support extras plugins.
 
 .. _`PGS4A`: http://pygame.renpy.org
-.. _`download page`: http://code.google.com/p/expyriment/downloads/list
+.. _`Android download page`: https://github.com/expyriment/expyriment-android-runtime/releases
