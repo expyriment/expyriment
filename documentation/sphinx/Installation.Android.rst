@@ -26,10 +26,10 @@ Installing experiment scripts
 Once installed, the application will look for experiment scripts (each in its own
 subdirectory) in a directory called 'expyriment', located at the root level of
 either storage device under 'mnt' (i.e. the internal or external SD card).
-For example:
+Examples of correctly located expyriment scripts include:
     /mnt/sdcard0/expyriment/exp1/exp1.py
     
-    /mnt/extSdCard/expyriment/exp1/exp1.py
+    /mnt/extSdCard/expyriment/exp2/exp2.py
 
 Notes
 -----
