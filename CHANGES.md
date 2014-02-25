@@ -2,24 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Upcomming Version
------------------
-New Features:
-- new io class: TouchScreenButtonBox
-- new options for control.start(): skip_ready_screen and subject_id to start with
-  predefined subject id
-- experiment have now also a global mouse object: experiment.mouse 
-- new property for io.mouse: is_visible
-
-Fixed:
-- bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
-  io.TextMenu
-
-Changed:
-- overlapping methods of stimuli now work on absolute_position by default
-
-Version 0.7.0b1 (15 Feb 2014)
------------------------------
+Version 0.7.0 (25 Feb 2014)
+---------------------------
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
@@ -34,6 +18,11 @@ New Features:
   them
 - FreeFonts are now part of the Expyriment distribution to guarantee the same
   fonts across platforms
+- new io class: TouchScreenButtonBox
+- new options for control.start(): skip_ready_screen and subject_id to start with
+  predefined subject id
+- experiment have now also a global mouse object: experiment.mouse 
+- new property for io.mouse: is_visible
 
 Fixed:
 - experiment clock with monotonic timing
@@ -42,9 +31,12 @@ Fixed:
 - incompatibility with multiprocessing.Pool
 - bug in visual.add_noise
 - bug in io.SerialPort.read_line
+- bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
+  io.TextMenu
 
 Changed:
 - several Android related changes (have no impact for normal use of Expyriment)
+- overlapping methods of stimuli now work on absolute_position by default
 
 Version 0.6.4 (5 Aug 2013)
 --------------------------

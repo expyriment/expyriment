@@ -92,7 +92,7 @@ def create_module_rst(mod_name, no_members=False):
 
 
 def create_change_log_rst():
-    """create well shaped Change_log.rst from CHANGES.md"""
+    """create well shaped Changelog.rst from CHANGES.md"""
 
     changes_md = "../../CHANGES.md"
     changelog_rst = "Changelog.rst"
@@ -100,7 +100,7 @@ def create_change_log_rst():
     fl = open(changes_md, 'r')
     out = open(changelog_rst, 'w')
 
-    out.write("""Change log
+    out.write("""Changelog
 ==========
 
 """)

@@ -2,7 +2,7 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: build
+.PHONY: build install clean
 
 release: build html_documentation api_ref_html
 	@# requires numpydoc. install: easy_install numpydoc
@@ -21,9 +21,14 @@ release: build html_documentation api_ref_html
 		mv release expyriment-$$VER;\
 		zip -r expyriment-$$VER.zip expyriment-$$VER;\
 		tar czf expyriment-$$VER.tar.gz expyriment-$$VER;
+	@find build -type f \( -name '*.swp' -o -name '*~' -o -name '*.bak' \) -delete
+	
 
 build:
 	python setup.py build | tee /tmp/expy.build.log
+
+install:
+	python setup.py install
 
 html_documentation:
 	make --directory=documentation/sphinx html
