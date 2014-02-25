@@ -32,20 +32,22 @@ Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.or
 
 Documentation
 =============
-Documentation is in the directory "documentation".
+Documentation can be found in the directory "documentation".
 For online documentation see: 
 http://docs.expyriment.org
 
 Examples
 ========
-Examples are in the directory "examples".
+Examples can be found in the directory "examples".
 For online examples see: 
 http://docs.expyriment.org/Examples.html
 
 Installation
 ============
-The usual setup.py for Python libraries is used for the source distribution.
-Windows installers are also available (see documentation).
+The usual setup.py for Python libraries is used.
+A Windows installer is also available.
+For more information, please see:
+http://docs.expyriment.org/Installation.html
 
 Reference
 =========
