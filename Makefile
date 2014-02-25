@@ -13,7 +13,7 @@ release: build html_documentation api_ref_html pdf_documentation
 	@cp -ra documentation build/release
 	@cp -ra examples build/release
 	@cp -at build/release  CHANGES.md COPYING.txt README.md 
-	@cp -at build/release  Makefile setup.py
+	@cp -at build/release  setup.py
 	@ # get version and rename and zip
 	@VER=$$(awk -F' ' '{if ($$2=="Version:") print $$3}' < /tmp/expy.build.log); \
 		cd build;\
@@ -21,7 +21,7 @@ release: build html_documentation api_ref_html pdf_documentation
 		mv release expyriment-$$VER;\
 		zip -r expyriment-$$VER.zip expyriment-$$VER;\
 		tar czf expyriment-$$VER.tar.gz expyriment-$$VER;
-	@find build -type f \( -name '*.swp' -o -name '*~' -o -name '*.bak' \) -delete
+	@find build -type f \( -name '*.swp' -o -name '*~' -o -name '*.bak' -o -name '#*#' \) -delete
 	
 
 build:
