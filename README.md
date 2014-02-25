@@ -44,9 +44,7 @@ http://docs.expyriment.org/Examples.html
 
 Installation
 ============
-The usual setup.py for Python libraries is used.
-A Windows installer is also available.
-For more information, please see:
+For installation instructions, please see:
 http://docs.expyriment.org/Installation.html
 
 Reference
