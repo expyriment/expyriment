@@ -44,7 +44,9 @@ http://docs.expyriment.org/Examples.html
 
 Installation
 ============
-For installation instructions, please see:
+
+Detailed installation instructions can be found in the documentation.
+For online installation instructions see:
 http://docs.expyriment.org/Installation.html
 
 Reference
