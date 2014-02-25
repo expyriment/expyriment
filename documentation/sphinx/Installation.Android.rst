@@ -21,15 +21,19 @@ You can only download the current version from our `Android download
 page`_. In the future it will also be available in the Google Play 
 Store.
 
-Installing experiment scripts
+Installing Expyriment scripts
 -----------------------------
-Once installed, the application will look for experiment scripts (each in its own
+Once installed, the application will look for Expyriment scripts (each in its own
 subdirectory) in a directory called 'expyriment', located at the root level of
 either storage device under 'mnt' (i.e. the internal or external SD card).
-Examples of correctly located expyriment scripts include:
+Examples of correctly located Expyriment scripts include:
     /mnt/sdcard0/expyriment/exp1/exp1.py
     
-    /mnt/extSdCard/expyriment/exp2/exp2.py
+    /mnt/sdcard0/expyriment/exp2/exp2.py
+    
+    /mnt/extSdCard/expyriment/exp3/exp3.py
+    
+    /mnt/extSdCard/expyriment/exp4/exp4.py
 
 Notes
 -----
