@@ -1,5 +1,10 @@
 #!/usr/bin/env python
+"""
+Setup file for Expyriment
+"""
 
+__author__ = 'Florian Krause <florian@expyriment.org>, \
+Oliver Lindemann <oliver@expyriment.org>'
 
 import stat
 from subprocess import Popen, PIPE
@@ -31,7 +36,7 @@ class Install(install):
     def run(self):
         # Clear old installation
         olddir = path.abspath(self.install_lib + path.sep + "expyriment")
-        oldegginfo = glob(path.abspath(self.install_lib) + path.sep + 
+        oldegginfo = glob(path.abspath(self.install_lib) + path.sep +
                           "expyriment*.egg-info")
         for egginfo in oldegginfo:
             remove(egginfo)
@@ -78,7 +83,7 @@ class Build(build_py):
                         new_file.write("__version__ = '" + version_nr + "'" +
                                        '\n')
                     elif line[0:12] == '__revision__':
-                        new_file.write("__revision__ = '" + revision_nr + "'"
+                        new_file.write("__revision__ = '" + revision_nr[:7] + "'"
                                        + '\n')
                     elif line[0:8] == '__date__':
                         new_file.write("__date__ = '" + date + "'" + '\n')
@@ -120,7 +125,7 @@ try:
     date = proc.stdout.readline().strip()
 
     # Build
-    setup(name='expyriment',
+    x = setup(name='expyriment',
           version=version_nr,
           description='A Python library for cognitive and neuroscientific experiments',
           author='Florian Krause, Oliver Lindemann',

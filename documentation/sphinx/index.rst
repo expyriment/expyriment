@@ -20,38 +20,16 @@ Contents
 
    Overview
    API Reference <expyriment>
+   Advanced
+   Technical issues <Technical>
    Changelog
 
-**Getting started**
+**Getting Started**
 
 .. toctree::
    :titlesonly:
    :maxdepth: 2
 
    Installation
-   Beginner’s tutorial <Tutorial>
+   Beginner`s tutorial <Tutorial>
    Example experiments <Examples>
-   
-**Advanced**
-
-.. toctree::
-    :titlesonly:
-    :maxdepth: 2
-
-    API reference tool <APIReferenceTool>
-    Test suite <Testsuite>
-    Command line interface <CommandLineInterface>
-    Data preprocessing <DataPreprocessing>
-    Importing data into R <ImportDataIntoR>
-    Using non-English characters <Unicode>
-
-**Technical**
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 1
-   
-   Hardware compatibility <Hardware>
-   Timing <Timing>
-   Problems & Limitations <Problems>
-
