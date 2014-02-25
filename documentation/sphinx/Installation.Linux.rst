@@ -15,9 +15,7 @@ Installing Expyriment
 ---------------------
 You can then install Expyriment with the online installer::
 
-    wget -P /tmp 
-    'https://raw2.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' 
-    && sh /tmp/expyriment_online_install_linux.sh
+    wget -P /tmp 'https://raw2.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
 
 Alternatively, you can download "expyriment-|release|.zip from the
 `Release page` and install as described here_.
