@@ -10,7 +10,6 @@ This example is also appropriate to illustrates the use of the Android runtime e
 
 from expyriment import control, stimuli, io, design, misc
 
-control.set_develop_mode(True)
 design.defaults.experiment_background_colour = misc.constants.C_GREY
 design.defaults.experiment_foreground_colour = misc.constants.C_BLACK
 line_length = 200
