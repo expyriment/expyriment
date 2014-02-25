@@ -4,7 +4,7 @@
 
 .PHONY: build install clean
 
-release: build html_documentation api_ref_html
+release: build html_documentation api_ref_html pdf_documentation
 	@# requires numpydoc. install: easy_install numpydoc
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
