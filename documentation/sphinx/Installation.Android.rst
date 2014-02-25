@@ -29,7 +29,7 @@ either storage device under 'mnt' (i.e. the internal or external SD card).
 For example:
     /mnt/sdcard0/expyriment/exp1/exp1.py
     
-or
+or:
     /mnt/extSdCard/expyriment/exp1/exp1.py
 
 Notes
