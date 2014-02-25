@@ -28,8 +28,8 @@ subdirectory) in a directory called 'expyriment', located at the root level of
 either storage device under 'mnt' (i.e. the internal or external SD card).
 For example:
     /mnt/sdcard0/expyriment/exp1/exp1.py
-    
-    /mnt/extSdCard/expyriment/exp2/exp2.py
+or
+    /mnt/extSdCard/expyriment/exp1/exp1.py
 
 Notes
 -----
