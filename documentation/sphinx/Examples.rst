@@ -29,13 +29,22 @@ mappings, error feedback and between-subject factors.
 .. literalinclude:: ../../examples/snarc_experiment.py
 
 
+
+Line bisection task
+-------------------
+Example of a line bisection task that is optimized for the use of touchscreens 
+and the `Expyriment Android Runtime`_.
+
+.. literalinclude:: ../../examples/line-bisection.py
+
+.. _`Expyriment Android Runtime`: https://github.com/expyriment/expyriment-android-runtime/
+
 Really short example
 --------------------
 Expyriment is efficient!. See here a very short example of an functioning 
 experiment in less than 20 lines of pure code.
 
-.. literalinclude:: ../../examples/really_short_exp.py 
-
+.. literalinclude:: ../../examples/really_short_exp.py
 
 Data preprocessing
 ------------------
