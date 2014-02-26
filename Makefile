@@ -14,7 +14,7 @@ release: build html_documentation api_ref_html pdf_documentation
 	@cp -ra examples build/release
 	@cp -at build/release  CHANGES.md COPYING.txt README.md 
 	@cp -at build/release  setup.py
-	@ # get version and rename and zip
+	@# get version and rename and zip
 	@VER=$$(awk -F' ' '{if ($$2=="Version:") print $$3}' < /tmp/expy.build.log); \
 		cd build;\
 		rm -rf expyriment-$$VER;\
