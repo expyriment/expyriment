@@ -12,7 +12,7 @@ PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
-.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest
+.PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest expyriment.rst
 
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -45,7 +45,6 @@ rst:
 expyriment.rst:
 	ln -fs ../../expyriment/ ./
 	./create_rst_api_reference.py
-	rm -f expyriment
 
 html: expyriment.rst
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
