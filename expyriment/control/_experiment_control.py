@@ -415,18 +415,19 @@ def initialize(experiment=None):
                             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                             background_colour=(0, 0, 0),
                             position=(0, 40))
-    text2 = stimuli.TextLine("{0} ({1})".format(
-                            os.path.split(sys.argv[0])[1],
-                            get_experiment_secure_hash()),
-                            text_size=14,
-                            text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                            background_colour=(0, 0, 0),
-                            position=(0, 10))
     canvas = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     canvas2 = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
-    text2.plot(canvas)
+    hash_ = get_experiment_secure_hash()
+    if hash_ is not None:
+        text2 = stimuli.TextLine(
+            "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_),
+            text_size=14,
+            text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+            background_colour=(0, 0, 0),
+            position=(0, 10))
+        text2.plot(canvas)
     canvas.preload(True)
     canvas._set_surface(canvas._get_surface().convert())
     start = experiment.clock.time

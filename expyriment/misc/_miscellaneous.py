@@ -303,7 +303,6 @@ def to_unicode(s, fse=False):
     return u
 
 
-
 def get_experiment_secure_hash():
     """
     Returns the first six places of the secure hash (sha1) of the main file
@@ -311,8 +310,9 @@ def get_experiment_secure_hash():
 
     Returns
     -------
-    hash: string
+    hash: string or None
         first six places of the experiment secure hash
+        (None if no main file can be found)
 
     Notes
     -----
@@ -330,4 +330,4 @@ def get_experiment_secure_hash():
             expyriment_main_content = f.read()
         return sha1(expyriment_main_content).hexdigest()[:6]
     except:
-        return "000000"
+        return None
