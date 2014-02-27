@@ -4,21 +4,23 @@ Installation
 How to install Expyriment?
 --------------------------
 
-Expyriment depends on a couple of software packages which have to be installed 
-on the system. These packages are:
+The latest releases of Expyriment can be downloaded from GitHub_. Note, that 
+Expyriment depends on the following software packages that have to be installed 
+on your system:
     * `Python 2`_ (>=2.6),
     * Pygame_ (>=1.9)
     * PyOpenGL_ (>=3.0). 
 
-Optional additional packages include PySerial_ (>=2.5) (to use serial port 
-communication), PyParallel_ (>=0.2) (to use parallel port communication) and 
-NumPy_ (>=1.6) (to use data preprocessing). Please be aware that Expyriment 
-plugins (extras) might have additional dependencies. 
+Additional packages, which are optional and only required for some features of 
+Expyriment are PySerial_ (>=2.5) (to use serial port communication), 
+PyParallel_ (>=0.2) (to use parallel port communication) and NumPy_ (>=1.6) (to 
+use data preprocessing). Please be aware that Expyriment plugins (extras) might 
+have additional dependencies. 
 
 **Importantly, Expyriment relies on 32-bit versions of all these packages!**
- 
-You can find platform-specific instructions for installing Expyriment 
-here:
+
+We provide more detailed platform-specific instructions for installing 
+Expyriment here:
 
 .. toctree::
    :maxdepth: 1
@@ -27,8 +29,7 @@ here:
    Windows <Installation.Windows>
    Linux <Installation.Linux>
    Mac OS X <Installation.OSX>
-
-   Android (experimental) <Installation.Android>
+   Android <Installation.Android>
 
 
 .. _`Python 2`: http://www.python.org/
@@ -36,6 +37,6 @@ here:
 .. _PyOpenGl: http://www.pyopengl.sourceforge.net
    
 .. _PyParallel: http://pyserial.sourceforge.net
-.. _PyParalel: http://pyserial.sourceforge.net/pyparallel.html  
+.. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
 .. _NumPy: http://numpy.org/
-
+.. _GitHub: https://github.com/expyriment/expyriment/releases

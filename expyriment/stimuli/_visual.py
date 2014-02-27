@@ -256,8 +256,8 @@ class Visual(Stimulus):
         """Getter for absolute_position."""
 
         if self._parent:
-            return (self._parent.position[0] + self.position[0],
-                    self._parent.position[1] + self.position[1])
+            return (self._parent.absolute_position[0] + self.position[0],
+                    self._parent.absolute_position[1] + self.position[1])
         else:
             return self.position
 
@@ -469,7 +469,8 @@ class Visual(Stimulus):
             else:
                 return False
 
-    def overlapping_with_stimulus(self, stimulus, mode="visible"):
+    def overlapping_with_stimulus(self, stimulus, mode="visible",
+                                  use_absolute_position=True):
         """Check if stimulus is overlapping with another stimulus.
 
         Parameters
@@ -480,14 +481,16 @@ class Visual(Stimulus):
             "visible": based on non-transparent pixels or
             "surface": based on pixels in pygame surface
             (default = visible")
+        use_absolute_position : bool, optional
+            use absolute_position of stimuli (default) instead of position
 
         Returns
         -------
         overlapping : bool
             are stimuli overlapping or not
-        overlap : pygame surface
-            the overlap in pixels. If mode is 'surface', the
-            argument will always be None.
+        overlap : (int, int)
+            the overlap (x, y) in pixels. If mode is 'surface', the argument
+            will always be None.
 
         Notes
         -----
@@ -500,12 +503,24 @@ class Visual(Stimulus):
             screen_size = expyriment._active_exp.screen.surface.get_size()
             self_size = self.surface_size
             other_size = stimulus.surface_size
-            self_pos = (
-                self.position[0] + screen_size[0] / 2 - self_size[0] / 2,
-                - self.position[1] + screen_size[1] / 2 - self_size[1] / 2)
-            other_pos = (
-                stimulus.position[0] + screen_size[0] / 2 - other_size[0] / 2,
-                - stimulus.position[1] + screen_size[1] / 2 - other_size[1] / 2)
+            if use_absolute_position:
+                self_pos = (self.absolute_position[0] + screen_size[0] / 2 -
+                            self_size[0] / 2,
+                            - self.absolute_position[1] + screen_size[1] / 2 -
+                            self_size[1] / 2)
+                other_pos = (stimulus.absolute_position[0] + screen_size[0] / 2
+                             - other_size[0] / 2,
+                             - stimulus.absolute_position[1] + screen_size[1] /
+                             2 - other_size[1] / 2)
+            else:
+                self_pos = (self.position[0] + screen_size[0] / 2 -
+                            self_size[0] / 2,
+                            - self.position[1] + screen_size[1] / 2 -
+                            self_size[1] / 2)
+                other_pos = (stimulus.position[0] + screen_size[0] / 2 -
+                             other_size[0] / 2,
+                             - stimulus.position[1] + screen_size[1] / 2 -
+                             other_size[1] / 2)
             offset = (-self_pos[0] + other_pos[0], -self_pos[1] + other_pos[1])
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
@@ -516,12 +531,18 @@ class Visual(Stimulus):
                 return False, overlap
         elif mode == "surface":
             screen_size = expyriment._active_exp.screen.surface.get_size()
-            sx = self.absolute_position[0] + screen_size[0] / 2
-            sy = self.absolute_position[1] + screen_size[1] / 2
+            if use_absolute_position:
+                sx = self.absolute_position[0] + screen_size[0] / 2
+                sy = self.absolute_position[1] + screen_size[1] / 2
+                ox = stimulus.absolute_position[0] + screen_size[0] / 2
+                oy = stimulus.absolute_position[1] + screen_size[1] / 2
+            else:
+                sx = self.position[0] + screen_size[0] / 2
+                sy = self.position[1] + screen_size[1] / 2
+                ox = stimulus.position[0] + screen_size[0] / 2
+                oy = stimulus.position[1] + screen_size[1] / 2
             selfrect = pygame.Rect((0, 0), self.surface_size)
             selfrect.center = (sx, sy)
-            ox = stimulus.absolute_position[0] + screen_size[0] / 2
-            oy = stimulus.absolute_position[1] + screen_size[1] / 2
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
@@ -531,7 +552,8 @@ class Visual(Stimulus):
             else:
                 return False, None
 
-    def overlapping_with_position(self, position, mode="visible"):
+    def overlapping_with_position(self, position, mode="visible",
+                                  use_absolute_position=True):
         """Check if stimulus is overlapping with a certain position.
 
         Parameters
@@ -542,10 +564,12 @@ class Visual(Stimulus):
             "visible": based on non-transparent pixels or
             "rectangle": based on pixels in pygame surface
             (default = visible")
+        use_absolute_position : bool, optional
+            use absolute_position of stimulus (default) instead of position
 
         Returns
         -------
-        out: bool
+        overlapping : bool
 
         Notes
         -----
@@ -557,9 +581,17 @@ class Visual(Stimulus):
         if mode == "visible":
             screen_size = expyriment._active_exp.screen.surface.get_size()
             self_size = self.surface_size
-            self_pos = (
-                (self.position[0] + screen_size[0] / 2) - self_size[0] / 2,
-                (-self.position[1] + screen_size[1] / 2) - self_size[1] / 2)
+            if use_absolute_position:
+                self_pos = (
+                    (self.absolute_position[0] + screen_size[0] / 2) -
+                    self_size[0] / 2,
+                    (-self.absolute_position[1] + screen_size[1] / 2) -
+                    self_size[1] / 2)
+            else:
+                self_pos = (
+                    (self.position[0] + screen_size[0] / 2) - self_size[0] / 2,
+                    (-self.position[1] + screen_size[1] / 2) - self_size[1] /
+                    2)
             pos = (position[0] + screen_size[0] / 2,
                    - position[1] + screen_size[1] / 2)
             offset = (int(pos[0] - self_pos[0]), int(pos[1] - self_pos[1]))
@@ -575,8 +607,12 @@ class Visual(Stimulus):
 
         elif mode == "surface":
             screen_size = expyriment._active_exp.screen.surface.get_size()
-            sx = self.absolute_position[0] + screen_size[0] / 2
-            sy = self.absolute_position[1] + screen_size[1] / 2
+            if use_absolute_position:
+                sx = self.absolute_position[0] + screen_size[0] / 2
+                sy = self.absolute_position[1] + screen_size[1] / 2
+            else:
+                sx = self.position[0] + screen_size[0] / 2
+                sy = self.position[1] + screen_size[1] / 2
             selfrect = pygame.Rect((0, 0), self.surface_size)
             selfrect.center = (sx, sy)
             p = (position[0] + screen_size[0] / 2,

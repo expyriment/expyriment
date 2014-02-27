@@ -1,11 +1,11 @@
-The Expyriment plugin system (Extras)
+The Expyriment plugin system (extras)
 =====================================
 
 Usage
 -----
 The design, stimuli, io and misc packages can be extended with plugins
 (additional classes) that can be accessed via the 'extras' namespace of each
-package. There two locations, Expyriment will look for installed plugins.
+package. There are two locations Expyriment will look for installed plugins:
     1. In the 'extras' directories of the corresponding packages of the
        Expyriment installation.
     2. In the 'design', 'stmuli', 'io' and 'misc' direcories within a
@@ -22,6 +22,7 @@ the filename is the class name in lowercase. Additionally a file called
 'classname_defaults.py' can be created which will hold the default values for
 all parameters given when initializing the class. The naming convention is
 'classname_parameter'.
+
 For design and misc extras this is all there is, but for io and stimuli plugins,
 additional conventions need to be taken care of.
 

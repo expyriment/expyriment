@@ -68,7 +68,7 @@ class TextMenu(Input):
             maximum length of a item list before a scroll menu will
             be display. If the parameter is 0 of False scroll menu
             will not be displayed
-        background_stimulus : expyriment stimulus, optional
+        background_stimulus : visual expyriment stimulus, optional
             The background stimulus is a second stimulus that will be presented
             together with the TextMenu. For both stimuli overlap TextMenu
             will appear on top of the background_stimulus
@@ -125,11 +125,11 @@ class TextMenu(Input):
             colour=select_frame_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         if background_stimulus is not None:
-            if background_stimulus.__class__.__base__ == \
-                    expyriment.stimuli._visual.Visual:
+            if background_stimulus.__class__.__base__ in \
+                     [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
-                raise AttributeError("{0} ".format(type(background_stimulus)) +
+                raise TypeError("{0} ".format(type(background_stimulus)) +
                                      "is not a valid background stimulus. " +
                                      "Use an expyriment visual stimulus.")
         else:

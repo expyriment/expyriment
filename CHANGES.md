@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Version 0.7.0b1 (15 Feb 2014)
------------------------------
+Version 0.7.0 (28 Feb 2014)
+---------------------------
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
@@ -11,24 +11,35 @@ New Features:
 - Clock: new method (static) monotonic_time (this time should be always used)
 - data_preprocessing: new exclusion rule, which allows removing trials
   depending on their deviation (std) from mean (e.g., 'RT > 1.5*std')
-- improvements for OS X in get_system_info
+- improvements for OS X in get_system_info()
 - proper unicode handling: use unicode strings whenever unicode characters
   are needed
 - files: the character encoding is now written to files and used when opening
   them
 - FreeFonts are now part of the Expyriment distribution to guarantee the same
   fonts across platforms
-
+- new io class: TouchScreenButtonBox
+- new options for control.start(): skip_ready_screen and subject_id to start
+  with predefined subject id
+- experiments now also have a global mouse object: experiment.mouse 
+- new property for io.Mouse: is_visible
+- Secure hashes for experiments help to ensure that the correct version is
+  running in the lab. Secure hashes will be displayed at the start and printed
+  in all output file.
+  
 Fixed:
-- experiment clock with monotonic timing
+- experiment clock now with monotonic timing
 - bug in extras.CedrusResponseDevice
 - several bugs in documentation
 - incompatibility with multiprocessing.Pool
-- bug in visual.add_noise
-- bug in io.SerialPort.read_line
+- bug in Visual.add_noise()
+- bug in io.SerialPort.read_line()
+- bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput
+  & io.TextMenu
 
-Changes:
+Changed:
 - several Android related changes (have no impact for normal use of Expyriment)
+- overlapping methods of stimuli now work on absolute_position by default
 
 Version 0.6.4 (5 Aug 2013)
 --------------------------
@@ -69,7 +80,7 @@ Fixed:
 - API reference tool should now also open when there are whitespaces in Python
   executable path
 
-Changes:
+Changed:
 - renamed TextInput.user_colour --> user_text_colour
 - FixCross.cross_size has been renamed to FixCross.size. FixCross.size is 
   now a tuple (int, int) and defines both dimensions (x, y) separately.  

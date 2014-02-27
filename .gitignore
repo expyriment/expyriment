@@ -19,7 +19,10 @@ lib
 lib64
 __pycache__
 
-# Installer logs
+# vim files
+*.swp
+
+## Installer logs
 pip-log.txt
 
 # Unit test / coverage reports
@@ -39,3 +42,10 @@ nosetests.xml
 test_suite_protocol.xpp
 data/
 events/
+_build/
+documentation/html/
+documentation/pdf/
+documentation/api_ref_html/
+documentation/sphinx/expyriment*.rst
+documentation/sphinx/expyriment
+documentation/sphinx/Changelog.rst

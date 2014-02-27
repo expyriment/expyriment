@@ -10,7 +10,7 @@ __revision__ = ''
 __date__ = ''
 
 import sys
-
+import os
 import pygame
 try:
     import android
@@ -24,14 +24,15 @@ except ImportError:
 import defaults
 import expyriment
 from expyriment import design, stimuli, misc
-from expyriment.io import DataFile, EventFile, TextInput, Keyboard
-from expyriment.io import _keyboard
+from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
+from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2str, get_experiment_secure_hash
 
 
-def start(experiment=None, auto_create_subject_id=None, subject_id=None):
+def start(experiment=None, auto_create_subject_id=None, subject_id=None,
+            skip_ready_screen=False):
     """Start an experiment.
 
     This starts an experiment defined by 'experiment' and asks for the subject
@@ -49,11 +50,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
     ----------
     experiment : design.Experiment, optional (DEPRECATED)
         Don't use this parameter, it only exists to keep backward compatibility.
-    auto_create_subject_id : bool
-        if true new subject id will be created automatically
-    subject_id : integer
-        start with a specific subject_id. Subject_id MUST be an integer.
-        Setting this paramter overrules auto_create_subject_id.
+    auto_create_subject_id : bool, optional
+        if True new subject id will be created automatically.
+    subject_id : integer, optional
+        start with a specific subject_id. No subject id input mask will be
+        presented.  Subject_id must be an integer.  Setting this paramter
+        overrules auto_create_subject_id.
+    skip_ready_screen : boolen, optional
+        if True ready screen will be skipped. default=False
 
     Returns
     -------
@@ -90,26 +94,53 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
 
     if not auto_create_subject_id:
         if android is not None:
-            position = (0, 200)
+            fields = [stimuli.Circle(diameter=50, line_width=0, position=(0,70)),
+                      stimuli.Circle(diameter=50, line_width=0, position=(0,-70)),
+                      stimuli.Rectangle(size=(50,50), position=(120,0))]
+            plusminus = [
+                stimuli.TextLine(text="+", text_size=36, position=(0,70),
+                                text_colour=(0,0,0), text_bold=True),
+                stimuli.TextLine(text="-", text_size=36, position=(0,-70),
+                                text_colour=(0,0,0), text_bold=True),
+                stimuli.TextLine(text = "OK", text_size=24, position=(120,0),
+                                text_colour=(0,0,0))]
+            subject_id = default_number
+            while True:
+                text = stimuli.TextLine(text="{0}".format(subject_id),
+                                text_size=28)
+                btn = TouchScreenButtonBox(button_fields=fields,
+                                stimuli=plusminus+[text])
+                btn.show()
+                key, rt = btn.wait()
+                if key==fields[0]:
+                    subject_id += 1
+                elif key == fields[1]:
+                    subject_id -= 1
+                    if subject_id <= 0:
+                        subject_id = 0
+                elif key == fields[2]:
+                    break
+            experiment._subject = int(subject_id)
+
         else:
             position = (0, 0)
-        while True:
-            ask_for_subject = TextInput(
-                message="Subject Number:",
-                position=position,
-                message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                message_text_size=24,
-                user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                user_text_size=20,
-                background_colour=(0, 0, 0),
-                frame_colour=(70, 70, 70),
-                ascii_filter=misc.constants.K_ALL_DIGITS)
-            subject_id = ask_for_subject.get(repr(default_number))
-            try:
-                experiment._subject = int(subject_id)
-                break
-            except:
-                pass
+            while True:
+                ask_for_subject = TextInput(
+                    message="Subject Number:",
+                    position=position,
+                    message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                    message_text_size=24,
+                    user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                    user_text_size=20,
+                    background_colour=(0, 0, 0),
+                    frame_colour=(70, 70, 70),
+                    ascii_filter=misc.constants.K_ALL_DIGITS)
+                subject_id = ask_for_subject.get(repr(default_number))
+                try:
+                    experiment._subject = int(subject_id)
+                    break
+                except:
+                    pass
 
     else:
         experiment._subject = default_number
@@ -167,10 +198,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None):
         position = (0, 200)
     else:
         position = (0, 0)
-    stimuli.TextLine("Ready", position=position, text_size=24,
+    if not skip_ready_screen:
+        stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
-    experiment.keyboard.wait()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+        if android is None:
+            experiment.keyboard.wait()
+        else:
+            experiment.mouse.wait_press()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
@@ -205,7 +240,10 @@ def pause():
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
-    key = Keyboard().wait(pygame.K_RETURN)
+    if android is None:
+        experiment.keyboard.wait()
+    else:
+        experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
     return key
 
@@ -303,6 +341,7 @@ def initialize(experiment=None):
     - experiment.screen   -- the current screen
     - experiment.clock    -- the main clock
     - experiment.keyboard -- the main keyboard
+    - experiment.mouse    -- the main mouse
     - experiment.event    -- the main event file
 
     Parameters
@@ -366,6 +405,7 @@ def initialize(experiment=None):
     else:
         experiment._events = None
     experiment._keyboard = Keyboard()
+    experiment._mouse = Mouse(show_cursor=False)
 
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
@@ -379,6 +419,15 @@ def initialize(experiment=None):
     canvas2 = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
+    hash_ = get_experiment_secure_hash()
+    if hash_ is not None:
+        text2 = stimuli.TextLine(
+            "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_),
+            text_size=14,
+            text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+            background_colour=(0, 0, 0),
+            position=(0, 10))
+        text2.plot(canvas)
     canvas.preload(True)
     canvas._set_surface(canvas._get_surface().convert())
     start = experiment.clock.time

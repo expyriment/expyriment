@@ -18,10 +18,11 @@ You can then install Expyriment with the online installer::
     wget -P /tmp 'https://raw.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
 
 Alternatively, you can download "expyriment-|release|.zip from the
-`Release page` and install as described here_.
+`Release page`_ and install as described here_.
 
-For Ubuntu, there is furthermore an Expyriment package available through the 
-following third-party PPA: https://launchpad.net/~smathot/+archive/cogscinl)
+(For Ubuntu, there is furthermore an Expyriment package available through the 
+following third-party PPA: https://launchpad.net/~smathot/+archive/cogscinl.
+Please note that we do not provide support for this package.)
 
 Notes
 -----

@@ -92,6 +92,7 @@ class Experiment(object):
         self._is_started = False
         self._is_initialized = False
         self._keyboard = None
+        self._mouse = None
         self._clock = None
         self._subject = None
         self._screen = None
@@ -177,6 +178,12 @@ class Experiment(object):
         """Getter for global keyboard."""
 
         return self._keyboard
+
+    @property
+    def mouse(self):
+        """Getter for global keyboard."""
+
+        return self._mouse
 
     @property
     def subject(self):
@@ -930,6 +937,8 @@ type".format(permutation_type))
         - io.mouse.wait_press
         - io.serialport.read_line
         - io.textinput.get
+        - io.TouchScreenButtonBox.wait
+        - io.extras.CedrusResponseDevice.wait
         - stimulus.video.wait_frame
         - stimulus.video.wait_end
 

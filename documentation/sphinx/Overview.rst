@@ -130,5 +130,3 @@ Related Projects
 ----------------
 If you are looking for a graphical experiment builder, we suggest OpenSesame, 
 which uses Expyriment as the default back-end:  http://www.osdoc.cogsci.nl/.
-
-

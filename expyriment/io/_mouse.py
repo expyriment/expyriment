@@ -22,7 +22,12 @@ from _input_output  import Input
 
 
 class Mouse(Input):
-    """A class implementing a mouse input."""
+    """A class implementing a mouse input.
+
+    Calling `expyriment.control.intialize(exp)` will automatically create a
+    mouse instance and will reference it in exp.mouse for easy access.
+
+    """
 
     def __init__(self, show_cursor=True, track_button_events=None,
                  track_motion_events=None):
@@ -119,6 +124,14 @@ class Mouse(Input):
 
         pygame.event.pump()
         return pygame.mouse.get_pressed()
+
+    @property
+    def is_cursor_visible(self):
+        """returns if cursor is visible"""
+
+        visible = pygame.mouse.set_visible(False)
+        pygame.mouse.set_visible(visible)
+        return visible
 
     def get_last_button_down_event(self):
         """Get the last button down event.
@@ -303,9 +316,8 @@ class Mouse(Input):
             if btn_id in buttons or motion_occured:
                 rt = int((get_time() - start) * 1000)
                 break
-            elif Keyboard.process_control_keys() or (duration is not None and
-                int((get_time() - start) * 1000)\
-                                                     >= duration):
+            elif Keyboard.process_control_keys() or (duration is not None and \
+                int((get_time() - start) * 1000) >= duration):
                 break
 
         position_in_expy_coordinates = self.position

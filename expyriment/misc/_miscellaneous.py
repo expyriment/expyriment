@@ -14,12 +14,11 @@ __revision__ = ''
 __date__ = ''
 
 import sys
-
-import sys
 import os
 import locale
 import glob
 import pygame
+from hashlib import sha1
 
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
@@ -231,14 +230,14 @@ def find_font(font):
             return font_file
         else:
             return ""
-            
+
 def to_str(u, fse=False):
 
     """
     Converts an input str or unicode object to a str object without throwing
     an exception. If fse is False, the str is utf-8 encoded, otherwise it is
     encoded with the filesystemencoding. Str input objects are return unmodified.
-    
+
     Parameters
     ----------
     u : str or unicode
@@ -246,33 +245,32 @@ def to_str(u, fse=False):
     fse : bool
         indicates whether the filesystem encoding should used.
         (default = False)
-        
+
     Returns
     -------
     A str-type string.
     """
-    
+
     if isinstance(u, str):
         return u
-        
+
     fs_enc = sys.getfilesystemencoding()
     if fs_enc == None:
         fs_enc = u'utf-8'
     if fse:
-        s = u.encode(fs_enc)        
+        s = u.encode(fs_enc)
     else:
         s = u.encode(u'utf-8')
     return s
 
 def to_unicode(s, fse=False):
-
     """
     Converts an input str or unicode object to a unicode object without throwing
     an exception. If fse is False, the first encoding that is tried is utf-8,
     falling back to the filesystem encoding if this throws an error. If fse is
     True, the filesystem encoding is tried, falling back to utf-8. Unicode
     input objects are return unmodified.
-    
+
     Parameters
     ----------
     s : str or unicode
@@ -280,15 +278,15 @@ def to_unicode(s, fse=False):
     fse : bool
         indicates whether the filesystem encoding should be tried first.
         (default = False)
-        
+
     Returns
     -------
     A unicode-type string.
     """
-    
+
     if isinstance(s, unicode):
         return s
-        
+
     fs_enc = sys.getfilesystemencoding()
     if fs_enc == None:
         fs_enc = u'utf-8'
@@ -303,3 +301,33 @@ def to_unicode(s, fse=False):
         except UnicodeDecodeError:
             u = s.decode(fs_enc, u'ignore')
     return u
+
+
+def get_experiment_secure_hash():
+    """
+    Returns the first six places of the secure hash (sha1) of the main file
+    of the current experiment.
+
+    Returns
+    -------
+    hash: string or None
+        first six places of the experiment secure hash
+        (None if no main file can be found)
+
+    Notes
+    -----
+    Secure hashes for experiments help to ensure that the correct version is
+    running in the lab. Hash codes are written in all output files. If
+    you want to check post hoc the version of your experiment, create the
+    secure hash (sha1) of your expyriment .py-file and compare the first six
+    place with the code in the output file.
+
+    """
+
+    expyriment_main_filename = os.path.split(sys.argv[0])[1]
+    try:
+        with open(expyriment_main_filename) as f:
+            expyriment_main_content = f.read()
+        return sha1(expyriment_main_content).hexdigest()[:6]
+    except:
+        return None

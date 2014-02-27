@@ -81,7 +81,7 @@ class TextInput(Input):
             gap between message and user input
         screen : io.Screen, optional
             screen to present on
-        background_stimulus : expyriment stimulus, optional
+        background_stimulus : visual Expyriment stimulus, optional
             The background stimulus is a second stimulus that will be presented
             together with the TextInput. For both stimuli overlap TextInput
             will appear on top of the background_stimulus
@@ -187,11 +187,11 @@ class TextInput(Input):
         else:
             self._screen = expyriment._active_exp.screen
         if background_stimulus is not None:
-            if background_stimulus.__class__.__base__ == \
-                    expyriment.stimuli._visual.Visual:
+            if background_stimulus.__class__.__base__ in \
+                     [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
-                raise AttributeError("{0} ".format(type(background_stimulus)) +
+                raise TypeError("{0} ".format(type(background_stimulus)) +
                                      "is not a valid background stimulus. " +
                                      "Use an expyriment visual stimulus.")
         else:
