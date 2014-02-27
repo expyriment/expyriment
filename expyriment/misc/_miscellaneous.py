@@ -325,6 +325,9 @@ def get_experiment_secure_hash():
     """
 
     expyriment_main_filename = os.path.split(sys.argv[0])[1]
-    with open(expyriment_main_filename) as f:
-        expyriment_main_content = f.read()
-    return sha1(expyriment_main_content).hexdigest()[:6]
+    try:
+        with open(expyriment_main_filename) as f:
+            expyriment_main_content = f.read()
+        return sha1(expyriment_main_content).hexdigest()[:6]
+    except:
+        return "000000"
