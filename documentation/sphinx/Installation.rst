@@ -29,7 +29,7 @@ Expyriment here:
    Windows <Installation.Windows>
    Linux <Installation.Linux>
    Mac OS X <Installation.OSX>
-   Android (experimental) <Installation.Android>
+   Android <Installation.Android>
 
 
 .. _`Python 2`: http://www.python.org/

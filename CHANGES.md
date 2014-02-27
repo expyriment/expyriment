@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Version 0.7.0b2 (27 Feb 2014)
------------------------------
+Version 0.7.0 (28 Feb 2014)
+---------------------------
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
@@ -11,7 +11,7 @@ New Features:
 - Clock: new method (static) monotonic_time (this time should be always used)
 - data_preprocessing: new exclusion rule, which allows removing trials
   depending on their deviation (std) from mean (e.g., 'RT > 1.5*std')
-- improvements for OS X in get_system_info
+- improvements for OS X in get_system_info()
 - proper unicode handling: use unicode strings whenever unicode characters
   are needed
 - files: the character encoding is now written to files and used when opening
@@ -19,24 +19,23 @@ New Features:
 - FreeFonts are now part of the Expyriment distribution to guarantee the same
   fonts across platforms
 - new io class: TouchScreenButtonBox
-- new options for control.start(): skip_ready_screen and subject_id to start with
-  predefined subject id
-- experiment have now also a global mouse object: experiment.mouse 
-- new property for io.mouse: is_visible
-- Secure hashes for experiments help to ensure that the correct version is running
-  in the lab. Secure hashes will be displayed at the start and printed in all
-  output file.
+- new options for control.start(): skip_ready_screen and subject_id to start
+  with predefined subject id
+- experiments now also have a global mouse object: experiment.mouse 
+- new property for io.Mouse: is_visible
+- Secure hashes for experiments help to ensure that the correct version is
+  running in the lab. Secure hashes will be displayed at the start and printed
+  in all output file.
   
-
 Fixed:
-- experiment clock with monotonic timing
+- experiment clock now with monotonic timing
 - bug in extras.CedrusResponseDevice
 - several bugs in documentation
 - incompatibility with multiprocessing.Pool
-- bug in visual.add_noise
-- bug in io.SerialPort.read_line
-- bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput & 
-  io.TextMenu
+- bug in Visual.add_noise()
+- bug in io.SerialPort.read_line()
+- bugfix: stimuli.shapes can now be used as background stimuli for io.TextInput
+  & io.TextMenu
 
 Changed:
 - several Android related changes (have no impact for normal use of Expyriment)
