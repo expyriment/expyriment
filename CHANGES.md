@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Version 0.7.0 (25 Feb 2014)
----------------------------
+Version 0.7.0b2 (27 Feb 2014)
+-----------------------------
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
@@ -23,6 +23,10 @@ New Features:
   predefined subject id
 - experiment have now also a global mouse object: experiment.mouse 
 - new property for io.mouse: is_visible
+- Secure hashes for experiments help to ensure that the correct version is running
+  in the lab. Secure hashes will be displayed at the start and printed in all
+  output file.
+  
 
 Fixed:
 - experiment clock with monotonic timing
