@@ -31,15 +31,20 @@ install:
 	python setup.py install
 
 debian_package:
-	@echo "Note: make release is required";\
+	@echo "Note: Don't forget to 'make release' before";\
 		read -p "Version: " VER;\
+		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
 		cp ../expyriment-$$VER.tar.gz expyriment_$$VER.orig.tar.gz -a;\
 		tar xfz expyriment_$$VER.orig.tar.gz;\
 		cd expyriment-$$VER/;\
+		rm expyriment/_fonts -r;\
 		cp ../../../debian ./ -ra;\
-		debuild -S
+		dpkg-buildpackage -uc -us -rfakeroot ;\
+		cd ..;\
+		lintian *.changes
+		
 
 html_documentation:
 	make --directory=documentation/sphinx html
