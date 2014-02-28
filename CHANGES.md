@@ -2,7 +2,7 @@
 Expyriment Release Notes
 ========================
 
-Upcomming Version
+Upcoming Version
 -----------------
 New Features:
 
