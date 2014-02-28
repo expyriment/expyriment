@@ -16,7 +16,10 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import ctypes
+try:
+    import ctypes
+except:
+    ctypes = None  # Does not exist on Android
 import os
 from sys import platform
 
@@ -24,13 +27,13 @@ _use_time_module = False
 
 if platform == 'darwin':
     # MAC
-    class _TimeBase(ctypes.Structure):
-        _fields_ = [
-            ('numer', ctypes.c_uint),
-            ('denom', ctypes.c_uint)
-        ]
-
     try:
+        class _TimeBase(ctypes.Structure):
+            _fields_ = [
+                ('numer', ctypes.c_uint),
+                ('denom', ctypes.c_uint)
+            ]
+
         _libsys_c = ctypes.CDLL('/usr/lib/system/libsystem_c.dylib')
         _libsys_kernel = ctypes.CDLL('/usr/lib/system/libsystem_kernel.dylib')
         _mac_abs_time = _libsys_c.mach_absolute_time
@@ -49,15 +52,15 @@ if platform == 'darwin':
 
 elif platform.startswith('linux'):
     # real OS
-    _CLOCK_MONOTONIC = 4 # actually CLOCK_MONOTONIC_RAW see <linux/time.h>
-
-    class _TimeSpec(ctypes.Structure):
-        _fields_ = [
-            ('tv_sec', ctypes.c_long),
-            ('tv_nsec', ctypes.c_long)
-        ]
+    _CLOCK_MONOTONIC = 4  # actually CLOCK_MONOTONIC_RAW see <linux/time.h>
 
     try:
+        class _TimeSpec(ctypes.Structure):
+            _fields_ = [
+                ('tv_sec', ctypes.c_long),
+                ('tv_nsec', ctypes.c_long)
+            ]
+
         _librt = ctypes.CDLL('librt.so.1', use_errno=True)
         _clock_gettime = _librt.clock_gettime
         _clock_gettime.argtypes = [ctypes.c_int, ctypes.POINTER(_TimeSpec)]

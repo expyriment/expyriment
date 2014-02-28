@@ -45,6 +45,7 @@ def _get_registry_value(key, subkey, value):
     (value, type) = _winreg.QueryValueEx(handle, value)
     return value
 
+
 def get_system_info(as_string=False):
     """Print system information to standard out and return as a dictionary.
 
