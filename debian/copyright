@@ -1,0 +1,18 @@
+Format: http://dep.debian.net/deps/dep5
+Upstream-Name: expyriment
+Source: http://dev.expyriment.org
+
+Files: *
+Copyright: 2012-2014 Florian Krause <siebenhundertzehn@googlemail.com>
+           2012-2014 Oliver Lindemann <lindemann09@googlemail.com>
+License: GPL-3.0+
+ On Debian systems, the complete text of the GNU General
+ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+Files: expyriment/fonts/*
+Copyright: 2002-2009 Free Software Foundation
+	Freefont is a collection of free Universal Character Set outline fonts.
+Current Upstream Maintainer: Steve White <stevan.white@googlemail.com>
+License: GPL-3.0+
+ On Debian systems, the complete text of the GNU General
+ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
