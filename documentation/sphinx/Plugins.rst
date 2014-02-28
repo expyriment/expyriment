@@ -22,7 +22,6 @@ the filename is the class name in lowercase. Additionally a file called
 'classname_defaults.py' can be created which will hold the default values for
 all parameters given when initializing the class. The naming convention is
 'classname_parameter'.
-
 For design and misc extras this is all there is, but for io and stimuli plugins,
 additional conventions need to be taken care of.
 

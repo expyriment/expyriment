@@ -12,7 +12,10 @@ __revision__ = ''
 __date__ = ''
 
 import os as _os
-import locale as _locale
+try:
+    import locale as _locale
+except ImportError:
+    _locale = None  # Does not exist on Android
 import sys as _sys
 import types as _types
 from copy import copy as _copy
@@ -123,9 +126,13 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
     """
 
     _sys.stdout.write("write file: {0}".format(filename))
+    try:
+        _locale_enc = _locale.getdefaultlocale()[1]
+    except:
+        _locale_enc = "UTF-8"
     with open(filename, 'w') as f:
         header = "# -*- coding: {0} -*-\n".format(
-            _locale.getdefaultlocale()[1])
+            _locale_enc)
         f.write(header)
         if varnames is not None:
             for c, v in enumerate(varnames):

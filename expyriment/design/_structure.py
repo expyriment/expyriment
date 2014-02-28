@@ -13,7 +13,10 @@ __date__ = ''
 
 
 import os
-import locale
+try:
+    import locale
+except ImportError:
+    locale = None  # Does not exist on Android
 import sys
 import types
 import codecs
@@ -742,8 +745,12 @@ type".format(permutation_type))
         """
 
         with open(filename, 'w') as f:
+            try:
+                locale_enc = locale.getdefaultlocale()[1]
+            except:
+                locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
-                locale.getdefaultlocale()[1])
+                locale_enc)
             f.write(header + unicode2str(self.design_as_text))
 
     def load_design(self, filename, encoding=None):
@@ -1284,8 +1291,12 @@ class Block(object):
         """
 
         with open(filename, 'w') as f:
+            try:
+                locale_enc = locale.getdefaultlocale()[1]
+            except:
+                locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
-                locale.getdefaultlocale()[1])
+                locale_enc)
             f.write(header + unicode2str(self.design_as_text))
 
     def read_design(self, filename):

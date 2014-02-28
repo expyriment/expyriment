@@ -14,7 +14,10 @@ __date__ = ''
 
 import atexit
 import os
-import locale
+try:
+    import locale
+except ImportError:
+    locale = None  # Does not exist on Android
 import codecs
 import re
 import types
@@ -173,9 +176,13 @@ class OutputFile(Output):
         # Create new file
         fl = open(self._fullpath, 'w+')
         fl.close()
+        try:
+            locale_enc = locale.getdefaultlocale()[1]
+        except:
+            locale_enc = "UTF-8"
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
             expyriment.get_version(), self._suffix,
-            locale.getdefaultlocale()[1]))
+            locale_enc))
         if expyriment._active_exp.is_initialized:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",

@@ -15,13 +15,12 @@ __date__ = ''
 
 
 import os
-import locale
 
 import pygame
 
 import defaults
 from _visual import Visual
-from expyriment.misc import find_font, unicode2str
+from expyriment.misc import find_font, unicode2str, str2unicode
 import expyriment
 
 
@@ -255,8 +254,7 @@ class TextLine(Visual):
         _font.set_underline(self.text_underline)
         if type(self.text) is not unicode:
             # Pygame wants latin-1 encoding here for character strings
-            _text = self.text.decode(
-                locale.getdefaultlocale()[1]).encode('latin-1')
+            _text = str2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         if self.background_colour:

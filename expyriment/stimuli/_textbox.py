@@ -15,13 +15,12 @@ __date__ = ''
 
 
 import os
-import locale
 import re
 
 import pygame
 
 import defaults
-from expyriment.misc import find_font, unicode2str
+from expyriment.misc import find_font, unicode2str, str2unicode
 import expyriment
 from _visual import Visual
 
@@ -311,8 +310,8 @@ class TextBox(Visual):
 
         if type(self.text) is not unicode:
             # Pygame wants latin-1 encoding here for character strings
-            _text = self.text.decode(
-                locale.getdefaultlocale()[1]).encode('latin-1')
+            
+            _text = str2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         surface = self.render_textrect(self.format_block(_text),
