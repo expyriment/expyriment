@@ -36,12 +36,12 @@ debian_package:
 		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
-		cp ../expyriment-$$VER.tar.gz expyriment_$$VER.orig.tar.gz -a;\
-		tar xfz expyriment_$$VER.orig.tar.gz;\
+		cp ../expyriment-$$VER ./ -ra;\
+		rm expyriment-$$VER/expyriment/_fonts -rf;\
+		tar cfz expyriment_$$VER.orig.tar.gz expyriment-$$VER;\
 		cd expyriment-$$VER/;\
-		rm expyriment/_fonts -r;\
 		cp ../../../debian ./ -ra;\
-		dpkg-buildpackage -uc -us -rfakeroot ;\
+		dpkg-buildpackage -rfakeroot ;\
 		cd ..;\
 		lintian *.changes
 		
