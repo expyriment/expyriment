@@ -28,7 +28,7 @@ from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2str, constants
 
 
 def start(experiment=None, auto_create_subject_id=None, subject_id=None,
@@ -94,25 +94,41 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
 
     if not auto_create_subject_id:
         if android is not None:
-            fields = [stimuli.Circle(diameter=50, line_width=0, position=(0,70)),
-                      stimuli.Circle(diameter=50, line_width=0, position=(0,-70)),
-                      stimuli.Rectangle(size=(50,50), position=(120,0))]
+            background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
+            fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
+                                     line_width=4, position=(0, 70)),
+                      stimuli.Circle(diameter=200, colour=(70, 70, 70),
+                                     line_width=4, position=(0, -70)),
+                      stimuli.Rectangle(size=(50, 50), line_width=1,
+                                        colour=(70, 70, 70),
+                                        position=(120, 0))]
+            fields[0].scale((0.25, 0.25))
+            fields[1].scale((0.25, 0.25))
             plusminus = [
-                stimuli.TextLine(text="+", text_size=36, position=(0,70),
-                                text_colour=(0,0,0), text_bold=True),
-                stimuli.TextLine(text="-", text_size=36, position=(0,-70),
-                                text_colour=(0,0,0), text_bold=True),
-                stimuli.TextLine(text = "OK", text_size=24, position=(120,0),
-                                text_colour=(0,0,0))]
+                stimuli.TextLine("Subject Number:", text_size=24,
+                                 text_colour=constants.C_EXPYRIMENT_PURPLE,
+                                 position=(-182, 0)),
+                stimuli.TextLine(text="+", text_size=36, position=(0, 70),
+                                 text_font="FreeMono",
+                                 text_colour=(70, 70, 70)),
+                stimuli.TextLine(text="-", text_size=36, position=(0, -70),
+                                 text_font="FreeMono",
+                                 text_colour=(70, 70, 70)),
+                stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
+                                 text_colour=(70, 70, 70))]
             subject_id = default_number
             while True:
-                text = stimuli.TextLine(text="{0}".format(subject_id),
-                                text_size=28)
-                btn = TouchScreenButtonBox(button_fields=fields,
-                                stimuli=plusminus+[text])
+                text = stimuli.TextLine(
+                    text="{0}".format(subject_id),
+                    text_size=28,
+                    text_colour=constants.C_EXPYRIMENT_ORANGE)
+                btn = TouchScreenButtonBox(
+                    button_fields=fields,
+                    stimuli=plusminus+[text],
+                    background_stimulus=background_stimulus)
                 btn.show()
                 key, rt = btn.wait()
-                if key==fields[0]:
+                if key == fields[0]:
                     subject_id += 1
                 elif key == fields[1]:
                     subject_id -= 1
@@ -194,10 +210,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                                        check_for_control_keys=False)
         if key[0] is not None:
             break
-    if android is not None:
-        position = (0, 200)
-    else:
-        position = (0, 0)
+
+    position = (0, 0)
     if not skip_ready_screen:
         stimuli.TextLine("Ready", position=position, text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
