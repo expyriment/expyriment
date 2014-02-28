@@ -39,7 +39,7 @@ debian_package:
 		tar xfz expyriment_$$VER.orig.tar.gz;\
 		cd expyriment-$$VER/;\
 		cp ../../../debian ./ -ra;\
-		debuild -us -uc
+		debuild -S
 
 html_documentation:
 	make --directory=documentation/sphinx html

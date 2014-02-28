@@ -7,7 +7,7 @@ Standards-Version: 3.9.2
 Homepage: http://www.expyriment.org
 
 Package: python-expyriment
-Architecture: any
+Architecture: all
 Depends: python (>= 2.6), python-support (>= 0.90.0), python-pygame (>= 1.9.1~),  python-opengl (>= 3.0.0)
 Recommends: python-serial (>= 2.5~), python-parallel (>= 0.2), python-numpy (>= 1.3.0~)
 Description: A Python library for cognitive and neuroscientific experiments
