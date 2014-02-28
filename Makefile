@@ -2,7 +2,7 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: build install clean
+.PHONY: build install clean debian_package
 
 release: build html_documentation api_ref_html pdf_documentation
 	@# requires numpydoc. install: easy_install numpydoc
@@ -29,6 +29,22 @@ build:
 
 install:
 	python setup.py install
+
+debian_package:
+	@echo "Note: Don't forget to 'make release' before";\
+		read -p "Version: " VER;\
+		rm build/debian/ -rf;\
+		mkdir -p build/debian;\
+		cd build/debian;\
+		cp ../expyriment-$$VER ./ -ra;\
+		rm expyriment-$$VER/expyriment/_fonts -rf;\
+		tar cfz expyriment_$$VER.orig.tar.gz expyriment-$$VER;\
+		cd expyriment-$$VER/;\
+		cp ../../../debian ./ -ra;\
+		dpkg-buildpackage -rfakeroot ;\
+		cd ..;\
+		lintian *.changes
+		
 
 html_documentation:
 	make --directory=documentation/sphinx html

@@ -1,0 +1,18 @@
+Source: expyriment
+Section: science
+Priority: extra
+Maintainer: Oliver Lindemann <lindemann09@googlemail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.3
+Homepage: http://www.expyriment.org
+
+Package: python-expyriment
+Architecture: all
+Depends: python (>= 2.6), python-support (>= 0.90.0), python-pygame (>= 1.9.1~),  python-opengl (>= 3.0.0), ttf-freefont
+Recommends: python-serial (>= 2.5~), python-parallel (>= 0.2), python-numpy (>= 1.3.0~)
+Description: A Python library for cognitive and neuroscientific experiments
+   Expyriment is an open-source and platform independent light-weight Python
+   library for designing and conducting timing-critical behavioural and 
+   neuroimaging experiments. The major goal is to provide a well-structured 
+   Python library for a script-based experiment development with a high 
+   priority on the readability of the resulting programme code. 
