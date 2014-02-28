@@ -30,7 +30,7 @@ from platform import uname
 import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str, str2unicode, get_experiment_secure_hash
+from expyriment.misc import unicode2str, str2unicode
 from _input_output import Input, Output
 
 
@@ -358,7 +358,7 @@ class DataFile(OutputFile):
                                                     sys.argv[0])[1]))
 
         self.write_comment("e sha1: {0}".format(
-                                        get_experiment_secure_hash()))
+                                    expyriment.get_experiment_secure_hash()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
         self.write_line(self.variable_names)
@@ -628,7 +628,8 @@ class EventFile(OutputFile):
             window_mode = "unknown"
             opengl = "unknown"
 
-        self.write_comment("sha1: {0}".format(get_experiment_secure_hash()))
+        self.write_comment("sha1: {0}".format(
+                                    expyriment.get_experiment_secure_hash()))
         self.write_comment("display: size={0}, window_mode={1}, opengl={2}"
                            .format(display, window_mode, opengl))
         self.write_comment("os: {0}".format(uname()))

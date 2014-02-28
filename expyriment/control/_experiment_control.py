@@ -28,7 +28,7 @@ from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from _miscellaneous import _set_stdout_logging, is_idle_running
-from expyriment.misc import unicode2str, get_experiment_secure_hash
+from expyriment.misc import unicode2str
 
 
 def start(experiment=None, auto_create_subject_id=None, subject_id=None,
@@ -419,7 +419,7 @@ def initialize(experiment=None):
     canvas2 = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
-    hash_ = get_experiment_secure_hash()
+    hash_ = expyriment.get_experiment_secure_hash()
     if hash_ is not None:
         text2 = stimuli.TextLine(
             "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_),

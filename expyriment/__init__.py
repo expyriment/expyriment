@@ -35,6 +35,8 @@ __date__ = ''
 
 import sys as _sys
 import os as _os
+from hashlib import sha1 as _sha1
+
 
 
 class _Expyriment_object(object):
@@ -87,9 +89,43 @@ def get_version():
 
     pv = "{0}.{1}.{2}".format(_sys.version_info[0],
                               _sys.version_info[1],
-                              _sys.version_info[2]) #no use of .major, .minor to ensure MacOS compatibility
+                              _sys.version_info[2])
+            #no use of .major, .minor to ensure MacOS compatibility
     return "{0} (Revision {1}; Python {2})".format(__version__, \
                                __revision__, pv)
+
+_secure_hash = ""
+def get_experiment_secure_hash():
+    """Returns the first six places of the secure hash (sha1) of the main file
+    of the current experiment.
+
+    Returns
+    -------
+    hash: string or None
+        first six places of the experiment secure hash
+        (None if no main file can be found)
+
+    Notes
+    -----
+    Secure hashes for experiments help to ensure that the correct version is
+    running in the lab. Hash codes are written to all output files and
+    printed in the command line output. If you want to check post hoc the
+    version of your experiment, create the secure hash (sha1) of your
+    expyriment .py-file and compare the first six place with the code in the
+    output file.
+
+    """
+
+    global _secure_hash
+    if _secure_hash != "":
+        return _secure_hash
+
+    try:
+        with open(_os.path.split(_sys.argv[0])[1]) as f:
+            _secure_hash = _sha1(f.read()).hexdigest()[:6]
+    except:
+        _secure_hash = None
+    return get_experiment_secure_hash()
 
 
 
@@ -102,7 +138,9 @@ if not(_sys.version_info[0] == 2 and (_sys.version_info[1] == 6 or
                       "\nPlease use Python 2.6 or Python 2.7.")
 else:
     print("Expyriment {0} ".format(get_version()))
-
+    if get_experiment_secure_hash() is not None:
+        print("File: {0} ({1})".format(_os.path.split(_sys.argv[0])[1],
+                    get_experiment_secure_hash()))
 try:
     import pygame as _pygame
     if _pygame.vernum < (1, 9, 1):

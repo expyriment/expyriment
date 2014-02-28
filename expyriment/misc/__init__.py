@@ -15,7 +15,7 @@ __date__ = ''
 
 import defaults
 from _miscellaneous import compare_codes, add_fonts, list_fonts, find_font
-from _miscellaneous import unicode2str, str2unicode, get_experiment_secure_hash
+from _miscellaneous import unicode2str, str2unicode
 import constants
 from _buffer import  Buffer, ByteBuffer
 from _clock import Clock
