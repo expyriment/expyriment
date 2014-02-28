@@ -2,6 +2,17 @@
 Expyriment Release Notes
 ========================
 
+Upcomming Version
+-----------------
+New Features:
+
+Fixed:
+
+Changed:
+- get_experiment_secure_hash has been moved from misc to the top level
+  expyriment.get_experiment_secure_hash(). Secure hash will be printed in command
+  line output
+ 
 Version 0.7.0 (28 Feb 2014)
 ---------------------------
 New Features:
