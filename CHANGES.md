@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
  
-Version 0.7.0 (29 Feb 2014)
----------------------------
+Version 0.7.0 (1 Mar 2014)
+--------------------------
 New Features:
 - new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
