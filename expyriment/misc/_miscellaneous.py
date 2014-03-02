@@ -21,8 +21,6 @@ except ImportError:
     locale = None  # Not available on Android
 import glob
 import pygame
-from hashlib import sha1
-
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
@@ -56,7 +54,6 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
 
 def str2unicode(s, fse=False):
-
     """Convert str to unicode.
 
     Converts an input str or unicode object to a unicode object without
@@ -239,33 +236,3 @@ def find_font(font):
             return font_file
         else:
             return ""
-
-
-def get_experiment_secure_hash():
-    """
-    Returns the first six places of the secure hash (sha1) of the main file
-    of the current experiment.
-
-    Returns
-    -------
-    hash: string or None
-        first six places of the experiment secure hash
-        (None if no main file can be found)
-
-    Notes
-    -----
-    Secure hashes for experiments help to ensure that the correct version is
-    running in the lab. Hash codes are written in all output files. If
-    you want to check post hoc the version of your experiment, create the
-    secure hash (sha1) of your expyriment .py-file and compare the first six
-    place with the code in the output file.
-
-    """
-
-    expyriment_main_filename = os.path.split(sys.argv[0])[1]
-    try:
-        with open(expyriment_main_filename) as f:
-            expyriment_main_content = f.read()
-        return sha1(expyriment_main_content).hexdigest()[:6]
-    except:
-        return None

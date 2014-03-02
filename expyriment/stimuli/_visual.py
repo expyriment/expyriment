@@ -1012,7 +1012,7 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        factors : (int, int) or float
+        factors : (int, int) or (float, float)
             tuple representing the x and y factors to scale or a single number.
             In the case of a single number x and y scaling will be the
             identical (i.e., proportional scaling)
