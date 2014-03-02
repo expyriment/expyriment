@@ -2,7 +2,7 @@
 Expyriment Release Notes
 ========================
  
-Version 0.7.0 (1 Mar 2014)
+Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
 - new feature in testsuite: Font viewer 

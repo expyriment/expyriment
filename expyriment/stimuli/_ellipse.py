@@ -108,10 +108,10 @@ class Ellipse(Visual):
         """Create the surface of the stimulus."""
 
         if self._line_width == 0:
-            surface = pygame.surface.Surface(self._size,
-                                         pygame.SRCALPHA).convert_alpha()
-            pygame.draw.ellipse(surface, self._colour, pygame.Rect((0, 0),
-                                                                   self._size))
+            surface = pygame.surface.Surface(
+                self._size, pygame.SRCALPHA).convert_alpha()
+            pygame.draw.ellipse(surface, self._colour, pygame.Rect(
+                (0, 0), self._size))
 
         else:
             # Invert colours and use it as colourkey for a temporal surface,
