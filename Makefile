@@ -41,10 +41,9 @@ debian_package:
 		tar cfz expyriment_$$VER.orig.tar.gz expyriment-$$VER;\
 		cd expyriment-$$VER/;\
 		cp ../../../debian ./ -ra;\
-		dpkg-buildpackage -rfakeroot ;\
+		debuild -S ;\
 		cd ..;\
-		lintian *.changes
-		
+
 
 html_documentation:
 	make --directory=documentation/sphinx html

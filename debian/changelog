@@ -1,4 +1,4 @@
-expyriment (0.7.0-1) unstable; urgency=low
+expyriment (0.7.0-1) precise; urgency=low
 
   * Initial release of the Debian package for Expyriment 
 
