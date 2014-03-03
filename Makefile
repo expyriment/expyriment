@@ -33,13 +33,14 @@ install:
 debian_package:
 	@echo "Note: Don't forget to 'make release' before";\
 		read -p "Version: " VER;\
+		read -p "Version suffix: " SUFFIX;\
 		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
-		cp ../expyriment-$$VER ./ -ra;\
-		rm expyriment-$$VER/expyriment/_fonts -rf;\
-		tar cfz expyriment_$$VER.orig.tar.gz expyriment-$$VER;\
-		cd expyriment-$$VER/;\
+		cp ../expyriment-$$VER ./expyriment-$$VER$$SUFFIX -ra;\
+		rm expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
+		tar cfz expyriment_$$VER$$SUFFIX.orig.tar.gz expyriment-$$VER$$SUFFIX;\
+		cd expyriment-$$VER$$SUFFIX/;\
 		cp ../../../debian ./ -ra;\
 		debuild -S ;\
 		cd ..;\
