@@ -37,10 +37,10 @@ debian_package:
 		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
-		cp ../expyriment-$$VER ./expyriment-$$VER$$SUFFIX -ra;\
-		rm expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
-		tar cfz expyriment_$$VER$$SUFFIX.orig.tar.gz expyriment-$$VER$$SUFFIX;\
-		cd expyriment-$$VER$$SUFFIX/;\
+		cp ../expyriment-$$VER ./python-expyriment-$$VER$$SUFFIX -ra;\
+		rm python-expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
+		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
+		cd python-expyriment-$$VER$$SUFFIX/;\
 		cp ../../../debian ./ -ra;\
 		debuild -S ;\
 		cd ..;\
