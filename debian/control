@@ -1,7 +1,7 @@
 Source: expyriment
 Section: science
 Priority: extra
-Maintainer: Oliver Lindemann <lindemann09@googlemail.com>
+Maintainer: Oliver Lindemann <oliver.lindemann@uni-potsdam.de>
 Build-Depends: debhelper (>= 8.0.0)
 Standards-Version: 3.9.3
 Homepage: http://www.expyriment.org
