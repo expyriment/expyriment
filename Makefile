@@ -42,7 +42,7 @@ debian_package:
 		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
 		cd python-expyriment-$$VER$$SUFFIX/;\
 		cp ../../../debian ./ -ra;\
-		debuild -S ;\
+		debuild -rfakeroot -S ;\
 		cd ..;\
 
 
