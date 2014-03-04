@@ -30,7 +30,7 @@ software for the `Debian`_ operating system and derivatives. Please visit the
 `Neurodebian`_ website for further instructions.
 
 
-Installing from Source
+Installing from source
 -----------------------
 For all other Linux distributions, you can download the file 
 expyriment-|release|.zip from the `release page`_ and install as described 
