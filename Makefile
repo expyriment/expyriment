@@ -31,13 +31,13 @@ install:
 	python setup.py install
 
 debian_package:
-	@echo "Note: Don't forget to 'make release' before";\
+	@echo "Note: expyriment-<ver>.zip must be in build";\
 		read -p "Version: " VER;\
 		read -p "Version suffix: " SUFFIX;\
 		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
-		tar xzf ../expyriment-$$VER.tar.gz;\
+		unzip ../expyriment-$$VER.zip;\
 		mv expyriment-$$VER python-expyriment-$$VER$$SUFFIX;\
 		rm python-expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
 		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
