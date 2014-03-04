@@ -1,5 +1,5 @@
-expyriment (0.7.0-1) unstable; urgency=low
+python-expyriment (0.7.0-1) unstable; urgency=low
 
-  * Initial release of the Debian package for Expyriment 
+  * Initial release 
 
- -- Oliver Lindemann <oliver.lindemann@uni-potsdam.de>  Fri, 28 Feb 2014 14:18:41 +0100
+ -- Oliver Lindemann <oliver.lindemann@uni-potsdam.de>  Mon, 03 Mar 2014 16:32:53 +0100

@@ -96,11 +96,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         if android is not None:
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
             fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                                     line_width=4, position=(0, 70)),
+                                     position=(0, 70)),
                       stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                                     line_width=4, position=(0, -70)),
-                      stimuli.Rectangle(size=(50, 50), line_width=1,
-                                        colour=(70, 70, 70),
+                                     position=(0, -70)),
+                      stimuli.Rectangle(size=(50, 50), colour=(70, 70, 70),
                                         position=(120, 0))]
             fields[0].scale((0.25, 0.25))
             fields[1].scale((0.25, 0.25))
@@ -110,12 +109,12 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                                  position=(-182, 0)),
                 stimuli.TextLine(text="+", text_size=36, position=(0, 70),
                                  text_font="FreeMono",
-                                 text_colour=(70, 70, 70)),
+                                 text_colour=(0, 0, 0)),
                 stimuli.TextLine(text="-", text_size=36, position=(0, -70),
                                  text_font="FreeMono",
-                                 text_colour=(70, 70, 70)),
+                                 text_colour=(0, 0, 0)),
                 stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
-                                 text_colour=(70, 70, 70))]
+                                 text_colour=(0, 0, 0))]
             subject_id = default_number
             while True:
                 text = stimuli.TextLine(

@@ -33,18 +33,18 @@ install:
 debian_package:
 	@echo "Note: Don't forget to 'make release' before";\
 		read -p "Version: " VER;\
+		read -p "Version suffix: " SUFFIX;\
 		rm build/debian/ -rf;\
 		mkdir -p build/debian;\
 		cd build/debian;\
-		cp ../expyriment-$$VER ./ -ra;\
-		rm expyriment-$$VER/expyriment/_fonts -rf;\
-		tar cfz expyriment_$$VER.orig.tar.gz expyriment-$$VER;\
-		cd expyriment-$$VER/;\
+		cp ../expyriment-$$VER ./python-expyriment-$$VER$$SUFFIX -ra;\
+		rm python-expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
+		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
+		cd python-expyriment-$$VER$$SUFFIX/;\
 		cp ../../../debian ./ -ra;\
-		dpkg-buildpackage -rfakeroot ;\
+		debuild -rfakeroot -S ;\
 		cd ..;\
-		lintian *.changes
-		
+
 
 html_documentation:
 	make --directory=documentation/sphinx html
