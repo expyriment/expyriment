@@ -152,6 +152,7 @@ Functions
 .. autofunction:: expyriment.get_version
 .. autofunction:: expyriment.show_documentation
 .. autofunction:: expyriment.get_system_info
+.. autofunction:: expyriment.get_experiment_secure_hash
 
 """)
 
