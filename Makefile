@@ -30,6 +30,7 @@ build:
 install:
 	python setup.py install
 
+
 debian_package:
 	@echo "Note: expyriment-<ver>.zip must be in build";\
 		read -p "Version: " VER;\
@@ -43,6 +44,7 @@ debian_package:
 		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
 		cd python-expyriment-$$VER$$SUFFIX/;\
 		cp ../../../debian ./ -ra;\
+		rm debian/*.debian debian/*.ubuntu;\
 		debuild -rfakeroot -S ;\
 		cd ..;\
 
