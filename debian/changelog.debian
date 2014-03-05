@@ -1,10 +1,10 @@
-python-expyriment (0.7.0-2) unstable; urgency=low
+python-expyriment (0.7.0deb-2) unstable; urgency=low
 
   * Bugfix build dependencies
 
  -- Oliver Lindemann <oliver.lindemann@uni-potsdam.de>  Tue, 04 Mar 2014 14:05:30 +0100
 
-python-expyriment (0.7.0-1) unstable; urgency=low
+python-expyriment (0.7.0-1) unreleased; urgency=low
 
   * Initial release 
 
