@@ -2,52 +2,52 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: build install clean debian_package
+.PHONY: build install clean source_tarball
 
 release: build html_documentation api_ref_html pdf_documentation
 	@# requires numpydoc. install: easy_install numpydoc
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
 	@echo "copy files"
-	@mv build/lib* build/release
+	@mv -f build/lib* build/release
 	@cp -ra documentation build/release
 	@cp -ra examples build/release
 	@cp -at build/release  CHANGES.md COPYING.txt README.md 
 	@cp -at build/release  setup.py
-	@# get version and rename and zip
-	@VER=$$(awk -F' ' '{if ($$2=="Version:") print $$3}' < /tmp/expy.build.log); \
+	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
+		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f;\
+
+# make zip file from the last release (make release)
+zip: build/release
+	@read -p "Version: " VER;\
 		cd build;\
-		rm -rf expyriment-$$VER;\
-		mv release expyriment-$$VER;\
+		ln -s release expyriment-$$VER;\
+		rm -f expyriment-$$VER.zip;\
 		zip -r expyriment-$$VER.zip expyriment-$$VER;\
-		tar czf expyriment-$$VER.tar.gz expyriment-$$VER;
-	@find build -type f \( -name '*.swp' -o -name '*~' -o -name '*.bak' -o -name '#*#' \) -delete
+		rm expyriment-$$VER;\
+		sha1sum expyriment-$$VER.zip
 	
 
+# make tarball from the last release (make release)
+tarball: 
+	@read -p "Version: " VER;\
+	 read -p "Tarball version suffix: " VERSION_SUFFIX;\
+		cd build;\
+		DIR=expyriment-$$VER;\
+		cp -ra release $$DIR;\
+		rm  $$DIR/expyriment/_fonts -rf;\
+		rm  $$DIR/documentation/html -rf;\
+		rm  $$DIR/documentation/apt_ref_html -rf;\
+		tar cfz python_$$VER$$VERSION_SUFFIX.orig.tar.gz $$DIR;\
+		rm -rf $$DIR;\
+		sha1sum python_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
+
 build:
+	-@rm -rf build/release
 	python setup.py build | tee /tmp/expy.build.log
 
 install:
 	python setup.py install
-
-
-debian_package:
-	@echo "Note: expyriment-<ver>.zip must be in build";\
-		read -p "Version: " VER;\
-		read -p "Version suffix: " SUFFIX;\
-		rm build/debian/ -rf;\
-		mkdir -p build/debian;\
-		cd build/debian;\
-		unzip ../expyriment-$$VER.zip;\
-		mv expyriment-$$VER python-expyriment-$$VER$$SUFFIX;\
-		rm python-expyriment-$$VER$$SUFFIX/expyriment/_fonts -rf;\
-		tar cfz python-expyriment_$$VER$$SUFFIX.orig.tar.gz python-expyriment-$$VER$$SUFFIX;\
-		cd python-expyriment-$$VER$$SUFFIX/;\
-		cp ../../../debian ./ -ra;\
-		rm debian/*.debian debian/*.ubuntu;\
-		debuild -rfakeroot -S ;\
-		cd ..;\
-
 
 html_documentation:
 	make --directory=documentation/sphinx html
@@ -65,6 +65,11 @@ api_ref_html:
 	cp -ra documentation/api/_build documentation/api_ref_html
 
 clean:
-	make --directory=documentation/sphinx clean
-	make --directory=documentation/api clean
-	rm -rf build documentation/pdf documentation/api_ref_html documentation/html 
+	@make --directory=documentation/sphinx clean
+	@make --directory=documentation/api clean
+	@rm -rf build \
+			documentation/pdf\
+			documentation/api_ref_html\
+			documentation/html 
+	@find . -name '*.py[co]' \
+		 -o -iname '#*#' | xargs -L 10 rm -f
