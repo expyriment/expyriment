@@ -29,7 +29,7 @@ zip: build/release
 	
 
 # make tarball from the last release (make release)
-tarball: 
+tarball: build/release 
 	@read -p "Version: " VER;\
 	 read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		cd build;\
