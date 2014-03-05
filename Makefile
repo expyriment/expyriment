@@ -33,7 +33,7 @@ tarball: build/release
 	@read -p "Version: " VER;\
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		cd build;\
-		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
+		DIR=python-expyriment_$$VER$$VERSION_SUFFIX;\
 		cp -ra release $$DIR;\
 		rm  $$DIR/expyriment/_fonts -rf;\
 		rm  $$DIR/documentation/html -rf;\
@@ -43,17 +43,16 @@ tarball: build/release
 		sha1sum $$DIR.orig.tar.gz;\
 
 debian_package:
-	read -p "Version: " VER;\
+	@read -p "Version: " VER;\
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		cd build;\
-		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
+		DIR=python-expyriment_$$VER$$VERSION_SUFFIX;\
 		tar xfz $$DIR.orig.tar.gz;\
 		cd $$DIR;\
 		cp ../../debian ./ -ra;\
 		debuild -rfakeroot -S ;\
 		cd ..;\
 		rm -rf $$DIR;
-
 	
 
 build:
