@@ -23,7 +23,7 @@ zip: build/release
 		cd build;\
 		ln -s release expyriment-$$VER;\
 		rm -f expyriment-$$VER.zip;\
-		zip -r expyriment-$$VER.zip expyriment-$$VER;\
+		zip -r expyriment-$$VER.all.zip expyriment-$$VER;\
 		rm expyriment-$$VER;\
 		sha1sum expyriment-$$VER.zip
 	
@@ -31,7 +31,7 @@ zip: build/release
 # make tarball from the last release (make release)
 tarball: build/release 
 	@read -p "Version: " VER;\
-	 read -p "Tarball version suffix: " VERSION_SUFFIX;\
+	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		cd build;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
 		cp -ra release $$DIR;\
