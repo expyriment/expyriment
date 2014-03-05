@@ -43,7 +43,11 @@ if __name__ == "__main__":
             script = sys.argv[1]
         for args in sys.argv[1:]:
             if args.startswith("-"):
-                for arg in args[1:]:
+                #sort args (capital letters last)
+                arguments = list(args[1:])
+                arguments.sort(reverse=True)
+                print arguments
+                for arg in arguments:
                     if arg == 'd':
                         expyriment.control.set_develop_mode(True)
                     elif arg == 'i':
