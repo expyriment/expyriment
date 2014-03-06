@@ -12,11 +12,15 @@ information about the system.
 **Starting the test suite**
 
 The test suite can either be started from within an experiment, or from an 
-interactive Python session (for instance with IPython).
-
-To start the test suite, just call::
+interactive Python session (for instance with IPython). To start the test 
+suite, just call::
 
     expyriment.control.run_test_suite()
+
+Alternatively, you can start the test suite from the command line using the 
+:doc:`command line interface` <CommandLineInterface>::
+
+   $ python -m expyriment.cli -T 
 
 **Menu overview**
 
