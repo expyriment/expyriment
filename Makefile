@@ -53,7 +53,6 @@ debian_package:
 		debuild -rfakeroot -S ;\
 		cd ..;\
 		rm -rf $$DIR;
-	
 
 build:
 	-@rm -rf build/release
