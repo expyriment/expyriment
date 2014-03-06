@@ -54,8 +54,7 @@ debian_package:
 		cp ../../debian ./ -ra;\
 		debuild -rfakeroot -S ;\
 		cd ..;\
-		rm -rf $$DIR;
-
+		rm -rf $$DIR;	
 
 build:
 	-@rm -rf build/release
