@@ -101,31 +101,37 @@ class Build(build_py):
                       stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
         build_py.byte_compile(self, files)
 
-version_nr = "{0}"
-with open('CHANGES.md') as f:
-    for line in f:
-        if line[0:8].lower() == "upcoming":
-            version_nr += "+"
-        if line[0:7] == "Version":
-            length = line[8:].find(" ")
-            version_nr = version_nr.format(line[8:8+length])
-            break
+def get_version():
+    # function is also used by Makefile
+    version_nr = "{0}"
+    with open('CHANGES.md') as f:
+        for line in f:
+            if line[0:8].lower() == "upcoming":
+                version_nr += "+"
+            if line[0:7] == "Version":
+                length = line[8:].find(" ")
+                version_nr = version_nr.format(line[8:8+length])
+                break
+    return version_nr
 
-# Check if we are building/installing from the repository
-try:
-    proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
-                 stdout=PIPE, stderr=PIPE)
-    initial_revision = proc.stdout.readline()
-    if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
-        raise Exception
-    proc = Popen(['git', 'log', '--format=%H', '-1'], stdout=PIPE, stderr=PIPE)
-    revision_nr = proc.stdout.read().strip()
-    proc = Popen(['git', 'log', '--format=%cd', '-1'],
-                 stdout=PIPE, stderr=PIPE)
-    date = proc.stdout.readline().strip()
+if __name__=="__main__":
+    version_nr = get_version()
 
-    # Build
-    x = setup(name='expyriment',
+    # Check if we are building/installing from the repository
+    try:
+        proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                     stdout=PIPE, stderr=PIPE)
+        initial_revision = proc.stdout.readline()
+        if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
+            raise Exception
+        proc = Popen(['git', 'log', '--format=%H', '-1'], stdout=PIPE, stderr=PIPE)
+        revision_nr = proc.stdout.read().strip()
+        proc = Popen(['git', 'log', '--format=%cd', '-1'],
+                     stdout=PIPE, stderr=PIPE)
+        date = proc.stdout.readline().strip()
+
+        # Build
+        x = setup(name='expyriment',
           version=version_nr,
           description='A Python library for cognitive and neuroscientific experiments',
           author='Florian Krause, Oliver Lindemann',
@@ -139,13 +145,13 @@ try:
                     'bdist_wininst': Wininst}
           )
 
-    print ""
-    print "Expyriment Version:", version_nr, "(from repository)"
+        print ""
+        print "Expyriment Version:", version_nr, "(from repository)"
 
 # If not, we are building/installing from a released download
-except:
-    # Build
-    setup(name='expyriment',
+    except:
+        # Build
+        setup(name='expyriment',
           version=version_nr,
           description='A Python library for cognitive and neuroscientific experiments',
           author='Florian Krause, Oliver Lindemann',
@@ -158,5 +164,5 @@ except:
           cmdclass={'install': Install, 'bdist_wininst': Wininst}
           )
 
-    print ""
-    print "Expyriment Version:", version_nr
+        print ""
+        print "Expyriment Version:", version_nr
