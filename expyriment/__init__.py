@@ -96,18 +96,18 @@ def get_version():
 
 _secure_hash = ""
 def get_experiment_secure_hash():
-    """Returns the first six places of the secure hash (sha1) of the main file
-    of the current experiment.
+    """Returns the fingerprint, that is, the first six places of the secure
+    hash (sha1) of the main file of the current experiment.
 
     Returns
     -------
     hash: string or None
-        first six places of the experiment secure hash
-        (None if no main file can be found)
+        first six places of the experiment secure hash or None, if no main
+        file can be found
 
     Notes
     -----
-    Secure hashes for experiments help to ensure that the correct version is
+    Fingerprints of experiments help to ensure that the correct version is
     running in the lab. Hash codes are written to all output files and
     printed in the command line output. If you want to check post hoc the
     version of your experiment, create the secure hash (sha1) of your

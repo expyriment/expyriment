@@ -22,6 +22,7 @@ Contents
    API Reference <expyriment>
    Advanced
    Technical issues <Technical>
+   Frequently Asked Questions <FAQ>
    Changelog
 
 **Getting Started**

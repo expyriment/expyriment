@@ -7,4 +7,4 @@ experimental design. Expyriment provides an easy, but flexible way to
 automatize this process with the included data preprocessing module of the misc 
 package (:doc:`expyriment.misc.data_preprocessing`).
 
-.. FIXME better docu data preprocessing
+.. TODO better docu data preprocessing

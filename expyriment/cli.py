@@ -15,6 +15,7 @@ OPTIONS:
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
+      -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
       -h              Show this help
@@ -33,6 +34,8 @@ if __name__ == "__main__":
 
     import expyriment
 
+    if len(sys.argv) <= 1:
+        sys.argv.append("-h")
 
     script = None
     if len(sys.argv) > 1:
@@ -40,7 +43,11 @@ if __name__ == "__main__":
             script = sys.argv[1]
         for args in sys.argv[1:]:
             if args.startswith("-"):
-                for arg in args[1:]:
+                #sort args (capital letters last)
+                arguments = list(args[1:])
+                arguments.sort(reverse=True)
+                print arguments
+                for arg in arguments:
                     if arg == 'd':
                         expyriment.control.set_develop_mode(True)
                     elif arg == 'i':
@@ -59,11 +66,15 @@ if __name__ == "__main__":
                         expyriment.control.defaults.open_gl = False
                     elif arg == 't':
                         print "* No time stamps"
-                        expyriment.io.defaults.outputfile_time_stamp = False
+                        expyriment.io.defaults.argvoutputfile_time_stamp = False
                     elif arg == 'a':
                         print "* Auto create subject id"
                         expyriment.control.defaults.auto_create_subject_id = \
                                 True
+                    elif arg == "S":
+                        print "System Info"
+                        print expyriment.get_system_info(as_string=True)
+                        sys.exit()
                     elif arg == "T":
                         print "Run Test Suite"
                         expyriment.control.run_test_suite()
@@ -84,6 +95,7 @@ Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
           -a              Auto create subject ID
           -i              Intensive logging (log level 2)
           -d              Develop mode (equivalent to -gwfat)
+          -S              Print system information
           -T              Run Test Suite
           -A              Start API Reference Tool
           -h              Show this help
@@ -92,4 +104,3 @@ Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
 
     if script is not None:
         execfile(script)
-# FIXME cli.py in online docu?
