@@ -49,6 +49,7 @@ def _stimulus_timing(exp):
 The left picture shows a good result, the right picture shows a bad result.
 
 [Press RETURN to continue]"""
+        # TODO test very slow quit
         text = stimuli.TextScreen("Stimulus presentation test (1)", info)
         y = []
         for x in [16, 32, 48, 64]:
