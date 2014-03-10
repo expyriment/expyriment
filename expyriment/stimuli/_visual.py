@@ -247,9 +247,7 @@ class Visual(Stimulus):
 
         """
 
-        self._position = list(value)
-        if self.is_preloaded and self._ogl_screen is not None:
-            self._ogl_screen.refresh_position()
+        self.replace(value)
 
     @property
     def absolute_position(self):
@@ -379,6 +377,25 @@ class Visual(Stimulus):
         return geometry.XYPoint(
             self.position).distance(geometry.XYPoint(other.position))
 
+    def replace(self, new_position):
+        """Replace a stimulus to a new position.
+
+        When using OpenGL, this can take longer then 1ms!
+
+        Parameters
+        ----------
+        new_position : tuple (x,y)
+            translation along x and y axis
+
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
+        """
+        return self.move((new_position[0] - self.position[0],
+                          new_position[1] - self.position[1]))
+
     def move(self, offset):
         """Moves the stimulus in 2D space.
 
@@ -386,7 +403,7 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        offset : list, optional
+        offset : tuple (x,y)
             translation along x and y axis
 
         Returns
@@ -398,17 +415,15 @@ class Visual(Stimulus):
 
         start = get_time()
         moved = False
-        x = offset[0]
-        y = offset[1]
-        if x > 0 or x < 0:
-            self._position[0] = self._position[0] + x
+        if offset[0] != 0:
+            self._position[0] = self._position[0] + offset[0]
             moved = True
-        if y > 0 or y < 0:
-            self._position[1] = self._position[1] + y
+        if offset[1] != 0:
+            self._position[1] = self._position[1] + offset[1]
             moved = True
         if moved and self._ogl_screen is not None:
             self._ogl_screen.refresh_position()
-        return int((get_time() - start) * 1000)
+        return int((get_time() - start))
 
     def inside_stimulus(self, stimulus, mode="visible"):
         """Check if stimulus is inside another stimulus.

@@ -2,6 +2,11 @@
 Expyriment Release Notes
 ========================
  
+upcoming version
+----------------
+New Features:
+- new convenient method for visual stimuli: replace
+
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
