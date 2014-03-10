@@ -4,7 +4,7 @@
 """
 A simple experiment to assess a Simon effect.
 
-See also:http://en.wikipedia.org/wiki/Simon_effect
+See also: http://en.wikipedia.org/wiki/Simon_effect
 
 """
 
