@@ -38,7 +38,7 @@ for mapping in ["left4green", "left4red"]:
     exp.add_block(b)
 exp.add_bws_factor("OrderOfMapping", [1, 2])
 
-exp.data_variable_names = ["Mapping", "Position", "Button", "RT"]
+exp.data_variable_names = ["Mapping", "Colour", "Position", "Button", "RT"]
 
 # Start Experiment
 control.start()
@@ -52,7 +52,7 @@ for block in exp.blocks:
         exp.clock.wait(1000 - trial.stimuli[0].preload())
         trial.stimuli[0].present()
         button, rt = exp.keyboard.wait(keys=response_keys)
-        exp.data.add([block.get_factor("Mapping"),
+        exp.data.add([block.get_factor("Mapping"), trial.get_factor("Colour"),
                         trial.get_factor("Position"), button, rt])
 
 # End Experiment
