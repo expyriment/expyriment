@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """
-A simple experiment to asses a Simon effect.
+A simple experiment to assess a Simon effect.
 
-See also:
-http://en.wikipedia.org/wiki/Simon_effect
+See also:http://en.wikipedia.org/wiki/Simon_effect
 
 """
 
