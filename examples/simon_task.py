@@ -21,11 +21,10 @@ fixcross = stimuli.FixCross()
 fixcross.preload()
 
 # Create IO
-#response_device = io.EventButtonBox(io.SerialPort("/dev/ttyS1"))
 response_device = exp.keyboard
 
 # Create design
-for task in ["left key for green", "left key for red"]:
+for task in ["left_key_for_green", "left_key_for_red"]:
     b = design.Block()
     b.set_factor("Response", task)
     for where in [["left", -300], ["right", 300]]:
