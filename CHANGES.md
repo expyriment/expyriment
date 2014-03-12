@@ -7,6 +7,9 @@ upcoming version
 New Features:
 - new method visual stimuli.replace
 - new method control.is_android_running
+- new function: experiments can be quitted by mouse events.
+  See documentation of property "mouse_quit_event". This function is switch on 
+  per default under Android
 
 Changed:
 - changes at Simon example

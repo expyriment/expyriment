@@ -43,7 +43,7 @@ class Keyboard(Input):
     """
 
     @staticmethod
-    def process_control_keys(key_event=None):
+    def process_control_keys(key_event=None, process_mouse_events=True):
         """Check if quit_key or pause_key has been pressed.
 
         Reads pygame event cue if no key_event is specified.
@@ -75,8 +75,13 @@ class Keyboard(Input):
                     return True
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
-                return Keyboard.process_control_keys(event) # recursive
+                # recursion
+                return Keyboard.process_control_keys(event, False)
+
+        if process_mouse_events:
+            return expyriment._active_exp.mouse._process_mouse_quit_event()
         return False
+
 
     def __init__(self, default_keys=None):
         """Create a keyboard input.
@@ -104,6 +109,9 @@ class Keyboard(Input):
         """Setter for default keys"""
         self._default_keys = value
 
+    @staticmethod
+    def _get_quit_key():
+        return quit_key
 
     def clear(self):
         """Clear the event queue from keyboard events."""
