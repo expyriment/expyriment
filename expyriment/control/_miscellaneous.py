@@ -250,12 +250,19 @@ def is_ipython_running():
     except NameError:
         return False
 
-
 def is_idle_running():
     """Return True if IDLE is running."""
 
     return "idlelib.run" in sys.modules
 
+def is_android_running():
+    """Return True if Exypriment runs on Android."""
+
+    try:
+        import android
+    except ImportError:
+        return False
+    return True
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.
