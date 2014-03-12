@@ -52,6 +52,7 @@ class Mouse(Input):
         """
 
         Input.__init__(self)
+        self._exit_action_events = []
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
         if track_button_events is None:
@@ -144,8 +145,6 @@ class Mouse(Input):
         """
 
         rtn = None
-        pygame.event.clear(pygame.MOUSEBUTTONUP)
-        pygame.event.clear(pygame.MOUSEMOTION)
         for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
             if event.button > 0:
                 rtn = event.button - 1
@@ -162,8 +161,6 @@ class Mouse(Input):
         """
 
         rtn = None
-        pygame.event.clear(pygame.MOUSEBUTTONDOWN)
-        pygame.event.clear(pygame.MOUSEMOTION)
         for event in pygame.event.get(pygame.MOUSEBUTTONUP):
             if event.button > 0:
                 rtn = event.button - 1
