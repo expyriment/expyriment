@@ -423,7 +423,7 @@ class Visual(Stimulus):
             moved = True
         if moved and self._ogl_screen is not None:
             self._ogl_screen.refresh_position()
-        return int((get_time() - start))
+        return int((get_time() - start) * 1000)
 
     def inside_stimulus(self, stimulus, mode="visible"):
         """Check if stimulus is inside another stimulus.
