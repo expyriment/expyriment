@@ -1,27 +1,28 @@
 ========================
 Expyriment Release Notes
 ========================
- 
+
 upcoming version
 ----------------
 New Features:
+- new mouse function: experiments can be quitted by mouse events. See
+  documentation of property "mouse_quit_event". This function is only switched
+  on per default under Android
 - new method visual stimuli.replace
 - new method control.is_android_running
-- new function: experiments can be quitted by mouse events.
-  See documentation of property "mouse_quit_event". This function is switch on 
-  per default under Android
+- io.Keyboard has static methods to set and get the quit_key and pause_key
 
 Changed:
 - changes at Simon example
 
 Fixed:
-- bug fix, io.TouchScreenButton crash if duration expired 
+- bug fix, io.TouchScreenButton crash if duration expired
 - bug fix, command line inteface: order of argument is now irrelevant
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
-- new feature in testsuite: Font viewer 
+- new feature in testsuite: Font viewer
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic_time (this time should be always used)

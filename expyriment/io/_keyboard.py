@@ -110,8 +110,27 @@ class Keyboard(Input):
         self._default_keys = value
 
     @staticmethod
-    def _get_quit_key():
+    def get_quit_key():
+        """Returns the currently defined quit key """
+
         return quit_key
+
+    @staticmethod
+    def get_pause_key():
+        """Returns the currently defined pause key"""
+        return pause_key
+
+    @staticmethod
+    def set_quit_key(value):
+        """Set the currently defined quit key"""
+        global quit_key
+        quit_key = value
+
+    @staticmethod
+    def set_pause_key(value):
+        """Set the currently defined pause key"""
+        global pause_key
+        pause_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""

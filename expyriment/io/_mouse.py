@@ -72,8 +72,11 @@ class Mouse(Input):
 
         Parameters
         ----------
-        key_event : int, optional
-            key event to check
+        click_position : tuple of int (x,y), optional
+            the position to be processed. If no position is defined, the
+            function checks if a button up event is in the pygame event
+            queue. So if, the current mouse position will be use to estimate
+            the click location.
 
         Returns
         -------
@@ -83,7 +86,7 @@ class Mouse(Input):
 
         Notes
         -----
-        The function will be also called by Keyboard.process_control_keys.
+        This method will be also called by Keyboard.process_control_keys.
         For more information see documentation of property "mouse_quit_event"
 
         """
@@ -109,7 +112,7 @@ class Mouse(Input):
                     if (diff<1):
                         # simulate quit key
                         simulated_key = pygame.event.Event(pygame.KEYDOWN,\
-                                    {'key': Keyboard._get_quit_key()})
+                                    {'key': Keyboard.get_quit_key()})
                         return Keyboard.process_control_keys(
                             key_event=simulated_key, process_mouse_events=False)
         return False
@@ -172,18 +175,21 @@ class Mouse(Input):
     def mouse_quit_event(self):
         """Getter for mouse_quit_event.
 
-        Switch on/off detection of mouse quit events
+        Switch on/off the detection of mouse quit events
 
         Notes
         -----
         If "mouse quit events" are switched on, clicking quickly three times
-        (i.e., within one second) in the top left corner of the screen forces
+        (i.e., within 1 second) in the top left corner of the screen forces
         the experiment to quit. This function is especially useful for
-        experiments on devices that don't have a keyboard, such as tablet PCs
-        or smartphones. The "mouse quit event" function is therefore switch on
-        per default, if the experiment is running under Android.
+        experiments on devices without hardware keyboard, such as tablet PCs
+        or smartphones. 
+        
+        Under Android, the "mouse quit event" function is switch on per 
+        default.
 
         """
+
         return self._mouse_quit_event
 
     @mouse_quit_event.setter
@@ -213,14 +219,14 @@ class Mouse(Input):
 
     def get_last_button_down_event(self):
         """Get the last button down event.
-        Down event before will be removed.
+        All earlier button down events will be removed from the queue.
 
         Returns
         -------
         btn_id : int
             button number (0,1,2) or 3 for wheel up or 4 for wheel down,
-            if quit screen mouse action has been performed, the function
-            return -1
+            if quit screen mouse action has been performed, the method
+            returns -1
 
         """
 
@@ -235,14 +241,16 @@ class Mouse(Input):
 
     def get_last_button_up_event(self):
         """Get the last button up event.
-        Up and down event before will be removed.
+        All earlier button up and down events will be removed from the
+        queue.
+
 
         Returns
         -------
         btn_id : int
             button number (0,1,2)
-            if quit screen mouse action has been performed, the function
-            return -1
+            if quit screen mouse action has been performed, the method
+            returns -1
 
         """
 
