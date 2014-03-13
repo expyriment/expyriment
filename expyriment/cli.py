@@ -15,6 +15,7 @@ OPTIONS:
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
+      -C              Create Expyriment template file
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
@@ -26,6 +27,34 @@ Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
+
+
+template_file = '''#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+This file is an automatically created template (via python -m expyriment.cli -C)
+for an experiment with Expyriment.
+
+"""
+
+from expyriment import control, design, misc, io, stimuli
+
+control.set_develop_mode(True)
+exp = design.Experiment(name="My experiment")
+
+## initialize ##
+control.initialize(exp)
+
+## start ##
+control.start(exp)
+
+stimuli.TextScreen("The experiment is running", "press any key").present()
+exp.keyboard.wait()
+
+## end ##
+control.end()
+'''
 
 
 if __name__ == "__main__":
@@ -46,7 +75,6 @@ if __name__ == "__main__":
                 #sort args (capital letters last)
                 arguments = list(args[1:])
                 arguments.sort(reverse=True)
-                print arguments
                 for arg in arguments:
                     if arg == 'd':
                         expyriment.control.set_develop_mode(True)
@@ -83,22 +111,28 @@ if __name__ == "__main__":
                         print "Start API Reference Tool"
                         expyriment.show_documentation(3)
                         sys.exit()
+                    elif arg == "C":
+                        print "Created template_expyriment.py in the current folder"
+                        f = open('template_expyriment.py','w')
+                        f.write(template_file)
+                        sys.exit()
                     elif arg == 'h':
                             print """
 Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
 
     OPTIONS:
-          -g              No OpenGL
-          -t              No time stamps for output files
-          -w              Window mode
-          -f              Fast mode (no initialize delay and fast quitting)
-          -a              Auto create subject ID
-          -i              Intensive logging (log level 2)
-          -d              Develop mode (equivalent to -gwfat)
-          -S              Print system information
-          -T              Run Test Suite
-          -A              Start API Reference Tool
-          -h              Show this help
+      -g              No OpenGL
+      -t              No time stamps for output files
+      -w              Window mode
+      -f              Fast mode (no initialize delay and fast quitting)
+      -a              Auto create subject ID
+      -i              Intensive logging (log level 2)
+      -d              Develop mode (equivalent to -gwfat)
+      -C              Create Expyriment template file
+      -S              Print system information
+      -T              Run the Expyriment Test Suite
+      -A              Start the Expyrimnent API Reference Tool
+      -h              Show this help
 """
                             sys.exit()
 
