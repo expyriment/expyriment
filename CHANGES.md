@@ -7,6 +7,7 @@ upcoming version
 New Features:
 - new method visual stimuli.replace
 - new method control.is_android_running
+- new option [-c] for command line interface: create template file
 
 Changed:
 - changes at Simon example
