@@ -46,7 +46,6 @@ if __name__ == "__main__":
                 #sort args (capital letters last)
                 arguments = list(args[1:])
                 arguments.sort(reverse=True)
-                print arguments
                 for arg in arguments:
                     if arg == 'd':
                         expyriment.control.set_develop_mode(True)
