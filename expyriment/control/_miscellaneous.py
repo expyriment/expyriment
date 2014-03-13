@@ -75,8 +75,8 @@ def wait_end_audiosystem(channel=None):
     while get_audiosystem_is_playing(channel):
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and \
-                        (event.key == control_defaults.quit_key or
-                         event.key == control_defaults.pause_key):
+                        (event.key == expyriment.io.Keyboard.get_quit_key() or
+                         event.key == expyriment.io.Keyboard.get_pause_key()):
                     if channel is None:
                         pygame.mixer.stop()
                     else:
