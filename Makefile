@@ -14,8 +14,8 @@ release: build html_documentation api_ref_html pdf_documentation
 	@cp -ra examples build/release
 	@cp -at build/release  CHANGES.md COPYING.txt README.md
 	@cp -at build/release  setup.py
-	@python -c "from setup import get_version; print get_version()" >\
-				build/release.version
+	@python -c "from setup import *; print get_version()+'~'+get_revision()" >\
+					build/release.version
 	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f
 
