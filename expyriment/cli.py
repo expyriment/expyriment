@@ -135,6 +135,6 @@ Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
       -h              Show this help
 """
                             sys.exit()
-    print script
+
     if script is not None:
         execfile(script)
