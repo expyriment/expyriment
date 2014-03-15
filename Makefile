@@ -64,12 +64,12 @@ install:
 	python setup.py install
 
 html_documentation:
-	make --directory=documentation/sphinx html
+	make --directory=documentation/sphinx rst html
 	rm -rf documentation/html
 	cp -ra documentation/sphinx/_build/html documentation/html
 
 pdf_documentation:
-	make --directory=documentation/sphinx latexpdf
+	make --directory=documentation/sphinx rst latexpdf
 	mkdir -p documentation/pdf
 	cp -ra documentation/sphinx/_build/latex/Expyriment.pdf documentation/pdf
 
