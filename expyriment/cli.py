@@ -5,8 +5,7 @@
 Use this to start the Expyriment Reference Tool, or to run the Expyriment Test
 Suite or any Python script with predefined Expyriment default settings.
 
-Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
-
+Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
 OPTIONS:
       -g              No OpenGL
       -t              No time stamps for output files
@@ -28,6 +27,23 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+info = """
+Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
+
+    OPTIONS:
+      -g              No OpenGL
+      -t              No time stamps for output files
+      -w              Window mode
+      -f              Fast mode (no initialize delay and fast quitting)
+      -a              Auto create subject ID
+      -i              Intensive logging (log level 2)
+      -d              Develop mode (equivalent to -gwfat)
+      -C              Create Expyriment template file
+      -S              Print system information
+      -T              Run the Expyriment Test Suite
+      -A              Start the Expyrimnent API Reference Tool
+      -h              Show this help
+"""
 
 template_file = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -60,7 +76,6 @@ control.end()
 if __name__ == "__main__":
 
     import sys, os, subprocess
-
     import expyriment
 
     if len(sys.argv) <= 1:
@@ -68,8 +83,6 @@ if __name__ == "__main__":
 
     script = None
     if len(sys.argv) > 1:
-        if sys.argv[1].endswith(".py"):
-            script = sys.argv[1]
         for args in sys.argv[1:]:
             if args.startswith("-"):
                 #sort args (capital letters last)
@@ -117,24 +130,13 @@ if __name__ == "__main__":
                         f.write(template_file)
                         sys.exit()
                     elif arg == 'h':
-                            print """
-Usage: python -m expyriment.cli [EXPYRIMENT SCRIPT] [OPTIONS]
-
-    OPTIONS:
-      -g              No OpenGL
-      -t              No time stamps for output files
-      -w              Window mode
-      -f              Fast mode (no initialize delay and fast quitting)
-      -a              Auto create subject ID
-      -i              Intensive logging (log level 2)
-      -d              Develop mode (equivalent to -gwfat)
-      -C              Create Expyriment template file
-      -S              Print system information
-      -T              Run the Expyriment Test Suite
-      -A              Start the Expyrimnent API Reference Tool
-      -h              Show this help
-"""
+                            print info
                             sys.exit()
 
+            elif args.endswith(".py"):
+                script = args
+
     if script is not None:
+        sys.argv[0] = script # for expyriment filenames
+        expyriment._secure_hash = "" # recalc secure hash
         execfile(script)
