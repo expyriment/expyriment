@@ -137,6 +137,8 @@ if __name__ == "__main__":
                 script = args
 
     if script is not None:
-        sys.argv[0] = script # for expyriment filenames
+        sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
         expyriment._secure_hash = "" # recalc secure hash
+        print("File: {0} ({1})".format(script,
+                expyriment.get_experiment_secure_hash()))
         execfile(script)
