@@ -38,6 +38,8 @@ tarball: build/release
 		cp -ra release $$DIR;\
 		rm  $$DIR/expyriment/_fonts -rf;\
 		rm  $$DIR/documentation/html -rf;\
+		rm  $$DIR/documentation/html -rf;\
+		rm  $$DIR/documentation/pdf -rf;\
 		rm  $$DIR/documentation/apt_ref_html -rf;\
 		tar cfz $$DIR.orig.tar.gz $$DIR;\
 		rm -rf $$DIR;\
