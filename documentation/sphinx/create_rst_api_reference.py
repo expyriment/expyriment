@@ -84,6 +84,7 @@ def create_module_rst(mod_name, no_members=False):
             for func in functions:
                 fl.write(".. autofunction:: " + mod_name + "." + func[0] + "\n")
 
+        fl.write("\n\n")
         #fl.write("\n\n.. "+repr(modules) + "\n")
         #fl.write(".. "+repr(classes) + "\n")
         #fl.write(".. "+repr(methods) + "\n")
@@ -152,6 +153,7 @@ Functions
 .. autofunction:: expyriment.get_version
 .. autofunction:: expyriment.show_documentation
 .. autofunction:: expyriment.get_system_info
+.. autofunction:: expyriment.get_experiment_secure_hash
 
 """)
 

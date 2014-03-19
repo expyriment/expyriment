@@ -1,4 +1,4 @@
-python-expyriment (0.7.0deb-2) unstable; urgency=low
+python-expyriment (0.7.0~57a01b6-1) unstable; urgency=low
 
   * Bugfix build dependencies
   * Switch to dpkg-source 3.0 (quilt) format

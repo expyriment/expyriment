@@ -9,5 +9,17 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+
+override_dh_auto_build:
+	dh_auto_build
+	make --directory=documentation/sphinx rst html
+	make --directory=documentation/api html
+
+override_dh_clean:
+	make --directory=documentation/sphinx clean
+	make --directory=documentation/api clean
+	rm documentation/api/_build -rf
+	dh_clean
+
 %:
 	dh $@ 
