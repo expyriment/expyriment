@@ -12,8 +12,8 @@
 
 override_dh_auto_build:
 	dh_auto_build
-	make --directory=documentation/sphinx rst html
-	make --directory=documentation/api html
+	make --directory=documentation/sphinx rst html latexpdf
+	#make --directory=documentation/api html
 
 override_dh_clean:
 	make --directory=documentation/sphinx clean
