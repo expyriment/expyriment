@@ -9,17 +9,30 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+CLI_SCRIPT=bin/expyriment
 
-override_dh_auto_build:
-	dh_auto_build
-	make --directory=documentation/sphinx rst html latexpdf
+override_dh_auto_build: $(CLI_SCRIPT)
+	make --directory=documentation/sphinx rst html
 	#make --directory=documentation/api html
+	dh_auto_build
+
+$(CLI_SCRIPT):
+	mkdir -p bin
+	echo "#!/bin/sh" > $(CLI_SCRIPT)
+	echo "set -e" >> $(CLI_SCRIPT)
+	echo -n "python -m expyriment.cli \$$* |" >> $(CLI_SCRIPT) 
+	echo "sed 's/ python -m expyriment.cli / expyriment /g'" >> $(CLI_SCRIPT)
+	chmod 755 $(CLI_SCRIPT)
+
+override_dh_install:
+	dh_install
 
 override_dh_clean:
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
 	rm documentation/api/_build -rf
 	dh_clean
+
 
 %:
 	dh $@ 
