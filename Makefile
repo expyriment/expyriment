@@ -2,12 +2,26 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: build install clean source_tarball
+.PHONY: install clean
 
-release: build html_documentation api_ref_html pdf_documentation
+html_documentation: documentation/html
+pdf_documentation: documentation/pdf
+api_ref_html: documentation/api_ref_html
+build: build/release
+
+CLI_SCRIPT=test
+override_dh_install:
+	echo "#!/bin/sh" > $(CLI_SCRIPT)
+	echo "set -e" >> $(CLI_SCRIPT)
+	echo -n "python -m expyriment.cli \$$* |" >> $(CLI_SCRIPT) 
+	echo "sed 's/ python -m expyriment.cli / expyriment /g'" >> $(CLI_SCRIPT)
+	chmod 755 $(CLI_SCRIPT)
+
+
+build/release: documentation/html documentation/pdf documentation/api_ref_html
+	python setup.py build
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
-	@echo "copy files"
 	@mv -f build/lib* build/release
 	@cp -ra documentation build/release
 	@cp -ra examples build/release
@@ -18,8 +32,6 @@ release: build html_documentation api_ref_html pdf_documentation
 	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f
 
-
-# make zip file from the last release (make release)
 zip: build/release
 	@cd build;\
 		VER=$$(cat release.version);\
@@ -29,7 +41,6 @@ zip: build/release
 		rm expyriment-$$VER;\
 		sha1sum expyriment-$$VER.all.zip
 
-# make tarball from the last release (make release)
 tarball: build/release
 	@cd build;\
 		VER=$$(cat release.version);\
@@ -51,6 +62,7 @@ debian_package:
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
 		TAR=python-expyriment_$$VER$($VERSION_SUFFIX).orig.tar.gz;\
+		rm $$DIR -rf;\
 		tar xfz $$TAR;\
 		cd $$DIR;\
 		cp ../../debian ./ -ra;\
@@ -58,27 +70,20 @@ debian_package:
 		cd ..;\
 		#rm -rf $$DIR;	
 
-build:
-	-@rm -rf build/release
-	python setup.py build
-
 install:
 	python setup.py install
 
-html_documentation:
+documentation/html:
 	make --directory=documentation/sphinx rst html
-	rm -rf documentation/html
-	cp -ra documentation/sphinx/_build/html documentation/html
+	mv documentation/sphinx/_build/html documentation/html
 
-pdf_documentation:
+documentation/pdf:
 	make --directory=documentation/sphinx rst latexpdf
-	mkdir -p documentation/pdf
-	cp -ra documentation/sphinx/_build/latex/Expyriment.pdf documentation/pdf
+	mv documentation/sphinx/_build/latex/Expyriment.pdf documentation/pdf
 
-api_ref_html:
+documentation/api_ref_html:
 	make --directory=documentation/api html
-	rm -rf documentation/api_ref_html
-	cp -ra documentation/api/_build documentation/api_ref_html
+	mv documentation/api/_build documentation/api_ref_html
 
 clean:
 	@make --directory=documentation/sphinx clean
