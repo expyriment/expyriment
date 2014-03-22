@@ -9,6 +9,15 @@ pdf_documentation: documentation/pdf
 api_ref_html: documentation/api_ref_html
 build: build/release
 
+CLI_SCRIPT=test
+override_dh_install:
+	echo "#!/bin/sh" > $(CLI_SCRIPT)
+	echo "set -e" >> $(CLI_SCRIPT)
+	echo -n "python -m expyriment.cli \$$* |" >> $(CLI_SCRIPT) 
+	echo "sed 's/ python -m expyriment.cli / expyriment /g'" >> $(CLI_SCRIPT)
+	chmod 755 $(CLI_SCRIPT)
+
+
 build/release: documentation/html documentation/pdf documentation/api_ref_html
 	python setup.py build
 	make --directory=documentation/sphinx clean
@@ -53,6 +62,7 @@ debian_package:
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
 		TAR=python-expyriment_$$VER$($VERSION_SUFFIX).orig.tar.gz;\
+		rm $$DIR -rf;\
 		tar xfz $$TAR;\
 		cd $$DIR;\
 		cp ../../debian ./ -ra;\
