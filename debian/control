@@ -2,7 +2,7 @@ Source: python-expyriment
 Section: science
 Priority: extra
 Maintainer: Oliver Lindemann <oliver.lindemann@uni-potsdam.de>
-Build-Depends: debhelper (>= 8.0.0), python-support, python-all, python-sphinx
+Build-Depends: debhelper (>= 8.0.0), python-support, python-all, python-sphinx, texlive-latex-recommended, texlive-latex-extra, texlive-fonts-recommended
 Standards-Version: 3.9.3
 Homepage: http://www.expyriment.org
 

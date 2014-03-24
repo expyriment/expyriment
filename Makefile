@@ -50,7 +50,7 @@ tarball: build/release
 		cp -ra release $$DIR;\
 		rm  $$DIR/expyriment/_fonts -rf;\
 		rm  $$DIR/documentation/html -rf;\
-		rm  $$DIR/documentation/pdf -rf;\
+		rm  $$DIR/documentation/Expyriment.pdf -rf;\
 		rm  $$DIR/documentation/api_ref_html -rf;\
 		tar cfz $$TAR $$DIR;\
 		rm -rf $$DIR;\
@@ -79,7 +79,7 @@ documentation/html:
 
 documentation/pdf:
 	make --directory=documentation/sphinx rst latexpdf
-	mv documentation/sphinx/_build/latex/Expyriment.pdf documentation/pdf
+	mv documentation/sphinx/_build/latex/Expyriment.pdf documentation/
 
 documentation/api_ref_html:
 	make --directory=documentation/api html
@@ -89,7 +89,7 @@ clean:
 	@make --directory=documentation/sphinx clean
 	@make --directory=documentation/api clean
 	@rm -rf build \
-			documentation/pdf\
+			documentation/Expyriment.pdf\
 			documentation/api_ref_html\
 			documentation/html
 	@find . -name '*.py[co]' \

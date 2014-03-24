@@ -12,7 +12,7 @@
 CLI_SCRIPT=bin/expyriment
 
 override_dh_auto_build: $(CLI_SCRIPT)
-	make --directory=documentation/sphinx rst html
+	make --directory=documentation/sphinx rst html latexpdf
 	#make --directory=documentation/api html
 	dh_auto_build
 
