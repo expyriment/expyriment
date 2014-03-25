@@ -5,7 +5,7 @@
 .PHONY: install clean
 
 html_documentation: documentation/html
-pdf_documentation: documentation/pdf
+pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
 build: build/release
 
@@ -18,7 +18,7 @@ override_dh_install:
 	chmod 755 $(CLI_SCRIPT)
 
 
-build/release: documentation/html documentation/pdf documentation/api_ref_html
+build/release: documentation/html documentation/Expyriment.pdf documentation/api_ref_html
 	python setup.py build
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
@@ -77,7 +77,7 @@ documentation/html:
 	make --directory=documentation/sphinx rst html
 	mv documentation/sphinx/_build/html documentation/html
 
-documentation/pdf:
+documentation/Expyriment.pdf:
 	make --directory=documentation/sphinx rst latexpdf
 	mv documentation/sphinx/_build/latex/Expyriment.pdf documentation/
 
