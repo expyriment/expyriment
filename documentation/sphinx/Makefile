@@ -37,7 +37,6 @@ clean:
 	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
 	rm -f Changelog.rst
-	rm -f expyriment
 
 rst:
 	@make expyriment.rst
@@ -45,6 +44,7 @@ rst:
 expyriment.rst:
 	ln -fs ../../expyriment/ ./
 	./create_rst_api_reference.py
+	rm -f expyriment
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
