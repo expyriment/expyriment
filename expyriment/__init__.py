@@ -4,15 +4,17 @@ Expyriment is an open-source and platform independent light-weight Python
 library for designing and conducting timing-critical behavioural and
 neuroimaging experiments. The major goal is to provide a well-structured
 Python library for a script-based experiment development with a high priority
-on the readability of the resulting programme code. It has been tested
-extensively under Linux and Windows.
+on the readability of the resulting programme code. Due to the availability of
+an Android runtime environment, Expyriment is also suitable for the
+development of experiments running on tablet PCs or smart-phones.
 
-Expyriment is an all-in-one solution, as it handles the stimulus presentation,
-recording of I/O events, communication with other devices and the collection
-and preprocessing of data. It offers furthermore a hierarchical design
-structure, which allows an intuitive transition from the experimental design
-to a running programme. It is therefore also suited for students as well as
-experimental psychologists and neuroscientists with little programming
+Expyriment has been tested extensively under Linux and Windows and is an
+all-in-one solution, as it handles stimulus presentation, the recording of
+input/output events, communication with other devices, and the collection
+and preprocessing of data. Furthermore, it offers a hierarchical design
+structure, which allows for an intuitive transition from the experimental
+design to a running program. It is therefore also suited for students, as well
+as for experimental psychologists and neuroscientists with little programming
 experience.
 
 Website: http://www.expyriment.org
