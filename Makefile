@@ -9,28 +9,21 @@ pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
 build: build/release
 
-CLI_SCRIPT=test
-override_dh_install:
-	echo "#!/bin/sh" > $(CLI_SCRIPT)
-	echo "set -e" >> $(CLI_SCRIPT)
-	echo -n "python -m expyriment.cli \$$* |" >> $(CLI_SCRIPT) 
-	echo "sed 's/ python -m expyriment.cli / expyriment /g'" >> $(CLI_SCRIPT)
-	chmod 755 $(CLI_SCRIPT)
-
-
 build/release: documentation/html documentation/Expyriment.pdf documentation/api_ref_html
 	python setup.py build
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
+	@git describe | sed -e 's/-[0-9]/+xxx&/' -e 's/xxx-/git/'\
+				> build/release.version
 	@mv -f build/lib* build/release
 	@cp -ra documentation build/release
 	@cp -ra examples build/release
 	@cp -at build/release  CHANGES.md COPYING.txt README.md
 	@cp -at build/release  setup.py
-	@python -c "from setup import *; print get_version()+'~'+get_revision()" >\
-					build/release.version
 	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f
+
+build/release.version:
 
 zip: build/release
 	@cd build;\
@@ -46,7 +39,7 @@ tarball: build/release
 		VER=$$(cat release.version);\
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
-		TAR=python-expyriment_$$VER$($VERSION_SUFFIX).orig.tar.gz;\
+		TAR=python-expyriment_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
 		cp -ra release $$DIR;\
 		rm  $$DIR/expyriment/_fonts -rf;\
 		rm  $$DIR/documentation/html -rf;\
@@ -61,7 +54,7 @@ debian_package:
 		VER=$$(cat release.version);\
 	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
-		TAR=python-expyriment_$$VER$($VERSION_SUFFIX).orig.tar.gz;\
+		TAR=python-expyriment_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
 		rm $$DIR -rf;\
 		tar xfz $$TAR;\
 		cd $$DIR;\
