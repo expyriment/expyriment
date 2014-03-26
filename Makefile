@@ -13,7 +13,7 @@ build/release: documentation/html documentation/Expyriment.pdf documentation/api
 	python setup.py build
 	make --directory=documentation/sphinx clean
 	make --directory=documentation/api clean
-	@git describe | sed -e 's/-[0-9]/+xxx&/' -e 's/xxx-/git/'\
+	@git describe | sed -e 's/^v//' -e 's/-[0-9]/+xxx&/' -e 's/xxx-/git/' \
 				> build/release.version
 	@mv -f build/lib* build/release
 	@cp -ra documentation build/release
