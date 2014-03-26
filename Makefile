@@ -23,8 +23,6 @@ build/release: documentation/html documentation/Expyriment.pdf documentation/api
 	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f
 
-build/release.version:
-
 zip: build/release
 	@cd build;\
 		VER=$$(cat release.version);\
