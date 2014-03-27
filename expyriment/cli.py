@@ -15,6 +15,9 @@ __date__ = ''
 import sys, os, subprocess
 import expyriment
 
+short_info = """You must specify an option.
+Try '-h' or '--help' for more information."""
+
 info = """
 Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
 
@@ -27,6 +30,7 @@ Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
       -C              Create Expyriment template
+      -J              Join data files to one single csv file
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
@@ -68,11 +72,25 @@ control.end()
         f.write(template_file)
         f.close()
 
+def join_data():
+    from expyriment.misc import data_preprocessing
+    print "Joining data"
+    sys.stdout.write(" data subfolder [optional, default=data]? ")
+    folder = raw_input()
+    if len(folder)<=0:
+        folder = "data"
+    start_with = raw_input(" data files start with [optional]? ")
+    output =""
+    while len(output)<=1:
+        output = raw_input(" name of output csv file? ")
+    d = data_preprocessing.Aggregator(folder, start_with)
+    d.write_concatenated_data(output)
 
 if __name__ == "__main__":
 
     if len(sys.argv) <= 1:
-        sys.argv.append("-h")
+        print short_info
+        sys.exit()
 
     script = None
     if len(sys.argv) > 1:
@@ -119,6 +137,9 @@ if __name__ == "__main__":
                         sys.exit()
                     elif arg == "C":
                         create_templet()
+                        sys.exit()
+                    elif arg == "J":
+                        join_data()
                         sys.exit()
                     elif arg == 'h':
                             print info
