@@ -25,7 +25,7 @@ Package Archiv (PPA_). You merely have to add the repository and install
 please first uninstall the old version using the following command (replace *X*
 to match your Python version)::
 
-    sudo rm usr/local/lib/python2.X/dist-packages/expyriment
+    sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
 
 The package ``python-expyriment`` is also part of the `NeuroDebian`_ software
 platform, which provides a large collection of popular neuroscience research
