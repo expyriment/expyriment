@@ -21,6 +21,10 @@ Try '-h' or '--help' for more information."""
 info = """
 Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
 
+The Expyriment command line interface provides a collection of convenient methods
+helpful for the development and testing of experiments as well as functions to
+join the data output.
+
     OPTIONS:
       -g              No OpenGL
       -t              No time stamps for output files
@@ -101,10 +105,12 @@ if __name__ == "__main__":
 
                 # long options
                 if args.startswith("--"):
-                    if args == "--help":
+                     if args == "--help":
                         print info
                         sys.exit()
-                    else:
+                     elif args == "--version":
+                        pass
+                     else:
                         print unknown_option.format(args)
 
                 #short options
