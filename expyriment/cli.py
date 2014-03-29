@@ -13,7 +13,6 @@ __revision__ = ''
 __date__ = ''
 
 import sys, os, subprocess
-import expyriment
 
 short_info = """You must specify an option.
 Try '-h' or '--help' for more information."""
@@ -33,6 +32,7 @@ functions to join the data output.
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
+
       -C              Create Expyriment template
       -J              Join data files to one single csv file
       -S              Print system information
@@ -123,42 +123,51 @@ if __name__ == "__main__":
 
                     for arg in arguments:
                         if arg == 'd':
-                            expyriment.control.set_develop_mode(True)
+                            from expyriment import control
+                            control.set_develop_mode(True)
                         elif arg == 'i':
                             print "* Intensive logging"
-                            expyriment.io.defaults.event_logging = 2
+                            from expyriment import io
+                            io.defaults.event_logging = 2
                         elif arg == 'f':
                             print "* Fast mode"
-                            expyriment.control.defaults.initialize_delay = 0
-                            expyriment.control.defaults.fast_quit = False
+                            from expyriment import control
+                            control.defaults.initialize_delay = 0
+                            control.defaults.fast_quit = False
                         elif arg == 'w':
                             print "* Window mode (No OpenGL)"
-                            expyriment.control.defaults.open_gl = False
-                            expyriment.control.defaults.window_mode = True
+                            from expyriment import control
+                            control.defaults.open_gl = False
+                            control.defaults.window_mode = True
                         elif arg == 'g':
                             print "* No OpenGL"
-                            expyriment.control.defaults.open_gl = False
+                            from expyriment import control
+                            control.defaults.open_gl = False
                         elif arg == 't':
                             print "* No time stamps"
-                            expyriment.io.defaults.argvoutputfile_time_stamp =\
-                                    False
+                            from expyriment import io
+                            io.defaults.argvoutputfile_time_stamp = False
                         elif arg == 'a':
                             print "* Auto create subject id"
-                            expyriment.control.defaults.auto_create_subject_id\
-                                             = True
+                            from expyriment import control
+                            control.defaults.auto_create_subject_id = True
                         elif arg == "S":
                             print "System Info"
+                            import expyriment
                             print expyriment.get_system_info(as_string=True)
                             sys.exit()
                         elif arg == "T":
                             print "Run Test Suite"
-                            expyriment.control.run_test_suite()
+                            from expyriment import control
+                            control.run_test_suite()
                             sys.exit()
                         elif arg == "B":
+                            import expyriment
                             expyriment.show_documentation(2)
                             sys.exit()
                         elif arg == "A":
                             print "Start API Reference Tool"
+                            import expyriment
                             expyriment.show_documentation(3)
                             sys.exit()
                         elif arg == "C":
