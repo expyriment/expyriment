@@ -19,7 +19,7 @@ suite, just call::
     expyriment.control.run_test_suite()
 
 Alternatively, you can start the test suite from the command line using the 
-:doc:`command line interface` <CommandLineInterface>::
+:doc:`command line interface <CommandLineInterface>`::
 
    $ python -m expyriment.cli -T 
 

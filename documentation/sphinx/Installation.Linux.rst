@@ -33,7 +33,7 @@ for you::
 
     wget -P /tmp 'https://raw.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
 
-Don't forget to install all `required software packages <Installation.rst>`_.
+Don't forget to install all :doc:`required software packages </Installation>`.
 
 
 Notes
