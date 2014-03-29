@@ -33,6 +33,7 @@ functions to join the data output.
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
+
       -C              Create Expyriment template
       -J              Join data files to one single csv file
       -S              Print system information
