@@ -7,7 +7,7 @@ Platform-specific instructions: Linux
 Debian, Ubuntu and derivatives
 -------------------------------
 
-We provide a `Debian`_ package for Expyriment, called `python-expyriment``. The package can be installed, 
+We provide a `Debian`_ package for Expyriment, called ``python-expyriment``. The package can be installed, 
 for instance, via `NeuroDebian`_, a platform providing alarge collection of neuroscience research software.
 For detailed instructions see:
 `Installing Expyriment via Neurodebian <http://neuro.debian.net/install_pkg.html?p=python-expyriment>`_
