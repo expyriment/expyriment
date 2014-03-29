@@ -21,9 +21,9 @@ Try '-h' or '--help' for more information."""
 info = """
 Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
 
-The Expyriment command line interface provides a collection of convenient methods
-helpful for the development and testing of experiments as well as functions to
-join the data output.
+The Expyriment command line interface provides a collection of convenient
+methods helpful for the development and testing of experiments as well as
+functions to join the data output.
 
     OPTIONS:
       -g              No OpenGL
@@ -38,6 +38,7 @@ join the data output.
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
+      -B              Open browser with API refelence
       -h              Show this help
 """
 
@@ -92,6 +93,7 @@ def join_data():
     d = data_preprocessing.Aggregator(folder, start_with)
     d.write_concatenated_data(output)
 
+
 if __name__ == "__main__":
 
     if len(sys.argv) <= 1:
@@ -142,8 +144,8 @@ if __name__ == "__main__":
                                     False
                         elif arg == 'a':
                             print "* Auto create subject id"
-                            expyriment.control.defaults.auto_create_subject_id =\
-                                    True
+                            expyriment.control.defaults.auto_create_subject_id\
+                                             = True
                         elif arg == "S":
                             print "System Info"
                             print expyriment.get_system_info(as_string=True)
@@ -151,6 +153,9 @@ if __name__ == "__main__":
                         elif arg == "T":
                             print "Run Test Suite"
                             expyriment.control.run_test_suite()
+                            sys.exit()
+                        elif arg == "B":
+                            expyriment.show_documentation(2)
                             sys.exit()
                         elif arg == "A":
                             print "Start API Reference Tool"
