@@ -7,11 +7,11 @@ Platform-specific instructions: Linux
 Debian, Ubuntu and derivatives
 -------------------------------
 
-We provide a `Debian`_ package for Expyriment, called ``python-expyriment``. The package can be installed, 
-for instance, via `NeuroDebian`_, a platform providing a large collection of neuroscience research software.
-
-For detailed instructions see:
-`Installing Expyriment via Neurodebian <http://neuro.debian.net/install_pkg.html?p=python-expyriment>`_
+We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
+suggest to installed ``python-expyriment`` via `NeuroDebian`_, a platform 
+providing a large collection of neuroscience research software.  For detailed 
+instructions see:
+`Installing Expyriment via Neurodebian <http://neuro.debian.net/pkgs/python-expyriment.html>`_
 
 *Note*: If you have a previous version of Expyriment installed from source,
 please first uninstall the old version using the following command (replace *X*
@@ -19,8 +19,7 @@ to match your Python version)::
 
     sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
 
-Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment 
-Nightly PPA <https://launchpad.net/~lindemann09/+archive/expyriment-nightly>`_.
+Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
 
 
 Other Linux distributions
@@ -49,5 +48,3 @@ Notes
 .. _`release page`: http://github.com/expyriment/expyriment/releases/latest
 .. _`Debian`: https://www.debian.org/
 .. _`NeuroDebian`: http://neuro.debian.net/
-.. _`Ubuntu`: http://www.ubuntu.com/
-.. _`PPA`: https://launchpad.net/~lindemann09/+archive/expyriment
