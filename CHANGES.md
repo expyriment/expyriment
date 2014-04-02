@@ -5,16 +5,14 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
-- new method visual stimuli.replace
+- new method in data_preprocessing: save to to R data frame
 - new method control.is_android_running
-- new option [-c] for command line interface: create template file
 
 Changed:
 - changes at Simon example
 
 Fixed:
 - bug fix, io.TouchScreenButton crash if duration expired 
-- bug fix, command line inteface: order of argument is now irrelevant
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
