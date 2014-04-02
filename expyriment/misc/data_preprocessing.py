@@ -180,8 +180,8 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     delimiter : str, optional
         delimiter character (default=",")
     to_R_data_frame: bool, optional
-        if True, data will be converted to a R data frame ('data') and saved
-        in a rda file
+        if True, data will be converted to a R data frame that is saved
+        in a RDS file
 
     """
 
@@ -989,12 +989,12 @@ The Python package 'numpy' is not installed."""
 
     def write_concatenated_data_to_R_data_frame(self, output_file):
         """Creates a R data frame of the concatenated data and stores it in a
-        rda file.
+        RDS file.
 
         Parameters
         ----------
         output_file : str, optional
-            name of rda output file
+            name of RDS output file
             If not specified data will the save to {file_name}.csv
 
         Notes
@@ -1011,7 +1011,7 @@ The Python package 'numpy' is not installed."""
             raise ImportError(message)
 
         if output_file is None:
-            output_file = u"{0}.rda".format(self.file_name)
+            output_file = u"{0}.rds".format(self.file_name)
         fl, tmp_file_name = _mkstemp()
         _os.close(fl)
         self.write_concatenated_data(output_file=tmp_file_name, delimiter=',')
@@ -1020,7 +1020,7 @@ The Python package 'numpy' is not installed."""
         na.strings=c("NA", "None"))'''.format(tmp_file_name))
         robjects.r('''str(data)''')
         print("write file: {0}".format(output_file))
-        robjects.r('''save(data, file="{0}")'''.format(output_file))
+        robjects.r('''saveRDS(data, file="{0}")'''.format(output_file))
         try:
             _os.remove(tmp_file_name)
         except:
