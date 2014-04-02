@@ -36,7 +36,7 @@ functions to join the data output.
 
       -C              Create Expyriment template
       -J              Join data files to one single csv file
-      -R              Join data files and create R data frame
+      -R              Join data files and create R data frame (in RDS file)
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
@@ -174,7 +174,7 @@ if __name__ == "__main__":
                             d = join_data()
                             output =""
                             while len(output)<=1:
-                                output = raw_input(" name of rda file? ")
+                                output = raw_input(" name of RDS file? ")
                             d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()
                         elif arg == 'h':
