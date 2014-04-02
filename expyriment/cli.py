@@ -36,6 +36,7 @@ functions to join the data output.
 
       -C              Create Expyriment template
       -J              Join data files to one single csv file
+      -R              Join data files and create R data frame
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
@@ -88,11 +89,8 @@ def join_data():
     if len(folder)<=0:
         folder = "data"
     start_with = raw_input(" data files start with [optional]? ")
-    output =""
-    while len(output)<=1:
-        output = raw_input(" name of output csv file? ")
     d = data_preprocessing.Aggregator(folder, start_with)
-    d.write_concatenated_data(output)
+    return d
 
 
 if __name__ == "__main__":
@@ -166,7 +164,18 @@ if __name__ == "__main__":
                             create_templet()
                             sys.exit()
                         elif arg == "J":
-                            join_data()
+                            d = join_data()
+                            output =""
+                            while len(output)<=1:
+                                output = raw_input(" name of output csv file? ")
+                            d.write_concatenated_data(output)
+                            sys.exit()
+                        elif arg == "R":
+                            d = join_data()
+                            output =""
+                            while len(output)<=1:
+                                output = raw_input(" name of rda file? ")
+                            d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()
                         elif arg == 'h':
                             print info
