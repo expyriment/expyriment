@@ -2,6 +2,14 @@
 Expyriment Release Notes
 ========================
  
+upcoming version
+----------------
+New Features:
+- several options for command line interface
+
+Fixed:
+- bug fix, command line inteface: order of argument is now irrelevant
+
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
