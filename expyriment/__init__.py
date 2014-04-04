@@ -123,7 +123,7 @@ def get_experiment_secure_hash():
         return _secure_hash
 
     try:
-        with open(_os.path.split(_sys.argv[0])[1]) as f:
+        with open(_sys.argv[0]) as f:
             _secure_hash = _sha1(f.read()).hexdigest()[:6]
     except:
         _secure_hash = None
