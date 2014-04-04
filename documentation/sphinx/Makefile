@@ -36,7 +36,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
-	rm -f Changelog.rst
+	rm -f Changelog.rst CommandLineInterface.rst
 
 rst:
 	@make expyriment.rst

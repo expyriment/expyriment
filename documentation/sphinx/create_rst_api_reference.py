@@ -124,6 +124,18 @@ def create_change_log_rst():
     out.close()
     fl.close()
 
+def make_cli_rst():
+    """make to commandline interface docu"""
+    from expyriment.cli import info
+    with open("CommandLineInterface.rst", 'w') as fl:
+         fl.write("""
+Command line interface
+======================
+
+Usage::
+""")
+         s = info.replace("\n", "\n    ").replace("Usage: ", "")
+         fl.write("\n    " + s)
 
 
 # main module
@@ -165,3 +177,5 @@ for mod_name in sub_modules:
     create_module_rst(mod_name)
 
 create_change_log_rst()
+make_cli_rst()
+
