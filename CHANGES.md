@@ -8,6 +8,8 @@ New Features:
 - new method in data_preprocessing: save to to R data frame
 - new method control.is_android_running
 - several new options for command line interface
+- get_module_hash_dictionary: dictionary secure hashes from all modules
+  imported from local folder
 
 Changed:
 - changes at Simon example

@@ -148,6 +148,6 @@ except ImportError:
     from _api_reference_tool import show_documentation
 from _get_system_info import get_system_info
 import _importer_functions
-from _secure_hash import get_experiment_secure_hash
+from _secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
 
 exec(_importer_functions.post_import_hook())

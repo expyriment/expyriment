@@ -10,9 +10,7 @@ __date__ = ''
 
 import sys
 from hashlib import sha1
-
-experiment_secure_hash = ""
-experiment_files = [sys.argv[0]]
+from copy import copy
 
 def _make_secure_hash(filename):
     """returns secure hash from file or None, if not possile"""
@@ -43,14 +41,67 @@ def get_experiment_secure_hash():
 
     """
 
-    global experiment_secure_hash
-    if experiment_secure_hash != "":
-        return experiment_secure_hash
-    experiment_secure_hash = _make_secure_hash(experiment_files[0])
-    return get_experiment_secure_hash()
+    if secure_hashes.has_key(main_file):
+        return secure_hashes[main_file]
+    else:
+        return None
+
+def get_module_hash_dictionary():
+    """Returns a dictionary with the fingerprints of all modules imported
+    from the local folded.
+
+    Returns
+    -------
+    hashes: dict
+        hash dict with all imported modules
+        keys = file names, values = sha hashes
+
+    Notes
+    -----
+    See get_experiment_secure_hash() for further information about Expyriment
+    secure hashes.
+
+    """
+    if secure_hashes.has_key(main_file):
+        rtn = copy(secure_hashes)
+        rtn.pop(main_file)
+    return rtn
+
+def _make_hash_dict():
+    """get all imported py modules from local directory"""
+    global main_file
+    rtn = {main_file : _make_secure_hash(main_file)}
+    try:
+        with open(main_file) as f:
+            for line in f:
+                if line.startswith("import") or line.startswith("from"):
+                    pyfl = line.strip().split(" ")[1] + ".py"
+                    sha = _make_secure_hash(pyfl)
+                    if sha is not None:
+                        rtn[pyfl] = sha
+    except:
+        pass
+    return rtn
+
+def module_hashes_as_string():
+    """helper function that converts dict to str"""
+    if len(secure_hashes)>1:
+        txt = ""
+        for fl, sha in get_module_hash_dictionary().iteritems():
+            txt += "{0} ({1}), ".format(fl, sha)
+        return txt[:-2]
+    else:
+        return ""
+
+def cout_hashes():
+    """helper function that prints hash information"""
+    if get_experiment_secure_hash() is not None:
+        print("Main file: {0} ({1})".format(main_file,
+                            get_experiment_secure_hash()))
+        if len(secure_hashes)>1:
+            print "Modules: " + module_hashes_as_string()
 
 # print hash information when imported
-if get_experiment_secure_hash() is not None:
-    print("File: {0} ({1})".format(sys.argv[0], get_experiment_secure_hash()))
-
-
+main_file = sys.argv[0]
+secure_hashes = _make_hash_dict()
+cout_hashes()

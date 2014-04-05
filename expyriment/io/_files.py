@@ -359,6 +359,8 @@ class DataFile(OutputFile):
 
         self.write_comment("e sha1: {0}".format(
                                     expyriment.get_experiment_secure_hash()))
+        self.write_comment("e modules: {0}".format(
+                            expyriment._secure_hash.module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
         self.write_line(self.variable_names)
@@ -630,6 +632,8 @@ class EventFile(OutputFile):
 
         self.write_comment("sha1: {0}".format(
                                     expyriment.get_experiment_secure_hash()))
+        self.write_comment("modules: {0}".format(
+                            expyriment._secure_hash.module_hashes_as_string()))
         self.write_comment("display: size={0}, window_mode={1}, opengl={2}"
                            .format(display, window_mode, opengl))
         self.write_comment("os: {0}".format(uname()))
