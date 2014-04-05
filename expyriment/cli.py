@@ -74,13 +74,10 @@ exp.keyboard.wait()
 ## end ##
 control.end()
 '''
-    if sys.platform.startswith("linux"):
-        print template_file
-    else:
-        print "Created template_expyriment.py in the current folder"
-        f = open('template_expyriment.py','w')
-        f.write(template_file)
-        f.close()
+    print "Created template_expyriment.py"
+    f = open('template_expyriment.py','w')
+    f.write(template_file)
+    f.close()
 
 def join_data():
     from expyriment.misc import data_preprocessing
