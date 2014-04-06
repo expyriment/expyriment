@@ -9,6 +9,7 @@ __revision__ = ''
 __date__ = ''
 
 import sys
+from re import split
 from hashlib import sha1
 from copy import copy
 
@@ -65,7 +66,9 @@ def get_module_hash_dictionary():
     if secure_hashes.has_key(main_file):
         rtn = copy(secure_hashes)
         rtn.pop(main_file)
-    return rtn
+        return rtn
+    else:
+        return {}
 
 def _make_hash_dict():
     """get all imported py modules from local directory"""
@@ -74,11 +77,17 @@ def _make_hash_dict():
     try:
         with open(main_file) as f:
             for line in f:
-                if line.startswith("import") or line.startswith("from"):
-                    pyfl = line.strip().split(" ")[1] + ".py"
-                    sha = _make_secure_hash(pyfl)
+                line = line.strip()
+                if line.startswith("from"):
+                    modules = [line.split(" ")[1]]
+                elif line.startswith("import"):
+                    modules = split(" |,", line)[1:]
+                else:
+                    modules = []
+                for module in modules:
+                    sha = _make_secure_hash(module + ".py")
                     if sha is not None:
-                        rtn[pyfl] = sha
+                        rtn[module] = sha
     except:
         pass
     return rtn
