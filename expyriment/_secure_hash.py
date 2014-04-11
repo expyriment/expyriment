@@ -70,12 +70,10 @@ def get_module_hash_dictionary():
     else:
         return {}
 
-def _make_hash_dict():
-    """get all imported py modules from local directory"""
-    global main_file
-    rtn = {main_file : _make_secure_hash(main_file)}
+def _append_hashes_from_imported_modules(hash_dict, filename):
+    """append hashes from imported modules und returns hash_dict"""
     try:
-        with open(main_file) as f:
+        with open(filename) as f:
             for line in f:
                 line = line.strip()
                 if line.startswith("from"):
@@ -85,12 +83,16 @@ def _make_hash_dict():
                 else:
                     modules = []
                 for module in modules:
-                    sha = _make_secure_hash(module + ".py")
-                    if sha is not None:
-                        rtn[module] = sha
+                    pyfile = module + ".py"
+                    if not hash_dict.has_key(pyfile):
+                        sha = _make_secure_hash(pyfile)
+                        if sha is not None:
+                            hash_dict[pyfile] = sha
+                            hash_dict,_ = _append_hashes_from_imported_modules(
+                                        hash_dict, pyfile) #recusion
     except:
         pass
-    return rtn
+    return hash_dict
 
 def module_hashes_as_string():
     """helper function that converts dict to str"""
@@ -112,5 +114,6 @@ def cout_hashes():
 
 # print hash information when imported
 main_file = sys.argv[0]
-secure_hashes = _make_hash_dict()
+secure_hashes = {main_file : _make_secure_hash(main_file)}
+secure_hashes = _append_hashes_from_imported_modules(secure_hashes, main_file)
 cout_hashes()
