@@ -193,6 +193,8 @@ class Keyboard(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         if android_show_keyboard is not None:
             android_show_keyboard()
         start = get_time()
@@ -259,6 +261,8 @@ class Keyboard(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         found_char = None

@@ -229,6 +229,8 @@ class CedrusResponseDevice(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = self._buffer.clock.time
         if not no_clear_buffer:
             self.clear()

@@ -70,6 +70,8 @@ class TriggerInput(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         found = None
         rt = None
