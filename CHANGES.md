@@ -10,6 +10,7 @@ New Features:
 - several new options for command line interface
 - get_module_hash_dictionary: dictionary secure hashes from all modules
   imported from local folder
+- new constant: ALL_KEYPAD_DIGITS
 
 Changed:
 - changes at Simon example
