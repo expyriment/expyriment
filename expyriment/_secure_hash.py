@@ -88,7 +88,7 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                         sha = _make_secure_hash(pyfile)
                         if sha is not None:
                             hash_dict[pyfile] = sha
-                            hash_dict,_ = _append_hashes_from_imported_modules(
+                            hash_dict = _append_hashes_from_imported_modules(
                                         hash_dict, pyfile) #recusion
     except:
         pass
@@ -116,4 +116,5 @@ def cout_hashes():
 main_file = sys.argv[0]
 secure_hashes = {main_file : _make_secure_hash(main_file)}
 secure_hashes = _append_hashes_from_imported_modules(secure_hashes, main_file)
+print secure_hashes
 cout_hashes()
