@@ -224,6 +224,8 @@ class GamePad(Input, Output):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         _button = None
