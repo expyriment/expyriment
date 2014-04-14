@@ -124,7 +124,7 @@ if __name__ == "__main__":
                             expyriment.control.set_develop_mode(True)
                         elif arg == 'i':
                             print "* Intensive logging"
-                            expyriment.io.defaults.event_logging = 2
+                            expyriment.control.defaults.event_logging = 2
                         elif arg == 'f':
                             print "* Fast mode"
                             expyriment.control.defaults.initialize_delay = 0
