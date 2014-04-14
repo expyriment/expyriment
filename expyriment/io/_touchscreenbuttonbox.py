@@ -238,6 +238,8 @@ class TouchScreenButtonBox(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         self.clear_event_buffer()
         while True:

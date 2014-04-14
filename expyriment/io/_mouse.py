@@ -294,6 +294,8 @@ class Mouse(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None, None, None
         start = get_time()
         self.clear()
         old_pos = pygame.mouse.get_pos()

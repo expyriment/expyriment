@@ -147,6 +147,8 @@ class MidiIn(Input):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         _event = None

@@ -11,6 +11,7 @@ New Features:
 - get_module_hash_dictionary: dictionary secure hashes from all modules
   imported from local folder
 - new constant: ALL_KEYPAD_DIGITS
+- new feature: control.set_skip_wait_functions
 
 Changed:
 - changes at Simon example
