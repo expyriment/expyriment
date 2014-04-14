@@ -13,7 +13,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import sys, os, subprocess
+import sys, os
 import expyriment
 
 short_info = """You must specify an option.
