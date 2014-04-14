@@ -116,5 +116,4 @@ def cout_hashes():
 main_file = sys.argv[0]
 secure_hashes = {main_file : _make_secure_hash(main_file)}
 secure_hashes = _append_hashes_from_imported_modules(secure_hashes, main_file)
-print secure_hashes
 cout_hashes()

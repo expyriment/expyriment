@@ -14,6 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 import sys, os
+from importlib import import_module
 import expyriment
 
 short_info = """You must specify an option.
@@ -189,7 +190,9 @@ if __name__ == "__main__":
     if script is not None:
         sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
         expyriment._secure_hash.main_file = script
-        expyriment._secure_hash.secure_hashes = \
-                            expyriment._secure_hash._make_hash_dict()
+        secure_hashes = {script : expyriment._secure_hash._make_secure_hash(script)}
+        secure_hashes = expyriment._secure_hash.\
+                    _append_hashes_from_imported_modules(secure_hashes, script)
+        expyriment._secure_hash.secure_hashes = secure_hashes
         expyriment._secure_hash.cout_hashes()
-        execfile(script)
+        import_module(script)
