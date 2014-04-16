@@ -188,6 +188,9 @@ if __name__ == "__main__":
                 script = args
 
     if script is not None:
+        script = os.path.abspath(script)
+        path, pyfile = os.path.split(script)
+        os.chdir(path)
         sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
         expyriment._secure_hash.main_file = script
         secure_hashes = {script : expyriment._secure_hash._make_secure_hash(script)}
@@ -195,4 +198,5 @@ if __name__ == "__main__":
                     _append_hashes_from_imported_modules(secure_hashes, script)
         expyriment._secure_hash.secure_hashes = secure_hashes
         expyriment._secure_hash.cout_hashes()
-        import_module(os.path.splitext(script)[0])
+
+        import_module(os.path.splitext(pyfile)[0])
