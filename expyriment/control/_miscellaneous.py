@@ -20,7 +20,9 @@ from expyriment.control import defaults as control_defaults
 def start_audiosystem():
     """Start the audio system.
 
-    NOTE: The audiosystem is automatically started when initializing an
+    Notes
+    ------
+    The audiosystem is automatically started when initializing an
     Experiment!
 
     """
@@ -137,6 +139,24 @@ def set_develop_mode(onoff, intensive_logging=False):
     if intensive_logging:
         expyriment.control.defaults.event_logging = 2
 
+def set_skip_wait_functions(onoff):
+    """Switch on/off skip wait function.
+    If skip-wait-functions is switch on (True) all wait functions in the
+    experiment (i.e.  all wait function in expyriment.io and the clock) will
+    be omitted.
+
+    Notes
+    -----
+    CAUTION!: This functions is only usefull for experiment test runs. Do not use
+    skip-wait-function while real experiments.
+
+    Parameters
+    ----------
+    onoff : bool
+        set skip-wait-function on (True) or off (False)
+
+"""
+    control_defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
     value = None

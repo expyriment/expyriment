@@ -110,6 +110,8 @@ class Clock(object) :
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return
         start = self.time
         if type(function) == types.FunctionType or\
                                  expyriment._active_exp._execute_wait_callback():

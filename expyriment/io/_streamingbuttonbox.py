@@ -145,6 +145,8 @@ class StreamingButtonBox(Input, Output):
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         if not no_clear_buffer:

@@ -1,16 +1,20 @@
 ========================
 Expyriment Release Notes
 ========================
-
+ 
 upcoming version
 ----------------
 New Features:
 - new mouse function: experiments can be quitted by mouse events. See
   documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
-- new option [-c] for command line interface: create template file
 - new method visual stimuli.replace
 - new method control.is_android_running
+- several new options for command line interface
+- get_module_hash_dictionary: dictionary secure hashes from all modules
+  imported from local folder
+- new constant: ALL_KEYPAD_DIGITS
+- new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
 
 Changed:

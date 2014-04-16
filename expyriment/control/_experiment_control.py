@@ -434,8 +434,11 @@ def initialize(experiment=None):
     text.plot(canvas)
     hash_ = expyriment.get_experiment_secure_hash()
     if hash_ is not None:
-        text2 = stimuli.TextLine(
-            "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_),
+        txt = "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_)
+        if len(expyriment._secure_hash.module_hashes_as_string())>0:
+            txt += ", {0}".format(
+                        expyriment._secure_hash.module_hashes_as_string())
+        text2 = stimuli.TextLine(txt,
             text_size=14,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),

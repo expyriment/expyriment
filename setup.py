@@ -102,6 +102,7 @@ class Build(build_py):
         build_py.byte_compile(self, files)
 
 def get_version():
+    # read version for CHANGES.md
     version_nr = "{0}"
     with open('CHANGES.md') as f:
         for line in f:
@@ -113,15 +114,25 @@ def get_version():
                 break
     return version_nr
 
-def get_revision():
+def get_git_revision():
         proc = Popen(['git', 'log', '--format=%H', '-1'], \
                         stdout=PIPE, stderr=PIPE)
         return proc.stdout.read().strip()[:7]
 
-def get_date():
+def get_git_date():
         proc = Popen(['git', 'log', '--format=%cd', '-1'],
                      stdout=PIPE, stderr=PIPE)
         return proc.stdout.readline().strip()
+
+def get_revision_from_file(filename):
+    # get the revision (___revision___) from a particular file
+    # not yet used but maybe usefule to implement (instead git check)
+    with open(filename) as f:
+        for line in f:
+            if line.startswith("__revision__"):
+                rtn = line.split("'")
+                return rtn[1]
+    return ''
 
 if __name__=="__main__":
     version_nr = get_version()
@@ -133,8 +144,8 @@ if __name__=="__main__":
         initial_revision = proc.stdout.readline()
         if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
             raise Exception
-        revision_nr = get_revision()
-        date = get_date()
+        revision_nr = get_git_revision()
+        date = get_git_date()
         # Build
         x = setup(name='expyriment',
           version=version_nr,

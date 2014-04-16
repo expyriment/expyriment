@@ -3,38 +3,28 @@
 Platform-specific instructions: Linux
 =====================================
 
-Dependencies
-------------
-If you are in the lucky position of working on a Linux system, installing the
-required packages can be easily done via your package manager. On Debian-based
-systems the following command will install dependencies in one go::
 
-    sudo apt-get install python python-pygame python-opengl python-serial python-parallel python-numpy
+Debian, Ubuntu and derivatives
+-------------------------------
 
-Installing from Debian or Ubuntu repository
---------------------------------------------
-Under `Ubuntu`_, Expyriment can be installed via the Expyriment Personal
-Package Archiv (PPA_). You merely have to add the repository and install
-``python-expyriment``::
+We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
+suggest to installed ``python-expyriment`` via `NeuroDebian`_, a platform 
+providing a large collection of neuroscience research software.  For detailed 
+instructions see:
+`Installing Expyriment via Neurodebian <http://neuro.debian.net/pkgs/python-expyriment.html>`_
 
-    sudo add-apt-repository ppa:lindemann09/expyriment
-    sudo apt-get update
-    sudo apt-get install python-expyriment
-
-**Note**: If you have previous versions of Expyriment installed from source,
+*Note*: If you have a previous version of Expyriment installed from source,
 please first uninstall the old version using the following command (replace *X*
 to match your Python version)::
 
-    sudo rm usr/local/lib/python2.X/dist-packages/expyriment
+    sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
 
-The package ``python-expyriment`` is also part of the `NeuroDebian`_ software
-platform, which provides a large collection of popular neuroscience research
-software for the `Debian`_ operating system and derivatives. Please visit the
-`Neurodebian`_ website for further instructions.
+Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
 
 
-Installing from source
------------------------
+Other Linux distributions
+-------------------------
+
 For all other Linux distributions, you can download the file
 expyriment-|release|.zip from the `release page`_ and install as described
 here_. Alternatively, you can use the following command, which is doing this
@@ -42,7 +32,8 @@ for you::
 
     wget -P /tmp 'https://raw.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
 
-.. FIXME installation script depends on unzip
+Don't forget to install all :doc:`required software packages </Installation>`.
+
 
 Notes
 -----
@@ -57,5 +48,3 @@ Notes
 .. _`release page`: http://github.com/expyriment/expyriment/releases/latest
 .. _`Debian`: https://www.debian.org/
 .. _`NeuroDebian`: http://neuro.debian.net/
-.. _`Ubuntu`: http://www.ubuntu.com/
-.. _`PPA`: https://launchpad.net/~lindemann09/+archive/expyriment
