@@ -195,4 +195,4 @@ if __name__ == "__main__":
                     _append_hashes_from_imported_modules(secure_hashes, script)
         expyriment._secure_hash.secure_hashes = secure_hashes
         expyriment._secure_hash.cout_hashes()
-        import_module(script)
+        import_module(os.path.splitext(script)[0])
