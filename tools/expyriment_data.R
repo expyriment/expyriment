@@ -10,7 +10,9 @@
 #		filename_pattern -- the pattern with which the names of each data file
 #                         start (string)
 #
-# Oliver Lindemann, 2012
+# Copyright: 2012-2014 Florian Krause <siebenhundertzehn@googlemail.com>
+#            2012-2014 Oliver Lindemann <lindemann09@googlemail.com>
+# License: GPL-3.0+
  
 read.expyriment.data = function(folder, file) 
 {

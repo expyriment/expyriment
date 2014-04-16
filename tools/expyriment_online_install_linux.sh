@@ -1,5 +1,9 @@
 #!/bin/sh
 # Linux shell script to download (from GitHub) & install the latest Expyriment version
+#
+# Copyright: 2012-2014 Florian Krause <siebenhundertzehn@googlemail.com>
+#            2012-2014 Oliver Lindemann <lindemann09@googlemail.com>
+# License: GPL-3.0+
 
 DIR=/tmp/expyriment_install
 sudo rm -rf $DIR
