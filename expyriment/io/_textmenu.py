@@ -145,11 +145,10 @@ class TextMenu(Input):
         self._original_items = menu_items
         self._menu_items = []
         for item in menu_items:
-            self._menu_items.append(expyriment.stimuli.TextBox(
+            self._menu_items.append(expyriment.stimuli.TextLine(
                 "{0}".format(item),
                 text_size=text_size, text_font=text_font,
-                text_justification=justification,
-                size=self._line_size))
+                max_width=self._line_size[0]))
             expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         self._heading = expyriment.stimuli.TextBox(
             heading,
