@@ -352,7 +352,7 @@ if __name__ == "__main__":
     exp = control.initialize()
 
     menu = TextMenu(heading="Expyriment TextMenu",
-                    items=["Items 1", "Items 1", "Items 3", "Items 4",
+                    menu_items=["Items 1", "Items 1", "Items 3", "Items 4",
                            "Items 5"],
                     width=250)
     print menu.get()
