@@ -43,6 +43,7 @@ textbox_text_justification = 1
 textbox_text_colour = None  # 'None' is experiment_text_colour
 textbox_background_colour = None  # 'None' is transparent
 textbox_position = (0, 0)
+textbox_do_not_trim_words = False
 
 # TextScreen
 textscreen_heading_font = None  # 'None' is experiment_heading_font

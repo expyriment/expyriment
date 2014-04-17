@@ -63,7 +63,7 @@ class TextLine(Visual):
         max_width: int, optional
             maximum surface width of the text line stimulus
             if this parameter is defined, text lines that exceed this
-            surface width will be trimmed (indicated by a '~' as last letter).
+            surface width will be trimmed (indicated by a '~' as last letter)
 
         """
 
