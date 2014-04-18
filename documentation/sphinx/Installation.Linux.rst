@@ -30,7 +30,7 @@ expyriment-|release|.zip from the `release page`_ and install as described
 here_. Alternatively, you can use the following command, which is doing this
 for you::
 
-    wget -P /tmp 'https://raw.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
+    wget -P /tmp 'https://raw.github.com/expyriment/expyriment/master/tools/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
 
 Don't forget to install all :doc:`required software packages </Installation>`.
 

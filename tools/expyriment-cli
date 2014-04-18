@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# This shell script is a simpler wrapper for the Expyriment command line
+# interface.
+# 
+# Copyright: 2012-2014 Florian Krause <siebenhundertzehn@googlemail.com>
+#            2012-2014 Oliver Lindemann <lindemann09@googlemail.com>
+# License: GPL-3.0+
+
+set -e
+case $1 in
+	-h|--help) python -m expyriment.cli -h | sed 's/ python -m expyriment.cli / expyriment-cli /g';;
+	*) python -m expyriment.cli $*;;
+esac
