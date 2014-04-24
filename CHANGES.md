@@ -12,6 +12,10 @@ New Features:
   imported from local folder
 - new constant: ALL_KEYPAD_DIGITS
 - new feature: control.set_skip_wait_functions
+- new feature: too long text lines will be trimmed automatically if the 
+  max_width parameter has been defiend
+- new feature: too long words in text boxes will be trimmed automatically, 
+  this function can be switch off
 
 Changed:
 - changes at Simon example
