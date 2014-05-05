@@ -379,10 +379,11 @@ class DataFile(OutputFile):
             data = "None"
         if isinstance(data, types.UnicodeType):
             return unicode2str(data)
-        elif type(data) in [types.StringType, types.IntType,
-                            types.LongType, types.FloatType,
-                            types.BooleanType]:
+        elif isinstance(data, types.StringType):
             return str(data)
+        elif type(data) in [types.IntType, types.LongType, types.FloatType,
+                            types.BooleanType]:
+            return repr(data)
         else:
             message = "Data to be added must to be " + \
                 "booleans, strings, numerics (i.e. floats or integers) " + \
