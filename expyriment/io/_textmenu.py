@@ -145,8 +145,7 @@ class TextMenu(Input):
         self._original_items = menu_items
         self._menu_items = []
         for item in menu_items:
-            self._menu_items.append(expyriment.stimuli.TextBox(
-                "{0}".format(item),
+            self._menu_items.append(expyriment.stimuli.TextBox(item,
                 text_size=text_size, text_font=text_font,
                 text_justification=justification,
                 size=self._line_size))
