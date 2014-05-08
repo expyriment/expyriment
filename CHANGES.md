@@ -21,8 +21,9 @@ Changed:
 - changes at Simon example
 
 Fixed:
-- bug fix, io.TouchScreenButton crash if duration expired 
-- bug fix, command line inteface: order of argument is now irrelevant
+- bug in io.TouchScreenButton crash if duration expired 
+- bug in command line inteface: order of argument is now irrelevant
+- unicode bug in textmenu
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
