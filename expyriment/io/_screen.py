@@ -86,8 +86,8 @@ OpenGL will be deactivated!"
                 self._surface = pygame.display.set_mode(self._window_size)
         else:
             self._surface = pygame.display.set_mode(
-            self._window_size,
-            pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+                self._window_size,
+                pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
                 ogl_extensions = ogl.glGetString(ogl.GL_EXTENSIONS)
