@@ -272,7 +272,7 @@ class TextLine(Visual):
         if self._max_width > 0 and surface.get_size()[0] > self._max_width:
             # trim too long text lines
             self._text = self._text[:-2] + "~"
-            sureface = self._create_surface() # recursion
+            surface = self._create_surface() # recursion
 
         return surface
 
