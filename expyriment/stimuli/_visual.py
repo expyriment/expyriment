@@ -1071,7 +1071,7 @@ class Visual(Stimulus):
                 "Stimulus,scaled,{0}, factors={1}".format(self.id, factors), 2)
         return int((get_time() - start) * 1000)
 
-    def scale_to_fullscreen(self, keep_aspect_ration=True):
+    def scale_to_fullscreen(self, keep_aspect_ratio=True):
         """Scale the stimulus to fullscreen.
 
         This is a surface operation. After this, a surface will be present!
@@ -1080,7 +1080,7 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        keep_aspect_ration : boolean, optional
+        keep_aspect_ratio : boolean, optional
             if this boolean is False, stimulus will be stretched so that it
             fills out the whole screen (default = False)
 
@@ -1104,7 +1104,7 @@ class Visual(Stimulus):
         screen_size = expyriment._active_exp.screen.surface.get_size()
         scale = (screen_size[0]/float(surface_size[0]),
                      screen_size[1]/float(surface_size[1]))
-        if keep_aspect_ration:
+        if keep_aspect_ratio:
             scale = [min(scale)]*2
         self.scale(factors=scale)
         return int((get_time() - start) * 1000)
