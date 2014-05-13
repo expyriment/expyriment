@@ -17,6 +17,7 @@ __date__ = ''
 import locale
 import re
 import codecs
+from expyriment.design.randomize import rand_int
 from expyriment.misc import unicode2str, str2unicode
 
 
@@ -222,13 +223,20 @@ class StimulationProtocol:
             f.write("ParametricWeights:  1\n")
             f.write("\n")
             f.write("NrOfConditions:     {0}\n".format(len(self._conditions)))
+            if self._unit == "time":
+                rjust = 8
+            elif self._unit == "volume":
+                rjust = 4
             for condition in self._conditions:
                 f.write("\n")
                 f.write(condition["name"] + "\n")
                 f.write(repr(len(condition["events"])) + "\n")
                 for event in condition["events"]:
-                    f.write("  {0}   {1}  {2}\n".format(event["begin"],
-                                                        event["end"],
-                                                        event["weight"]))
-                f.write("Color: 0 0 0\n")
+                    f.write("{0} {1} {2}\n".format(
+                        repr(event["begin"]).rjust(rjust),
+                        repr(event["end"]).rjust(rjust),
+                        repr(event["weight"]).rjust(2)))
+                f.write("Color: {0} {1} {2}\n".format(rand_int(0,255),
+                                                      rand_int(0,255),
+                                                      rand_int(0,255)))
 
