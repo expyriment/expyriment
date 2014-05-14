@@ -29,7 +29,7 @@ class TextLine(Visual):
 
     def __init__(self, text, position=None, text_font=None, text_size=None,
                  text_bold=None, text_italic=None, text_underline=None,
-                 text_colour=None, background_colour=None):
+                 text_colour=None, background_colour=None, max_width=None):
         """Create a text line stimulus.
 
         NOTE: text_font can be both, a name or path to a font file!
@@ -60,6 +60,10 @@ class TextLine(Visual):
             text colour
         background_colour : (int, int, int), optional
             background colour
+        max_width: int, optional
+            maximum surface width of the text line stimulus
+            if this parameter is defined, text lines that exceed this
+            surface width will be trimmed (indicated by a '~' as last letter)
 
         """
 
@@ -68,6 +72,7 @@ class TextLine(Visual):
             position = defaults.textline_position
         Visual.__init__(self, position, log_comment=text)
         self._text = text
+        self._max_width = max_width
         if text_size is None:
             text_size = defaults.textline_text_size
         if text_size is not None:
@@ -258,12 +263,17 @@ class TextLine(Visual):
         else:
             _text = self.text
         if self.background_colour:
-            text = _font.render(_text, True, self.text_colour,
+            surface = _font.render(_text, True, self.text_colour,
                                 self.background_colour)
         else:
-            text = _font.render(_text, True, self.text_colour)
-        text.convert_alpha()
-        surface = text
+            surface = _font.render(_text, True, self.text_colour)
+        surface.convert_alpha()
+
+        if self._max_width > 0 and surface.get_size()[0] > self._max_width:
+            # trim too long text lines
+            self._text = self._text[:-2] + "~"
+            surface = self._create_surface() # recursion
+
         return surface
 
 

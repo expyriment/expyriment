@@ -5,6 +5,9 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
+- mew method: stimulus.visual.scale_to_fullscreen
+- new class: design.extras.StimulationProtocol
+- new method in data_preprocessing: save to to R data frame
 - new mouse function: experiments can be quitted by mouse events. See
   documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
@@ -16,18 +19,23 @@ New Features:
 - new constant: ALL_KEYPAD_DIGITS
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
+- new feature: too long text lines will be trimmed automatically if the 
+  max_width parameter has been defiend
+- new feature: too long words in text boxes will be trimmed automatically, 
+  this function can be switch off
 
 Changed:
 - changes at Simon example
 
 Fixed:
-- bug fix, io.TouchScreenButton crash if duration expired
-- bug fix, command line inteface: order of argument is now irrelevant
+- bug in io.TouchScreenButton crash if duration expired 
+- bug in command line inteface: order of argument is now irrelevant
+- unicode bug in textmenu
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
-- new feature in testsuite: Font viewer
+- new feature in testsuite: Font viewer 
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic_time (this time should be always used)

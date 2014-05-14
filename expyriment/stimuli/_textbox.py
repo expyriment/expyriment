@@ -37,7 +37,8 @@ class TextBox(Visual):
     def __init__(self, text, size, position=None, text_font=None,
                  text_size=None, text_bold=None, text_italic=None,
                  text_underline=None, text_justification=None,
-                 text_colour=None, background_colour=None):
+                 text_colour=None, background_colour=None,
+                 do_not_trim_words=None):
         """Create a text box.
 
         Notes
@@ -74,6 +75,10 @@ class TextBox(Visual):
             colour of the text
         background_colour : (int, int, int), optional
             background colour
+        do_not_trim_words: bool, optional
+            if True, words that exceed the width of the text box
+            will be not be trimmed and an exception is raise instead.
+            default: False
 
         """
 
@@ -131,6 +136,11 @@ class TextBox(Visual):
         else:
             self._background_colour = \
                 defaults.textbox_background_colour
+        if do_not_trim_words is not None:
+            self._do_not_trim_words = do_not_trim_words
+        else:
+            self._do_not_trim_words = defaults.textbox_do_not_trim_words
+
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -310,7 +320,6 @@ class TextBox(Visual):
 
         if type(self.text) is not unicode:
             # Pygame wants latin-1 encoding here for character strings
-            
             _text = str2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
@@ -354,25 +363,29 @@ class TextBox(Visual):
         # rect.
         for requested_line in requested_lines:
             if font.size(requested_line)[0] > rect.width:
-                words = requested_line.split(' ')
-                # if any of our words are too long to fit, return.
-                for word in words:
-                    if font.size(word)[0] >= rect.width:
-                        raise Exception(
-                            "The word " + word +
-                            " is too long to fit in the rect passed.")
-
                 # Start a new line
                 accumulated_line = ""
-                for word in words:
-                    test_line = accumulated_line + word + " "
+                for word in requested_line.split(' '):
+                    if not self._do_not_trim_words:
+                        while font.size(word)[0] >= rect.width:
+                            word = word[:-2] + '~'
+                    elif font.size(word)[0] >= rect.width:
+                            raise Exception("The word " + word +
+                                " is too long to fit in the rect passed.")
 
-                    # Build the line while the words fit.
+                    if len(accumulated_line) > 0:
+                        test_line = accumulated_line + " " + word
+                    else:
+                        test_line = word
+
+                    # Build the line if the words fit.
                     if font.size(test_line)[0] < rect.width:
                         accumulated_line = test_line
                     else:
-                        final_lines.append(accumulated_line)
-                        accumulated_line = word + " "
+                        if len(accumulated_line) > 0:
+                            final_lines.append(accumulated_line)
+                        accumulated_line = word
+
                 final_lines.append(accumulated_line)
             else:
                 final_lines.append(requested_line)

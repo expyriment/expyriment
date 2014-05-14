@@ -37,7 +37,7 @@ Notes
 .. _`Python 2`: http://python.org/ftp/python/2.7.6/python-2.7.6-macosx10.3.dmg
 .. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
-.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-py2.7-python.org-macosx10.3.dmg/download
+.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-py2.7-python.org-macosx10.6.dmg/download
 .. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.2.zip
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.tar.gz/download
 ..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils

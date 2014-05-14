@@ -312,16 +312,21 @@ class Experiment(object):
     def add_bws_factor(self, factor_name, conditions):
         """Add a between subject factor.
 
-        The defined between subject factor conditions will be permuted across
-        the subjects. Factors that are added first are treated as
-        hierarchically higher factors while permutation.
-
         Parameters
         ----------
         factor_name : str
             the name of the between subject factor
         conditions : list
             possible conditions of the between subject factor
+
+        Notes
+        -----
+        The defined between subject factor conditions will be permuted across
+        the subjects when 'using get_permuted_bws_factor_condition'.
+        Factors that are added first are treated as hierarchically higher
+        factors while permutation.
+
+        see also get_permuted_bws_factor_condition
 
         """
 
@@ -358,6 +363,10 @@ class Experiment(object):
         -------
         cond : str
             condition for the current subject
+
+        Notes
+        -----
+        see add_bws_factor
 
         """
 
