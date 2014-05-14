@@ -115,7 +115,6 @@ class Mouse(Input):
 
         Notes
         -----
-        This method will be also called by Keyboard.process_control_keys.
         For more information see documentation of property "detect_quit_event"
 
         """
@@ -167,7 +166,7 @@ class Mouse(Input):
                         simulated_key = pygame.event.Event(pygame.KEYDOWN,\
                                     {'key': Keyboard.get_quit_key()})
                         return Keyboard.process_control_keys(
-                            key_event=simulated_key, process_mouse_events=False)
+                            key_event=simulated_key)
         return False
 
 
@@ -466,8 +465,7 @@ class Mouse(Input):
             elif btn_id in buttons or motion_occured:
                 rt = int((get_time() - start) * 1000)
                 break
-            elif Keyboard.process_control_keys(process_mouse_events=False) or \
-                    (duration is not None and \
+            elif Keyboard.process_control_keys() or (duration is not None and \
                     int((get_time() - start) * 1000) >= duration):
                 break
 
