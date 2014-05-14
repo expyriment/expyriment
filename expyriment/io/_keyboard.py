@@ -245,7 +245,7 @@ class Keyboard(Input):
         done = False
         while not done:
             expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == target_event:
@@ -305,7 +305,7 @@ class Keyboard(Input):
         done = False
         while not done:
             expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
