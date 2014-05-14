@@ -66,8 +66,9 @@ class Mouse(Input):
         (b) If "mouse quit events" is switched on, clicking quickly three times
         (i.e., within 1 second) in one of the corners of the screen forces
         the experiment to quit (default left corner, see `quit_rect_location`
-        parameter). This function is especially useful for experiments on
-        devices without hardware keyboard, such as tablet PCs or smartphones.
+        parameter), if the currently polling mouse events. This function is
+        especially useful for experiments on devices without hardware keyboard,
+        such as tablet PCs or smartphones.
 
         The "mouse quit event" function is switch on per default, only under
         Android. To switch on/off in the function manually set the property
@@ -96,7 +97,7 @@ class Mouse(Input):
         self.quit_click_rect_size = quit_click_rect_size
         self.quit_rect_location = quit_rect_location
 
-    def _process_mouse_quit_event(self, click_position=None):
+    def _process_mouse_quit_event(self, click_position=None): # TODO check corners
         """Check if mouse exit action has been performed
 
         Parameters
@@ -314,7 +315,7 @@ class Mouse(Input):
         return rtn
 
     def check_button_pressed(self, button_number):
-        """Return (True/False) if a specific button is currently pressed.
+        """Return False or button id if a specific button is currently pressed.
 
         Returns
         -------
