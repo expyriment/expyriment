@@ -1068,7 +1068,45 @@ class Visual(Stimulus):
             self.flip(flip)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                "Stimulus,sclaed,{0}, factors={1}".format(self.id, factors), 2)
+                "Stimulus,scaled,{0}, factors={1}".format(self.id, factors), 2)
+        return int((get_time() - start) * 1000)
+
+    def scale_to_fullscreen(self, keep_aspect_ratio=True):
+        """Scale the stimulus to fullscreen.
+
+        This is a surface operation. After this, a surface will be present!
+        Scaling goes along with a quality loss. Thus, scaling an already
+        scaled stimulus is not a good idea.
+
+        Parameters
+        ----------
+        keep_aspect_ratio : boolean, optional
+            if this boolean is False, stimulus will be stretched so that it
+            fills out the whole screen (default = False)
+
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
+        Notes
+        -----
+        Depending on the size of the stimulus, this method may take some time
+        to compute!
+
+        """
+
+        start = get_time()
+        if not self._set_surface(self._get_surface()):
+            raise RuntimeError(Visual._compression_exception_message.format(
+                "scale_to_fullscreen()"))
+        surface_size = self.surface_size
+        screen_size = expyriment._active_exp.screen.surface.get_size()
+        scale = (screen_size[0]/float(surface_size[0]),
+                     screen_size[1]/float(surface_size[1]))
+        if keep_aspect_ratio:
+            scale = [min(scale)]*2
+        self.scale(factors=scale)
         return int((get_time() - start) * 1000)
 
     def flip(self, booleans):
