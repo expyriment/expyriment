@@ -191,6 +191,10 @@ class Keyboard(Input):
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        Keys are defined my keyboard constants (please use see misc.constants)
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
