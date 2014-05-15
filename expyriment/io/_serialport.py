@@ -441,7 +441,7 @@ The Python package 'pySerial' is not installed."""
                 for p in dev:
                     if p.startswith("ttyS") and len(p) == length:
                         ports.append("/dev/" + p)
-        elif platform == "dawin": #for MacOS
+        elif platform == "darwin": #for MacOS
             dev = sorted(listdir('/dev'))
             max_length = 0
             for d in dev:
