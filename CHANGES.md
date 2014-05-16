@@ -25,6 +25,7 @@ Changed:
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired 
 - bug in command line inteface: order of argument is now irrelevant
+- keypad bug in TextInput
 - unicode bug in textmenu
 
 Version 0.7.0 (2 Mar 2014)
