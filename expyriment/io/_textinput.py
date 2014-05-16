@@ -414,7 +414,7 @@ class TextInput(Input):
             inkey, string = self._get_key()
             if inkey == pygame.K_BACKSPACE:
                 self._user = self._user[0:-1]
-            elif inkey == pygame.K_RETURN:
+            elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
                 break
             elif inkey != pygame.K_LCTRL or inkey != pygame.K_RCTRL:
                 if not self._user_text_surface_size[0] >= self._max_size[0]:
