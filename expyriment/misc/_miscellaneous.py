@@ -102,7 +102,6 @@ def str2unicode(s, fse=False):
 
 
 def unicode2str(u, fse=False):
-
     """Convert unicode to str.
 
     Converts an input str or unicode object to a str object without throwing
@@ -147,6 +146,23 @@ def unicode2str(u, fse=False):
             s = u.encode(u'uff-8', u'replace')
     return s
 
+def numpad_digit_code2ascii(keycode):
+    """Convert numpad keycode to the ascii code of that particular number
+
+    If it is not a keypad digit code, no convertion takes place and the
+    same code will be returned.
+
+    Returns
+    -------
+    ascii_code : int
+
+    """
+
+    from expyriment.misc import constants
+    if keycode in constants.K_ALL_KEYPAD_DIGITS:
+        return keycode - (constants.K_KP1 - constants.K_1)
+    else:
+        return keycode
 
 def add_fonts(folder):
     """Add fonts to Expyriment.

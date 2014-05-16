@@ -25,7 +25,8 @@ except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
 import defaults
-from expyriment.misc import find_font, unicode2str
+from expyriment.misc import find_font, unicode2str, constants, \
+                 numpad_digit_code2ascii
 import expyriment
 from _input_output import Input
 
@@ -406,7 +407,7 @@ class TextInput(Input):
         self._create()
         self._update()
         if self._ascii_filter is None:
-            ascii_filter = range(0, 256)
+            ascii_filter = range(0, 256) + constants.K_ALL_KEYPAD_DIGITS
         else:
             ascii_filter = self._ascii_filter
         while True:
@@ -415,13 +416,18 @@ class TextInput(Input):
                 self._user = self._user[0:-1]
             elif inkey == pygame.K_RETURN:
                 break
-            elif inkey != pygame.K_LCTRL or pygame.K_RCTRL:
+            elif inkey != pygame.K_LCTRL or inkey != pygame.K_RCTRL:
                 if not self._user_text_surface_size[0] >= self._max_size[0]:
                     if android is not None:
                         if inkey in ascii_filter:
+                            if inkey in constants.K_ALL_KEYPAD_DIGITS:
+                                inkey = numpad_digit_code2ascii(inkey)
                             self._user.append(chr(inkey))
                     else:
-                        if string and ord(string) in ascii_filter:
+                        if inkey in constants.K_ALL_KEYPAD_DIGITS:
+                            self._user.append(chr(numpad_digit_code2ascii(
+                                inkey)))
+                        elif string and ord(string) in ascii_filter:
                             self._user.append(string)
             self._update()
         got = "".join(self._user)
