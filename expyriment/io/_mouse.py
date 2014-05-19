@@ -60,7 +60,7 @@ class Mouse(Input):
         """
 
         Input.__init__(self)
-        if expyriment.control.is_android_running:
+        if expyriment.control.is_android_running():
             Mouse.quit_rect_location = 1
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
@@ -123,7 +123,7 @@ class Mouse(Input):
 
             Default value under Android is 1, otherwise  None
 
-        `Mouse.quit_click_ret_size` : tuple (int, int)
+        `Mouse.quit_click_rect_size` : tuple (int, int)
             size of the field (rect) that detects the quit action by
             triple clicking in one corner of the screen. (default = (30, 30))
 
@@ -132,7 +132,8 @@ class Mouse(Input):
 
         """
 
-        if Mouse.quit_rect_location is None or expyriment._active_exp is None:
+        if Mouse.quit_rect_location not in [0,1,2,3] or \
+            expyriment._active_exp is None:
             return False
 
         if click_position is None:
