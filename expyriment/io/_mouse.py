@@ -20,8 +20,6 @@ from expyriment.misc._timer import get_time
 from _keyboard import Keyboard
 from _input_output  import Input
 
-_detect_quit_event = None
-
 class Mouse(Input):
     """A class implementing a mouse input.
 
@@ -30,9 +28,14 @@ class Mouse(Input):
 
     """
 
+    #static class properties for quit_events
+    quit_rect_location = None
+    quit_click_rect_size = (30, 30)
+    _quit_action_events = []
+
+
     def __init__(self, show_cursor=True, track_button_events=None,
-                 track_motion_events=None, quit_click_rect_size=None,
-                 quit_rect_location=None):
+                 track_motion_events=None, quit_click_rect_size=None):
         """Initialize a mouse input.
 
         Notes
@@ -46,15 +49,6 @@ class Mouse(Input):
             track button events via Pygame queue (default = True)
         track_motion_events : bool, optional
             track motion events via Pygame queue (default = False)
-        quit_click_rect_size : tuple (int, int), optional
-            the size of the field (rect) that detects the quit action by
-            triple clicking in one corner of the screen.
-            Only relevant, if "mouse quit event" is used. (default = (30, 30))
-        quit_rect_location = int, optional
-            the location of the quit click action field.  Only relevant, if
-            "mouse quit event" is used. (default = 1)
-            0 = upper left corner,  1 = upper right corner   (0) (1)
-            2 = lower right corner, 3 = lower left corner    (3) (2)
 
         Notes
         -----
@@ -63,23 +57,22 @@ class Mouse(Input):
         the Pygame event queue and you might consequently loose important
         events.
 
-        (b) If "mouse quit events" is switched on, clicking quickly three times
+        (b) If Mouse.quit_rect_location is defined, clicking quickly three times
         (i.e., within 1 second) in one of the corners of the screen forces
-        the experiment to quit (default left corner, see `quit_rect_location`
-        parameter), if the  mouse events are currently polled with
-        `get_last_button_down_event`. This function is especially useful for
-        experiments on devices without hardware keyboard, such as tablet PCs
-        or smartphones.
+        the experiment to quit, if themouse events are processed (see
+        `process_quit_event`for more information). This function is
+        especially useful for experiments on devices without hardware keyboard,
+        such as tablet PCs or smartphones.
 
-        The "mouse quit event" function is switch on per default, only under
-        Android. To switch on/off in the function manually set the property
-        `detect_quit_event`.
+        The mouse quit event function is switch on per default, only under
+        Android with Mouse.quit_rect_location=1. To switch on/off in the function
+        manually set the property `detect_quit_event`.
 
         """
 
         Input.__init__(self)
-        self._quit_action_events = []
-        self.detect_quit_event = expyriment.control.is_android_running()
+        if expyriment.control.is_android_running:
+            Mouse.quit_rect_location = 1
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
         if track_button_events is None:
@@ -91,14 +84,9 @@ class Mouse(Input):
         else:
             self.track_button_events = track_button_events
             self.track_motion_events = track_motion_events
-        if quit_click_rect_size is None:
-            quit_click_rect_size = defaults.mouse_quit_click_rect_size
-        if quit_rect_location is None:
-            quit_rect_location = defaults.mouse_quit_rect_location
-        self.quit_click_rect_size = quit_click_rect_size
-        self.quit_rect_location = quit_rect_location
 
-    def _process_mouse_quit_event(self, click_position): # TODO check corners
+    @staticmethod
+    def process_quit_event(click_position): # TODO check corners
         """Check if mouse exit action has been performed
 
         Parameters
@@ -114,42 +102,61 @@ class Mouse(Input):
 
         Notes
         -----
-        For more information see documentation of property "detect_quit_event"
+        Under Android, the "mouse quit event" function is switch on per
+        default. 
+
+        Use the follwing static class property are defined. 
+            Mouse.detect_quit_event : boolena
+                    Switch on/off the detection of mouse quit events.
+                    This property is global property and affects all mouse instances.
+
+                quit_click_rect_size : tuple (int, int), optional
+            the size of the field (rect) that detects the quit action by
+            triple clicking in one corner of the screen.
+            Only relevant, if "mouse quit event" is used. (default = (30, 30))
+        quit_rect_location = int, optional
+            the location of the quit click action field.  Only relevant, if
+            "mouse quit event" is used. (default = 1)
+            0 = upper left corner,  1 = upper right corner   (0) (1)
+            2 = lower right corner, 3 = lower left corner    (3) (2)
+
+Changing this static class properties affects always all mouse instances.
+
 
         """
 
-        if _detect_quit_event==False:
+        if Mouse.quit_rect_location is None or expyriment._active_exp is None:
             return False
         # determine threshold x & y
-        if self.quit_rect_location == 0 or self.quit_rect_location == 3: # left
+        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
             threshold_x = -expyriment._active_exp.screen.center_x + \
-                    self.quit_click_rect_size[0]
+                    Mouse.quit_click_rect_size[0]
         else:# right
             threshold_x = expyriment._active_exp.screen.center_x - \
-                    self.quit_click_rect_size[0]
-        if self.quit_rect_location == 0 or self.quit_rect_location == 1: # upper
+                    Mouse.quit_click_rect_size[0]
+        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 1: # upper
             threshold_y = expyriment._active_exp.screen.center_y - \
-                    self.quit_click_rect_size[1]
+                    Mouse.quit_click_rect_size[1]
         else:# lower
             threshold_y = -expyriment._active_exp.screen.center_y + \
-                    self.quit_click_rect_size[1]
+                    Mouse.quit_click_rect_size[1]
         # check
-        if (self.quit_rect_location == 0 and \
+        if (Mouse.quit_rect_location == 0 and \
                 click_position[0] < threshold_x and\
                 click_position[1] > threshold_y) \
-           or (self.quit_rect_location == 1 and \
+           or (Mouse.quit_rect_location == 1 and \
                 click_position[0] > threshold_x and \
                 click_position[1] > threshold_y) \
-           or (self.quit_rect_location == 2 and \
+           or (Mouse.quit_rect_location == 2 and \
                 click_position[0] > threshold_x and \
                 click_position[1] < threshold_y) \
-           or (self.quit_rect_location == 3 and \
+           or (Mouse.quit_rect_location == 3 and \
                 click_position[0] < threshold_x and \
                 click_position[1] < threshold_y):
 
-            self._quit_action_events.append(get_time())
-            if len(self._quit_action_events)>=3:
-                diff = get_time()-self._quit_action_events.pop(0)
+            Mouse._quit_action_events.append(get_time())
+            if len(Mouse._quit_action_events)>=3:
+                diff = get_time()-Mouse._quit_action_events.pop(0)
                 if (diff<1):
                     # simulate quit key
                     simulated_key = pygame.event.Event(pygame.KEYDOWN,\
@@ -213,36 +220,6 @@ class Mouse(Input):
             pygame.event.set_blocked(pygame.MOUSEMOTION)
 
     @property
-    def detect_quit_event(self):
-        """Getter for detect_quit_event.
-
-        Switch on/off the detection of mouse quit events.
-        This property is global property and affects all mouse instances.
-
-        Notes
-        -----
-        Under Android, the "mouse quit event" function is switch on per
-        default. Further information, see the init function in the class
-        documentation of Mouse.
-
-
-        """
-
-        return _detect_quit_event
-
-    @detect_quit_event.setter
-    def detect_quit_event(self, value):
-        """Setter for detect_quit_event.
-
-        Switch on/off detection of mouse quit events
-        This property is global property.
-
-        """
-
-        global _detect_quit_event
-        _detect_quit_event = value
-
-    @property
     def pressed_buttons(self):
         """Getter for pressed buttons."""
 
@@ -275,14 +252,13 @@ class Mouse(Input):
             if event.button > 0:
                 rtn = event.button - 1
         if rtn==0:
-            if self._process_mouse_quit_event(self.position):
+            if Mouse.process_quit_event(self.position):
                 return -1
         return rtn
 
     def get_last_button_up_event(self):
         """Get the last button up event.
-        All earlier button up and down events will be removed from the
-        queue.
+        All earlier button up events will be removed from the queue.
 
 
         Returns

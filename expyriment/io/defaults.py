@@ -21,8 +21,6 @@ keyboard_default_keys = None
 mouse_show_cursor = True
 mouse_track_button_events = True
 mouse_track_motion_events = False
-mouse_quit_click_rect_size = (30, 30)
-mouse_quit_rect_location = 1
 
 # StreamingButtonBox
 streamingbuttonbox_baseline = 0
