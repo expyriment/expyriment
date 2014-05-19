@@ -51,7 +51,8 @@ class Keyboard(Input):
         Parameters
         ----------
         key_event : int, optional
-            key event to check
+            key event to check. If not defined, the Pygame event queue will be
+            checked for key down events.
 
         Returns
         -------

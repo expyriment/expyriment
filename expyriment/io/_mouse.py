@@ -38,9 +38,6 @@ class Mouse(Input):
                  track_motion_events=None, quit_click_rect_size=None):
         """Initialize a mouse input.
 
-        Notes
-        -----
-
         Parameters
         ----------
         show_cursor : bool, optional
@@ -57,16 +54,8 @@ class Mouse(Input):
         the Pygame event queue and you might consequently loose important
         events.
 
-        (b) If Mouse.quit_rect_location is defined, clicking quickly three times
-        (i.e., within 1 second) in one of the corners of the screen forces
-        the experiment to quit, if themouse events are processed (see
-        `process_quit_event`for more information). This function is
-        especially useful for experiments on devices without hardware keyboard,
-        such as tablet PCs or smartphones.
-
-        The mouse quit event function is switch on per default, only under
-        Android with Mouse.quit_rect_location=1. To switch on/off in the function
-        manually set the property `detect_quit_event`.
+        (b) See `process_quit_event` for the forced quitting of experiments
+        via mouse events.
 
         """
 
@@ -86,13 +75,27 @@ class Mouse(Input):
             self.track_motion_events = track_motion_events
 
     @staticmethod
-    def process_quit_event(click_position): # TODO check corners
+    def process_quit_event(click_position=None):
         """Check if mouse exit action has been performed
+
+        If Mouse.quit_rect_location is defined (i.e. 0, 1, 2 or 3), clicking
+        quickly three times (i.e., within 1 second) in one of the corners of
+        the screen forces the experiment to quit.
+
+        The function is called automatically by all mouse get event and wait
+        methods (similar to Keyboard.process_control_keys).  If no mouse
+        functions are called by your program, this function can be polled to
+        ensure quitting experiment by mouse.
+
+        Mouse quit events are especially useful for experiments on devices
+        without hardware keyboard, such as tablet PCs or smartphones.
 
         Parameters
         ----------
-        click_position : tuple of int (x,y)
-            the position to be processed.
+        click_position : tuple of int (x,y), optional
+            clicked location to be processed. If not defined, the Pygame event
+            queue will be checked for mouse down events and the current
+            position is taken
 
         Returns
         -------
@@ -102,31 +105,52 @@ class Mouse(Input):
 
         Notes
         -----
-        Under Android, the "mouse quit event" function is switch on per
-        default. 
+        To switch on or off the detection of mouse quit events, please use the
+        static class property `quit_rect_location' (see below).
 
-        Use the follwing static class property are defined. 
-            Mouse.detect_quit_event : boolena
-                    Switch on/off the detection of mouse quit events.
-                    This property is global property and affects all mouse instances.
+        The detection of mouse quit events is activated by default under
+        Android.
 
-                quit_click_rect_size : tuple (int, int), optional
-            the size of the field (rect) that detects the quit action by
-            triple clicking in one corner of the screen.
-            Only relevant, if "mouse quit event" is used. (default = (30, 30))
-        quit_rect_location = int, optional
-            the location of the quit click action field.  Only relevant, if
-            "mouse quit event" is used. (default = 1)
+        Static class properties
+        ~~~~~~~~~~~~~~~~~~~~~~~
+
+        `Mouse.quit_rect_location` = int, optional
+            Location of the quit click action field or None.
+
             0 = upper left corner,  1 = upper right corner   (0) (1)
             2 = lower right corner, 3 = lower left corner    (3) (2)
+            otherwise the detection of mouse quit events is deactivated.
 
-Changing this static class properties affects always all mouse instances.
+            Default value under Android is 1, otherwise  None
 
+        `Mouse.quit_click_ret_size` : tuple (int, int)
+            size of the field (rect) that detects the quit action by
+            triple clicking in one corner of the screen. (default = (30, 30))
+
+        Changing the static class properties affects always all mouse
+        instances.
 
         """
 
         if Mouse.quit_rect_location is None or expyriment._active_exp is None:
             return False
+
+        if click_position is None:
+            # check Pygame queu
+            pos = None
+            pygame.event.pump()
+            screen_size = expyriment._active_exp.screen.surface.get_size()
+            for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
+                if event.button > 0:
+                    pos = pygame.mouse.get_pos()
+                    pos = (pos[0] - screen_size[0] / 2,
+                          -pos[1] + screen_size[1] / 2)
+                    break
+            if pos is None:
+                return False
+            else:
+                return Mouse.process_quit_event(click_position=pos)
+
         # determine threshold x & y
         if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
             threshold_x = -expyriment._active_exp.screen.center_x + \
@@ -157,7 +181,7 @@ Changing this static class properties affects always all mouse instances.
             Mouse._quit_action_events.append(get_time())
             if len(Mouse._quit_action_events)>=3:
                 diff = get_time()-Mouse._quit_action_events.pop(0)
-                if (diff<1):
+                if (diff < 1):
                     # simulate quit key
                     simulated_key = pygame.event.Event(pygame.KEYDOWN,\
                                 {'key': Keyboard.get_quit_key()})
@@ -234,7 +258,7 @@ Changing this static class properties affects always all mouse instances.
         pygame.mouse.set_visible(visible)
         return visible
 
-    def get_last_button_down_event(self):
+    def get_last_button_down_event(self, process_quit_event=True):
         """Get the last button down event.
         All earlier button down events will be removed from the queue.
 
@@ -244,6 +268,11 @@ Changing this static class properties affects always all mouse instances.
             button number (0,1,2) or 3 for wheel up or 4 for wheel down,
             if quit screen mouse action has been performed, the method
             returns -1
+
+        process_quit_event : boolean, optional
+            if False, the current location will not be processed for mouse
+                quitting events in the case that a button down event has been
+                found (default = True).
 
         """
 
