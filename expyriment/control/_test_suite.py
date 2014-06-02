@@ -388,7 +388,9 @@ def run_test_suite():
     if not expyriment._active_exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
-        exp = expyriment.control.initialize()
+        exp = expyriment.design.Experiment()
+        exp.testsuite = True
+        expyriment.control.initialize(exp)
         quit_experiment = True
     else:
         exp = expyriment._active_exp

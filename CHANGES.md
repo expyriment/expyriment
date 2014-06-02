@@ -5,7 +5,8 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
-- mew method: stimulus.visual.scale_to_fullscreen
+- new feature: Expyriment asks in interactive mode if initializing a fullscreen
+- new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
 - new mouse function: experiments can be quitted by mouse events (triple click).
@@ -17,6 +18,7 @@ New Features:
 - get_module_hash_dictionary: dictionary secure hashes from all modules
   imported from local folder
 - new constant: ALL_KEYPAD_DIGITS
+- new helper functions in misc and control
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
 - new feature: too long text lines will be trimmed automatically if the 

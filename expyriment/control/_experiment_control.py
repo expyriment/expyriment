@@ -27,7 +27,8 @@ from expyriment import design, stimuli, misc
 from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
-from _miscellaneous import _set_stdout_logging, is_idle_running
+from _miscellaneous import _set_stdout_logging, is_idle_running, \
+                is_interactive_mode
 from expyriment.misc import unicode2str, constants
 
 
@@ -371,6 +372,18 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
+
+    if is_interactive_mode() and not expyriment.control.defaults.window_mode \
+        and not hasattr(experiment, "testsuite"):
+        print """
+Python is running in an interactive shell but Expyriment wants to initialize a
+fullscreen."""
+        quest = "Do you want to switch to windows mode?"
+        ans = raw_input(quest + " (Y/n) ").strip().lower()
+        if ans =="" or ans.lower() =="y" or ans.lower()=="yes":
+            print "Switched to windows mode"
+            expyriment.control.defaults.window_mode = True
+
     stdout_logging = defaults.stdout_logging
     expyriment._active_exp = experiment
     experiment._log_level = 0  # switch off for the first screens
