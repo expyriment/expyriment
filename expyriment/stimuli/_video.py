@@ -296,8 +296,8 @@ expyriment.control.stop_audiosystem() before preloading the video."
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and (
-                   event.key == expyriment.control.defaults.quit_key or
-                   event.key == expyriment.control.defaults.pause_key):
+                   event.key == Keyboard.get_quit_key() or
+                   event.key == Keyboard.get_pause_key()):
                     self.stop()
                     Keyboard.process_control_keys(event)
                     self.play()

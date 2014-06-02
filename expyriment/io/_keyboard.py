@@ -51,7 +51,8 @@ class Keyboard(Input):
         Parameters
         ----------
         key_event : int, optional
-            key event to check
+            key event to check. If not defined, the Pygame event queue will be
+            checked for key down events.
 
         Returns
         -------
@@ -75,8 +76,11 @@ class Keyboard(Input):
                     return True
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
-                return Keyboard.process_control_keys(event) # recursive
+                # recursion
+                return Keyboard.process_control_keys(event)
+
         return False
+
 
     def __init__(self, default_keys=None):
         """Create a keyboard input.
@@ -97,13 +101,40 @@ class Keyboard(Input):
     @property
     def default_keys(self):
         """Getter for default keys"""
+
         return self._default_keys
 
     @default_keys.setter
     def default_keys(self, value):
         """Setter for default keys"""
+
         self._default_keys = value
 
+    @staticmethod
+    def get_quit_key():
+        """Returns the currently defined quit key """
+
+        return quit_key
+
+    @staticmethod
+    def get_pause_key():
+        """Returns the currently defined pause key"""
+
+        return pause_key
+
+    @staticmethod
+    def set_quit_key(value):
+        """Set the currently defined quit key"""
+
+        global quit_key
+        quit_key = value
+
+    @staticmethod
+    def set_pause_key(value):
+        """Set the currently defined pause key"""
+
+        global pause_key
+        pause_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""
@@ -217,7 +248,7 @@ class Keyboard(Input):
         done = False
         while not done:
             expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == target_event:
@@ -277,7 +308,7 @@ class Keyboard(Input):
         done = False
         while not done:
             expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
