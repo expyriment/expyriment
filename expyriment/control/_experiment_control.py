@@ -370,7 +370,11 @@ def initialize(experiment=None):
 
     """
 
-    if is_interactive_mode() and not expyriment.control.defaults.window_mode:
+    if experiment is None:
+        experiment = design.Experiment()
+
+    if is_interactive_mode() and not expyriment.control.defaults.window_mode \
+        and not hasattr(experiment, "testsuite"):
         print """
 Python is running in an interactiv shell but Expyriment wants to initialize a
 fullscreen."""
@@ -380,8 +384,6 @@ fullscreen."""
             print "Switch to windows mode"
             expyriment.control.defaults.window_mode = True
 
-    if experiment is None:
-        experiment = design.Experiment()
     stdout_logging = defaults.stdout_logging
     expyriment._active_exp = experiment
     experiment._log_level = 0  # switch off for the first screens

@@ -281,7 +281,7 @@ def is_interactive_mode():
 
     Returns
     -------
-        intertive_mode : boolean
+        interactive_mode : boolean
     """
 
     # ps2 is only defined in interactive mode
