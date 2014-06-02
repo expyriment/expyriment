@@ -5,7 +5,8 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
-- mew method: stimulus.visual.scale_to_fullscreen
+- new feature: Expyriment asks in interactive mode if initializing a fullscreen
+- new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
 - new mouse function: experiments can be quitted by mouse events (triple click).
