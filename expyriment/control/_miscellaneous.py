@@ -276,7 +276,8 @@ def is_idle_running():
     return "idlelib.run" in sys.modules
 
 def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDEL or IPthon)
+    """Returns if Python is running in interactive mode (such as IDLE or
+    IPthon)
 
     Returns
     -------
