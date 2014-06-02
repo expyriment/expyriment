@@ -252,13 +252,3 @@ def find_font(font):
             return font_file
         else:
             return ""
-
-def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDEL or IPthon)
-
-    Returns
-    -------
-        intertive_mode : boolean
-    """
-
-    return hasattr(sys, "ps2") # ps2 is only defined in interactive mode

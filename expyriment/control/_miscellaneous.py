@@ -275,6 +275,17 @@ def is_idle_running():
 
     return "idlelib.run" in sys.modules
 
+def is_interactive_mode():
+    """Returns if Python is running in interactive mode (such as IDEL or IPthon)
+
+    Returns
+    -------
+        intertive_mode : boolean
+    """
+
+    # ps2 is only defined in interactive mode
+    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
+
 def is_android_running():
     """Return True if Exypriment runs on Android."""
 
