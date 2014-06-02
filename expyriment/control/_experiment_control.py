@@ -380,8 +380,8 @@ Python is running in an interactive shell but Expyriment wants to initialize a
 fullscreen."""
         quest = "Do you want to switch to windows mode?"
         ans = raw_input(quest + " (Y/n) ").strip().lower()
-        if ans =="" or ans =="y" or ans=="yes":
-            print "Switch to windows mode"
+        if ans =="" or ans.lower() =="y" or ans.lower()=="yes":
+            print "Switched to windows mode"
             expyriment.control.defaults.window_mode = True
 
     stdout_logging = defaults.stdout_logging
