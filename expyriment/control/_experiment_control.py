@@ -372,6 +372,8 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
+        experiment.set_log_level(defaults.log_level)
+
 
     if is_interactive_mode() and not expyriment.control.defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
@@ -386,7 +388,8 @@ fullscreen."""
 
     stdout_logging = defaults.stdout_logging
     expyriment._active_exp = experiment
-    experiment._log_level = 0  # switch off for the first screens
+    old_log_level = experiment.log_level
+    experiment.set_log_level(0)  # switch off for the first screens
 
     _keyboard.quit_key = defaults.quit_key
     _keyboard.pause_key = defaults.pause_key
@@ -423,7 +426,7 @@ fullscreen."""
     experiment._data = None
     experiment._subject = None
     experiment._is_initialized = True  # required before EventFile
-    if defaults.event_logging > 0:
+    if old_log_level> 0:
         experiment._events = EventFile(
             additional_suffix=experiment.filename_suffix, time_stamp=True)
         if stdout_logging:
@@ -498,6 +501,6 @@ fullscreen."""
     stimuli.TextLine("Preparing experiment...", text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_PURPLE).present()
     experiment._screen.colour = experiment.background_colour
-    experiment.set_log_level(defaults.event_logging)
+    experiment.set_log_level(old_log_level)
     stimuli._stimulus.Stimulus._id_counter = 0
     return experiment
