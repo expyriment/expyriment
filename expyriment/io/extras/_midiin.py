@@ -1,3 +1,4 @@
+
 """MIDI input.
 
 This module contains a class implementing a MIDI input device.
@@ -36,7 +37,6 @@ class MidiIn(Input):
     stay in extras.
 
     """
-
     @staticmethod
     def get_devices():
         """Get a list of all MIDI input devices connected to the system."""
@@ -143,7 +143,7 @@ class MidiIn(Input):
         evt : int
             found event
         rt : int
-            reaction timein ms
+            reaction time in ms
 
         """
 
