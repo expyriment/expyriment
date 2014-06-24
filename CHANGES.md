@@ -5,6 +5,7 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
+- new io device: io.extras.TcpClient
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
