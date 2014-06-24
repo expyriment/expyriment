@@ -5,6 +5,8 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
+- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
+  The stimulus depends on the package "matplotlib".
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
