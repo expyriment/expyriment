@@ -24,13 +24,13 @@ from expyriment.io._input_output import Input, Output
 class TcpClient(Input, Output):
     """A class implementing a TCP network client."""
 
-    def __init__(self, ip, port, default_package_size=None, connect=None):
+    def __init__(self, host, port, default_package_size=None, connect=None):
         """Create a TcpClient and connect to it.
 
         Parameters:
         -----------
-        ip : str
-            The IP address of the server to connect to.
+        host : str
+            The hostname or IPv4 address of the server to connect to.
         port : int
             The port to connect to.
         default_package_size : int
@@ -43,26 +43,24 @@ class TcpClient(Input, Output):
         Input.__init__(self)
         Output.__init__(self)
 
-        self._ip = ip
+        self._host = host
         self._port = port
         if default_package_size is None:
             default_package_size = defaults.tcpclient_default_package_size
         self._default_package_size = default_package_size
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self._socket.settimeout(0)
         self._is_connected = False
         if connect is None:
             connect = defaults.tcpclient_connect
         if connect:
-            self._socket.connect(self._ip, self._port)
-            self._is_connected = True
+            self.connect()
 
 
     @property
-    def ip(self):
-        """Getter for ip."""
+    def host(self):
+        """Getter for host."""
 
-        return self._ip
+        return self._host
 
 
     @property
@@ -91,15 +89,16 @@ class TcpClient(Input, Output):
 
         if not self._is_connected:
             try:
-                self._socket.connect(self._ip, self._port)
+                self._socket.connect((self._host, self._port))
                 self._is_connected = True
-            except:
+                self._socket.settimeout(0)
+            except socket.error:
                 raise RuntimeError(
-                    "TCP connection to {0}:{1} failed!".format(self._ip,
+                    "TCP connection to {0}:{1} failed!".format(self._host,
                                                                self._port))
             if self._logging:
                 expyriment._active_exp._event_file_log(
-                    "TcpClient,connected,{0}:{1}".format(self._ip,
+                    "TcpClient,connected,{0}:{1}".format(self._host,
                                                          self._port))
 
 
@@ -119,7 +118,7 @@ class TcpClient(Input, Output):
                             "TcpClient,sent,{0}".format(data))
 
 
-    def wait(self, package_size=None):
+    def wait(self, package_size=None, duration=None):
         """Wait for data.
 
         Parameters:
@@ -127,11 +126,15 @@ class TcpClient(Input, Output):
         package_size : int
             The size of the package to be received, optional.
             If not set, the default package size will be used.
+        duration: int
+            The duration to wait in milliseconds.
 
         Returns:
         --------
         data : str
             The received data.
+        rt : int
+            The time it took to receive the data in milliseconds.
 
         """
 
@@ -155,6 +158,10 @@ class TcpClient(Input, Output):
                     expyriment._active_exp._execute_wait_callback()
                     if Keyboard.process_control_keys():
                         break
+            if duration:
+                if int((get_time() - start) * 1000) >= duration:
+                    break
+
         if self._logging:
             expyriment._active_exp._event_file_log(
                             "TcpClient,received,{0},wait".format(data))
@@ -166,6 +173,7 @@ class TcpClient(Input, Output):
 
         if self._is_connected:
             self._socket.close()
+            self._socket.settimeout(None)
             if self._logging:
                 expyriment._active_exp._event_file_log(
                     "TcpClient,closed")
