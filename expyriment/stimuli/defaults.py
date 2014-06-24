@@ -122,7 +122,7 @@ tone_amplitude = 0.5
 
 
 # Create tmp for compressed stimuli folder
-tempdir = _tempfile.gettempdir() + "/expyriment"
+tempdir = _tempfile.gettempdir() + "/expyriment_tmp"
 try:
     _os.mkdir(tempdir)
 except:

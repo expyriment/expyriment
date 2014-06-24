@@ -252,7 +252,7 @@ class Aggregator(object):
 
         if type(_np) is not _types.ModuleType:
             message = """Aggregator can not be initialized.
-The Python package 'numpy' is not installed."""
+The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
         _version = _np.version.version.split(".")
