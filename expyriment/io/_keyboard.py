@@ -218,7 +218,7 @@ class Keyboard(Input):
         Returns
         -------
         found : char
-            pressed charater
+            pressed character
         rt : int
             reaction time in ms
 

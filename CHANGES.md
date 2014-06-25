@@ -5,6 +5,7 @@ Expyriment Release Notes
 upcoming version
 ----------------
 New Features:
+- new io device: io.extras.TcpClient
 - new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
   The stimulus depends on the package "matplotlib".
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen

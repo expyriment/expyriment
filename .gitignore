@@ -37,6 +37,7 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.idea
 
 #### Expyriment specific
 test_suite_protocol.xpp
