@@ -118,16 +118,19 @@ class TcpClient(Input, Output):
                             "TcpClient,sent,{0}".format(data))
 
 
-    def wait(self, package_size=None, duration=None):
+    def wait(self, package_size=None, duration=None,
+             check_control_keys=True):
         """Wait for data.
 
         Parameters:
         -----------
-        package_size : int
+        package_size : int, optional
             The size of the package to be received, optional.
             If not set, the default package size will be used.
-        duration: int
+        duration: int, optional
             The duration to wait in milliseconds.
+        process_control_keys : bool, optional
+            Check if control key has been pressed (default = True).
 
         Returns:
         --------
@@ -156,8 +159,9 @@ class TcpClient(Input, Output):
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                     expyriment._active_exp._execute_wait_callback()
-                    if Keyboard.process_control_keys():
-                        break
+                    if check_control_keys:
+                        if Keyboard.process_control_keys():
+                            break
             if duration:
                 if int((get_time() - start) * 1000) >= duration:
                     break
