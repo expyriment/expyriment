@@ -114,6 +114,8 @@ The Python package 'Matplotlib' is not installed."""
 
         #save stimulus
         color_map = pyplot.get_cmap('gray')
+        color_map.set_over(color="y")
+
         pyplot.imsave(fname = filename,
                     arr  = self._pixel_array,
                     cmap = color_map, format="png")
@@ -129,6 +131,7 @@ The Python package 'Matplotlib' is not installed."""
         """Getter for background_colour"""
 
         return self._background_colour
+
 
     @property
     def pixel_array(self):
