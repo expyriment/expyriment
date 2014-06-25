@@ -6,6 +6,7 @@ upcoming version
 ----------------
 New Features:
 - new io device: io.extras.TcpClient
+- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
