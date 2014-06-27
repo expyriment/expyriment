@@ -152,7 +152,7 @@ class TbvNetworkInterface(Input, Output):
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
-                                 check_control_keys=False)
+                                     check_control_keys=False)
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
             data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
@@ -514,7 +514,7 @@ class TbvNetworkInterface(Input, Output):
 
 
 
-    def get_mean_of_roi(self, roi):  # TODO: Needs testing!
+    def get_mean_of_roi(self, roi):
         """Get the mean of a ROI.
 
         Parameters:
@@ -578,8 +578,9 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return (struct.unpack('!i', data[:4])[0],
+                    struct.unpack('!i', data[4:8])[0],
                     [struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data[4:]) / 4)], rt)
+                     for x in range(0, len(data[8:]) / 4)], rt)
 
 
     def get_mean_of_roi_at_time_point(self, roi, time_point):  # TODO: Needs testing!

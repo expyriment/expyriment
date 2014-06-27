@@ -48,7 +48,7 @@ class TcpClient(Input, Output):
         if default_package_size is None:
             default_package_size = defaults.tcpclient_default_package_size
         self._default_package_size = default_package_size
-        self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._socket = None
         self._is_connected = False
         if connect is None:
             connect = defaults.tcpclient_connect
@@ -124,6 +124,8 @@ class TcpClient(Input, Output):
 
         if not self._is_connected:
             try:
+                self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                print self._socket
                 self._socket.connect((self._host, self._port))
                 self._is_connected = True
                 self._socket.settimeout(0)
@@ -207,12 +209,13 @@ class TcpClient(Input, Output):
         return data, rt
 
 
-    def close(self):
+    def close(self):  # FIXME!!!
         """Close the connection to the server."""
 
         if self._is_connected:
             self._socket.close()
-            self._socket.settimeout(None)
+            self._socket = None
+            self._is_connected = False
             if self._logging:
                 expyriment._active_exp._event_file_log(
                     "TcpClient,closed")
