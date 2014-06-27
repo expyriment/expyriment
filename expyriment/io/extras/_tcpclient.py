@@ -55,12 +55,24 @@ class TcpClient(Input, Output):
         if connect:
             self.connect()
 
+    _getter_exception_message = "Cannot set {0} if connected!"
 
     @property
     def host(self):
         """Getter for host."""
 
         return self._host
+
+
+    @host.setter
+    def host(self, value):
+        """Setter for host."""
+
+        if self._is_connected:
+            raise AttributeError(
+                TcpClient._getter_exception_message.format("host"))
+        else:
+            self._host = value
 
 
     @property
@@ -70,11 +82,34 @@ class TcpClient(Input, Output):
         return self._port
 
 
+    @port.setter
+    def port(self, value):
+        """Setter for port."""
+
+        if self._is_connected:
+            raise AttributeError(
+                TcpClient._getter_exception_message.format("port"))
+        else:
+            self._port = value
+
+
     @property
     def default_package_size(self):
         """Getter for default_package_size."""
 
         return self._default_package_size
+
+
+    @default_package_size.setter
+    def default_package_size(self, value):
+        """Setter for default_package_size."""
+
+        if self._is_connected:
+            raise AttributeError(
+                TcpClient._getter_exception_message.format(
+                    "default_package_size"))
+        else:
+            self._default_package_size = value
 
 
     @property
