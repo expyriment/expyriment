@@ -63,7 +63,6 @@ class TcpClient(Input, Output):
 
         return self._host
 
-
     @host.setter
     def host(self, value):
         """Setter for host."""
@@ -74,13 +73,11 @@ class TcpClient(Input, Output):
         else:
             self._host = value
 
-
     @property
     def port(self):
         """Getter for port."""
 
         return self._port
-
 
     @port.setter
     def port(self, value):
@@ -92,13 +89,11 @@ class TcpClient(Input, Output):
         else:
             self._port = value
 
-
     @property
     def default_package_size(self):
         """Getter for default_package_size."""
 
         return self._default_package_size
-
 
     @default_package_size.setter
     def default_package_size(self, value):
@@ -111,13 +106,11 @@ class TcpClient(Input, Output):
         else:
             self._default_package_size = value
 
-
     @property
     def is_connected(self):
         """Getter for is_connected."""
 
         return self._is_connected
-
 
     def connect(self):
         """Connect to the server."""
@@ -125,7 +118,6 @@ class TcpClient(Input, Output):
         if not self._is_connected:
             try:
                 self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                print self._socket
                 self._socket.connect((self._host, self._port))
                 self._is_connected = True
                 self._socket.settimeout(0)
@@ -137,7 +129,6 @@ class TcpClient(Input, Output):
                 expyriment._active_exp._event_file_log(
                     "TcpClient,connected,{0}:{1}".format(self._host,
                                                          self._port))
-
 
     def send(self, data):
         """Send data.
@@ -152,8 +143,7 @@ class TcpClient(Input, Output):
         self._socket.sendall(data)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                            "TcpClient,sent,{0}".format(data))
-
+                "TcpClient,sent,{0}".format(data))
 
     def wait(self, package_size=None, duration=None,
              check_control_keys=True):
@@ -189,7 +179,15 @@ class TcpClient(Input, Output):
             package_size = self._default_package_size
         while True:
             try:
-                data = self._socket.recv(package_size)
+                if data is None:
+                    data = self._socket.recv(package_size)
+                while len(data) < package_size:
+                    data = data + self._socket.recv(package_size)
+                    if duration:
+                        if int((get_time() - start) * 1000) >= duration:
+                            data = None
+                            rt = None
+                            break
                 rt = int((get_time() - start) * 1000)
                 break
             except socket.error, e:
@@ -201,6 +199,8 @@ class TcpClient(Input, Output):
                             break
             if duration:
                 if int((get_time() - start) * 1000) >= duration:
+                    data = None
+                    rt = None
                     break
 
         if self._logging:
@@ -209,7 +209,19 @@ class TcpClient(Input, Output):
         return data, rt
 
 
-    def close(self):  # FIXME!!!
+    def clear(self):
+        """Read the stream empty."""
+
+        try:
+            self._socket.recv(1024000000000)
+        except:
+            pass
+
+        if self._logging:
+            expyriment._active_exp._event_file_log(
+                            "TcpClient,cleared,wait", 2)
+
+    def close(self):
         """Close the connection to the server."""
 
         if self._is_connected:

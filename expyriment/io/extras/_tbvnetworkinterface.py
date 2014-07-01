@@ -1,7 +1,8 @@
 """Turbo Brain Voyager network interface.
 
-This module contains a class implementing a network interface with Turbo Brain
-Voyager (see www.brainvoyager.com).
+This module contains a class implementing a network interface for Turbo Brain
+Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
+
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -11,7 +12,6 @@ __revision__ = ''
 __date__ = ''
 
 
-import time
 import struct
 
 import _tbvnetworkinterface_defaults as defaults
@@ -23,10 +23,10 @@ from expyriment.io.extras._tcpclient import TcpClient
 
 
 class TbvNetworkInterface(Input, Output):
-    """A class implementing a network interface with Turbo Brain Voyager.
+    """A class implementing a network interface to Turbo Brain Voyager.
 
-     See http://www.brainvoyager.com/products/turbobrainvoyager.html
-     for more information.
+    See http://www.brainvoyager.com/products/turbobrainvoyager.html
+    for more information.
 
      """
 
@@ -62,7 +62,6 @@ class TbvNetworkInterface(Input, Output):
         if connect:
             self.connect()
 
-
     _getter_exception_message = "Cannot set {0} if connected!"
 
     @property
@@ -70,7 +69,6 @@ class TbvNetworkInterface(Input, Output):
         """Getter for host."""
 
         return self._host
-
 
     @host.setter
     def host(self, value):
@@ -82,13 +80,11 @@ class TbvNetworkInterface(Input, Output):
         else:
             self._host = value
 
-
     @property
     def port(self):
         """Getter for port."""
 
         return self._port
-
 
     @port.setter
     def port(self, value):
@@ -100,20 +96,17 @@ class TbvNetworkInterface(Input, Output):
         else:
             self._port = value
 
-
     @property
     def is_connected(self):
         """Getter for is_connected."""
 
         return self._is_connected
 
-
     @property
     def timeout(self):
         """Getter for timeout."""
 
         return self._timeout
-
 
     @timeout.setter
     def timeout(self, value):
@@ -126,33 +119,37 @@ class TbvNetworkInterface(Input, Output):
         else:
             self._timeout = value
 
-
     def connect(self):
         """Connect to the TBV server."""
 
         if not self._is_connected:
             self._tcp.connect()
-            self._send("Request Socket")
+            data, rt = self.request_data("Request Socket")
+            if data is None or data[4:-1] != "OK":
+                raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
                 expyriment._active_exp._event_file_log(
                     "TbvNetworkInterface,connected,{0}:{1}".format(self._host,
                                                                    self._port))
 
-
     def _send(self, message, *args):
         length = len(message)
-        data = struct.pack('!q', length+5) + \
-               "\x00\x00\x00{0}{1}\x00".format(chr(length+1), message)
-        if len(args)>0:
+        arg_length = 0
+        if len(args) > 0:
             for arg in args:
-                data = data + arg
+                arg_length += len(arg)
+        data = struct.pack('!q', length + 5 + arg_length) + \
+            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+        if len(args) > 0:
+            for arg in args:
+                data += arg
         self._tcp.send(data)
-
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
                                      check_control_keys=False)
+        data = None
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
             data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
@@ -161,7 +158,6 @@ class TbvNetworkInterface(Input, Output):
             return None
         else:
             return data[4:]
-
 
     def request_data(self, request, *args):
         """Request data from Turbo Brain Voyager.
@@ -181,18 +177,23 @@ class TbvNetworkInterface(Input, Output):
         """
 
         start = get_time()
+        self._tcp.clear()
         self._send(request, *args)
         data = self._wait()
         if data is None:
             return None, None
-        elif data[0:len(request)]!= request:
+        elif data[0:len(request)] != request:
             return data, None
         else:
-            return data[len(request)+1:], int((get_time() - start) * 1000)
+            return data[len(request) + 1:], int((get_time() - start) * 1000)
 
+    def close(self):
+        """Close the connection."""
+
+        self._tcp.close()
+        self._is_connected = False
 
     # Basic Project Queries
-
     def get_current_time_point(self):
         """Get the current time point.
 
@@ -212,7 +213,6 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return struct.unpack('!i', data)[0], rt
-
 
     def get_expected_nr_of_time_points(self):
         """Get the expected number of time points.
@@ -234,18 +234,14 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', data)[0], rt
 
-
     def get_dims_of_functional_data(self):
         """Get the dimensions of the functional data.
 
         Returns:
         --------
-        dim_x :
-            The X dimension of the functional volume.
-        dim_y :
-            The Y dimension of the functional volume.
-        dim_z :
-            The Z dimension of the functional volume.
+        dims : list
+            The dimension of the functional volume.
+            [x, y, z]
         rt : int
             The time it took to get the data.
 
@@ -257,10 +253,9 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
+            return ([struct.unpack('!i', data[:4])[0],
                     struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!i', data[8:])[0], rt)
-
+                    struct.unpack('!i', data[8:])[0]], rt)
 
     def get_project_name(self):
         """Get the project name.
@@ -282,7 +277,6 @@ class TbvNetworkInterface(Input, Output):
         else:
             return str2unicode(name[4:-1]), rt
 
-
     def get_watch_folder(self):
         """Get the watch folder.
 
@@ -302,7 +296,6 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
             return str2unicode(folder[4:-1]), rt
-
 
     def get_target_folder(self):
         """Get the target folder.
@@ -324,7 +317,6 @@ class TbvNetworkInterface(Input, Output):
         else:
             return str2unicode(folder[4:-1]), rt
 
-
     def get_feedback_folder(self):
         """Get the feedback folder.
 
@@ -345,9 +337,7 @@ class TbvNetworkInterface(Input, Output):
         else:
             return str2unicode(folder[4:-1]), rt
 
-
     # Protocol, DM, GLM Queries
-
     def get_current_protocol_condition(self):
         """Get the current protocol condition.
 
@@ -368,8 +358,7 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', condition_nr)[0], rt
 
-
-    def get_full_number_of_predictors(self):
+    def get_full_nr_of_predictors(self):
         """Get the full number of predictors.
 
         Returns:
@@ -381,7 +370,7 @@ class TbvNetworkInterface(Input, Output):
 
         """
 
-        nr_predictors, rt = self.request_data("tGetFullNumberOfPredictors")
+        nr_predictors, rt = self.request_data("tGetFullNrOfPredictors")
         if nr_predictors is None:
             return None, rt
         elif nr_predictors[:14] == "Wrong request!":
@@ -389,8 +378,7 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', nr_predictors)[0], rt
 
-
-    def get_current_number_of_predictors(self):
+    def get_current_nr_of_predictors(self):
         """Get the current number of predictors.
 
         Returns:
@@ -402,7 +390,7 @@ class TbvNetworkInterface(Input, Output):
 
         """
 
-        nr_predictors, rt = self.request_data("tGetCurrentNumberOfPredictors")
+        nr_predictors, rt = self.request_data("tGetCurrentNrOfPredictors")
         if nr_predictors is None:
             return None, rt
         elif nr_predictors[:14] == "Wrong request!":
@@ -410,8 +398,7 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', nr_predictors)[0], rt
 
-
-    def get_number_of_confound_predictors(self):
+    def get_nr_of_confound_predictors(self):
         """Get the number of confound predictors.
 
         Returns:
@@ -423,7 +410,7 @@ class TbvNetworkInterface(Input, Output):
 
         """
 
-        nr_predictors, rt = self.request_data("tGetNumberOfConfoundPredictors")
+        nr_predictors, rt = self.request_data("tGetNrOfConfoundPredictors")
         if nr_predictors is None:
             return None, rt
         elif nr_predictors[:14] == "Wrong request!":
@@ -431,11 +418,10 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', nr_predictors)[0], rt
 
-
     def get_value_of_design_matrix(self, pred, time_point):
         """Get the value of the design matrix.
 
-        Paramters:
+        Parameters:
         ----------
         pred : int
             The predictor.
@@ -444,10 +430,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        pred : int
-            The predictor.
-        time_point : int
-            The time point.
         value : float
             The design matrix value.
         rt : int
@@ -459,15 +441,13 @@ class TbvNetworkInterface(Input, Output):
         time_point = struct.pack('!i', time_point)
         data, rt = self.request_data(
             "tGetValueOfDesignMatrix", pred, time_point)
+        print data, data[8:]
         if data is None:
             return None, rt
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!f', data[8:])[0], rt)
-
+            return struct.unpack('!f', data[8:])[0], rt
 
     def get_nr_of_contrasts(self):
         """Get the number of contrasts.
@@ -489,9 +469,7 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', nr_contrasts)[0], rt
 
-
     # ROI Queries
-
     def get_nr_of_rois(self):
         """Get the number of ROIs.
 
@@ -512,8 +490,6 @@ class TbvNetworkInterface(Input, Output):
         else:
             return struct.unpack('!i', nr_rois)[0], rt
 
-
-
     def get_mean_of_roi(self, roi):
         """Get the mean of a ROI.
 
@@ -524,8 +500,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
         mean : float
             The mean of the ROI.
         rt : int
@@ -541,14 +515,12 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!f', data[4:])[0], rt)
+            return struct.unpack('!f', data[4:])[0], rt
 
-
-    def get_existing_means_of_roi(self, roi, to_time_point):  # TODO: Needs testing!
+    def get_existing_means_of_roi(self, roi, to_time_point):
         """Get the existing means of a ROI.
 
-        Paramters:
+        Parameters:
         ----------
         roi : int
             The ROI.
@@ -557,10 +529,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
-        to_time_point : int
-            The point in time to which all means are returned.
         means : list
             The means of the ROI.
         rt : int
@@ -577,16 +545,13 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    [struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
+            return ([struct.unpack('!f', data[8 + x * 4:8 + x * 4 + 4])[0]
                      for x in range(0, len(data[8:]) / 4)], rt)
 
-
-    def get_mean_of_roi_at_time_point(self, roi, time_point):  # TODO: Needs testing!
+    def get_mean_of_roi_at_time_point(self, roi, time_point):
         """Get the mean of a ROI at a time point.
 
-        Paramters:
+        Parameters:
         ----------
         roi : int
             The ROI.
@@ -595,10 +560,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
-        time_point : int
-            The time point.
         mean : float
             The mean of the ROI.
         rt : int
@@ -615,12 +576,9 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!f', data[8:])[0], rt)
+            return struct.unpack('!f', data[8:])[0], rt
 
-
-    def get_number_of_voxels_of_roi(self, roi):  # TODO: Needs testing!
+    def get_nr_of_voxels_of_roi(self, roi):
         """Get the number of voxels of a ROI.
 
         Parameters:
@@ -630,8 +588,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
         nr_voxels : int
             The number of voxels of the ROI.
         rt : int
@@ -647,14 +603,12 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:])[0], rt)
+            return struct.unpack('!i', data[4:])[0], rt
 
-
-    def get_beta_of_roi(self, roi, beta):  # TODO: Needs testing!
+    def get_beta_of_roi(self, roi, beta):
         """Get the value of a beta of a ROI.
 
-        Paramters:
+        Parameters:
         ----------
         roi : int
             The ROI.
@@ -663,10 +617,6 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
-        beta : int
-            The beta.
         value : float
             The value of the beta of the ROI.
         rt : int
@@ -683,15 +633,12 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!f', data[8:])[0], rt)
+            return struct.unpack('!f', data[8:])[0], rt
 
-
-    def get_coord_of_voxel_of_roi(self, roi, voxel):  # TODO: Needs testing!
+    def get_coord_of_voxel_of_roi(self, roi, voxel):  # TODO: Return as one list?
         """Get the coordinates of a voxel of a ROI.
 
-        Paramters:
+        Parameters:
         ----------
         roi : int
             The ROI.
@@ -700,16 +647,9 @@ class TbvNetworkInterface(Input, Output):
 
         Returns:
         --------
-        roi : int
-            The ROI.
-        voxel : int
-            The voxel.
-        x : int
-            The X coordinate.
-        y : int
-            The Y coordinate.
-        z : int
-            The Z coordinate.
+        coords : list
+            The coordinates of the voxel.
+            [x, y, z]
         rt : int
             The time it took to get the data.
 
@@ -724,30 +664,23 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!i', data[8:12])[0],
+            return ([struct.unpack('!i', data[8:12])[0],
                     struct.unpack('!i', data[12:16])[0],
-                    struct.unpack('!i', data[16:])[0], rt)
+                    struct.unpack('!i', data[16:])[0]], rt)
 
-
-    def get_all_coords_of_voxels_of_roi(self, roi):  # TODO: Needs testing!
+    def get_all_coords_of_voxels_of_roi(self, roi):  # TODO: Put into lists?
         """Get coordinates for all voxels for a ROI.
 
-        Paramters:
+        Parameters:
         ----------
         roi : int
             The ROI.
 
         Returns:
         --------
-        roi : int
-            The ROI.
         coords : list
             The coordinates of all voxels of the ROI.
-            [v1_x, v1_y, v1_z, v2_x, v2_z, v2_y, etc.]
-            A single coordinate can be accessed at:
-                x_coord = voxel_roi+0; y_coord = voxel_roi+1; z_coord = voxel_roi+2
+            [[v1_x, v1_y, v1_z], [v2_x, v2_z, v2_y], ..., [vn_x, vn_y, _vn_z]]
         rt : int
             The time it took to get the data.
 
@@ -761,37 +694,24 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    [struct.unpack('!i', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data[4:]) / 4)], rt)
-
+            _all = [struct.unpack('!i', data[4 + x * 4:4 + x * 4 + 4])[0]
+                    for x in range(0, len(data[4:]) / 4)]
+            return [_all[x:x+3] for x in range(0, len(_all), 3)], rt
 
     # Volume Data Access Queries
-
-    def get_value_of_voxel_at_time(self, x, y, z, time_point):  # TODO: Needs testing!
+    def get_value_of_voxel_at_time(self, coords, time_point):
         """Get the value of a voxel at a certain time point.
 
-        Paramters:
+        Parameters:
         ----------
-        x : int
-            The X coordinate of the voxel.
-        y : int
-            The Y coordinate of the voxel.
-        z : int
-            The Z coordinate of the voxel.
+        coords : list
+            The coordinates of the voxel.
+            [x, y, z]
         time_point : int
             The time point.
 
         Returns:
         --------
-        x : int
-            The X coordinate.
-        y : int
-            The Y coordinate.
-        z : int
-            The Z coordinate.
-        time_point : int
-            The time point.
         value : float
             The voxel value.
         rt : int
@@ -799,9 +719,9 @@ class TbvNetworkInterface(Input, Output):
 
         """
 
-        x = struct.pack('!i', x)
-        y = struct.pack('!i', y)
-        z = struct.pack('!i', z)
+        x = struct.pack('!i', coords[0])
+        y = struct.pack('!i', coords[1])
+        z = struct.pack('!i', coords[2])
         time_point = struct.pack('!i', time_point)
         data, rt = self.request_data(
             "tGetValueOfVoxelAtTime", x, y, z, time_point)
@@ -810,28 +730,21 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!i', data[8:12])[0],
-                    struct.unpack('!i', data[12:16])[0],
-                    struct.unpack('!f', data[16:])[0], rt)
+            return struct.unpack('!f', data[16:])[0], rt
 
-
-    def get_value_of_all_voxels_at_time(self, time_point):  # TODO: Needs testing!
+    def get_value_of_all_voxels_at_time(self, time_point):
         """Get the value of all voxels at a certain time point.
 
-        Paramters:
+        Parameters:
         ----------
         time_point : int
             The time point.
 
         Returns:
         --------
-        time_point : int
-            The time point.
         voxels : list
             The data of all voxel values.
-            [x1_y1_z1, ..., xn_y1_y1, ... x1_yn_z1, ..., xn_yn_z1, ..., x1_yn_zn, ...]
+            [x1_y1_z1, ..., xn_y1_y1, ..., xn_yn_z1, ..., xn_yn_zn]
             The value of a single voxel can be accessed at:
                 z_coord*dim_x*dim_y + y_coord*dim_x + x_coord
         rt : int
@@ -847,23 +760,19 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    [struct.unpack('!h', data[x * 2:x * 2 + 2])[0]
+            return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
                      for x in range(0, len(data[4:]) / 2)], rt)
 
-
-    def get_raw_value_of_all_voxels_at_time(self, time_point):  # TODO: Needs testing!
+    def get_raw_value_of_all_voxels_at_time(self, time_point):
         """Get the raw value of all voxels at a certain time point.
 
-        Paramters:
+        Parameters:
         ----------
         time_point : int
             The time point.
 
         Returns:
         --------
-        time_point : int
-            The time point.
         voxels : list
             The data of all raw voxel values.
             [x1_y1_z1, ..., xn_y1_y1, ..., xn_yn_z1, ..., xn_yn_zn]
@@ -882,35 +791,22 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    [struct.unpack('!h', data[x * 2:x * 2 + 2])[0]
+            return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
                      for x in range(0, len(data[4:]) / 2)], rt)
 
-
-    def get_beta_of_voxel(self, beta, x, y, z):  # TODO: Needs testing!
+    def get_beta_of_voxel(self, beta, coords):
         """Get a specific beta value of a voxel.
 
-        Paramters:
+        Parameters:
         ----------
         beta : int
             The beta.
-        x : int
-            The X coordinate of the voxel.
-        y : int
-            The Y coordinate of the voxel.
-        z : int
-            The Z coordinate of the voxel.
+        coords : list
+            The coordinates of the voxel.
+            [x, y, z]
 
         Returns:
         --------
-        beta : int
-            The beta.
-        x : int
-            The X coordinate.
-        y : int
-            The Y coordinate.
-        z : int
-            The Z coordinate.
         value : double
             The beta value.
         rt : int
@@ -919,9 +815,9 @@ class TbvNetworkInterface(Input, Output):
         """
 
         beta = struct.pack('!i', beta)
-        x = struct.pack('!i', x)
-        y = struct.pack('!i', y)
-        z = struct.pack('!i', z)
+        x = struct.pack('!i', coords[0])
+        y = struct.pack('!i', coords[1])
+        z = struct.pack('!i', coords[2])
         data, rt = self.request_data(
             "tGetBetaOfVoxel", beta, x, y, z)
         if data is None:
@@ -929,21 +825,16 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!i', data[8:12])[0],
-                    struct.unpack('!i', data[12:16])[0],
-                    struct.unpack('!d', data[16:])[0], rt)
+            return struct.unpack('!d', data[16:])[0], rt
 
-
-    def get_beta_maps(self):  # TODO: Needs testing!
+    def get_beta_maps(self):
         """Get the beta maps.
 
         Returns:
         --------
         beta_maps : list
             The data of all raw voxel values.
-                [x1_y1_z_p1, ..., xn_y1_y1_p1, ..., xn_yn_z1_p1, ..., xn_yn_zn_pn]
+                [x1_y1_z_p1, ..., xn_y1_y1_p1, ..., xn_yn_z1_p1, ..., xn_yn_zn_p1, ..., xn_yn_zn_pn]
             A beta value of a single predictor can be accessed at:
                 beta_i*dim_xyz + z_coord*dim_xy + y_coord*dim_x + x_coord
         rt : int
@@ -961,31 +852,19 @@ class TbvNetworkInterface(Input, Output):
             return ([struct.unpack('!d', data[x * 8:x * 8 + 8])[0]
                      for x in range(0, len(data) / 8)], rt)
 
-
-    def get_map_value_of_voxel(self, map, x, y, z):  # TODO: Needs testing!
+    def get_map_value_of_voxel(self, map, coords):
         """Get a specific map value of a voxel.
 
-        Paramters:
+        Parameters:
         ----------
         map : int
             The map.
-        x : int
-            The X coordinate of the voxel.
-        y : int
-            The Y coordinate of the voxel.
-        z : int
-            The Z coordinate of the voxel.
+        coords : list
+            The coordinates of the voxel.
+            [x, y, z]
 
         Returns:
         --------
-        map : int
-            The map.
-        x : int
-            The X coordinate.
-        y : int
-            The Y coordinate.
-        z : int
-            The Z coordinate.
         value : float
             The map value.
         rt : int
@@ -993,10 +872,10 @@ class TbvNetworkInterface(Input, Output):
 
         """
 
-        beta = struct.pack('!i', map)
-        x = struct.pack('!i', x)
-        y = struct.pack('!i', y)
-        z = struct.pack('!i', z)
+        map = struct.pack('!i', map)
+        x = struct.pack('!i', coords[0])
+        y = struct.pack('!i', coords[1])
+        z = struct.pack('!i', coords[2])
         data, rt = self.request_data(
             "tGetMapValueOfVoxel", map, x, y, z)
         if data is None:
@@ -1004,14 +883,9 @@ class TbvNetworkInterface(Input, Output):
         elif data[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
-            return (struct.unpack('!i', data[:4])[0],
-                    struct.unpack('!i', data[4:8])[0],
-                    struct.unpack('!i', data[8:12])[0],
-                    struct.unpack('!i', data[12:16])[0],
-                    struct.unpack('!f', data[16:])[0], rt)
+            return struct.unpack('!f', data[16:])[0], rt
 
-
-    def get_contrast_maps(self):  # TODO: Needs testing!
+    def get_contrast_maps(self):
         """Get the contrast maps.
 
         Returns:
@@ -1037,9 +911,7 @@ class TbvNetworkInterface(Input, Output):
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
                      for x in range(0, len(data) / 4)], rt)
 
-
     # SVM Access Functions
-
     def get_number_of_classes(self):
         """Get the number of classes.
 
@@ -1059,7 +931,6 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(nr_classes[19:-1]))
         else:
             return struct.unpack('!i', nr_classes)[0], rt
-
 
     def get_current_classifier_output(self):  # TODO: Needs testing!
         """Get the current classifier output.
