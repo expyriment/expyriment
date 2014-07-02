@@ -2,9 +2,8 @@
 Expyriment Release Notes
 ========================
  
-upcomming version
+upcoming version
 -----------------
-New pygame.display.set_mode:
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
  
