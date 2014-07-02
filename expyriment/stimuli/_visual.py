@@ -315,7 +315,7 @@ class Visual(Stimulus):
         """Set the surface of the stimulus
 
         This method overwrites the surface of the stimulus. It can also handle
-        surfaces in form of pygame.PixelArray representation.
+        surfaces in form of pygame.PixelArray representations.
 
         Parameters
         ----------
