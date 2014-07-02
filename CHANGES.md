@@ -2,8 +2,15 @@
 Expyriment Release Notes
 ========================
  
-upcoming version
-----------------
+upcomming version
+-----------------
+New pygame.display.set_mode:
+- new method: all visual stimuli have methods for lowlevel Pygame operations
+  get_surface_copy(), set_surface(), get_pixel_array()
+ 
+
+Version 0.8.0
+--------------
 New Features:
 - new io device: io.extras.TcpClient
 - new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
