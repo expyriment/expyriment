@@ -72,9 +72,14 @@ OpenGL will be deactivated!"
             expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
         pygame.display.init()
+        if expyriment._active_exp.is_initialized:
+            self._monitor_resolution = \
+                        expyriment._active_exp.screen.monitor_resolution
+        else:
+            self._monitor_resolution = (pygame.display.Info().current_w,
+                                        pygame.display.Info().current_h)
         if self._fullscreen:
-            self._window_size = (pygame.display.Info().current_w,
-                                pygame.display.Info().current_h)
+            self._window_size = self._monitor_resolution
         else:
             self._window_size = window_size
 
@@ -132,6 +137,12 @@ machine!")
         """Getter for window_size."""
 
         return self._window_size
+
+    @property
+    def monitor_resolution(self):
+        """Getter for monitor_resolution."""
+
+        return self._monitor_resolution
 
     def update(self):
         """Update the screen.

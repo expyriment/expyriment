@@ -12,6 +12,7 @@ New Features:
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
+- new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
 - new mouse function: experiments can be quitted by mouse events (triple click).
   See documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
