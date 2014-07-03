@@ -53,6 +53,7 @@ class TbvNetworkInterface(Input, Output):
         self._host = host
         self._port = port
         self._is_connected = False
+        self._tbv_version = None
         self._tcp = TcpClient(host, port, None, False)
         if timeout is None:
             timeout = defaults.tbvnetworkinterface_timeout
@@ -103,6 +104,12 @@ class TbvNetworkInterface(Input, Output):
         return self._is_connected
 
     @property
+    def tbv_version(self):
+        """Getter for tbv_version."""
+
+        return self._tbv_version
+
+    @property
     def timeout(self):
         """Getter for timeout."""
 
@@ -125,7 +132,12 @@ class TbvNetworkInterface(Input, Output):
         if not self._is_connected:
             self._tcp.connect()
             data, rt = self.request_data("Request Socket")
-            if data is None or data[4:-1] != "OK":
+            try:
+                self._tbv_version = (struct.unpack('!i', data[:4])[0],
+                                     struct.unpack('!i', data[4:8])[0],
+                                     struct.unpack('!i', data[8:])[0])
+                print self.tbv_version
+            except:
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:

@@ -5,6 +5,7 @@ Expyriment Release Notes
 Version 0.8.0
 -------------
 New Features:
+- new io device: io.extras.TbvNetworkClient
 - new io device: io.extras.TcpClient
 - new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
   The stimulus depends on the package "matplotlib".
