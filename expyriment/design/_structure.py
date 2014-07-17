@@ -326,7 +326,9 @@ class Experiment(object):
         Factors that are added first are treated as hierarchically higher
         factors while permutation.
 
-        see also get_permuted_bws_factor_condition
+        See Also
+        --------
+        get_permuted_bws_factor_condition
 
         """
 

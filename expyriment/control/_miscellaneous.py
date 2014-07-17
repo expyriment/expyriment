@@ -156,7 +156,7 @@ def set_skip_wait_functions(onoff):
         set skip-wait-function on (True) or off (False)
 
     """
-    
+
     control_defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
@@ -237,8 +237,10 @@ def register_wait_callback_function(function, exp=None):
     -----
     CAUTION! If wait callback function takes longer than 1 ms to process,
     Expyriment timing will be affected!
-    
-    see also: unregister_wait_callback_function
+
+    See Also
+    --------
+    unregister_wait_callback_function
 
     """
 
@@ -256,11 +258,10 @@ def unregister_wait_callback_function(exp=None):
     exp : design.Experiment, optional
         specific experiment for which to unregister the wait callback function
 
-    
-    Notes
-    -----
-    
-    see also: register_wait_callback_function
+
+    See Also
+    --------
+    register_wait_callback_function
 
     """
 

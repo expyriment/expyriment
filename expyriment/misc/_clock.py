@@ -127,7 +127,7 @@ class Clock(object) :
                 pass
 
     def wait_seconds(self, time_sec, function=None):
-        """Wait for a certain amout of seconds (see also wait() ).
+        """Wait for a certain amout of seconds.
 
         Parameters
         ----------
@@ -136,12 +136,16 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        See Also
+        --------
+        Clock.wait()
+
         """
 
         self.wait(time_sec * 1000, function)
 
     def wait_minutes(self, time_minutes, function=None):
-        """Wait for a certain amount of minutes (see also wait() ).
+        """Wait for a certain amount of minutes.
 
         Parameters
         ----------
@@ -149,6 +153,10 @@ class Clock(object) :
             time to wait in minutes
         function : function, optional
             function to repeatedly execute during waiting loop
+
+        See Also
+        --------
+        Clock.wait()
 
         """
 
