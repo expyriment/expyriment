@@ -107,7 +107,7 @@ def set_develop_mode(onoff, intensive_logging=False):
         True sets expyriment.io.defaults.event_logging=2
         (default = False)
 
-"""
+    """
 
     if onoff:
         defaults._mode_settings = [defaults.initialize_delay,
@@ -155,7 +155,8 @@ def set_skip_wait_functions(onoff):
     onoff : bool
         set skip-wait-function on (True) or off (False)
 
-"""
+    """
+    
     control_defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
@@ -236,6 +237,8 @@ def register_wait_callback_function(function, exp=None):
     -----
     CAUTION! If wait callback function takes longer than 1 ms to process,
     Expyriment timing will be affected!
+    
+    see also: unregister_wait_callback_function
 
     """
 
@@ -246,12 +249,18 @@ def register_wait_callback_function(function, exp=None):
 
 
 def unregister_wait_callback_function(exp=None):
-    """Unregister wait function.
+    """Unregister all wait callback functions.
 
     Parameters
     ----------
     exp : design.Experiment, optional
-        specific experiment for which to unregister wait function
+        specific experiment for which to unregister the wait callback function
+
+    
+    Notes
+    -----
+    
+    see also: register_wait_callback_function
 
     """
 
