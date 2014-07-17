@@ -1,5 +1,5 @@
 # Defaults for ThermometerDisplay
-thermometerdisplay_size = (128, 320)
+thermometerdisplay_size = (128, 340)
 thermometerdisplay_nr_segments = 10
 thermometerdisplay_gap = 6
 thermometerdisplay_frame_line_width = 20

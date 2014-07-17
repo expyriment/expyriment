@@ -246,7 +246,7 @@ class ThermometerDisplay(Visual):
         width = self._size[0] - self._frame_line_width
         height = self._size[1] - self._frame_line_width
         for x in range(self._nr_segments):
-            if x < int(self._state / 100.0 * self._nr_segments):
+            if x < self._state / 100.0 * self._nr_segments:
                 colour = self._active_colour
             else:
                 colour = self._inactive_colour
