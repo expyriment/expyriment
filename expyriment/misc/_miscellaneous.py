@@ -21,6 +21,7 @@ except ImportError:
     locale = None  # Not available on Android
 import glob
 import pygame
+import expyriment
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
@@ -252,3 +253,21 @@ def find_font(font):
             return font_file
         else:
             return ""
+
+def get_monitor_resolution():
+    """Returns the monitor resolution
+
+    Returns
+    -------
+    resolution: (int, int)
+        monitor resolution, screen resolution
+
+    """
+
+    if expyriment._active_exp.is_initialized:
+        return expyriment._active_exp.screen.monitor_resolution
+    else:
+        pygame.display.init()
+        return (pygame.display.Info().current_w,
+                pygame.display.Info().current_h)
+
