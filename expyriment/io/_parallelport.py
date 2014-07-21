@@ -34,8 +34,13 @@ class ParallelPort(Input, Output):
 
     """
 
-    def __init__(self):
+    def __init__(self, port=None):
         """Create a parallel port input and output.
+
+        Parameters:
+        -----------
+        port : int, optional
+            The port to use.
 
         """
 
@@ -53,8 +58,16 @@ The Python package 'pyParallel' is not installed."""
 
         Input.__init__(self)
         Output.__init__(self)
-        self._parallel = parallel.Parallel()
+        if port is None:
+            port = 0
+        self._port = port
+        self._parallel = parallel.Parallel(self._port)
         self.input_history = False # dummy
+
+    @property
+    def port(self):
+        """Getter for port."""
+        return self._port
 
     @property
     def parallel(self):
