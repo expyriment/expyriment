@@ -33,6 +33,9 @@ New Features:
   this function can be switch off
 
 Changed:
+- ParallelPort: Polling will now return 4 bits, including also the status of
+  the Busy status line
+  (ATTENTION: Byte order in the output other status lines has changed!)
 - changes at Simon example
 
 Fixed:

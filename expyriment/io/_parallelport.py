@@ -92,22 +92,22 @@ The Python package 'pyParallel' is not installed."""
     def poll(self):
         """Poll the parallel port.
 
-        The parlallel port will be polled. The result will be put into the
-        buffer and returned.
-        The parallel module for Python can only read three of the status
-        lines. The result is thus coded in three bits:
+        The parlallel port will be polled and the result will be returned.
+        The parallel module for Python can only read the 4 status lines.
+        The result is thus coded in four bits:
 
-        Acknowledge Paper-Out Selected
+        Acknowledge Busy Paper-Out Selected
 
-        Example: '4' means only Selected is receiving data ("001").
+        Example: '4' means only Paper-Out is receiving data ("0010").
 
         To send out data the actual data lines are used.
 
         """
 
-        bits = "{2}{1}{0}".format(int(self._parallel.getInAcknowledge()),
-                            int(self._parallel.getInPaperOut()),
-                            int(self._parallel.getInSelected()))
+        bits = "{3}{2}{1}{0}".format(int(self._parallel.getInAcknowledge()),
+                                     int(self._parallel.getInPaperBusy()),
+                                     int(self._parallel.getInPaperOut()),
+                                     int(self._parallel.getInSelected()))
         byte = int(bits, 2)
         if self._logging:
             expyriment._active_exp._event_file_log(
