@@ -280,6 +280,70 @@ class Visual(Stimulus):
 
         return self._get_surface().get_size()
 
+    def get_surface_copy(self):
+        """Returns a copy of the Pygame surface of the stimulus
+
+        Returns
+        -------
+        surface: Pygame.surface
+
+        Notes
+        -----
+        see also set_surface
+
+        """
+
+        return self._get_surface().copy()
+
+    def get_pixel_array(self):
+        """Returns a PixelArray representation of surface of the stimulus
+
+        Returns
+        -------
+        pixel_array: Pygame.PixelArray
+            a copy of the PixelArray is returned
+
+        Notes
+        -----
+        see also set_surface
+
+        """
+
+        return pygame.PixelArray(self.get_surface_copy())
+
+    def set_surface(self, surface):
+        """Set the surface of the stimulus
+
+        This method overwrites the surface of the stimulus. It can also handle
+        surfaces in form of pygame.PixelArray representations.
+
+        Parameters
+        ----------
+        surface: pygame.Surface or pygame.PixelArray
+            a representation of the new surface
+
+        Returns
+        -------
+        succeeded: boolean
+            setting surface was successful or not
+
+        Notes
+        -----
+        CAUTION: This is an expert's method.
+        The method can be used together with get_surface() & get_pixel_array()
+        to apply low-level Pygame operations on stimuli. However, users should
+        be aware of what they are doing, because the incorrect usage of this
+        methods might affect the stability of the experiment.
+
+        """
+
+        if isinstance(surface, pygame.PixelArray):
+            return self._set_surface(surface.make_surface())
+        elif isinstance(surface, pygame.Surface):
+            return self._set_surface(surface)
+        else:
+            return False
+
     def _create_surface(self):
         """Get the surface of the stimulus.
 
@@ -291,7 +355,7 @@ class Visual(Stimulus):
         return surface
 
     def _set_surface(self, surface):
-        """Set the surface.
+        """Set the surface (from internal use only).
 
         Parameters
         ----------
