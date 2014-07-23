@@ -42,6 +42,8 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
     only_header_and_variable_names : bool, optional
         if True the function reads only the header and variable names
         (default=False)
+    encoding : str, optional
+        the encoding with which the contents of the file will be read
 
     Returns
     -------
@@ -54,8 +56,6 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
         subject factors)
     comments : str
         string with remaining comments
-    encoding : str, optional
-        the encoding with which the contents of the file will be read
 
     """
 
