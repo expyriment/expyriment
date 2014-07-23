@@ -41,7 +41,7 @@ class Experiment(object):
 
     def __init__(self, name=None, foreground_colour=None,
                  background_colour=None, text_font=None, text_size=None,
-                 filename_suffix=None):
+                 filename_suffix=None, log_level=None):
         """Create an experiment.
 
         Parameters
@@ -55,6 +55,13 @@ class Experiment(object):
         filename_suffix : str, optional
             additional suffix that will be added to the main event
             and data filename
+        log_level : int, optional
+            the log level of the experiment
+            (see set_log_level for more detailed information)
+
+        Notes
+        ------
+        See the method
 
         """
         if name is not None:
@@ -86,6 +93,11 @@ class Experiment(object):
         else:
             self._filename_suffix = defaults.experiment_filename_suffix
 
+        if log_level is not None:
+            self._log_level = log_level
+        else:
+            self._log_level = defaults.experiment_event_logging
+
         self.clear_bws_factors()
         self._data_variable_names = []
         self._experiment_info = []
@@ -101,7 +113,6 @@ class Experiment(object):
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = 0  # will be set from initialize
         self._wait_callback_function = None
 
     @property
@@ -457,7 +468,6 @@ class Experiment(object):
         In most cases, it should be avoided to switch of logging (loglevel=0).
         It log files become to big due to certain repetitive events, it is
         suggested to switch of the logging of individual stimuli or IO event.
-        (see the method `.set_logging()` of this objects)
 
         The logging of events can be also changed before initialize via the
         default value `expyriment.control.defaults.event_logging`.

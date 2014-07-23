@@ -278,10 +278,10 @@ class TextLine(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     textline = TextLine("abcde fghijk lmnopqrstuvwxyz 12 348 56789",
                         text_font="Helvetica",
                         text_size=20, text_bold=False)

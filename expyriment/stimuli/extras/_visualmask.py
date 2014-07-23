@@ -148,10 +148,10 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     mask = VisualMask(size=(200, 200))
     mask.present()
     print mask.surface_size

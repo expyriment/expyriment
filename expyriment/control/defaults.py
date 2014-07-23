@@ -27,7 +27,6 @@ open_gl = True
 window_mode = False
 window_size = (800, 600)
 
-event_logging = 1  # 1 = default, 2 = extensive, 0 or False = off
 stdout_logging = True
 
 audiosystem_autostart = True
@@ -38,3 +37,4 @@ audiosystem_buffer_size = 2048
 
 _mode_settings = None
 _skip_wait_functions = False
+_intensive_logging = None

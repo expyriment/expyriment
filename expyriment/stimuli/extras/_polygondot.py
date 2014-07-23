@@ -99,10 +99,10 @@ class PolygonDot(PolygonEllipse):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     dot = PolygonDot(radius=100)
     dot.present()
     exp.clock.wait(1000)

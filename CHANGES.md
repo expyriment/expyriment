@@ -1,7 +1,9 @@
 ========================
 Expyriment Release Notes
 ========================
- 
+
+upcoming version
+-----------------
 
 Version 0.8.0
 -------------
@@ -20,9 +22,9 @@ New Features:
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
 - new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
-- new mouse function: experiments can be quitted by mouse events (triple click).
-  See documentation of property "mouse_quit_event". This function is only switched
-  on per default under Android
+- new mouse function: experiments can be quitted by mouse events (triple click)
+  See documentation of property "mouse_quit_event". This function is only
+  switched on per default under Android
 - new method visual stimuli.replace
 - new method control.is_android_running
 - several new options for command line interface
@@ -38,6 +40,10 @@ New Features:
   this function can be switch off
 
 Changed:
+- Log levels will not be anymore controlled via control.default.log_level.
+  Instead design.Expyriment() has the method set_log_level(). Log_levels can be
+  also directly defined when creating a new design.Experiment() or via the
+  defauls of design
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output other status lines has changed!)

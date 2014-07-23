@@ -440,10 +440,10 @@ class TextInput(Input):
 
 
 if __name__ == '__main__':
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     textinput = TextInput(message="Subject Number:",
                           message_colour=(160, 70, 250),
                           user_text_size=30,

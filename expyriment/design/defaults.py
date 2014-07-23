@@ -29,6 +29,8 @@ experiment_foreground_colour = (150, 150, 150)
 experiment_text_font = "FreeSans"
 experiment_text_size = 20
 experiment_filename_suffix = None
+experiment_event_logging = 1  # 1 = default, 2 = extensive, 0 or False = off
+
 
 # Block
 block_name = 'unnamed'

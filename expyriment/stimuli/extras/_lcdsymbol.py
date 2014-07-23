@@ -433,10 +433,10 @@ class LcdSymbol(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     lcdsymbol = LcdSymbol("A", size=(100, 100))
     lcdsymbol.present()
     exp.clock.wait(1000)
