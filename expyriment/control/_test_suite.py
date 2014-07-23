@@ -388,7 +388,7 @@ def run_test_suite():
     if not expyriment._active_exp.is_initialized:
         defaults.initialize_delay = 0
         exp = expyriment.design.Experiment(log_level=0)
-        exp.testsuite = True
+        exp.testsuite = True # FIXME: never used?
         expyriment.control.initialize(exp)
         quit_experiment = True
     else:
