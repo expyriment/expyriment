@@ -105,7 +105,7 @@ The Python package 'pyParallel' is not installed."""
         """
 
         bits = "{3}{2}{1}{0}".format(int(self._parallel.getInAcknowledge()),
-                                     int(self._parallel.getInPaperBusy()),
+                                     int(self._parallel.getInBusy()),
                                      int(self._parallel.getInPaperOut()),
                                      int(self._parallel.getInSelected()))
         byte = int(bits, 2)

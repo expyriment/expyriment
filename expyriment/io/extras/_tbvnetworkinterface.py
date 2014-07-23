@@ -583,6 +583,7 @@ class TbvNetworkInterface(Input, Output):
         time_point = struct.pack('!i', time_point)
         data, rt = self.request_data(
             "tGetMeanOfROIAtTimePoint", roi, time_point)
+
         if data is None:
             return None, rt
         elif data[:14] == "Wrong request!":
