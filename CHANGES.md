@@ -1,7 +1,9 @@
 ========================
 Expyriment Release Notes
 ========================
- 
+
+upcoming version
+-----------------
 
 Version 0.8.0
 -------------
