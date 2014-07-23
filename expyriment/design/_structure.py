@@ -57,7 +57,7 @@ class Experiment(object):
             and data filename
         log_level : int, optional
             the log level of the experiment
-            (set_log_level for more detailed information)
+            (see set_log_level for more detailed information)
 
         Notes
         ------
