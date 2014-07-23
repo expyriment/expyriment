@@ -177,10 +177,10 @@ class NoiseTone(Audio):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     control.start_audiosystem()
     sine = NoiseTone(duration=1000)
     sine.present()

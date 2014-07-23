@@ -142,10 +142,9 @@ The Python package 'Matplotlib' is not installed."""
 if __name__ == "__main__":
     from expyriment import control, design, misc
     control.set_develop_mode(True)
-    defaults.event_logging = 0
     garbor = GaborPatch(size=200, lambda_=10, theta=15,
                 sigma=20, phase=0.25)
-    exp = design.Experiment(background_colour=garbor.background_colour)
+    exp = design.Experiment(background_colour=garbor.background_colour, log_level=0)
     control.initialize(exp)
     garbor.present()
     exp.clock.wait(1000)

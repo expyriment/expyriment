@@ -77,10 +77,10 @@ class Picture(Visual):
 
 if __name__ == "__main__":
     from expyriment import __file__
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     directory = os.path.dirname(__file__)
     picture = Picture(os.path.join(directory, "expyriment_logo.png"))
     picture.present()

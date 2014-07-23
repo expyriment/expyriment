@@ -43,6 +43,7 @@ nosetests.xml
 
 #### Expyriment specific
 test_suite_protocol.xpp
+template_expyriment.py
 data/
 events/
 _build/

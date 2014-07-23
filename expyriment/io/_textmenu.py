@@ -345,11 +345,10 @@ class TextMenu(Input):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
-
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     menu = TextMenu(heading="Expyriment TextMenu",
                     menu_items=["Items 1", "Items 1", "Items 3", "Items 4",
                            "Items 5"],

@@ -104,7 +104,7 @@ def set_develop_mode(onoff, intensive_logging=False):
     onoff : bool
         set develop_mode on (True) or off (False)
     intensive_logging : bool, optional
-        True sets expyriment.io.defaults.event_logging=2
+        True sets all experiments in intensive logging (log_level=2) mode
         (default = False)
 
     """
@@ -136,8 +136,7 @@ def set_develop_mode(onoff, intensive_logging=False):
         else:
             pass  # Nothing to do
 
-    if intensive_logging:
-        expyriment.control.defaults.event_logging = 2
+    control_defaults._intensive_logging = intensive_logging
 
 def set_skip_wait_functions(onoff):
     """Switch on/off skip wait function.

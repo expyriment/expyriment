@@ -196,10 +196,10 @@ class StimulusCloud(Visual):
 
 if __name__ == "__main__":
     from expyriment.stimuli._textline import TextLine
-    from expyriment import control
+    from expyriment import control, design
     control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
+    exp = design.Experiment(log_level=0)
+    control.initialize(exp)
     stimuluscloud = StimulusCloud()
     stims = []
     for i in range(0, 25):

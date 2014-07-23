@@ -259,7 +259,6 @@ def pause():
     else:
         experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
-    return key
 
 
 def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
@@ -372,8 +371,9 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
-        experiment.set_log_level(defaults.event_logging)
 
+    if (defaults._intensive_logging):
+        experiment.set_log_level(loglevel=2)
 
     if is_interactive_mode() and not expyriment.control.defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
