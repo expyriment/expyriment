@@ -2,9 +2,12 @@
 Expyriment Release Notes
 ========================
  
+
 Version 0.8.0
 -------------
 New Features:
+- new method: all visual stimuli have methods for lowlevel Pygame operations
+  get_surface_copy(), set_surface(), get_pixel_array()
 - new stimulus: stimuli.extras.ThermometerDisplay
 - new io device: io.extras.TbvNetworkClient
 - new io device: io.extras.TcpClient
