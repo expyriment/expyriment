@@ -101,7 +101,7 @@ class Experiment(object):
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = 0  # will be set from initialize
+        self._log_level = None  # will be set from initialize
         self._wait_callback_function = None
 
     @property
@@ -455,7 +455,7 @@ class Experiment(object):
           debugging proposes.
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
-        It log files become to big due to certain repetitive events, it is
+        If log files become to big due to certain repetitive events, it is
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
