@@ -53,7 +53,7 @@ class TbvNetworkInterface(Input, Output):
         self._host = host
         self._port = port
         self._is_connected = False
-        self._tbv_version = None
+        self._tbv_plugin_version = None
         self._tcp = TcpClient(host, port, None, False)
         if timeout is None:
             timeout = defaults.tbvnetworkinterface_timeout
@@ -104,10 +104,10 @@ class TbvNetworkInterface(Input, Output):
         return self._is_connected
 
     @property
-    def tbv_version(self):
-        """Getter for tbv_version."""
+    def tbv_plugin_version(self):
+        """Getter for tbv_plugin_version."""
 
-        return self._tbv_version
+        return self._tbv_plugin_version
 
     @property
     def timeout(self):
@@ -133,10 +133,9 @@ class TbvNetworkInterface(Input, Output):
             self._tcp.connect()
             data, rt = self.request_data("Request Socket")
             try:
-                self._tbv_version = (struct.unpack('!i', data[:4])[0],
-                                     struct.unpack('!i', data[4:8])[0],
-                                     struct.unpack('!i', data[8:])[0])
-                print self.tbv_version
+                self._tbv_plugin_version = (struct.unpack('!i', data[:4])[0],
+                                            struct.unpack('!i', data[4:8])[0],
+                                            struct.unpack('!i', data[8:])[0])
             except:
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
@@ -453,7 +452,6 @@ class TbvNetworkInterface(Input, Output):
         time_point = struct.pack('!i', time_point)
         data, rt = self.request_data(
             "tGetValueOfDesignMatrix", pred, time_point)
-        print data, data[8:]
         if data is None:
             return None, rt
         elif data[:14] == "Wrong request!":
