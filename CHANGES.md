@@ -13,6 +13,8 @@ New Features:
 - new io device: io.extras.TcpClient
 - new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
   The stimulus depends on the package "matplotlib".
+- new feature: data_preprocessing methodsallow now to read in only certain
+  variables (see parameter `read_variables`)
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol

@@ -372,8 +372,9 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
-        experiment.set_log_level(defaults.event_logging)
 
+    if experiment.log_level is None:
+        experiment.set_log_level(defaults.event_logging)
 
     if is_interactive_mode() and not expyriment.control.defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
