@@ -251,7 +251,14 @@ class Visual(Stimulus):
 
     @property
     def absolute_position(self):
-        """Getter for absolute_position."""
+        """Getter for absolute_position.
+        
+        Notes
+        -----
+        The absolute position differs for instance from the (relative) position, if the
+        stimulus is plotted ontop of another stimulus, which has not the position (0,0).
+        
+        """
 
         if self._parent:
             return (self._parent.absolute_position[0] + self.position[0],
