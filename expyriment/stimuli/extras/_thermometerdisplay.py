@@ -277,37 +277,51 @@ class ThermometerDisplay(Visual):
         """Create the surface of the stimulus."""
 
         surface = pygame.surface.Surface((self._size[0] +
-                                          self._frame_line_width / 2 + 1,
+                                          self._frame_line_width,
                                           self._size[1] +
-                                          self._frame_line_width / 2 + 1),
+                                          self._frame_line_width),
                                          pygame.SRCALPHA).convert_alpha()
 
         if self._gap_colour is not None:
             surface.fill(self._gap_colour)
 
         parts = []
-        width = self._size[0] - self._frame_line_width
-        height = self._size[1] - self._frame_line_width
-        s_height = height / self._nr_segments - self._gap
+        width = self._size[0] - self._frame_line_width - 2 * self._frame_line_width % 2
+        height = self._size[1] - self._frame_line_width - 2 * self._frame_line_width % 2 + 1
+        s_height = int(height - (self._nr_segments + 1) * self._gap) / self._nr_segments
         for x in range(self._nr_segments):
             if x < self._state / 100.0 * self._nr_segments:
                 colour = self._active_colour
             else:
                 colour = self._inactive_colour
-            s = Rectangle((width - self._gap,
+            s = Rectangle((width - self._gap * 2,
                            s_height), colour=colour,
-                          position=(0, -height / 2 + s_height / 2 +
-                                    x * height / self._nr_segments + self._gap / 2))
+                          position=(0, -height / 2 + s_height / 2 + x * height / self.nr_segments + self._gap))
             parts.append(s)
-        if self._goal is not None:
-            x = self._goal / 100.0 * self._nr_segments
-            g = Rectangle((width - self._gap, s_height), colour=self._goal_colour,
-                          line_width=self._gap,
-                          position=(0, -height / 2 + s_height / 2 +
-                                    x * height / self._nr_segments + self._gap / 2))
-            parts.append(g)
         parts.append(Rectangle(self._size, colour=self._frame_colour,
-                               line_width=self._frame_line_width, position=self._position))
+                               line_width=self._frame_line_width,
+                               position=self._position))
+        parts.append(Rectangle((width - self._gap, height - self._gap * 2), colour=self._gap_colour,
+                               line_width=self._gap,
+                               position=self._position))
+
+
+        if self._goal is not None:
+            x = int(round(self._goal / 100.0 * self._nr_segments)) - 1
+            current_y_pos = -height / 2 + s_height / 2 + x * height / self._nr_segments + self._gap
+            above_y_pos = -height / 2 + s_height / 2 + (x + 1) * height / self._nr_segments + self._gap
+            g1 = Rectangle((self._frame_line_width * 1.25, self._frame_line_width * 1.25),
+                           colour=self._goal_colour,
+                           position=(-self._size[0] / 2 - self._frame_line_width / 2,
+                                     (current_y_pos + above_y_pos) / 2))
+            g2 = Rectangle((self._frame_line_width * 1.25, self._frame_line_width * 1.25),
+                           colour=self._goal_colour,
+                           position=(self._size[0] / 2 + self._frame_line_width / 2,
+                                     (current_y_pos + above_y_pos) / 2))
+            g1.rotate(45)
+            g2.rotate(45)
+            parts.append(g1)
+            parts.append(g2)
 
         for stim in parts:
             stim.rect = pygame.Rect((0, 0), stim.surface_size)
@@ -323,6 +337,8 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     defaults.event_logging = 0
     exp = control.initialize()
-    thermometer_display = ThermometerDisplay(50)
+    thermometer_display = ThermometerDisplay(50, 50, gap=3)
     thermometer_display.present()
-    exp.clock.wait(1000)
+    #exp.clock.wait(1000)
+    import expyriment.misc
+    exp.keyboard.wait(expyriment.misc.constants.K_SPACE)
