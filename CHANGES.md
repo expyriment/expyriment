@@ -3,8 +3,8 @@ Expyriment Release Notes
 ========================
  
 
-Version 0.8.0
--------------
+upcoming (Version 0.8.0)
+------------------------
 New Features:
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
@@ -20,7 +20,7 @@ New Features:
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
 - new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
-- new mouse function: experiments can be quitted by mouse events (triple click).
+- new mouse function: experiments can be quited by mouse events (triple click).
   See documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
 - new method visual stimuli.replace
@@ -33,21 +33,21 @@ New Features:
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
 - new feature: too long text lines will be trimmed automatically if the 
-  max_width parameter has been defiend
+  max_width parameter has been defined
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
 
 Changed:
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
-  (ATTENTION: Byte order in the output other status lines has changed!)
+  (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired 
-- bug in command line inteface: order of argument is now irrelevant
+- bug in command line interface: order of argument is now irrelevant
 - keypad bug in TextInput
-- unicode bug in textmenu
+- unicode bug in TextMenu
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
