@@ -23,16 +23,18 @@ from expyriment.stimuli._visual import Visual
 class ThermometerDisplay(Visual):
     """A class implementing a thermometer display."""
 
-    def __init__(self, state, size=None, nr_segments=None, gap=None,
-                 frame_line_width=None, active_colour=None,
-                 inactive_colour=None, frame_colour=None,
-                 background_colour=None, position=None):
+    def __init__(self, state, goal=None, size=None, nr_segments=None,
+                 gap=None, frame_line_width=None, active_colour=None,
+                 inactive_colour=None, frame_colour=None, goal_colour=None,
+                 gap_colour=None, position=None):
         """Initializing a thermometer display.
 
         Parameters:
         -----------
         state : int
             The state of the thermometer in percent.
+        goal : int, optional
+            The goal state indication in percent.
         size : (int, int), optional
             The size of the thermometer display.
         nr_segments : int, optional
@@ -47,13 +49,19 @@ class ThermometerDisplay(Visual):
             The colour of the inactive segments.
         frame_colour : (int, int, int), optional
             The colour of the frame around the thermometer display.
-        background_colour : (int, int, int), optional
-            The background colour of the thermometer stimulus.
+        goal_colour : (int, int, int), optional
+            The colour of the goal indicator.
+        gap_colour : (int, int, int), optional
+            The gap colour of the thermometer stimulus.
         position : (int, int), optional
             The position of the thermometer display.
         """
 
         self._state = state
+        if goal is not None:
+            self._goal = goal
+        else:
+            self._goal = defaults.thermometerdisplay_goal
         if size is not None:
             self._size = size
         else:
@@ -82,10 +90,14 @@ class ThermometerDisplay(Visual):
             self._frame_colour = frame_colour
         else:
             self._frame_colour = defaults.thermometerdisplay_frame_colour
-        if background_colour is not None:
-            self._background_colour = background_colour
+        if goal_colour is not None:
+            self._goal_colour = goal_colour
         else:
-            self._background_colour = defaults.thermometerdisplay_background_colour
+            self._goal_colour = defaults.thermometerdisplay_goal_colour
+        if gap_colour is not None:
+            self._gap_colour = gap_colour
+        else:
+            self._gap_colour = defaults.thermometerdisplay_gap_colour
         if position is not None:
             self._position = position
         else:
@@ -109,6 +121,22 @@ class ThermometerDisplay(Visual):
                 ThermometerDisplay._getter_exception_message.format("state"))
         else:
             self._state = value
+
+
+    @property
+    def goal(self):
+        """Getter for goal."""
+        return self._goal
+
+    @goal.setter
+    def goal(self, value):
+        """Setter for goal."""
+
+        if self.has_surface:
+            raise AttributeError(
+                ThermometerDisplay._getter_exception_message.format("goal"))
+        else:
+            self._goal = value
 
     @property
     def size(self):
@@ -216,19 +244,34 @@ class ThermometerDisplay(Visual):
             self._frame_colour = value
 
     @property
-    def background_colour(self):
-        """Getter for background_colour."""
-        return self._background_colour
+    def goal_colour(self):
+        """Getter for goal_colour."""
+        return self._goal_colour
 
-    @background_colour.setter
-    def background_colour(self, value):
-        """Setter for active_background."""
+    @goal_colour.setter
+    def goal_colour(self, value):
+        """Setter for goal_colour."""
 
         if self.has_surface:
             raise AttributeError(
-                ThermometerDisplay._getter_exception_message.format("background_colour"))
+                ThermometerDisplay._getter_exception_message.format("goal_colour"))
         else:
-            self._background_colour = value
+            self._goal_colour = value
+
+    @property
+    def gap_colour(self):
+        """Getter for gap_colour."""
+        return self._gap_colour
+
+    @gap_colour.setter
+    def gap_colour(self, value):
+        """Setter for gap_colour."""
+
+        if self.has_surface:
+            raise AttributeError(
+                ThermometerDisplay._getter_exception_message.format("gap_colour"))
+        else:
+            self._gap_colour = value
 
     def _create_surface(self):
         """Create the surface of the stimulus."""
@@ -239,26 +282,33 @@ class ThermometerDisplay(Visual):
                                           self._frame_line_width / 2 + 1),
                                          pygame.SRCALPHA).convert_alpha()
 
-        if self._background_colour is not None:
-            surface.fill(self._background_colour)
+        if self._gap_colour is not None:
+            surface.fill(self._gap_colour)
 
         parts = []
         width = self._size[0] - self._frame_line_width
         height = self._size[1] - self._frame_line_width
+        s_height = height / self._nr_segments - self._gap
         for x in range(self._nr_segments):
             if x < self._state / 100.0 * self._nr_segments:
                 colour = self._active_colour
             else:
                 colour = self._inactive_colour
-
-            s_height = height / self._nr_segments - self._gap
             s = Rectangle((width - self._gap,
                            s_height), colour=colour,
                           position=(0, -height / 2 + s_height / 2 +
                                     x * height / self._nr_segments + self._gap / 2))
             parts.append(s)
+        if self._goal is not None:
+            x = self._goal / 100.0 * self._nr_segments
+            g = Rectangle((width - self._gap, s_height), colour=self._goal_colour,
+                          line_width=self._gap,
+                          position=(0, -height / 2 + s_height / 2 +
+                                    x * height / self._nr_segments + self._gap / 2))
+            parts.append(g)
         parts.append(Rectangle(self._size, colour=self._frame_colour,
                                line_width=self._frame_line_width, position=self._position))
+
         for stim in parts:
             stim.rect = pygame.Rect((0, 0), stim.surface_size)
             surface_size = surface.get_size()
