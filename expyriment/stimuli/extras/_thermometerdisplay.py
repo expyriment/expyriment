@@ -358,4 +358,5 @@ if __name__ == "__main__":
     exp = control.initialize()
     thermometer_display = ThermometerDisplay(50, 50)
     thermometer_display.present()
-    exp.clock.wait(1000)
+    #exp.clock.wait(1000)
+    exp.keyboard.wait()
