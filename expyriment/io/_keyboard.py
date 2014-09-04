@@ -247,7 +247,11 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                done = True
+                found_key = rtn_callback
+                rt = int((get_time() - start) * 1000)
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
@@ -306,8 +310,14 @@ class Keyboard(Input):
             char = [char]
         pygame.event.pump()
         done = False
+
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                    done = True
+                    rt = int((get_time() - start) * 1000)
+                    found_char = rtn_callback
+
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True

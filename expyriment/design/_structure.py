@@ -981,13 +981,13 @@ type".format(permutation_type))
     def _execute_wait_callback(self):
         """Execute wait function.
 
-        Returns True if wait function is defined and executed.
+        Returns the return value of the callback function or
+        False if callback is not defines.
 
         """
 
         if self._wait_callback_function is not None:
-            self._wait_callback_function()
-            return True
+            return self._wait_callback_function()
         else:
             return False
 

@@ -118,7 +118,9 @@ class Clock(object) :
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
-                expyriment._active_exp._execute_wait_callback()
+                rtn_callback = expyriment._active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                    return rtn_callback
         else:
             looptime = 200
             if (waiting_time > looptime):
@@ -142,7 +144,7 @@ class Clock(object) :
 
         """
 
-        self.wait(time_sec * 1000, function)
+        return self.wait(time_sec * 1000, function)
 
     def wait_minutes(self, time_minutes, function=None):
         """Wait for a certain amount of minutes.
@@ -160,4 +162,4 @@ class Clock(object) :
 
         """
 
-        self.wait_seconds(time_minutes * 60, function)
+        return self.wait_seconds(time_minutes * 60, function)

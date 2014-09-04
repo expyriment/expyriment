@@ -444,7 +444,11 @@ class Mouse(Input):
         if type(buttons) is not list:
             buttons = [buttons]
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                btn_id = rtn_callback
+                rt = int((get_time() - start) * 1000)
+                break
             if wait_motion:
                 motion_occured = old_pos != pygame.mouse.get_pos()
             if wait_button:

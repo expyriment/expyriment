@@ -270,6 +270,12 @@ def unregister_wait_callback_function(exp=None):
     else:
         expyriment._active_exp.unregister_wait_callback_function()
 
+class CallbackQuitEvent():
+    def __init__(self, data=None):
+        """Return a CallbackQuitEvent object by your callback function, to force a quitting of
+         the wait or event loop function """
+        self.data = data
+
 
 def is_ipython_running():
     """Return True if IPython is running."""

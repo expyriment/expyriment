@@ -152,7 +152,11 @@ class StreamingButtonBox(Input, Output):
         if not no_clear_buffer:
             self.clear()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                found = rtn_callback
+                rt = int((get_time() - start) * 1000)
+                break
             if duration is not None:
                 if int((get_time() - start) * 1000) > duration:
                     return None, None

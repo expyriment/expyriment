@@ -391,7 +391,10 @@ The Python package 'pySerial' is not installed."""
                     repr(self._serial.port)), 2)
 
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                rtn_string = rtn_callback
+                break
             byte = self.poll()
             if byte:
                 byte = chr(byte)

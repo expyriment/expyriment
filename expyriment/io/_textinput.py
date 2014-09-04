@@ -305,7 +305,10 @@ class TextInput(Input):
         """Get a key press."""
 
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback
+
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
                 return event.key, event.unicode
