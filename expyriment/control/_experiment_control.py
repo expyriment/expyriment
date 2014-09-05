@@ -268,7 +268,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     Parameters
     ----------
-    goodbye_text  : str, obligatory
+    goodbye_text  : str, optional
         text to present on the screen when quitting
     goodbye_delay : int, optional
         period to show the goodbye_text
