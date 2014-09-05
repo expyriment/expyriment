@@ -1385,7 +1385,7 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = deepcopy(str2unicode(row))
+                    factor_names = map(lambda x: str2unicode(x), row)
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
