@@ -541,7 +541,11 @@ class Mouse(Input):
 
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                         duration=duration, wait_for_buttonup=False)
-        return rtn[2], rtn[3]
+
+        if isinstance(rtn[0], expyriment.control.CallbackQuitEvent):
+            return rtn[0], rtn[3]
+        else:
+            return rtn[2], rtn[3]
 
 
     def show_cursor(self, track_button_events=True, track_motion_events=False):
