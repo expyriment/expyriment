@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Example of to usage of callback_functions in Expyriment
+Example of the usage of callback_functions in Expyriment
 """
 
 from expyriment import control, design, misc, io, stimuli
