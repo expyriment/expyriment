@@ -49,6 +49,7 @@ def _stimulus_timing(exp):
 The left picture shows a good result, the right picture shows a bad result.
 
 [Press RETURN to continue]"""
+        # TODO test very slow quit
         text = stimuli.TextScreen("Stimulus presentation test (1)", info)
         y = []
         for x in [16, 32, 48, 64]:
@@ -387,7 +388,9 @@ def run_test_suite():
     if not expyriment._active_exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
-        exp = expyriment.control.initialize()
+        exp = expyriment.design.Experiment()
+        exp.testsuite = True
+        expyriment.control.initialize(exp)
         quit_experiment = True
     else:
         exp = expyriment._active_exp

@@ -43,6 +43,7 @@ textbox_text_justification = 1
 textbox_text_colour = None  # 'None' is experiment_text_colour
 textbox_background_colour = None  # 'None' is transparent
 textbox_position = (0, 0)
+textbox_do_not_trim_words = False
 
 # TextScreen
 textscreen_heading_font = None  # 'None' is experiment_heading_font
@@ -121,7 +122,7 @@ tone_amplitude = 0.5
 
 
 # Create tmp for compressed stimuli folder
-tempdir = _tempfile.gettempdir() + "/expyriment"
+tempdir = _tempfile.gettempdir() + "/expyriment_tmp"
 try:
     _os.mkdir(tempdir)
 except:

@@ -27,7 +27,8 @@ from expyriment import design, stimuli, misc
 from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
-from _miscellaneous import _set_stdout_logging, is_idle_running
+from _miscellaneous import _set_stdout_logging, is_idle_running, \
+                is_interactive_mode
 from expyriment.misc import unicode2str, constants
 
 
@@ -267,7 +268,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     Parameters
     ----------
-    goodbye_text  : str, obligatory
+    goodbye_text  : str, optional
         text to present on the screen when quitting
     goodbye_delay : int, optional
         period to show the goodbye_text
@@ -371,9 +372,25 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
+
+    if experiment.log_level is None:
+        experiment.set_log_level(defaults.event_logging)
+
+    if is_interactive_mode() and not expyriment.control.defaults.window_mode \
+        and not hasattr(experiment, "testsuite"):
+        print """
+Python is running in an interactive shell but Expyriment wants to initialize a
+fullscreen."""
+        quest = "Do you want to switch to windows mode?"
+        ans = raw_input(quest + " (Y/n) ").strip().lower()
+        if ans=="" or ans=="y" or ans=="yes":
+            print "Switched to windows mode"
+            expyriment.control.defaults.window_mode = True
+
     stdout_logging = defaults.stdout_logging
     expyriment._active_exp = experiment
-    experiment._log_level = 0  # switch off for the first screens
+    old_logging = experiment.log_level
+    experiment.set_log_level(0)  # switch off for the first screens
 
     _keyboard.quit_key = defaults.quit_key
     _keyboard.pause_key = defaults.pause_key
@@ -410,7 +427,7 @@ def initialize(experiment=None):
     experiment._data = None
     experiment._subject = None
     experiment._is_initialized = True  # required before EventFile
-    if defaults.event_logging > 0:
+    if old_logging> 0:
         experiment._events = EventFile(
             additional_suffix=experiment.filename_suffix, time_stamp=True)
         if stdout_logging:
@@ -434,8 +451,11 @@ def initialize(experiment=None):
     text.plot(canvas)
     hash_ = expyriment.get_experiment_secure_hash()
     if hash_ is not None:
-        text2 = stimuli.TextLine(
-            "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_),
+        txt = "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_)
+        if len(expyriment._secure_hash.module_hashes_as_string())>0:
+            txt += ", {0}".format(
+                        expyriment._secure_hash.module_hashes_as_string())
+        text2 = stimuli.TextLine(txt,
             text_size=14,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),
@@ -482,6 +502,6 @@ def initialize(experiment=None):
     stimuli.TextLine("Preparing experiment...", text_size=24,
                      text_colour=misc.constants.C_EXPYRIMENT_PURPLE).present()
     experiment._screen.colour = experiment.background_colour
-    experiment.set_log_level(defaults.event_logging)
+    experiment.set_log_level(old_logging)
     stimuli._stimulus.Stimulus._id_counter = 0
     return experiment

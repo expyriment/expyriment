@@ -278,10 +278,17 @@ expyriment.control.stop_audiosystem() before preloading the video."
         frame : int, optional
             number of the frame to stop after
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         while self.is_playing:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback
+
             old_frame = self._frame
             self.update()
             new_frame = self._frame
@@ -296,8 +303,8 @@ expyriment.control.stop_audiosystem() before preloading the video."
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and (
-                   event.key == expyriment.control.defaults.quit_key or
-                   event.key == expyriment.control.defaults.pause_key):
+                   event.key == Keyboard.get_quit_key() or
+                   event.key == Keyboard.get_pause_key()):
                     self.stop()
                     Keyboard.process_control_keys(event)
                     self.play()

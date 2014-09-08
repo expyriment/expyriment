@@ -101,7 +101,7 @@ class Experiment(object):
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = 0  # will be set from initialize
+        self._log_level = None  # will be set from initialize
         self._wait_callback_function = None
 
     @property
@@ -312,16 +312,23 @@ class Experiment(object):
     def add_bws_factor(self, factor_name, conditions):
         """Add a between subject factor.
 
-        The defined between subject factor conditions will be permuted across
-        the subjects. Factors that are added first are treated as
-        hierarchically higher factors while permutation.
-
         Parameters
         ----------
         factor_name : str
             the name of the between subject factor
         conditions : list
             possible conditions of the between subject factor
+
+        Notes
+        -----
+        The defined between subject factor conditions will be permuted across
+        the subjects when 'using get_permuted_bws_factor_condition'.
+        Factors that are added first are treated as hierarchically higher
+        factors while permutation.
+
+        See Also
+        --------
+        get_permuted_bws_factor_condition
 
         """
 
@@ -358,6 +365,10 @@ class Experiment(object):
         -------
         cond : str
             condition for the current subject
+
+        Notes
+        -----
+        see add_bws_factor
 
         """
 
@@ -444,7 +455,7 @@ class Experiment(object):
           debugging proposes.
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
-        It log files become to big due to certain repetitive events, it is
+        If log files become to big due to certain repetitive events, it is
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
@@ -923,14 +934,15 @@ type".format(permutation_type))
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
 
-        Notes
-        -----
-        CAUTION! If wait callback function takes longer than 1 ms to process,
-        Expyriment timing will be affected!
-
         The registered wait callback function will be repetitively executed in
-        all Expyriment wait and event loops that wait for an external input.
-        That is, they are executed by the following functions (at least once!):
+        all Expyriment wait and event loops that wait for an external input (see below).
+
+        If the callback function returns a control.CallbackQuitEvent the calling wait
+        or event loop will be force to quit. The CallbackQuitEvent object will be then
+        return (as first return value in the case of multiple return values).
+
+        The following functions will call the currently registered callback function
+        (at least once!):
 
         - control.wait_end_audiosystem
         - misc.clock.wait
@@ -954,6 +966,15 @@ type".format(permutation_type))
         function : function
             wait function (function)
 
+        Notes
+        -----
+        CAUTION! If wait callback function takes longer than 1 ms to process,
+        Expyriment timing will be affected!
+
+        See Also
+        --------
+        control.CallbackQuitEvent
+
         """
 
         if type(function) == types.FunctionType:
@@ -970,15 +991,23 @@ type".format(permutation_type))
     def _execute_wait_callback(self):
         """Execute wait function.
 
-        Returns True if wait function is defined and executed.
+        Returns the return value of the callback function or
+        False if callback is not defines.
 
         """
 
         if self._wait_callback_function is not None:
-            self._wait_callback_function()
-            return True
+            return self._wait_callback_function()
         else:
             return False
+
+    @property
+    def is_callback_registered(self):
+        """This property indicates whether a callback function has been
+        registered or not.
+
+        """
+        return (self._wait_callback_function is not None)
 
 
 class Block(object):
@@ -1374,7 +1403,7 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = deepcopy(str2unicode(row))
+                    factor_names = map(lambda x: str2unicode(x), row)
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):

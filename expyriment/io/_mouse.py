@@ -20,7 +20,6 @@ from expyriment.misc._timer import get_time
 from _keyboard import Keyboard
 from _input_output  import Input
 
-
 class Mouse(Input):
     """A class implementing a mouse input.
 
@@ -29,16 +28,15 @@ class Mouse(Input):
 
     """
 
-    def __init__(self, show_cursor=True, track_button_events=None,
-                 track_motion_events=None):
-        """Initialize a mouse input.
+    #static class properties for quit_events
+    quit_rect_location = None
+    quit_click_rect_size = (30, 30)
+    _quit_action_events = []
 
-        Notes
-        -----
-        It is strongly suggest to avoid tracking of motions events,
-        (track_motion_events=True), because it quickly causes an overflow in
-        the Pygame event queue and you might consequently loose important
-        events.
+
+    def __init__(self, show_cursor=True, track_button_events=None,
+                 track_motion_events=None, quit_click_rect_size=None):
+        """Initialize a mouse input.
 
         Parameters
         ----------
@@ -49,21 +47,149 @@ class Mouse(Input):
         track_motion_events : bool, optional
             track motion events via Pygame queue (default = False)
 
+        Notes
+        -----
+        (a) It is strongly suggest to avoid tracking of motions events,
+        (track_motion_events=True), because it quickly causes an overflow in
+        the Pygame event queue and you might consequently loose important
+        events.
+
+        (b) See `process_quit_event` for the forced quitting of experiments
+        via mouse events.
+
         """
 
         Input.__init__(self)
+        if expyriment.control.is_android_running():
+            Mouse.quit_rect_location = 1
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
         if track_button_events is None:
             track_button_events = defaults.mouse_track_button_events
         if track_motion_events is None:
             track_motion_events = defaults.mouse_track_motion_events
-
         if show_cursor:
             self.show_cursor(track_button_events, track_motion_events)
         else:
             self.track_button_events = track_button_events
             self.track_motion_events = track_motion_events
+
+    @staticmethod
+    def process_quit_event(click_position=None):
+        """Check if mouse exit action has been performed
+
+        If Mouse.quit_rect_location is defined (i.e. 0, 1, 2 or 3), clicking
+        quickly three times (i.e., within 1 second) in one of the corners of
+        the screen forces the experiment to quit.
+
+        The function is called automatically by all mouse get event and wait
+        methods (similar to Keyboard.process_control_keys).  If no mouse
+        functions are called by your program, this function can be polled to
+        ensure quitting experiment by mouse.
+
+        Mouse quit events are especially useful for experiments on devices
+        without hardware keyboard, such as tablet PCs or smartphones.
+
+        Parameters
+        ----------
+        click_position : tuple of int (x,y), optional
+            clicked location to be processed. If not defined, the Pygame event
+            queue will be checked for mouse down events and the current
+            position is taken
+
+        Returns
+        -------
+        out : bool, optional
+            True if exit action has been performed
+            False otherwise
+
+        Notes
+        -----
+        To switch on or off the detection of mouse quit events, please use the
+        static class property `quit_rect_location' (see below).
+
+        The detection of mouse quit events is activated by default under
+        Android.
+
+        Static class properties
+        ~~~~~~~~~~~~~~~~~~~~~~~
+
+        `Mouse.quit_rect_location` = int, optional
+            Location of the quit click action field or None.
+
+            0 = upper left corner,  1 = upper right corner   (0) (1)
+            2 = lower right corner, 3 = lower left corner    (3) (2)
+            otherwise the detection of mouse quit events is deactivated.
+
+            Default value under Android is 1, otherwise  None
+
+        `Mouse.quit_click_rect_size` : tuple (int, int)
+            size of the field (rect) that detects the quit action by
+            triple clicking in one corner of the screen. (default = (30, 30))
+
+        Changing the static class properties affects always all mouse
+        instances.
+
+        """
+
+        if Mouse.quit_rect_location not in [0,1,2,3] or \
+            expyriment._active_exp is None:
+            return False
+
+        if click_position is None:
+            # check Pygame queu
+            pos = None
+            pygame.event.pump()
+            screen_size = expyriment._active_exp.screen.surface.get_size()
+            for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
+                if event.button > 0:
+                    pos = pygame.mouse.get_pos()
+                    pos = (pos[0] - screen_size[0] / 2,
+                          -pos[1] + screen_size[1] / 2)
+                    break
+            if pos is None:
+                return False
+            else:
+                return Mouse.process_quit_event(click_position=pos)
+
+        # determine threshold x & y
+        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
+            threshold_x = -expyriment._active_exp.screen.center_x + \
+                    Mouse.quit_click_rect_size[0]
+        else:# right
+            threshold_x = expyriment._active_exp.screen.center_x - \
+                    Mouse.quit_click_rect_size[0]
+        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 1: # upper
+            threshold_y = expyriment._active_exp.screen.center_y - \
+                    Mouse.quit_click_rect_size[1]
+        else:# lower
+            threshold_y = -expyriment._active_exp.screen.center_y + \
+                    Mouse.quit_click_rect_size[1]
+        # check
+        if (Mouse.quit_rect_location == 0 and \
+                click_position[0] < threshold_x and\
+                click_position[1] > threshold_y) \
+           or (Mouse.quit_rect_location == 1 and \
+                click_position[0] > threshold_x and \
+                click_position[1] > threshold_y) \
+           or (Mouse.quit_rect_location == 2 and \
+                click_position[0] > threshold_x and \
+                click_position[1] < threshold_y) \
+           or (Mouse.quit_rect_location == 3 and \
+                click_position[0] < threshold_x and \
+                click_position[1] < threshold_y):
+
+            Mouse._quit_action_events.append(get_time())
+            if len(Mouse._quit_action_events)>=3:
+                diff = get_time()-Mouse._quit_action_events.pop(0)
+                if (diff < 1):
+                    # simulate quit key
+                    simulated_key = pygame.event.Event(pygame.KEYDOWN,\
+                                {'key': Keyboard.get_quit_key()})
+                    return Keyboard.process_control_keys(
+                        key_event=simulated_key)
+        return False
+
 
     @property
     def track_button_events(self):
@@ -133,49 +259,66 @@ class Mouse(Input):
         pygame.mouse.set_visible(visible)
         return visible
 
-    def get_last_button_down_event(self):
+    def get_last_button_down_event(self, process_quit_event=True):
         """Get the last button down event.
+        All earlier button down events will be removed from the queue.
 
+        Parameters
+        ----------
+        process_quit_event : boolean, optional
+            if False, the current location will not be processed for mouse
+                quitting events in the case that a button down event has been
+                found (default = True).
+            
         Returns
         -------
         btn_id : int
-            button number (0,1,2) or 3 for wheel up or 4 for wheel down
+            button number (0,1,2) or 3 for wheel up or 4 for wheel down,
+            if quit screen mouse action has been performed, the method
+            returns -1
 
         """
 
         rtn = None
-        pygame.event.clear(pygame.MOUSEBUTTONUP)
-        pygame.event.clear(pygame.MOUSEMOTION)
         for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
             if event.button > 0:
                 rtn = event.button - 1
+        if rtn==0:
+            if Mouse.process_quit_event(self.position):
+                return -1
         return rtn
 
     def get_last_button_up_event(self):
         """Get the last button up event.
+        All earlier button up events will be removed from the queue.
+
 
         Returns
         -------
         btn_id : int
             button number (0,1,2)
+            if quit screen mouse action has been performed, the method
+            returns -1
 
         """
 
         rtn = None
-        pygame.event.clear(pygame.MOUSEBUTTONDOWN)
-        pygame.event.clear(pygame.MOUSEMOTION)
         for event in pygame.event.get(pygame.MOUSEBUTTONUP):
             if event.button > 0:
                 rtn = event.button - 1
         return rtn
 
     def check_button_pressed(self, button_number):
-        """Return (True/False) if a specific button is currently pressed.
+        """Return False or button id if a specific button is currently pressed.
 
+        Parameters
+        ----------
+        button_number : int
+            the button number (0,1,2) to be checked
+            
         Returns
         -------
-        btn_id : int
-            button number (0,1,2)
+        is_pressed: boolean
 
         """
 
@@ -292,8 +435,14 @@ class Mouse(Input):
         - 3       for wheel up or
         - 4       for wheel down (wheel works only for keydown events).
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None, None, None
         start = get_time()
         self.clear()
         old_pos = pygame.mouse.get_pos()
@@ -305,7 +454,11 @@ class Mouse(Input):
         if type(buttons) is not list:
             buttons = [buttons]
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                btn_id = rtn_callback
+                rt = int((get_time() - start) * 1000)
+                break
             if wait_motion:
                 motion_occured = old_pos != pygame.mouse.get_pos()
             if wait_button:
@@ -313,11 +466,14 @@ class Mouse(Input):
                     btn_id = self.get_last_button_up_event()
                 else:
                     btn_id = self.get_last_button_down_event()
-            if btn_id in buttons or motion_occured:
+            if btn_id ==-1:
+                btn_id = None
+                break
+            elif btn_id in buttons or motion_occured:
                 rt = int((get_time() - start) * 1000)
                 break
             elif Keyboard.process_control_keys() or (duration is not None and \
-                int((get_time() - start) * 1000) >= duration):
+                    int((get_time() - start) * 1000) >= duration):
                 break
 
         position_in_expy_coordinates = self.position

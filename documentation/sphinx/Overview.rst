@@ -88,11 +88,10 @@ Publications & Citation
 If you have used Expyriment in your work, please cite the follwing 
 publication:
     
-Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive 
-and neuroscientific experiments. *Behavior Research Methods.*  
+Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive 
+and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.  
 `doi:10.3758/s13428-013-0390-6 <http://dx.doi.org/10.3758/s13428-013-0390-6>`_
 
-.. FIXME update BRM publication details
 
 Development repository
 ----------------------

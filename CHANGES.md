@@ -2,6 +2,55 @@
 Expyriment Release Notes
 ========================
  
+
+upcoming (Version 0.8.0)
+------------------------
+New Features:
+- new function: quiting wait or event loop by callback_function, if this function
+  returs an instance of the new class control.CallbackQuitEvent
+- new method: all visual stimuli have methods for lowlevel Pygame operations
+  get_surface_copy(), set_surface(), get_pixel_array()
+- new stimulus: stimuli.extras.ThermometerDisplay
+- new io device: io.extras.TbvNetworkClient
+- new io device: io.extras.TcpClient
+- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
+  The stimulus depends on the package "matplotlib".
+- new feature: data_preprocessing methodsallow now to read in only certain
+  variables (see parameter `read_variables`)
+- new feature: Expyriment asks in interactive mode if initializing a fullscreen
+- new method: stimulus.visual.scale_to_fullscreen
+- new class: design.extras.StimulationProtocol
+- new method in data_preprocessing: save to to R data frame
+- new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
+- new mouse function: experiments can be quited by mouse events (triple click).
+  See documentation of property "mouse_quit_event". This function is only switched
+  on per default under Android
+- new method visual stimuli.replace
+- new method control.is_android_running
+- several new options for command line interface
+- get_module_hash_dictionary: dictionary secure hashes from all modules
+  imported from local folder
+- new constant: ALL_KEYPAD_DIGITS
+- new helper functions in misc and control
+- new feature: control.set_skip_wait_functions
+- io.Keyboard has static methods to set and get the quit_key and pause_key
+- new feature: too long text lines will be trimmed automatically if the 
+  max_width parameter has been defined
+- new feature: too long words in text boxes will be trimmed automatically, 
+  this function can be switch off
+
+Changed:
+- ParallelPort: Polling will now return 4 bits, including also the status of
+  the Busy status line
+  (ATTENTION: Byte order in the output of other status lines has changed!)
+- changes at Simon example
+
+Fixed:
+- bug in io.TouchScreenButton crash if duration expired 
+- bug in command line interface: order of argument is now irrelevant
+- keypad bug in TextInput
+- unicode bug in TextMenu
+
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:

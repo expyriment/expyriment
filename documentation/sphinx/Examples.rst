@@ -41,7 +41,7 @@ and the `Expyriment Android Runtime`_.
 
 Really short example
 --------------------
-Expyriment is efficient!. See here a very short example of an functioning 
+Expyriment is efficient! See here a very short example of an functioning 
 experiment in less than 20 lines of pure code.
 
 .. literalinclude:: ../../examples/really_short_exp.py

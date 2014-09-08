@@ -21,6 +21,7 @@ except ImportError:
     locale = None  # Not available on Android
 import glob
 import pygame
+import expyriment
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
@@ -102,7 +103,6 @@ def str2unicode(s, fse=False):
 
 
 def unicode2str(u, fse=False):
-
     """Convert unicode to str.
 
     Converts an input str or unicode object to a str object without throwing
@@ -147,6 +147,23 @@ def unicode2str(u, fse=False):
             s = u.encode(u'uff-8', u'replace')
     return s
 
+def numpad_digit_code2ascii(keycode):
+    """Convert numpad keycode to the ascii code of that particular number
+
+    If it is not a keypad digit code, no convertion takes place and the
+    same code will be returned.
+
+    Returns
+    -------
+    ascii_code : int
+
+    """
+
+    from expyriment.misc import constants
+    if keycode in constants.K_ALL_KEYPAD_DIGITS:
+        return keycode - (constants.K_KP1 - constants.K_1)
+    else:
+        return keycode
 
 def add_fonts(folder):
     """Add fonts to Expyriment.
@@ -236,3 +253,21 @@ def find_font(font):
             return font_file
         else:
             return ""
+
+def get_monitor_resolution():
+    """Returns the monitor resolution
+
+    Returns
+    -------
+    resolution: (int, int)
+        monitor resolution, screen resolution
+
+    """
+
+    if expyriment._active_exp.is_initialized:
+        return expyriment._active_exp.screen.monitor_resolution
+    else:
+        pygame.display.init()
+        return (pygame.display.Info().current_w,
+                pygame.display.Info().current_h)
+

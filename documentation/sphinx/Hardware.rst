@@ -175,8 +175,8 @@ Cedrus response devices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Expyriment comes with a high-level wrapper for Cedrus response devices 
-expyriment.io.extras.CedrusResponseDevice_, which allows you to easily use all 
-Cedrus response devices.
+:doc:`expyriment.io.extras.CedrusResponseDevice`, which allows you to easily 
+use all Cedrus response devices.
 
 To use these devices, however, the third-party Python package pyxid_ needs to 
 be installed on the system.
@@ -189,4 +189,3 @@ be installed on the system.
 .. _pyxid: https://github.com/cedrus-opensource/pyxid
 .. _Download: https://github.com/cedrus-opensource/pyxid/zipball/master
 .. _here: http://docs.python.org/install/index.html#the-new-standard-distutils 
-.. FIXME: io.extas.CedrusResponseDevice is not in docu yet

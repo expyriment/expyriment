@@ -359,6 +359,8 @@ class DataFile(OutputFile):
 
         self.write_comment("e sha1: {0}".format(
                                     expyriment.get_experiment_secure_hash()))
+        self.write_comment("e modules: {0}".format(
+                            expyriment._secure_hash.module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
         self.write_line(self.variable_names)
@@ -377,10 +379,11 @@ class DataFile(OutputFile):
             data = "None"
         if isinstance(data, types.UnicodeType):
             return unicode2str(data)
-        elif type(data) in [types.StringType, types.IntType,
-                            types.LongType, types.FloatType,
-                            types.BooleanType]:
+        elif isinstance(data, types.StringType):
             return str(data)
+        elif type(data) in [types.IntType, types.LongType, types.FloatType,
+                            types.BooleanType]:
+            return repr(data)
         else:
             message = "Data to be added must to be " + \
                 "booleans, strings, numerics (i.e. floats or integers) " + \
@@ -630,6 +633,8 @@ class EventFile(OutputFile):
 
         self.write_comment("sha1: {0}".format(
                                     expyriment.get_experiment_secure_hash()))
+        self.write_comment("modules: {0}".format(
+                            expyriment._secure_hash.module_hashes_as_string()))
         self.write_comment("display: size={0}, window_mode={1}, opengl={2}"
                            .format(display, window_mode, opengl))
         self.write_comment("os: {0}".format(uname()))

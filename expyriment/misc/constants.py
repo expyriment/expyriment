@@ -153,6 +153,7 @@ K_POWER = _pygame.K_POWER
 K_EURO = _pygame.K_EURO
 K_ALL_LETTERS = range(K_a, K_z + 1)
 K_ALL_DIGITS = range(K_0, K_9 + 1)
+K_ALL_KEYPAD_DIGITS = range(K_KP0, K_KP9 + 1)
 
 # Colours
 C_BLACK = (0, 0, 0)

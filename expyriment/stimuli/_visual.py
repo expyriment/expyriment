@@ -247,13 +247,18 @@ class Visual(Stimulus):
 
         """
 
-        self._position = list(value)
-        if self.is_preloaded and self._ogl_screen is not None:
-            self._ogl_screen.refresh_position()
+        self.replace(value)
 
     @property
     def absolute_position(self):
-        """Getter for absolute_position."""
+        """Getter for absolute_position.
+        
+        Notes
+        -----
+        The absolute position differs for instance from the (relative) position, if the
+        stimulus is plotted ontop of another stimulus, which has not the position (0,0).
+        
+        """
 
         if self._parent:
             return (self._parent.absolute_position[0] + self.position[0],
@@ -282,6 +287,70 @@ class Visual(Stimulus):
 
         return self._get_surface().get_size()
 
+    def get_surface_copy(self):
+        """Returns a copy of the Pygame surface of the stimulus
+
+        Returns
+        -------
+        surface: Pygame.surface
+
+        Notes
+        -----
+        see also set_surface
+
+        """
+
+        return self._get_surface().copy()
+
+    def get_pixel_array(self):
+        """Returns a PixelArray representation of surface of the stimulus
+
+        Returns
+        -------
+        pixel_array: Pygame.PixelArray
+            a copy of the PixelArray is returned
+
+        Notes
+        -----
+        see also set_surface
+
+        """
+
+        return pygame.PixelArray(self.get_surface_copy())
+
+    def set_surface(self, surface):
+        """Set the surface of the stimulus
+
+        This method overwrites the surface of the stimulus. It can also handle
+        surfaces in form of pygame.PixelArray representations.
+
+        Parameters
+        ----------
+        surface: pygame.Surface or pygame.PixelArray
+            a representation of the new surface
+
+        Returns
+        -------
+        succeeded: boolean
+            setting surface was successful or not
+
+        Notes
+        -----
+        CAUTION: This is an expert's method.
+        The method can be used together with get_surface() & get_pixel_array()
+        to apply low-level Pygame operations on stimuli. However, users should
+        be aware of what they are doing, because the incorrect usage of this
+        methods might affect the stability of the experiment.
+
+        """
+
+        if isinstance(surface, pygame.PixelArray):
+            return self._set_surface(surface.make_surface())
+        elif isinstance(surface, pygame.Surface):
+            return self._set_surface(surface)
+        else:
+            return False
+
     def _create_surface(self):
         """Get the surface of the stimulus.
 
@@ -293,7 +362,7 @@ class Visual(Stimulus):
         return surface
 
     def _set_surface(self, surface):
-        """Set the surface.
+        """Set the surface (from internal use only).
 
         Parameters
         ----------
@@ -379,6 +448,25 @@ class Visual(Stimulus):
         return geometry.XYPoint(
             self.position).distance(geometry.XYPoint(other.position))
 
+    def replace(self, new_position):
+        """Replace a stimulus to a new position.
+
+        When using OpenGL, this can take longer then 1ms!
+
+        Parameters
+        ----------
+        new_position : tuple (x,y)
+            translation along x and y axis
+
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
+        """
+        return self.move((new_position[0] - self.position[0],
+                          new_position[1] - self.position[1]))
+
     def move(self, offset):
         """Moves the stimulus in 2D space.
 
@@ -386,7 +474,7 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        offset : list, optional
+        offset : tuple (x,y)
             translation along x and y axis
 
         Returns
@@ -398,13 +486,11 @@ class Visual(Stimulus):
 
         start = get_time()
         moved = False
-        x = offset[0]
-        y = offset[1]
-        if x > 0 or x < 0:
-            self._position[0] = self._position[0] + x
+        if offset[0] != 0:
+            self._position[0] = self._position[0] + offset[0]
             moved = True
-        if y > 0 or y < 0:
-            self._position[1] = self._position[1] + y
+        if offset[1] != 0:
+            self._position[1] = self._position[1] + offset[1]
             moved = True
         if moved and self._ogl_screen is not None:
             self._ogl_screen.refresh_position()
@@ -1053,7 +1139,45 @@ class Visual(Stimulus):
             self.flip(flip)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                "Stimulus,sclaed,{0}, factors={1}".format(self.id, factors), 2)
+                "Stimulus,scaled,{0}, factors={1}".format(self.id, factors), 2)
+        return int((get_time() - start) * 1000)
+
+    def scale_to_fullscreen(self, keep_aspect_ratio=True):
+        """Scale the stimulus to fullscreen.
+
+        This is a surface operation. After this, a surface will be present!
+        Scaling goes along with a quality loss. Thus, scaling an already
+        scaled stimulus is not a good idea.
+
+        Parameters
+        ----------
+        keep_aspect_ratio : boolean, optional
+            if this boolean is False, stimulus will be stretched so that it
+            fills out the whole screen (default = False)
+
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
+        Notes
+        -----
+        Depending on the size of the stimulus, this method may take some time
+        to compute!
+
+        """
+
+        start = get_time()
+        if not self._set_surface(self._get_surface()):
+            raise RuntimeError(Visual._compression_exception_message.format(
+                "scale_to_fullscreen()"))
+        surface_size = self.surface_size
+        screen_size = expyriment._active_exp.screen.surface.get_size()
+        scale = (screen_size[0]/float(surface_size[0]),
+                     screen_size[1]/float(surface_size[1]))
+        if keep_aspect_ratio:
+            scale = [min(scale)]*2
+        self.scale(factors=scale)
         return int((get_time() - start) * 1000)
 
     def flip(self, booleans):
