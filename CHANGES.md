@@ -6,6 +6,8 @@ Expyriment Release Notes
 upcoming (Version 0.8.0)
 ------------------------
 New Features:
+- new function: quiting wait or event loop by callback_function, if this function
+  returs an instance of the new class control.CallbackQuitEvent
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
 - new stimulus: stimuli.extras.ThermometerDisplay
