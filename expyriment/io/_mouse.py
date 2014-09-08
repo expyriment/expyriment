@@ -263,17 +263,19 @@ class Mouse(Input):
         """Get the last button down event.
         All earlier button down events will be removed from the queue.
 
+        Parameters
+        ----------
+        process_quit_event : boolean, optional
+            if False, the current location will not be processed for mouse
+                quitting events in the case that a button down event has been
+                found (default = True).
+            
         Returns
         -------
         btn_id : int
             button number (0,1,2) or 3 for wheel up or 4 for wheel down,
             if quit screen mouse action has been performed, the method
             returns -1
-
-        process_quit_event : boolean, optional
-            if False, the current location will not be processed for mouse
-                quitting events in the case that a button down event has been
-                found (default = True).
 
         """
 
@@ -309,10 +311,14 @@ class Mouse(Input):
     def check_button_pressed(self, button_number):
         """Return False or button id if a specific button is currently pressed.
 
+        Parameters
+        ----------
+        button_number : int
+            the button number (0,1,2) to be checked
+            
         Returns
         -------
-        btn_id : int
-            button number (0,1,2)
+        is_pressed: boolean
 
         """
 
