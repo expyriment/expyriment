@@ -145,6 +145,10 @@ class MidiIn(Input):
         rt : int
             reaction time in ms
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -162,7 +166,9 @@ class MidiIn(Input):
             events = [events]
         done = False
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time() - start) * 1000)
             event = self.read(1)
             if event is not None and event[0][0] in events:
                 rt = int((get_time() - start) * 1000)

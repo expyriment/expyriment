@@ -379,6 +379,10 @@ The Python package 'pySerial' is not installed."""
         -------
         line : str
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         rtn_string = ""

@@ -143,6 +143,10 @@ class StreamingButtonBox(Input, Output):
         rt : int
             reaction time
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:

@@ -271,11 +271,32 @@ def unregister_wait_callback_function(exp=None):
         expyriment._active_exp.unregister_wait_callback_function()
 
 class CallbackQuitEvent():
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
     def __init__(self, data=None):
-        """Return a CallbackQuitEvent object by your callback function, to force a quitting of
-         the wait or event loop function """
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
         self.data = data
 
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)
 
 def is_ipython_running():
     """Return True if IPython is running."""

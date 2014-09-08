@@ -68,7 +68,11 @@ class TriggerInput(Input):
         code -- a specific code to wait for (int) (optional)
         bitwise_comparison -- make a bitwise comparison (default=False)
 
-        """
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
+       """
 
         if expyriment.control.defaults._skip_wait_functions:
             return None, None
@@ -79,7 +83,9 @@ class TriggerInput(Input):
             code = self._default_code
         self.interface.clear()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time() - start) * 1000)
             read = self.interface.poll()
             if read is not None:
                 if code is None: #return for every event

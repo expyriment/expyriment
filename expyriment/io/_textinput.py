@@ -400,6 +400,10 @@ class TextInput(Input):
         default_input : str, optional
             default input in the textbox
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if android_show_keyboard is not None:

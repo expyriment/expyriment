@@ -934,14 +934,15 @@ type".format(permutation_type))
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
 
-        Notes
-        -----
-        CAUTION! If wait callback function takes longer than 1 ms to process,
-        Expyriment timing will be affected!
-
         The registered wait callback function will be repetitively executed in
-        all Expyriment wait and event loops that wait for an external input.
-        That is, they are executed by the following functions (at least once!):
+        all Expyriment wait and event loops that wait for an external input (see below).
+
+        If the callback function returns a control.CallbackQuitEvent the calling wait
+        or event loop will be force to quit. The CallbackQuitEvent object will be then
+        return (as first return value in the case of multiple return values).
+
+        The following functions will call the currently registered callback function
+        (at least once!):
 
         - control.wait_end_audiosystem
         - misc.clock.wait
@@ -964,6 +965,15 @@ type".format(permutation_type))
         ----------
         function : function
             wait function (function)
+
+        Notes
+        -----
+        CAUTION! If wait callback function takes longer than 1 ms to process,
+        Expyriment timing will be affected!
+
+        See Also
+        --------
+        control.CallbackQuitEvent
 
         """
 
@@ -990,6 +1000,14 @@ type".format(permutation_type))
             return self._wait_callback_function()
         else:
             return False
+
+    @property
+    def is_callback_registered(self):
+        """This property indicates whether a callback function has been
+        registered or not.
+
+        """
+        return (self._wait_callback_function is not None)
 
 
 class Block(object):

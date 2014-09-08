@@ -429,6 +429,10 @@ class Mouse(Input):
         - 3       for wheel up or
         - 4       for wheel down (wheel works only for keydown events).
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:

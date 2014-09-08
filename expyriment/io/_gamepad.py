@@ -222,6 +222,10 @@ class GamePad(Input, Output):
         rt : int
             reaction time in ms
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:

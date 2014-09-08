@@ -108,13 +108,17 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
             return
         start = self.time
         if type(function) == types.FunctionType or\
-                                 expyriment._active_exp._execute_wait_callback():
+                                 expyriment._active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
@@ -140,7 +144,7 @@ class Clock(object) :
 
         See Also
         --------
-        Clock.wait()
+        Clock.wait, design.experiment.register_wait_callback_function
 
         """
 
@@ -158,7 +162,7 @@ class Clock(object) :
 
         See Also
         --------
-        Clock.wait()
+        Clock.wait, design.experiment.register_wait_callback_function
 
         """
 
