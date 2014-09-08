@@ -247,9 +247,9 @@ class TouchScreenButtonBox(Input):
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
             if pressed_button_field is not None:
-                rt = int(touch_time - start)
+                rt = int((get_time()-start)*1000)
                 break
-            elif (duration is not None and get_time()-start>=duration):
+            elif (duration is not None and int((get_time()-start)*1000)>=duration):
                 pressed_button_field, rt = None, None
                 break
         return pressed_button_field, rt
