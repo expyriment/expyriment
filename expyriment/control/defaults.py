@@ -21,7 +21,8 @@ goodbye_text = "Ending experiment..."
 goodbye_delay = 3000
 fast_quit = False
 quit_key = _constants.K_ESCAPE
-pause_key = _constants.K_p
+pause_key = None
+refresh_key = None
 
 open_gl = True
 window_mode = False
