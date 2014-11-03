@@ -60,8 +60,10 @@ def create_module_rst(mod_name, no_members=False):
                 att = mod_name + "." + att[0]
                 fl.write(".. py:data:: " + att + "\n\n")
                 #t = eval("type(" + att + ")")
-                v = eval("repr(" + att + ")")
-                fl.write("   default value: {0}\n\n".format(v))
+                if att.find("EXPYRIMENT_LOGO_FILE") == -1:
+                    # do not write default for EXPYRIMENT_LOGO_FILE
+                    v = eval("repr(" + att + ")")
+                    fl.write("   default value: {0}\n\n".format(v))
 
         if len(modules)>0:
             fl.write(heading("\n\nModules", "-"))
