@@ -92,7 +92,8 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 if only_header_and_variable_names:
                     break
                 if read_variables is not None:
-                    read_in_columns = map(lambda x:variables.index(x), read_variables)
+                    read_in_columns = map(lambda x:variables.index(x),
+                                                            read_variables)
                     variables = map(lambda x:variables[x], read_in_columns)
             else:
                 row =ln.split(delimiter)
@@ -203,7 +204,7 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
 
 
 
-def experiment_duration(event_filename):
+def get_experiment_duration(event_filename):
 	"""Extracts the experiment duration from event file and returns the time in
 	minutes.
 
