@@ -205,33 +205,33 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
 
 
 def get_experiment_duration(event_filename):
-	"""Extracts the experiment duration from event file and returns the time in
-	minutes.
+    """Extracts the experiment duration from event file and returns the time in
+    minutes.
 
-	Parameters
-	----------
-	info_filename : str
+    Parameters
+    ----------
+    info_filename : str
         name (fullpath) of the Expyriment event file
 
-	Returns
-	-------
-	minutes : float
-		experiment duration in minutes
+    Returns
+    -------
+    minutes : float
+        experiment duration in minutes
 
-	"""
+    """
 
-	data, _, _, _ = read_datafile(event_filename)
+    data, _, _, _ = read_datafile(event_filename)
 
-	start = end = None
-	for r in data:
-		if r[1] == "Experiment":
-			if r[2]=="started":
-				start = int(r[0])
-			elif r[2]=="ended":
-				stop = int(r[0])
+    start = end = None
+    for r in data:
+        if r[1] == "Experiment":
+            if r[2]=="started":
+                start = int(r[0])
+            elif r[2]=="ended":
+                stop = int(r[0])
 
-	sec = (stop-start)/1000.0
-	return sec / 60.0
+    sec = (stop-start)/1000.0
+    return sec / 60.0
 
 
 class Aggregator(object):
