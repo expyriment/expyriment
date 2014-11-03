@@ -62,7 +62,6 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        self._line_width = line_width
         x = (self._size[0] - line_width) / 2
         y = (self._size[1] - line_width) / 2
         self.add_vertex((line_width, 0))
