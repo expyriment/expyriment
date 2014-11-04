@@ -227,6 +227,10 @@ class CedrusResponseDevice(Input):
         rt : int
             reaction time in ms
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -235,7 +239,9 @@ class CedrusResponseDevice(Input):
         if not no_clear_buffer:
             self.clear()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback
             if duration is not None:
                 if int(self._buffer.clock.time - start) > duration:
                     return (None, None)

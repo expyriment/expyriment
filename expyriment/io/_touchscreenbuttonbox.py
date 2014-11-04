@@ -236,6 +236,10 @@ class TouchScreenButtonBox(Input):
         -----
         Don't forget to show the TouchScreenButtonBox.
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -243,7 +247,9 @@ class TouchScreenButtonBox(Input):
         start = get_time()
         self.clear_event_buffer()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time()-start)*1000)
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
             if pressed_button_field is not None:

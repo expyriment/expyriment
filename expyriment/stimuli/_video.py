@@ -278,10 +278,17 @@ expyriment.control.stop_audiosystem() before preloading the video."
         frame : int, optional
             number of the frame to stop after
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         while self.is_playing:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback
+
             old_frame = self._frame
             self.update()
             new_frame = self._frame

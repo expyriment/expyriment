@@ -166,6 +166,10 @@ class TcpClient(Input, Output):
         rt : int
             The time it took to receive the data in milliseconds.
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -193,7 +197,11 @@ class TcpClient(Input, Output):
             except socket.error, e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
-                    expyriment._active_exp._execute_wait_callback()
+                    rtn_callback = expyriment._active_exp._execute_wait_callback()
+                    if isinstance(rtn_callback,
+                                      expyriment.control.CallbackQuitEvent):
+                        return rtn_callback, int((get_time() - start) * 1000)
+
                     if check_control_keys:
                         if Keyboard.process_control_keys():
                             break

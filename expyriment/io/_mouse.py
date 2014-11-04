@@ -435,6 +435,10 @@ class Mouse(Input):
         - 3       for wheel up or
         - 4       for wheel down (wheel works only for keydown events).
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -450,7 +454,11 @@ class Mouse(Input):
         if type(buttons) is not list:
             buttons = [buttons]
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                btn_id = rtn_callback
+                rt = int((get_time() - start) * 1000)
+                break
             if wait_motion:
                 motion_occured = old_pos != pygame.mouse.get_pos()
             if wait_button:
@@ -533,7 +541,11 @@ class Mouse(Input):
 
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                         duration=duration, wait_for_buttonup=False)
-        return rtn[2], rtn[3]
+
+        if isinstance(rtn[0], expyriment.control.CallbackQuitEvent):
+            return rtn[0], rtn[3]
+        else:
+            return rtn[2], rtn[3]
 
 
     def show_cursor(self, track_button_events=True, track_motion_events=False):
