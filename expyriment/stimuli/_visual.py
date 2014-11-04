@@ -582,6 +582,11 @@ class Visual(Stimulus):
         -----
         Depending on the size of the stimulus, this method may take some time
         to compute!
+        
+        CAUTION: Please note that if a stimulus is plotted on another smaller
+        stimulus, such that it is not fully visible on screen, this method will
+        still check overlapping of the full stimulus! Due to a current bug in
+        Pygame, we can right now not change this.
 
         """
 
@@ -662,6 +667,11 @@ class Visual(Stimulus):
         Depending on the size of the stimulus, this method may take some time
         to compute!
 
+        CAUTION: Please note that if a stimulus is plotted on another smaller
+        stimulus, such that it is not fully visible on screen, this method will
+        still check overlapping of the full stimulus! Due to a current bug in
+        Pygame, we can right now not change this.
+        
         """
 
         if mode == "visible":
