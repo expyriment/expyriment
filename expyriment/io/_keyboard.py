@@ -64,7 +64,6 @@ class Keyboard(Input):
 
         if key_event:
             if key_event.type == pygame.KEYDOWN:
-                print key_event.key, refresh_key
                 if key_event.key == quit_key and \
                    end_function is not None:
                     confirm = end_function(confirmation=True)
