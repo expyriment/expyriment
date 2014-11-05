@@ -28,9 +28,9 @@ from expyriment.misc._timer import get_time
 from expyriment.misc import unicode2str
 from  _input_output import Input
 
-
 quit_key = None
 pause_key = None
+refresh_key = None
 end_function = None
 pause_function = None
 
@@ -64,6 +64,7 @@ class Keyboard(Input):
 
         if key_event:
             if key_event.type == pygame.KEYDOWN:
+                print key_event.key, refresh_key
                 if key_event.key == quit_key and \
                    end_function is not None:
                     confirm = end_function(confirmation=True)
@@ -74,6 +75,9 @@ class Keyboard(Input):
                         pause_function is not None:
                     pause_function()
                     return True
+                elif key_event.key == refresh_key:
+                    if expyriment._active_exp is not None:
+                        expyriment._active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
