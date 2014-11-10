@@ -39,12 +39,14 @@ New Features:
   max_width parameter has been defined
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
+- bug fix anti_aliasing shapes
 
 Changed:
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
+- the property Shape.size has been renamed to shape.shape_size
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired 

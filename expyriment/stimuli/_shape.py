@@ -141,14 +141,14 @@ class Shape(Visual):
 
     @property
     def width(self):
-        return self.rect[3] - self.rect[1]#r-l
+        return self._rect[3] - self._rect[1]#r-l
 
     @property
     def height(self):
-        return self.rect[0] - self.rect[2]#t-b
+        return self._rect[0] - self._rect[2]#t-b
 
     @property
-    def size(self):
+    def shape_size(self):
         return (self.width, self.height)
 
     @property
@@ -452,7 +452,8 @@ class Shape(Visual):
 
         self._native_scaling[0] = self._native_scaling[0] * factors[0]
         self._native_scaling[1] = self._native_scaling[1] * factors[1]
-        self._line_width = self._line_width * sqrt(factors[0] * factors[1])
+        if scale_line_width:
+            self._line_width = self._line_width * sqrt(factors[0] * factors[1])
         self._update_points()
 
     def native_flip(self, booleans):
@@ -573,12 +574,11 @@ class Shape(Visual):
         if self._anti_aliasing > 0: # Draw enlarged shape
             aa_scaling = (self._anti_aliasing / 5.0) + 1
             old_scaling = copy.copy(self._native_scaling)
-            old_line_width = self._line_width
             self.native_scale([aa_scaling, aa_scaling], scale_line_width=True)
 
         line_width = int(self._line_width)
         # Draw the rect
-        s = (self.size[0] + line_width, self.size[1] + line_width)
+        s = (self.width + line_width, self.height + line_width)
         surface = pygame.surface.Surface(s,
                                         pygame.SRCALPHA).convert_alpha()
         #surface.fill((255, 0, 0)) # for debugging only
@@ -598,7 +598,6 @@ class Shape(Visual):
                                 (int(size[0] / aa_scaling),
                                  int(size[1] / aa_scaling)))
             self._native_scaling = old_scaling
-            self._line_width = old_line_width
             self._update_points()
         return surface
 
