@@ -18,7 +18,7 @@ class HSVColour(object):
 
     Note
     ----
-    All methods in Expyriment that have a colour parameter required RGB
+    All methods in Expyriment that have a colour parameter require RGB
     colours. Use the property Colour.rgb. E.g.::
 
         my_colour = misc.HSVColour(hue=128, saturation=200, value = 128)
