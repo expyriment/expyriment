@@ -22,7 +22,7 @@ goodbye_delay = 3000
 fast_quit = False
 quit_key = _constants.K_ESCAPE
 pause_key = None
-refresh_key = None
+refresh_key = None # TODO: not yet documented, because this feature is experimental
 
 open_gl = True
 window_mode = False
