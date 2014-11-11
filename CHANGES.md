@@ -6,6 +6,7 @@ Expyriment Release Notes
 upcoming (Version 0.8.0)
 ------------------------
 New Features:
+- new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
 - new function: quiting wait or event loops by callback_function, if this function
   returs an instance of the new class control.CallbackQuitEvent
 - new method: all visual stimuli have methods for lowlevel Pygame operations

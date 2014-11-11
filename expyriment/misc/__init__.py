@@ -20,6 +20,7 @@ from _miscellaneous import get_monitor_resolution
 import constants
 from _buffer import  Buffer, ByteBuffer
 from _clock import Clock
+from _hsv_colour import HSVColour
 import geometry
 import data_preprocessing
 import statistics
