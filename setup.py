@@ -137,35 +137,39 @@ def get_revision_from_file(filename):
 if __name__=="__main__":
     version_nr = get_version()
 
-    # Check if we are building/installing from the repository
-    try:
-        proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
-                     stdout=PIPE, stderr=PIPE)
-        initial_revision = proc.stdout.readline()
-        if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
-            raise Exception
-        revision_nr = get_git_revision()
-        date = get_git_date()
-        # Build
-        x = setup(name='expyriment',
-          version=version_nr,
-          description='A Python library for cognitive and neuroscientific experiments',
-          author='Florian Krause, Oliver Lindemann',
-          author_email='florian@expyriment.org, oliver@expyriment.org',
-          license='GNU GPLv3',
-          url='http://www.expyriment.org',
-          packages=packages,
-          package_dir={'expyriment': 'expyriment'},
-          package_data=package_data,
-          cmdclass={'build_py': Build, 'install': Install,
-                    'bdist_wininst': Wininst}
-          )
+    # Check if we are building/installing from unreleased code
+    if get_revision_from_file("expyriment/__init__.py") == '':
+        # Try to add date and revision stamp from Git and build/install
+        try:
+            proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                         stdout=PIPE, stderr=PIPE)
+            initial_revision = proc.stdout.readline()
+            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
+                raise Exception
+            revision_nr = get_git_revision()
+            date = get_git_date()
+            # Build
+            x = setup(name='expyriment',
+              version=version_nr,
+              description='A Python library for cognitive and neuroscientific experiments',
+              author='Florian Krause, Oliver Lindemann',
+              author_email='florian@expyriment.org, oliver@expyriment.org',
+              license='GNU GPLv3',
+              url='http://www.expyriment.org',
+              packages=packages,
+              package_dir={'expyriment': 'expyriment'},
+              package_data=package_data,
+              cmdclass={'build_py': Build, 'install': Install,
+                        'bdist_wininst': Wininst}
+              )
+    
+            print ""
+            print "Expyriment Version:", version_nr, "(from repository)"
+        except:
+            raise RuntimeError("Building from repository failed!")
 
-        print ""
-        print "Expyriment Version:", version_nr, "(from repository)"
-
-# If not, we are building/installing from a released download
-    except:
+    # If not, we are building/installing from a released download
+    else:
         # Build
         setup(name='expyriment',
           version=version_nr,
