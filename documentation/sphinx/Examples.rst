@@ -4,6 +4,9 @@ Example Experiments
 Here you can find some code examples to see Expyriment in action. All examples 
 are fully working experiments.
 
+For offline usage, all example experiments are also included in the Expyriment source
+distribution (.zip) which is available for download on our `Release page`_.
+
 Simon task
 -----------
 An experiment to asses a spatial stimulus-response compatibility effect (see 
@@ -50,4 +53,6 @@ Data preprocessing
 ------------------
 Preprocessing the data of the SNARC experiment for further statistical analysis.
 
-.. literalinclude:: ../../examples/snarc_data_preprocessing.py 
+.. literalinclude:: ../../examples/snarc_data_preprocessing.py
+
+.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest
