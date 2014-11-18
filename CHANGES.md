@@ -6,6 +6,7 @@ Expyriment Release Notes
 upcoming (Version 0.8.0)
 ------------------------
 New Features:
+- Antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
 - new function: quiting wait or event loops by callback_function, if this function
   returs an instance of the new class control.CallbackQuitEvent
@@ -40,7 +41,6 @@ New Features:
   max_width parameter has been defined
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
-- bug fix anti_aliasing shapes
 
 Changed:
 - ParallelPort: Polling will now return 4 bits, including also the status of
@@ -54,6 +54,7 @@ Fixed:
 - bug in command line interface: order of argument is now irrelevant
 - keypad bug in TextInput
 - unicode bug in TextMenu
+- bug in anti_aliasing shapes
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
