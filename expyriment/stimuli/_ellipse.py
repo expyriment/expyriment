@@ -39,6 +39,8 @@ class Ellipse(Visual):
             (as does a value < 0 or >= min(size))
         position : (int, int), optional
             position of the stimulus
+        anti_aliasing : int, optional
+            anti aliasing parameter (good anti_aliasing with 10)
 
         """
 
@@ -176,6 +178,6 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     defaults.event_logging = 0
     exp = control.initialize()
-    ellipse = Ellipse(size=[200, 200])
+    ellipse = Ellipse(size=[200, 200], anti_aliasing=10)
     ellipse.present()
     exp.clock.wait(1000)
