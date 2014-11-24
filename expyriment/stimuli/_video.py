@@ -31,9 +31,17 @@ class Video(_visual.Stimulus):
     """A class implementing a general video stimulus.
 
     This class uses a background thread for playing the video!
-    According to the Pygame documentation MPEG-1 movies are supported.
-    However, it seems that Pygame's video support is quite limited and poor.
-
+    
+    Only MPEG-1 movies with MP3 audio are supported. You can use ffmpeg
+    (www.ffmpeg.org) to convert from other formats:
+        
+        ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
+        
+    The -qscale option is the quality setting. It can take values from 1 to 31.
+    1 is the best quality, but big file size. 31 is the worst quality, but
+    small file size. Play around with this setting to get a good balance
+    between quality and file size.
+    
     When the audio from the video should be played as well, the audiosystem
     has to be stopped (by calling expyriment.control.stop_audiosystem() )
     BEFORE the video stimulus is preloaded! After the stimulus has been played
@@ -44,19 +52,29 @@ class Video(_visual.Stimulus):
     enough, frames might be dropped! When using Video.wait_frame() or
     Video.wait_end(), dropped video frames will be reported and logged.
 
-    This module will be exchanged with a more capable one in the long run.
-
     """
 
     def __init__(self, filename, position=None):
         """Create a video stimulus.
-
+    
         Parameters
         ----------
         filename : str
             filename (incl. path) of the video
         position : (int, int), optional
             position of the stimulus
+            
+        Notes
+        -----
+        Only MPEG-1 movies with MP3 audio are supported. You can use ffmpeg
+        (www.ffmpeg.org) to convert from other formats:
+        
+            ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
+        
+        The -qscale option is the quality setting. It can take values from 1 to 31.
+        1 is the best quality, but big file size. 31 is the worst quality, but
+        small file size. Play around with this setting to get a good balance
+        between quality and file size.
 
         """
 
@@ -157,7 +175,17 @@ class Video(_visual.Stimulus):
             return self._file.has_audio()
 
     def preload(self):
-        """Preload stimulus to memory."""
+        """Preload stimulus to memory.
+        
+        Notes
+        -----
+        When the audio from the video should be played as well, the audiosystem
+        has to be stopped (by calling expyriment.control.stop_audiosystem() )
+        BEFORE the video stimulus is preloaded! After the stimulus has been played
+        the audiosystem can be started again (by calling
+        expyriment.control.start_audiosystem() ).
+        
+        """
 
         if not self._is_preloaded:
             self._file = pygame.movie.Movie(unicode2str(self._filename,
@@ -186,7 +214,21 @@ class Video(_visual.Stimulus):
             self._is_preloaded = False
 
     def play(self):
-        """Play the video stimulus from the current position."""
+        """Play the video stimulus from the current position.
+        
+        Notes
+        -----
+        When the audio from the video should be played as well, the audiosystem
+        has to be stopped (by calling expyriment.control.stop_audiosystem() )
+        BEFORE the video stimulus is preloaded! After the stimulus has been played
+        the audiosystem can be started again (by calling
+        expyriment.control.start_audiosystem() ).
+
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using Video.wait_frame() or
+        Video.wait_end(), dropped video frames will be reported and logged.
+        
+        """
 
         if mixer.get_init() is not None:
             message = "Mixer is still initialized, cannot play audio! Call \
@@ -247,6 +289,18 @@ expyriment.control.stop_audiosystem() before preloading the video."
         current one). When using OpenGL, the method blocks until this frame is
         actually being written to the screen.
 
+        Notes
+        -----
+        When the audio from the video should be played as well, the audiosystem
+        has to be stopped (by calling expyriment.control.stop_audiosystem() )
+        BEFORE the video stimulus is preloaded! After the stimulus has been played
+        the audiosystem can be started again (by calling
+        expyriment.control.start_audiosystem() ).
+
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using Video.wait_frame() or
+        Video.wait_end(), dropped video frames will be reported and logged.
+        
         """
 
         self.play()
