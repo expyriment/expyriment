@@ -575,11 +575,11 @@ class Experiment(object):
             Permutation types defined in misc.constants:
             P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, and P_RANDOM
         factor_names : list (of strings), optional
-            list of the factor names to be considered while permutation.
-            If factor_names are not defined (None) all factors will be used.
+            list of the factor names to be considered while permutation;
+            if factor_names are not defined (None) all factors will be used
         subject_id : int, optional
-            subject number for this permutation
-            If subject_id is defined or none (default) and experiment has
+            subject number for this permutation;
+            if subject_id is defined or none (default) and experiment has
             been started, the current subject number will be used
 
         """
@@ -1196,7 +1196,7 @@ class Block(object):
         copies : int, optional
             number of copies to add (default = 1)
         random_position : bool, optional
-            True  = insert trials at random position,
+            True  = insert trials at random position;
             False = append trials at the end (default=False)
 
         """
@@ -1492,8 +1492,8 @@ class Block(object):
         method : int, optional
             method of trial randomization (default=0)
         max_repetitions : int, optional
-            maximum number of allowed immediate repetitions.
-            If None the repetition criterion will be ignored
+            maximum number of allowed immediate repetitions;
+            if None the repetition criterion will be ignored
 
         Returns
         -------
