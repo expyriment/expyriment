@@ -102,7 +102,7 @@ def shuffle_list(list_):
 def make_multiplied_shuffled_list(list_, xtimes):
     """Return the multiplied and shuffled (sectionwise) list.
 
-    The function manifolds the list 'xtimes' and shuffles each
+    The function manifolds the list 'x times' and shuffles each
     and concatenates to the return new lists.
 
     Parameters
