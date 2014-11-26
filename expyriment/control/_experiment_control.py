@@ -54,9 +54,9 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     auto_create_subject_id : bool, optional
         if True new subject id will be created automatically
     subject_id : integer, optional
-        start with a specific subject_id
-        No subject id input mask will be presented. Subject_id must be an
-        integer. Setting this paramter overrules auto_create_subject_id.
+        start with a specific subject_id;
+        no subject id input mask will be presented; subject_id must be an
+        integer; setting this paramter overrules auto_create_subject_id
     skip_ready_screen : bool, optional
         if True ready screen will be skipped (default=False)
 
