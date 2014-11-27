@@ -86,17 +86,66 @@ def coin_flip():
         return False
 
 
-def shuffle_list(list_):
-    """Shuffle any list of objects.
+def shuffle_list(list_, max_repetitions=None, n_segments=None):
+    """Shuffle any list of objects. In place randomization of the list.
 
     Parameters
     ----------
     list_ : int
         list to shuffle
+    max_repetitions : int, optional
+        max number of allowed repetitions of one identical item. If no solution
+        can be found (i.e., Python's recursion limit is reached), the function
+        returns False and the list will be randomized without constrains. This
+        parameter has no effect, when mixing lists of Expyriment stimuli
+        (see Notes) default = None
+    n_segments : int, optional
+        randomize list per segment, i.e., list will be divided into n equal
+        sized segments and the order of elements within each segment will be
+        randomized. If n_segments is None or < 2, this parameter has no effect.
+        default = None
+
+    Returns
+    -------
+    success : bool
+        returns if randomization was successful and fulfilled the specified
+        constrains (see max_repetitions)
+
+    Note
+    ----
+    In Expyriment each stimulus is unique, because stimulus ids are unique.
+    (even if two stimuli are otherwise identical).
 
     """
 
-    _random.shuffle(list_)
+    if n_segments > 1:
+        l = 1 + len(list_) - 1 / int(n_segments)
+        for x in range(n_segments):
+            t = (x + 1) * l
+            if t > len(list_):
+                t = len(list_)
+            a = list_[l * x:t]
+            _random.shuffle(a)
+            list_[l * x:t] = a
+    else:
+        _random.shuffle(list_)
+
+    if max_repetitions >= 0:
+        # check constrains and remix
+        reps = 0
+        for i in range(len(list_)-1):
+            if list_[i] == list_[i+1]:
+                reps += 1
+                if reps > max_repetitions:
+                    try:
+                        return shuffle_list(list_=list_,
+                                max_repetitions=max_repetitions,
+                                n_segments=n_segments)
+                    except: # maximum recursion depth reached
+                        return False
+            else:
+                reps = 0
+    return True
 
 
 def make_multiplied_shuffled_list(list_, xtimes):
