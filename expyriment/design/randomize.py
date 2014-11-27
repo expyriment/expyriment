@@ -94,11 +94,11 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
     list_ : int
         list to shuffle
     max_repetitions : int, optional
-        max number of allowed repetitions of one identical item. If no solution
-        can be found (i.e., Python's recursion limit is reached), the function
-        returns False and the list will be randomized without constrains. This
-        parameter has no effect, when mixing lists of Expyriment stimuli
-        (see Notes) default = None
+        maximum number of allowed repetitions of one identical items. If no
+        solution can be found (i.e., Python's recursion limit is reached), the
+        function returns `False` and the list will be randomized without
+        constrains. This parameter has no effect, when mixing lists of
+        Expyriment stimuli (see Notes). default = None
     n_segments : int, optional
         randomize list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
