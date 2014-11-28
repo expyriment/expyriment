@@ -10,6 +10,8 @@ __revision__ = ''
 __date__ = ''
 
 
+import sys
+
 import pygame
 try:
     import OpenGL.GL as ogl
@@ -154,6 +156,15 @@ machine!")
         pygame.event.pump()
         pygame.display.flip()
         if self._open_gl:
+            ogl.glBegin(ogl.GL_POINTS)
+            ogl.glColor4f(0, 0, 0, 0)
+            vendor = ogl.glGetString(ogl.GL_VENDOR)
+            if sys.platform == 'win32' and vendor.lower().startswith('ati'):
+                pass
+            else:
+                # this corrupts text rendering on win with some ATI cards :-(
+                ogl.glVertex2i(0, 0)
+            ogl.glEnd()
             ogl.glFinish()
         if self._logging:
             expyriment._active_exp._event_file_log("Screen,updated", 2)
