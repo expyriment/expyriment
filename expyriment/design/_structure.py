@@ -1555,7 +1555,7 @@ class Block(object):
             self._trials = []
             types_occured = []
             cnt = 0
-            n_segments = 0
+            n_segments = 1
             while len(tmp) > 0:
                 is_new = True
                 tr_type = tmp[cnt].factors_as_text
@@ -1564,19 +1564,19 @@ class Block(object):
                         is_new = False
                         break
                 if is_new:
-                    self._trials.append(tmp[cnt].pop(cnt))
+                    self._trials.append(tmp.pop(cnt))
                     types_occured.append(tr_type)
                     cnt = 0
                 else:
                     cnt = cnt + 1
                     if cnt >= len(tmp):
                         types_occured = []
-                        n_segments += 1
                         cnt = 0
-            rtn = True
+                        if len(tmp)>0:
+                            n_segments += 1
 
-        else:
-            rtn = randomize.shuffle_list(self._trials, max_repetitions=max_repetitions,
+        rtn = randomize.shuffle_list(self._trials,
+                                   max_repetitions=max_repetitions,
                                    n_segments=n_segments)
         if rtn == False:
             print "Warning: Could not find an appropriate trial " + \

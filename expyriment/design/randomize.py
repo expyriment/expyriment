@@ -130,7 +130,7 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
     """
 
     if n_segments > 1:
-        l = 1 + len(list_) - 1 / int(n_segments)
+        l = 1 + (len(list_) - 1) / int(n_segments)
         for x in range(n_segments):
             t = (x + 1) * l
             if t > len(list_):
