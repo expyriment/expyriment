@@ -13,6 +13,7 @@ __date__ = ''
 
 from copy import copy as _copy
 import random as _random
+import _structure
 
 _random.seed()
 
@@ -85,6 +86,13 @@ def coin_flip():
     else:
         return False
 
+def _compare_items(a, b):
+    """Helper function for `shuffle_list` to compare two elements of a list"""
+    if (isinstance(a, _structure.Trial) and isinstance(b, _structure.Trial)) or\
+       (isinstance(a, _structure.Block) and isinstance(b, _structure.Block)):
+        return a.compare(b)
+    else:
+        return a == b
 
 def shuffle_list(list_, max_repetitions=None, n_segments=None):
     """Shuffle any list of objects. In place randomization of the list.
@@ -97,8 +105,7 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
         maximum number of allowed repetitions of one identical items. If no
         solution can be found (i.e., Python's recursion limit is reached), the
         function returns `False` and the list will be randomized without
-        constrains. This parameter has no effect, when mixing lists of
-        Expyriment stimuli (see Notes). default = None
+        constrains. (see Notes). default = None
     n_segments : int, optional
         randomize list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
@@ -113,8 +120,12 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
 
     Note
     ----
-    In Expyriment each stimulus is unique, because stimulus ids are unique.
-    (even if two stimuli are otherwise identical).
+    When shuffling lists of trials or blocks, IDs will be ignored to determine
+    repetitions, because trial or block comparisons are based on the `compare`
+    method (see documentation of `Trial` or `Block`). If you added stimuli to
+    the trials, note that creating the same stimulus multiple times will not
+    result in identical stimulus objects, since each newly created stimulus
+    gets it's own id in Expyriment.
 
     """
 
@@ -134,7 +145,7 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
         # check constrains and remix
         reps = 0
         for i in range(len(list_)-1):
-            if list_[i] == list_[i+1]:
+            if _compare_items(list_[i], list_[i+1]):
                 reps += 1
                 if reps > max_repetitions:
                     try:

@@ -559,10 +559,29 @@ class Experiment(object):
         else:
             return False
 
-    def shuffle_blocks(self):
-        """Shuffle all blocks."""
+    def shuffle_blocks(self, max_repetitions=None, n_segments=None):
+        """Shuffle all blocks.
 
-        randomize.shuffle_list(self._blocks)
+        Parameters
+        ----------
+        max_repetitions : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+        n_segments : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+
+        Returns
+        -------
+        success : bool
+            returns if randomization was successful and fulfilled the specified
+            constrains (see max_repetitions)
+
+        See Also
+        ----------
+        `randomize.shuffle_list`
+
+        """
+
+        return randomize.shuffle_list(self._blocks)
 
     def permute_blocks(self, permutation_type, factor_names=None,
                        subject_id=None):
@@ -1170,6 +1189,33 @@ class Block(object):
 
         return self._factors.keys()
 
+    def compare(self, block):
+        """Compares this block with another block and returns `True` if all
+        factors as well as the trial lists associated with both blocks are
+        identical.
+
+        Parameter
+        ---------
+        block : design.Block
+
+        Returns
+        -------
+        identical: boolean
+
+        See also
+        --------
+        Trials.compare()
+
+        """
+
+        if len(self.trials) != len(block.trials):
+            return False
+        for a, b in zip(self.trials, block.trials):
+            if not a.compare(b):
+                return False
+
+        return (self.factor_dict == block.factor_dict)
+
     def get_random_trial(self):
         """Returns a randomly selected trial.
 
@@ -1470,7 +1516,8 @@ class Block(object):
                 cnt = 0
         return max_reps
 
-    def shuffle_trials(self, method=0, max_repetitions=None):
+    def shuffle_trials(self, method=0, max_repetitions=None,
+                       n_segments=None):
         """Shuffle all trials.
 
         The function returns False if no randomization could be found that
@@ -1483,7 +1530,7 @@ class Block(object):
                 0 = total randomization of trial order (default),
 
                 1 = randomization within small miniblocks. Each miniblock
-                contains one trial of each type (only defined by factors!).
+                contains one trial of each type (only defined by factors!)
                 In other words, copies of one trial type are always in
                 different miniblocks.
 
@@ -1492,8 +1539,10 @@ class Block(object):
         method : int, optional
             method of trial randomization (default=0)
         max_repetitions : int, optional
-            maximum number of allowed immediate repetitions.
-            If None the repetition criterion will be ignored
+            see documentation of `randomize.shuffle_list` (default = None)
+        n_segments : int, optional
+            This parameter will be only considered for randomization method 0.
+            see documentation of `randomize.shuffle_list` (default = None)
 
         Returns
         -------
@@ -1501,49 +1550,38 @@ class Block(object):
 
         """
 
-        start = Clock._cpu_time()
-        cnt = 0
-        while True:
-            cnt += 1
-            self._shuffle_trials(method)
-            if max_repetitions is None or \
-                    (self.max_trial_repetitions <= max_repetitions):
-                return True
-            else:
-                if (Clock._cpu_time() - start) * 1000 >= \
-                        defaults.max_shuffle_time:
-                    print "Warning: Could not find an appropriate trial " + \
-                          "randomization ({0} attempts)!".format(cnt)
-                    return False
-
-    def _shuffle_trials(self, method):
-        """actual implementation of the trial shuffling"""
-        if method == 1:  # shuffling blockwise
-            cp = self.copy()
-            randomize.shuffle_list(cp._trials)
+        if method == 1: # make segments
+            tmp = self._trials
             self._trials = []
             types_occured = []
             cnt = 0
-            while len(cp._trials) > 0:
-                tr = cp._trials[cnt]
-                new = True
-                tr_type = tr.factors_as_text
+            n_segments = 0
+            while len(tmp) > 0:
+                is_new = True
+                tr_type = tmp[cnt].factors_as_text
                 for occ in types_occured:
                     if tr_type == occ:
-                        new = False
+                        is_new = False
                         break
-                if new:
-                    self._trials.append(tr)
-                    cp._trials.pop(cnt)
+                if is_new:
+                    self._trials.append(tmp[cnt].pop(cnt))
                     types_occured.append(tr_type)
                     cnt = 0
                 else:
                     cnt = cnt + 1
-                    if cnt >= len(cp._trials):
+                    if cnt >= len(tmp):
                         types_occured = []
+                        n_segments += 1
                         cnt = 0
+            rtn = True
+
         else:
-            randomize.shuffle_list(self._trials)
+            rtn = randomize.shuffle_list(self._trials, max_repetitions=max_repetitions,
+                                   n_segments=n_segments)
+        if rtn == False:
+            print "Warning: Could not find an appropriate trial " + \
+                          "randomization!"
+        return rtn
 
     def sort_trials(self):
         """Sort the trials according to their indices from low to high."""
@@ -1688,6 +1726,30 @@ class Trial(object):
                 unicode2str(f), unicode2str(self.get_factor(f)))
         return all_factors
 
+    def compare(self, trial):
+        """Compares this trial with another trail and returns `True` if all
+        factors as well as the stimulus lists associated with both trials are
+        identical.
+
+        Parameter
+        ---------
+        trail : design.Trial
+
+        Returns
+        -------
+        identical: boolean
+
+        Notes
+        -----
+        If you added stimuli to the trials, note that creating the same
+        stimulus  multiple times will not result in identical stimulus
+        objects, since each newly created stimulus gets it's own id in Expyriment.
+
+        """
+
+        return (self.factor_dict == trial.factor_dict) and \
+               (self.stimuli == trial.stimuli)
+
     def add_stimulus(self, stimulus):
         """Add a stimulus to the trial.
 
@@ -1764,10 +1826,31 @@ class Trial(object):
         else:
             return False
 
-    def shuffle_stimuli(self):
-        """Shuffle all stimuli."""
+    def shuffle_stimuli(self, max_repetitions=None, n_segments=None):
+        """Shuffle all stimuli.
 
-        randomize.shuffle_list(self.stimuli)
+        Parameters
+        ----------
+        max_repetitions : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+        n_segments : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+
+        Returns
+        -------
+        success : bool
+            returns if randomization was successful and fulfilled the specified
+            constrains (see max_repetitions)
+
+        See Also
+        ----------
+        `randomize.shuffle_list`
+
+        """
+
+        return randomize.shuffle_list(self.stimuli,
+                               max_repetitions=max_repetitions,
+                               n_segments=n_segments)
 
     def sort_stimuli(self):
         """Sort the stimuli according to their IDs from low to high."""
