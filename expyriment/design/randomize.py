@@ -120,12 +120,9 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
 
     Note
     ----
-    When shuffling lists of trials or blocks, IDs will be ignored to determine
-    repetitions, because trial or block comparisons are based on the `compare`
-    method (see documentation of `Trial` or `Block`). If you added stimuli to
-    the trials, note that creating the same stimulus multiple times will not
-    result in identical stimulus objects, since each newly created stimulus
-    gets it's own id in Expyriment.
+    When shuffling lists of trials or blocks, IDs and added stimuli will be
+    ignored to determine repetitions, because trial or block comparisons are
+    based on the `compare`method (see documentation of `Trial` or `Block`).
 
     """
 

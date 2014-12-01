@@ -1728,8 +1728,8 @@ class Trial(object):
 
     def compare(self, trial):
         """Compares this trial with another trail and returns `True` if all
-        factors as well as the stimulus lists associated with both trials are
-        identical.
+        factors associated with both trials are identical. Added stimuli will
+        be ignored for the comparison.
 
         Parameter
         ---------
@@ -1739,16 +1739,9 @@ class Trial(object):
         -------
         identical: boolean
 
-        Notes
-        -----
-        If you added stimuli to the trials, note that creating the same
-        stimulus  multiple times will not result in identical stimulus
-        objects, since each newly created stimulus gets it's own id in Expyriment.
-
         """
 
-        return (self.factor_dict == trial.factor_dict) and \
-               (self.stimuli == trial.stimuli)
+        return (self.factor_dict == trial.factor_dict)
 
     def add_stimulus(self, stimulus):
         """Add a stimulus to the trial.
