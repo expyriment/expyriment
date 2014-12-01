@@ -1191,8 +1191,7 @@ class Block(object):
 
     def compare(self, block):
         """Compares this block with another block and returns `True` if all
-        factors as well as the trial lists associated with both blocks are
-        identical.
+        factors associated with both blocks are identical.
 
         Parameter
         ---------
@@ -1208,12 +1207,6 @@ class Block(object):
 
         """
 
-        if len(self.trials) != len(block.trials):
-            return False
-        for a, b in zip(self.trials, block.trials):
-            if not a.compare(b):
-                return False
-
         return (self.factor_dict == block.factor_dict)
 
     def get_random_trial(self):
@@ -1227,6 +1220,7 @@ class Block(object):
         -------
         rnd : design.Trial
             random Expyriment trial
+
         """
 
         rnd = randomize.rand_int(0, len(self._trials) - 1)
