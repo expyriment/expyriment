@@ -173,7 +173,6 @@ machine!")
         pygame.event.pump()
         pygame.display.flip()
         if self._open_gl and self._sync_mode>0:
-            print self._sync_mode
             if self._sync_mode == 2:
                 ogl.glBegin(ogl.GL_POINTS)
                 ogl.glColor4f(0, 0, 0, 0)
