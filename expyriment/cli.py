@@ -35,6 +35,7 @@ functions to join the data output.
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
       -d              Develop mode (equivalent to -gwfat)
+      -s              new sync_mode (sync_mode 2)
 
       -C              Create Expyriment template
       -J              Join data files to one single csv file
@@ -136,6 +137,9 @@ if __name__ == "__main__":
                         elif arg == 'g':
                             print "* No OpenGL"
                             expyriment.control.defaults.open_gl = False
+                        elif arg == 's':
+                            print "* Sync mode 2"
+                            expyriment.control.defaults.sync_mode = 2
                         elif arg == 't':
                             print "* No time stamps"
                             expyriment.io.defaults.argvoutputfile_time_stamp =\
