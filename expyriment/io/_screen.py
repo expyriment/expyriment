@@ -34,7 +34,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size, sync_mode=1):
+    def __init__(self, colour, open_gl, window_mode, window_size, blocking_mode=1):
         """Create and set up a screen output.
 
         Notes
@@ -53,9 +53,9 @@ class Screen(Output):
             size of the window in window_mode,
             full screen mode if size of window_mode[0]<=0
 
-        sync_mode : int
-            type of screen syncing
-            0: no screen syncing (always in non open_gl mode)
+        blocking_mode : int
+            type of screen blocking
+            0: no sync screen blocking (always in non open_gl modes)
             1: old sync xxxxx #TODO
             2: new sync xxx #TODO
 
@@ -67,9 +67,9 @@ class Screen(Output):
         self._fullscreen = not window_mode
         self._window_size = window_size
         if open_gl: # TODO: Checking also Win & ATI here?
-            self._sync_mode = sync_mode
+            self._blocking_mode = blocking_mode
         else:
-            self._sync_mode = 0
+            self._blocking_mode = 0
 
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
@@ -140,10 +140,10 @@ machine!")
         return self._open_gl
 
     @property
-    def sync_mode(self):
+    def blocking_mode(self):
         """Getter for sync_mode."""
 
-        return self._sync_mode
+        return self._blocking_mode
 
     @property
     def window_mode(self):
@@ -172,8 +172,8 @@ machine!")
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._open_gl and self._sync_mode>0:
-            if self._sync_mode == 2:
+        if self._open_gl and self._blocking_mode>0:
+            if self._blocking_mode == 2:
                 ogl.glBegin(ogl.GL_POINTS)
                 ogl.glColor4f(0, 0, 0, 0)
                 vendor = ogl.glGetString(ogl.GL_VENDOR)

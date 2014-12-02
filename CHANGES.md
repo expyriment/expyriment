@@ -41,7 +41,7 @@ New Features:
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
 - bug fix anti_aliasing shapes
-- control.defaults.sync_mode for setting the sync_mode
+- control.defaults.blocking_mode for setting the blocking_mode
 
 Changed:
 - ParallelPort: Polling will now return 4 bits, including also the status of
@@ -49,7 +49,7 @@ Changed:
   (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
 - the property Shape.size has been renamed to shape.shape_size
-- io.screen has new parameter for setting the sync_mode
+- io.screen has new parameter to change the type of sync_screen blocking
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired 

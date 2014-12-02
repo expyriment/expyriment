@@ -27,7 +27,7 @@ refresh_key = None # TODO: not yet documented, because this feature is experimen
 open_gl = True
 window_mode = False
 window_size = (800, 600)
-sync_mode = 1
+blocking_mode = 1
 
 event_logging = 1  # 1 = default, 2 = extensive, 0 or False = off
 stdout_logging = True
