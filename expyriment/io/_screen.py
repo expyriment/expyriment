@@ -66,9 +66,13 @@ class Screen(Output):
         self._open_gl = open_gl
         self._fullscreen = not window_mode
         self._window_size = window_size
-        if open_gl: # TODO: Checking also Win & ATI here?
+        if open_gl:
             self._blocking_mode = blocking_mode
         else:
+            warn_message = "Blocking mode {0} does only work with OpenGL. \
+Blocking mode will be set to 0!".format(blocking_mode)
+            print("Warning: " + warn_message)
+            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
             self._blocking_mode = 0
 
         if ogl is None:
@@ -78,12 +82,6 @@ OpenGL will be deactivated!"
             expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
 
-        if self._open_gl and not self._fullscreen:
-            warn_message = "OpenGL does not support window mode. \
-OpenGL will be deactivated!"
-            print("Warning: " + warn_message)
-            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
-            self._open_gl = False
         pygame.display.init()
         if expyriment._active_exp.is_initialized:
             self._monitor_resolution = \
@@ -103,9 +101,14 @@ OpenGL will be deactivated!"
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
         else:
-            self._surface = pygame.display.set_mode(
-                self._window_size,
-                pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            if self._fullscreen:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            else:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL)
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
                 ogl_extensions = ogl.glGetString(ogl.GL_EXTENSIONS)
@@ -172,16 +175,11 @@ machine!")
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._open_gl and self._blocking_mode>0:
+        if self._open_gl and self._blocking_mode > 0:
             if self._blocking_mode == 2:
                 ogl.glBegin(ogl.GL_POINTS)
                 ogl.glColor4f(0, 0, 0, 0)
-                vendor = ogl.glGetString(ogl.GL_VENDOR)
-                if sys.platform == 'win32' and vendor.lower().startswith('ati'): # TODO can't see be check when setting sync_mode in __init__
-                    pass
-                else:
-                    # this corrupts text rendering on win with some ATI cards :-(
-                    ogl.glVertex2i(0, 0)
+                ogl.glVertex2i(0, 0)
                 ogl.glEnd()
             ogl.glFinish()
         if self._logging:

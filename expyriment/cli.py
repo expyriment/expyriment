@@ -34,8 +34,8 @@ functions to join the data output.
       -f              Fast mode (no initialize delay and fast quitting)
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
-      -d              Develop mode (equivalent to -gwfat)
-      -b              new blocking mode (blocking_mode 2)
+      -d              Develop mode (equivalent to -wfat)
+      -b              Alternative blocking mode (blocking mode 2)
 
       -C              Create Expyriment template
       -J              Join data files to one single csv file
@@ -49,7 +49,7 @@ functions to join the data output.
 
 unknown_option = "Unknown option '{0}' (use --help for information)"
 
-def create_templet():
+def create_template():
     template_file = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -164,19 +164,19 @@ if __name__ == "__main__":
                             expyriment.show_documentation(3)
                             sys.exit()
                         elif arg == "C":
-                            create_templet()
+                            create_template()
                             sys.exit()
                         elif arg == "J":
                             d = join_data()
                             output =""
-                            while len(output)<=1:
+                            while len(output) <= 1:
                                 output = raw_input(" name of output csv file? ")
                             d.write_concatenated_data(output)
                             sys.exit()
                         elif arg == "R":
                             d = join_data()
                             output =""
-                            while len(output)<=1:
+                            while len(output) <= 1:
                                 output = raw_input(" name of RDS file? ")
                             d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()
