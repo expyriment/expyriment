@@ -5,8 +5,7 @@ when changed, alter the default behaviour of the related functionality.
 Changing the default settings is hence a way to globally customize
 Expyriment functionality.
 
-expyriment.control.defaults_
-----------------------------
+**expyriment.control.defaults_**
 The default settings of the control submodule is special, since it clusters
 together several settings from other submodules which are important for
 experimental control in one central place. The settings here have preceedance!
