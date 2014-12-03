@@ -44,6 +44,8 @@ New Features:
 - control.defaults.blocking_mode for setting the blocking_mode
 
 Changed:
+- ATTENTION: Open_GL is now also used in window mode and will not be switch
+  off automatically, if Expyriment is not running in fullscreen modus.
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output of other status lines has changed!)
