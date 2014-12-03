@@ -131,8 +131,7 @@ if __name__ == "__main__":
                             expyriment.control.defaults.initialize_delay = 0
                             expyriment.control.defaults.fast_quit = False
                         elif arg == 'w':
-                            print "* Window mode (No OpenGL)"
-                            expyriment.control.defaults.open_gl = False
+                            print "* Window mode"
                             expyriment.control.defaults.window_mode = True
                         elif arg == 'g':
                             print "* No OpenGL"
