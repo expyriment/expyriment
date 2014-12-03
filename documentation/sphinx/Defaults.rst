@@ -46,3 +46,11 @@ an instance of this class) within expyriment.misc can be set via:
 ```
 expyriment.misc.defaults.classname_parametername = x
 ```
+
+Development
+-----------
+When developing Plugins_ default values can be integrated into extras.defaults.
+Upon start, Expyriment will read all files in the extra folder that have the same
+name as the plugin, followd by "_defaults.py" (e.g. dotcloud_defaults.py).
+All variables within this file will be integrated into the namespace and will
+be available in extras.defaults (e.g. expyriment.stimuli.extras.defaults).
