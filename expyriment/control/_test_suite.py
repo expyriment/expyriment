@@ -14,6 +14,7 @@ __date__ = ''
 
 
 import os
+from math import ceil
 
 import pygame
 try:
@@ -27,7 +28,7 @@ import expyriment
 from expyriment import stimuli, io
 from expyriment.misc import constants, statistics
 from expyriment.misc._timer import get_time
-
+from expyriment.design import randomize
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -102,13 +103,13 @@ The left picture shows a good result, the right picture shows a bad result.
         picture = stimuli.Rectangle((100, 100))
         cnvs.preload()
         picture.preload()
-        todo_time = []
+        todo_time = range(0, 60) * 3
+        randomize.shuffle_list(todo_time)
         actual_time = []
-        for x in range(150):
-            todo_time.append(expyriment.design.randomize.rand_int(0, 60))
+        for x in todo_time:
             picture.present()
             start = exp.clock.time
-            exp.clock.wait(todo_time[-1])
+            exp.clock.wait(x)
             cnvs.present()
             actual_time.append(exp.clock.time - start)
             exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
