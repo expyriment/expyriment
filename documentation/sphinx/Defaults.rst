@@ -1,7 +1,7 @@
 Defaults (settings)
 ==================
-For each submodule of Expyriment, there are various default settings, defining
-the behaviour of elements of that submodule.
+For each package of Expyriment, there are various default settings, defining
+the behaviour of elements of that package.
 
 Usage
 -----
@@ -11,8 +11,8 @@ customize Expyriment functionality.
 
 expyriment.control.defaults_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-The default settings of the control submodule is special, since it clusters
-together several settings from other submodules which are important for
+The default settings of the control package is special, since it clusters
+together several settings from other packages which are important for
 experimental control in one central place. The settings here have preceedance!
 
 expyriment.design.defaults_
