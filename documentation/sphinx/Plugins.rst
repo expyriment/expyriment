@@ -34,5 +34,6 @@ stimuli.extras
 ~~~~~~~~~~~~~~
 Stimulus plugins have to inherit from 'expyriment.stimuli.Stimulus'. This means
 they can also inherit from any other stimulus class.
-Additionally, every extra stimulus class needs a '_create_surface' method that
-defines what happens when the stimulus is preloaded, plotted or presented.
+Additionally, every visual extra stimulus class (inherited from expyriment.stimuli.Visual)
+needs a '_create_surface' method that defines what happens when the stimulus is preloaded,
+plotted or presented.
