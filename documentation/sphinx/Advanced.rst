@@ -13,3 +13,4 @@ Advanced
     Using non-English characters <Unicode>
     Using fonts <Fonts>
     Plugin system (extras) <Plugins>
+    Defaults (settings) <Defaults>
