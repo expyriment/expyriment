@@ -143,9 +143,7 @@ The left picture shows a good result, the right picture shows a bad result.
         # show histogram of presentation delays
         time_diff= map(lambda x:x[1]-x[0], zip(todo_time, actual_time))
         hist, hist_str = _histogram(time_diff)
-        text = stimuli.TextScreen("Historgram of presentation delays",
-                    "Historgram of time differences (dRT) between " +
-                    "actual and instructed presentation.\n\n" + hist_str,
+        text = stimuli.TextScreen("Stimulus presentation delays", hist_str,
                     text_font="freemono", text_size = 16, text_bold=True, text_justification=0)
         text.present()
         exp.keyboard.wait()
