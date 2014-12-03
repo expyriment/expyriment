@@ -10,6 +10,8 @@ __revision__ = ''
 __date__ = ''
 
 
+import sys
+
 import pygame
 try:
     import OpenGL.GL as ogl
@@ -32,7 +34,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size):
+    def __init__(self, colour, open_gl, window_mode, window_size, blocking_mode=1):
         """Create and set up a screen output.
 
         Notes
@@ -51,6 +53,12 @@ class Screen(Output):
             size of the window in window_mode,
             full screen mode if size of window_mode[0]<=0
 
+        blocking_mode : int
+            type of screen blocking
+            0: no sync screen blocking (always in non open_gl modes)
+            1: old sync xxxxx #TODO
+            2: new sync xxx #TODO
+
         """
 
         Output.__init__(self)
@@ -58,6 +66,15 @@ class Screen(Output):
         self._open_gl = open_gl
         self._fullscreen = not window_mode
         self._window_size = window_size
+        if open_gl:
+            self._blocking_mode = blocking_mode
+        else:
+            warn_message = "Blocking mode {0} does only work with OpenGL. \
+Blocking mode will be set to 0!".format(blocking_mode)
+            print("Warning: " + warn_message)
+            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
+            self._blocking_mode = 0
+
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
 OpenGL will be deactivated!"
@@ -65,12 +82,6 @@ OpenGL will be deactivated!"
             expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
 
-        if self._open_gl and not self._fullscreen:
-            warn_message = "OpenGL does not support window mode. \
-OpenGL will be deactivated!"
-            print("Warning: " + warn_message)
-            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
-            self._open_gl = False
         pygame.display.init()
         if expyriment._active_exp.is_initialized:
             self._monitor_resolution = \
@@ -90,9 +101,14 @@ OpenGL will be deactivated!"
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
         else:
-            self._surface = pygame.display.set_mode(
-                self._window_size,
-                pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            if self._fullscreen:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            else:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL)
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
                 ogl_extensions = ogl.glGetString(ogl.GL_EXTENSIONS)
@@ -127,6 +143,12 @@ machine!")
         return self._open_gl
 
     @property
+    def blocking_mode(self):
+        """Getter for sync_mode."""
+
+        return self._blocking_mode
+
+    @property
     def window_mode(self):
         """Getter for window_mode."""
 
@@ -153,7 +175,12 @@ machine!")
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._open_gl:
+        if self._open_gl and self._blocking_mode > 0:
+            if self._blocking_mode == 2:
+                ogl.glBegin(ogl.GL_POINTS)
+                ogl.glColor4f(0, 0, 0, 0)
+                ogl.glVertex2i(0, 0)
+                ogl.glEnd()
             ogl.glFinish()
         if self._logging:
             expyriment._active_exp._event_file_log("Screen,updated", 2)
