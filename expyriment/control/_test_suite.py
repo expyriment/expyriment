@@ -104,7 +104,7 @@ The left picture shows a good result, the right picture shows a bad result.
         picture.preload()
         todo_time = []
         actual_time = []
-        for x in range(200):
+        for x in range(150):
             todo_time.append(expyriment.design.randomize.rand_int(0, 60))
             picture.present()
             start = exp.clock.time
@@ -139,10 +139,12 @@ The left picture shows a good result, the right picture shows a bad result.
             response1 = "Steps"
         elif key == constants.K_RIGHT:
             response1 = "Line"
+        else:
+            response1 = None
 
         # show histogram of presentation delays
-        time_diff= map(lambda x:x[1]-x[0], zip(todo_time, actual_time))
-        hist, hist_str = _histogram(time_diff)
+        delay= map(lambda x:x[1]-x[0], zip(todo_time, actual_time))
+        _, hist_str = _histogram(delay)
         text = stimuli.TextScreen("Stimulus presentation delays", hist_str,
                     text_font="freemono", text_size = 16, text_bold=True, text_justification=0)
         text.present()
@@ -480,6 +482,10 @@ def run_test_suite():
             results["testsuite_visual_sync_refresh_rate"] = str(rtn[3]) + " Hz"
             results["testsuite_visual_sync_user"] = rtn[4]
             results["testsuite_visual_flipping_user"] = rtn[5]
+            delay = map(lambda x:x[1]-x[0],
+                           zip(results["testsuite_visual_timing_todo"],
+                               results["testsuite_visual_timing_actual"]))
+            results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
             if ogl is not None:
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
                 results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
