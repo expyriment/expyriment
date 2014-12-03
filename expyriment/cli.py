@@ -45,7 +45,7 @@ functions to join the data output.
       -A              Start the Expyrimnent API Reference Tool
       -B              Open browser with API refelence
       -h              Show this help
-""" # TODO: blocking docu
+"""
 
 unknown_option = "Unknown option '{0}' (use --help for information)"
 
@@ -142,7 +142,7 @@ if __name__ == "__main__":
                             expyriment.control.defaults.blocking_mode = 2
                         elif arg == 't':
                             print "* No time stamps"
-                            expyriment.io.defaults.argvoutputfile_time_stamp =\
+                            expyriment.io.defaults.outputfile_time_stamp =\
                                     False
                         elif arg == 'a':
                             print "* Auto create subject id"
