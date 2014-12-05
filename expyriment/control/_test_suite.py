@@ -114,6 +114,17 @@ The left picture shows a good result, the right picture shows a bad result.
             actual_time.append((get_time() - start) * 1000)
             exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
 
+        # determine refresh_rate
+        tmp = []
+        for _x in range(20):
+            start = get_time()
+            picture.present()
+            tmp.append(get_time() - start)
+            start = get_time()
+            cnvs.present()
+            tmp.append(get_time() - start)
+        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
+
         text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         graph = _make_graph(todo_time, actual_time, [150, 150, 150])
         graph.position = (0, -100)
@@ -147,18 +158,21 @@ The left picture shows a good result, the right picture shows a bad result.
         def expected_delay(presentation_time, refresh_rate):
             refresh_time = 1000.0/refresh_rate
             return refresh_time - (presentation_time % refresh_time)
-        refresh_rate = 60 # FIXME: refesh_rate is hardcoded
         # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
         unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
                                 zip(todo_time, actual_time))
         _, hist_str = _histogram(unexplained_delay)
 
-        text = stimuli.TextScreen("Unexplained stimulus presentation delays", hist_str,
-                    text_font="freemono", text_size = 16, text_bold=True, text_justification=0)
+        text = stimuli.TextScreen("Unexplained stimulus presentation delays",
+                    "Estimated Refresh rate: {0} Hz\n\n".format(refresh_rate) +
+                    hist_str,
+                    text_font="freemono", text_size = 16, text_bold=True,
+                    text_justification=0)
         text.present()
         exp.keyboard.wait()
 
         return todo_time, actual_time, response1
+
 
 
     def _test2():
