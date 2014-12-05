@@ -101,6 +101,10 @@ OpenGL will be deactivated!"
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
         else:
+            try:
+                pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
+            except:
+                pass
             if self._fullscreen:
                 self._surface = pygame.display.set_mode(
                     self._window_size,
