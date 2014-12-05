@@ -14,7 +14,6 @@ __date__ = ''
 
 
 import os
-from math import ceil
 
 import pygame
 try:
@@ -49,6 +48,7 @@ def _histogram(data):
 
     hist = {}
     for x in data: # make histogram
+        x = int(x)
         if hist.has_key(x):
             hist[x] += 1
         else:
@@ -108,10 +108,10 @@ The left picture shows a good result, the right picture shows a bad result.
         actual_time = []
         for x in todo_time:
             picture.present()
-            start = exp.clock.time
+            start = get_time()
             exp.clock.wait(x)
             cnvs.present()
-            actual_time.append(exp.clock.time - start)
+            actual_time.append((get_time() - start) * 1000)
             exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
 
         text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
@@ -144,9 +144,16 @@ The left picture shows a good result, the right picture shows a bad result.
             response1 = None
 
         # show histogram of presentation delays
-        delay= map(lambda x:x[1]-x[0], zip(todo_time, actual_time))
-        _, hist_str = _histogram(delay)
-        text = stimuli.TextScreen("Stimulus presentation delays", hist_str,
+        def expected_delay(presentation_time, refresh_rate):
+            refresh_time = 1000.0/refresh_rate
+            return refresh_time - (presentation_time % refresh_time)
+        refresh_rate = 60 # FIXME: refesh_rate is hardcoded
+        # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
+        unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
+                                zip(todo_time, actual_time))
+        _, hist_str = _histogram(unexplained_delay)
+
+        text = stimuli.TextScreen("Unexplained stimulus presentation delays", hist_str,
                     text_font="freemono", text_size = 16, text_bold=True, text_justification=0)
         text.present()
         exp.keyboard.wait()
