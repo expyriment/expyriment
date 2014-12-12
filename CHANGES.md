@@ -37,18 +37,22 @@ New Features:
 - new helper functions in misc and control
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
-- new feature: too long text lines will be trimmed automatically if the
+- new feature: too long text lines will be trimmed automatically if the 
   max_width parameter has been defined
-- new feature: too long words in text boxes will be trimmed automatically,
+- new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
+- control.defaults.blocking_mode for setting the blocking_mode
 - new feature: improved functionality of ranomize.shuffle_list
 
 Changed:
+- ATTENTION: Open_GL is now also used in window mode and will not be switch
+  off automatically, if Expyriment is not running in fullscreen modus.
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
 - the property Shape.size has been renamed to shape.shape_size
+- io.screen has new parameter to change the type of sync_screen blocking
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired
