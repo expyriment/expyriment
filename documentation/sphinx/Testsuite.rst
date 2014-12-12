@@ -9,8 +9,10 @@ functionality/usage.
 Eventually, all test results can be saved as a protocol, together with some 
 information about the system.
 
-**Starting the test suite**
-
+Usage
+------
+Starting the test suite
+~~~~~~~~~~~~~~~~~~~~~~~
 The test suite can either be started from within an experiment, or from an 
 interactive Python session (for instance with IPython). To start the test 
 suite, just call::
@@ -23,8 +25,10 @@ Alternatively, you can start the test suite from the command line using the
 
    $ python -m expyriment.cli -T 
 
-**Menu overview**
+**Please note that all changes to Defaults_ prior to starting the test suite apply!**
 
+Menu overview
+~~~~~~~~~~~~~
 Here is a brief explanation of the available options:
 
 1. *Visual stimulus presentation*

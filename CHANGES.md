@@ -37,24 +37,21 @@ New Features:
 - new helper functions in misc and control
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
-- new feature: too long text lines will be trimmed automatically if the 
+- new feature: too long text lines will be trimmed automatically if the
   max_width parameter has been defined
-- new feature: too long words in text boxes will be trimmed automatically, 
+- new feature: too long words in text boxes will be trimmed automatically,
   this function can be switch off
-- control.defaults.blocking_mode for setting the blocking_mode
+- new feature: improved functionality of ranomize.shuffle_list
 
 Changed:
-- ATTENTION: Open_GL is now also used in window mode and will not be switch
-  off automatically, if Expyriment is not running in fullscreen modus.
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
 - the property Shape.size has been renamed to shape.shape_size
-- io.screen has new parameter to change the type of sync_screen blocking
 
 Fixed:
-- bug in io.TouchScreenButton crash if duration expired 
+- bug in io.TouchScreenButton crash if duration expired
 - bug in command line interface: order of argument is now irrelevant
 - keypad bug in TextInput
 - unicode bug in TextMenu
@@ -63,7 +60,7 @@ Fixed:
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
-- new feature in testsuite: Font viewer 
+- new feature in testsuite: Font viewer
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic_time (this time should be always used)
