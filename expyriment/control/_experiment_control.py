@@ -326,11 +326,15 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
             pygame.display.set_mode(experiment.screen._window_size)
             pygame.display.iconify()
 
-    experiment._screen.colour = [0, 0, 0]
-    stimuli.TextLine(goodbye_text, position=(0, 0),
-                     text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                     text_size=24).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
+    try:
+        experiment._screen.colour = [0, 0, 0]
+        stimuli.TextLine(goodbye_text, position=(0, 0),
+                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                         text_size=24).present()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+    except:
+        pass
+    
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
     expyriment._active_exp = design.Experiment("None")
