@@ -50,15 +50,15 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     Parameters
     ----------
     experiment : design.Experiment, optional (DEPRECATED)
-        Don't use this parameter, it only exists to keep backward compatibility.
+        don't use this parameter, it only exists to keep backward compatibility
     auto_create_subject_id : bool, optional
-        if True new subject id will be created automatically.
+        if True new subject id will be created automatically
     subject_id : integer, optional
-        start with a specific subject_id. No subject id input mask will be
-        presented.  Subject_id must be an integer.  Setting this paramter
-        overrules auto_create_subject_id.
-    skip_ready_screen : boolen, optional
-        if True ready screen will be skipped. default=False
+        start with a specific subject_id;
+        no subject id input mask will be presented; subject_id must be an
+        integer; setting this paramter overrules auto_create_subject_id
+    skip_ready_screen : bool, optional
+        if True ready screen will be skipped (default=False)
 
     Returns
     -------
@@ -326,11 +326,15 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
             pygame.display.set_mode(experiment.screen._window_size)
             pygame.display.iconify()
 
-    experiment._screen.colour = [0, 0, 0]
-    stimuli.TextLine(goodbye_text, position=(0, 0),
-                     text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                     text_size=24).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
+    try:
+        experiment._screen.colour = [0, 0, 0]
+        stimuli.TextLine(goodbye_text, position=(0, 0),
+                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                         text_size=24).present()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+    except:
+        pass
+    
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
     expyriment._active_exp = design.Experiment("None")
@@ -407,8 +411,11 @@ fullscreen."""
         mixer.init()  # Needed on some systems
 
     experiment._clock = misc.Clock()
-    experiment._screen = Screen((0, 0, 0), defaults.open_gl,
-                                defaults.window_mode, defaults.window_size)
+    experiment._screen = Screen(colour=(0, 0, 0),
+                                open_gl=defaults.open_gl,
+                                window_mode=defaults.window_mode,
+                                window_size=defaults.window_size,
+                                blocking_mode=defaults.blocking_mode)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
     if is_idle_running() and sys.argv[0] != "":
         try:

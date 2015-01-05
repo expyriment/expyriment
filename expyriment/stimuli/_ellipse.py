@@ -24,7 +24,8 @@ import expyriment
 class Ellipse(Visual):
     """A class implementing a basic 2D ellipse."""
 
-    def __init__(self, size, colour=None, line_width=None, position=None):
+    def __init__(self, size, colour=None, line_width=None, position=None,
+                 anti_aliasing=None):
         """Create an ellipse.
 
         Parameters
@@ -38,6 +39,8 @@ class Ellipse(Visual):
             (as does a value < 0 or >= min(size))
         position : (int, int), optional
             position of the stimulus
+        anti_aliasing : int, optional
+            anti aliasing parameter (good anti_aliasing with 10)
 
         """
 
@@ -56,6 +59,10 @@ class Ellipse(Visual):
         elif line_width < 0 or line_width >= min(self._size):
             line_width = 0
         self._line_width = line_width
+        if anti_aliasing is not None:
+            self._anti_aliasing = anti_aliasing
+        else:
+            self._anti_aliasing = defaults.shape_anti_aliasing
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -104,14 +111,39 @@ class Ellipse(Visual):
         else:
             self._line_width = value
 
+    @property
+    def anti_aliasing(self):
+        """Getter for anti_aliasing."""
+
+        return self._anti_aliasing
+
+    @anti_aliasing.setter
+    def anti_aliasing(self, value):
+        """Setter for anti_aliasing."""
+
+        if self.has_surface:
+            raise AttributeError(Ellipse._getter_exception_message.format(
+                "anti_aliasing"))
+        self._anti_aliasing = value
+
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
+        if self._anti_aliasing > 0:
+            aa_scaling = (self._anti_aliasing / 5.0) + 1
+        else:
+            aa_scaling = 1
+        size = (self._size[0] * aa_scaling, self._size[1] * aa_scaling)
+
         if self._line_width == 0:
             surface = pygame.surface.Surface(
-                self._size, pygame.SRCALPHA).convert_alpha()
+                size, pygame.SRCALPHA).convert_alpha()
             pygame.draw.ellipse(surface, self._colour, pygame.Rect(
-                (0, 0), self._size))
+                (0, 0), size))
+            if aa_scaling != 1:
+                surface = pygame.transform.smoothscale(surface,
+                                (int(size[0] / aa_scaling),
+                                 int(size[1] / aa_scaling)))
 
         else:
             # Invert colours and use it as colourkey for a temporal surface,
@@ -119,19 +151,24 @@ class Ellipse(Visual):
             colour = [abs(self._colour[0] - 255),
                       abs(self._colour[1] - 255),
                       abs(self._colour[2] - 255)]
+            line_width = self._line_width * aa_scaling
             surface = pygame.surface.Surface(
-                [x + self._line_width for x in self._size],
+                [x + line_width for x in size],
                 pygame.SRCALPHA).convert_alpha()
             tmp = pygame.surface.Surface(
-                [x + self._line_width for x in self._size]).convert()
+                [x + line_width for x in size]).convert()
             tmp.set_colorkey(colour)
             tmp.fill(colour)
             pygame.draw.ellipse(tmp, self._colour, pygame.Rect(
-                (0, 0), [x + self._line_width for x in self._size]))
+                (0, 0), [x + line_width for x in size]))
             pygame.draw.ellipse(tmp, colour, pygame.Rect(
-                (self._line_width, self._line_width),
-                [x - self._line_width for x in self._size]))
+                (line_width, line_width),
+                [x - line_width for x in size]))
             surface.blit(tmp, (0, 0))
+            if aa_scaling != 1:
+                surface = pygame.transform.smoothscale(surface,
+                                (int(size[0] / aa_scaling),
+                                 int(size[1] / aa_scaling)))
 
         return surface
 
@@ -141,6 +178,6 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     defaults.event_logging = 0
     exp = control.initialize()
-    ellipse = Ellipse(size=[200, 100])
+    ellipse = Ellipse(size=[200, 200], anti_aliasing=10)
     ellipse.present()
     exp.clock.wait(1000)

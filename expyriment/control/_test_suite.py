@@ -463,7 +463,7 @@ def run_test_suite():
                 results["testsuite_audio_bitdepth"] = str(abs(pygame.mixer.get_init()[1])) + " bit"
                 results["testsuite_audio_channels"] = pygame.mixer.get_init()[2]
             except:
-                presults["testsuite_audio_frequency"] = ""
+                results["testsuite_audio_frequency"] = ""
                 results["testsuite_audio_bitdepth"] = ""
                 results["testsuite_audio_channels"] = ""
             preselected_item = select + 1

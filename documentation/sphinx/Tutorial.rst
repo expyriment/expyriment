@@ -390,12 +390,15 @@ Let's see why this is:
     Now have a look at the "data" and "events" directories (in the same 
     directory where your first_example.py is located). The "data" directory 
     contains data log files, named according to the experiment name, the 
-    subject number and a timestamp. The file ending is .xpd. The event 
-    directory contains event log files with the ending .xpe. Open the latest 
-    data file to see the data we just logged. Notice that the first rows are a 
-    header with some information about the file. However, it would be nice to 
-    also have the variable names of what is logged in there. To do this, add 
-    the following lines above where you start the experiment:
+    subject number and a timestamp. The file ending is .xpd. (Note: To 
+    disable time stamps in output filenames, you have change the defauls of
+    the io module before you initialize your experiment: 
+    ``expyriment.io.defaults.outputfile_time_stamp = False``)  The event 
+    directory contains event log files with the ending .xpe.
+    Open the latest data file to see the data we just logged. Notice that the 
+    first rows are a header with some information about the file. However, it 
+    would be nice to also have the variable names of what is logged in there. 
+    To do this, add the following lines above where you start the experiment:
 
     ``exp.data_variable_names = ["Block", "Trial", "Key", "RT"]``
 
