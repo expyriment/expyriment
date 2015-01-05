@@ -48,7 +48,7 @@ class Screen(Output):
         open_gl : int or bool
             0/False - No OpenGL (no vsync / no blocking)
             1       - OpenGL (vsync / no blocking)
-            2/True  - OpenGL (vsync / blocking) (default)
+            2/True  - OpenGL (vsync / blocking)
             3       - OpenGL (vsync / alternative blocking)
         window_mode : bool
              if screen should be a window
