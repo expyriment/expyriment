@@ -9,7 +9,7 @@ New Features:
 - Antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
 - new function: quiting wait or event loops by callback_function, if this function
-  returs an instance of the new class control.CallbackQuitEvent
+  returns an instance of the new class control.CallbackQuitEvent
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
 - new stimulus: stimuli.extras.ThermometerDisplay
@@ -41,8 +41,7 @@ New Features:
   max_width parameter has been defined
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
-- control.defaults.blocking_mode for setting the blocking_mode
-- new feature: improved functionality of ranomize.shuffle_list
+- new feature: improved functionality of randomize.shuffle_list
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
@@ -52,7 +51,11 @@ Changed:
   (ATTENTION: Byte order in the output of other status lines has changed!)
 - changes at Simon example
 - the property Shape.size has been renamed to shape.shape_size
-- io.screen has new parameter to change the type of sync_screen blocking
+- io.screen.open_gl and control.defaults.open_gl have new parameters:
+    0/False - No OpenGL (no vsync / no blocking)
+    1       - OpenGL (vsync / no blocking)
+    2/True  - OpenGL (vsync / blocking)
+    3       - OpenGL (vsync / alternative blocking)
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired
