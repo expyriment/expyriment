@@ -259,7 +259,6 @@ def pause():
     else:
         experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
-    return key
 
 
 def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
