@@ -576,8 +576,8 @@ class Experiment(object):
             constrains (see max_repetitions)
 
         See Also
-        ----------
-        `randomize.shuffle_list`
+        --------
+        randomize.shuffle_list
 
         """
 
@@ -1831,7 +1831,7 @@ class Trial(object):
 
         See Also
         ----------
-        `randomize.shuffle_list`
+        randomize.shuffle_list
 
         """
 
