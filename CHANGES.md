@@ -42,6 +42,8 @@ New Features:
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
 - new feature: improved functionality of randomize.shuffle_list
+- Testsuite summarizes delay histograms for visual presentations
+- control.defaults.blocking_mode for setting the blocking_mode
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch

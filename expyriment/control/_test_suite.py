@@ -27,7 +27,7 @@ import expyriment
 from expyriment import stimuli, io
 from expyriment.misc import constants, statistics
 from expyriment.misc._timer import get_time
-
+from expyriment.design import randomize
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -40,6 +40,40 @@ def _make_graph(x, y, colour):
         dot.plot(graph)
     return graph
 
+def _histogram(data):
+    """Returns the hist of the data (list of numbers) as dict and
+    as string representation
+
+    """
+
+    hist = {}
+    for x in data: # make histogram
+        x = int(x)
+        if hist.has_key(x):
+            hist[x] += 1
+        else:
+            hist[x] = 1
+    #make string representation
+    hist_str = ""
+    cnt = 0
+    str1 = None
+    for x in range(min(hist.keys()), max(hist.keys())+1):
+        if str1 is None:
+            str1 = "dRT: "
+            str2 = "  n: "
+        str1 += "%4d" % x
+        if hist.has_key(x):
+            value = hist[x]
+        else:
+            value = 0
+        str2 += "%4d" % value
+        if x % 10 == 0:
+            hist_str += str1 + "\n" + str2 + "\n\n"
+            str1 = None
+
+    if str1 is not None:
+        hist_str += str1 + "\n" + str2 + "\n\n"
+    return hist, hist_str
 
 def _stimulus_timing(exp):
     """Test the timing of stimulus presentation."""
@@ -69,16 +103,28 @@ The left picture shows a good result, the right picture shows a bad result.
         picture = stimuli.Rectangle((100, 100))
         cnvs.preload()
         picture.preload()
-        todo_time = []
+        todo_time = range(0, 60) * 3
+        randomize.shuffle_list(todo_time)
         actual_time = []
-        for x in range(200):
-            todo_time.append(expyriment.design.randomize.rand_int(0, 60))
+        for x in todo_time:
             picture.present()
-            start = exp.clock.time
-            exp.clock.wait(todo_time[-1])
+            start = get_time()
+            exp.clock.wait(x)
             cnvs.present()
-            actual_time.append(exp.clock.time - start)
-            exp.clock.wait(expyriment.design.randomize.rand_int(30, 100))
+            actual_time.append((get_time() - start) * 1000)
+            exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
+
+        # determine refresh_rate
+        tmp = []
+        for _x in range(20):
+            start = get_time()
+            picture.present()
+            tmp.append(get_time() - start)
+            start = get_time()
+            cnvs.present()
+            tmp.append(get_time() - start)
+        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
+
         text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         graph = _make_graph(todo_time, actual_time, [150, 150, 150])
         graph.position = (0, -100)
@@ -105,8 +151,28 @@ The left picture shows a good result, the right picture shows a bad result.
             response1 = "Steps"
         elif key == constants.K_RIGHT:
             response1 = "Line"
+        else:
+            response1 = None
+
+        # show histogram of presentation delays
+        def expected_delay(presentation_time, refresh_rate):
+            refresh_time = 1000.0/refresh_rate
+            return refresh_time - (presentation_time % refresh_time)
+        # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
+        unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
+                                zip(todo_time, actual_time))
+        _, hist_str = _histogram(unexplained_delay)
+
+        text = stimuli.TextScreen("Unexplained stimulus presentation delays",
+                    "Estimated Refresh rate: {0} Hz\n\n".format(refresh_rate) +
+                    hist_str,
+                    text_font="freemono", text_size = 16, text_bold=True,
+                    text_justification=0)
+        text.present()
+        exp.keyboard.wait()
 
         return todo_time, actual_time, response1
+
 
 
     def _test2():
@@ -438,6 +504,10 @@ def run_test_suite():
             results["testsuite_visual_sync_refresh_rate"] = str(rtn[3]) + " Hz"
             results["testsuite_visual_sync_user"] = rtn[4]
             results["testsuite_visual_flipping_user"] = rtn[5]
+            delay = map(lambda x:x[1]-x[0],
+                           zip(results["testsuite_visual_timing_todo"],
+                               results["testsuite_visual_timing_actual"]))
+            results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
             if ogl is not None:
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
                 results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
