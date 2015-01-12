@@ -5,4 +5,3 @@ randomdotkinematogram_dot_colour = None # expyriment default
 randomdotkinematogram_background_colour = None # expyriment default
 randomdotkinematogram_north_up_clockwise = True
 randomdotkinematogram_position = (0,0)
-
