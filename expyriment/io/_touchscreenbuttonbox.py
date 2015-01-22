@@ -47,9 +47,13 @@ class TouchScreenButtonBox(Input):
 
         Input.__init__(self)
 
-        if type(button_fields) is not list:
+        try:
+            button_fields = list(button_fields)
+        except:
             button_fields = [button_fields]
-        if type(stimuli) is not list:
+        try:
+            stimuli = list(stimuli)
+        except:
             stimuli = [stimuli]
 
         self._mouse = expyriment._active_exp.mouse
@@ -186,8 +190,11 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if button_fields is not None and type(button_fields) is not list:
-            button_fields = [button_fields]
+        if button_fields is not None:
+            try:
+                button_fields = list(button_fields)
+            except:
+                button_fields = [button_fields]
         if check_for_control_keys:
             expyriment.io.Keyboard.process_control_keys()
 

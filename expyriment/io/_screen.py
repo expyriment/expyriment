@@ -190,7 +190,10 @@ machine!")
             stimulus or a list of stimuli to update
 
         """
-        if type(stimuli) is not list:
+
+        try:
+            stimuli = list(stimuli)
+        except:
             stimuli = [stimuli]
 
         if not self._open_gl:

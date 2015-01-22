@@ -179,8 +179,11 @@ class Keyboard(Input):
 
         if keys is None:
             keys = self.default_keys
-        if type(keys) is not list and keys is not None:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         pygame.event.pump()
         pygame.event.clear(pygame.KEYUP)
         for event in pygame.event.get(pygame.KEYDOWN):
@@ -245,8 +248,11 @@ class Keyboard(Input):
         self.clear()
         if keys is None:
             keys = self.default_keys
-        if keys is not None and type(keys) is not list:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         if wait_for_keyup:
             target_event = pygame.KEYUP
         else:
@@ -317,7 +323,9 @@ class Keyboard(Input):
         rt = None
         found_char = None
         self.clear()
-        if type(char) is not list:
+        try:
+            char = list(char)
+        except:
             char = [char]
         pygame.event.pump()
         done = False

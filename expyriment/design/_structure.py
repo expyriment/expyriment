@@ -257,7 +257,9 @@ class Experiment(object):
         """
         if variable_names is None:
             return
-        if type(variable_names) is not list:
+        try:
+            variable_names = list(variable_names)
+        except:
             variable_names = [variable_names]
         self._data_variable_names.extend(variable_names)
         if self.data is not None:
@@ -281,8 +283,11 @@ class Experiment(object):
 
         if text is None:
             return
-        if type(text) is not list:
+        try:
+            text = list(text)
+        except:
             text = [text]
+
         self._experiment_info.extend(text)
         if self.data is not None:
             self.data.add_experiment_info(text)
@@ -332,7 +337,9 @@ class Experiment(object):
 
         """
 
-        if type(conditions) is not list:
+        try:
+            conditions = list(conditions)
+        except:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)

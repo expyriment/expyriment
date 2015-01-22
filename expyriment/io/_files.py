@@ -488,7 +488,9 @@ class DataFile(OutputFile):
 
         if variable_names is None:
             return
-        if type(variable_names) is not list:
+        try:
+            variable_names = list(variable_names)
+        except:
             variable_names = [variable_names]
         self._variable_names.extend(variable_names)
         self._variable_names_changed = True

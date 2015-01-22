@@ -451,8 +451,11 @@ class Mouse(Input):
         motion_occured = False
         if buttons is None:
             buttons = [0, 1, 2, 3, 4]
-        if type(buttons) is not list:
-            buttons = [buttons]
+        else:
+            try:
+                buttons = list(buttons)
+            except:
+                buttons = [buttons]
         while True:
             rtn_callback = expyriment._active_exp._execute_wait_callback()
             if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):

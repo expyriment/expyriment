@@ -236,7 +236,9 @@ class GamePad(Input, Output):
         self.clear()
         if buttons is None:
             buttons = range(self.get_numbuttons())
-        if type(buttons) is not list:
+        try:
+            buttons = list(buttons)
+        except:
             buttons = [buttons]
         done = False
         while not done:

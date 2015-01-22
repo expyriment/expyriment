@@ -444,7 +444,7 @@ class Shape(Visual):
 
         """
 
-        if (type(factors) is not list):
+        if type(factors) is not list and type(factors) is not tuple:
             factors = [factors, factors]
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
