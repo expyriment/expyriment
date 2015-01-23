@@ -246,7 +246,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         results3.plot(info)
         results4.plot(info)
         results5.plot(info)
-        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -200))
+        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -160))
         info2.plot(info)
         info.present()
         exp.keyboard.wait([constants.K_RETURN])
