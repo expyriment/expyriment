@@ -43,7 +43,7 @@ functions to join the data output.
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
-      -B              Open browser with API refelence
+      -B              Open browser with API reference
       -h              Show this help
 """
 
@@ -119,7 +119,6 @@ if __name__ == "__main__":
                     #sort args (capital letters last)
                     arguments = list(args[1:])
                     arguments.sort(reverse=True)
-
                     for arg in arguments:
                         if arg == 'd':
                             expyriment.control.set_develop_mode(True)
@@ -133,12 +132,18 @@ if __name__ == "__main__":
                         elif arg == 'w':
                             print "* Window mode"
                             expyriment.control.defaults.window_mode = True
-                        elif arg == 'g':
+                        elif arg == 'g' or arg == 0:
                             print "* No OpenGL"
                             expyriment.control.defaults.open_gl = False
-                        elif arg == 'b':
-                            print "* Blocking_mode 2"
-                            expyriment.control.defaults.blocking_mode = 2
+                        elif arg == '1':
+                            print "* OpenGL mode 1"
+                            expyriment.control.defaults.open_gl = 1
+                        elif arg == '2':
+                            print "* OpenGL mode 2"
+                            expyriment.control.defaults.open_gl = 2
+                        elif arg == '3':
+                            print "* OpenGL mode 3"
+                            expyriment.control.defaults.open_gl = 3
                         elif arg == 't':
                             print "* No time stamps"
                             expyriment.io.defaults.outputfile_time_stamp =\
