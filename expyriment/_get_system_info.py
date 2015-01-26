@@ -251,10 +251,10 @@ def get_system_info(as_string=False):
                 y = item.find("page size of")
                 if x > -1:
                     non_decimal = re.compile(r'[^\d.]+')
-                    free = int(non_decimal.sub('', item))
+                    free = int(non_decimal.sub('', item).strip("."))
                 if y > -1:
                     non_decimal = re.compile(r'[^\d.]+')
-                    page = int(non_decimal.sub('', item))
+                    page = int(non_decimal.sub('', item).strip("."))
             hardware_memory_free = str((free * page) / 1024 ** 2) + "MB "
 
         except:
