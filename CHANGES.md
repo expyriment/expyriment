@@ -65,6 +65,7 @@ Fixed:
 - keypad bug in TextInput
 - unicode bug in TextMenu
 - bug in anti_aliasing shapes
+- some method parameters that require a list and didn't work with tuples 
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
