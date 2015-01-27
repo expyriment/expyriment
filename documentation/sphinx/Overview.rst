@@ -20,8 +20,8 @@ experience.
 
 *Authors*
 
-* `Florian Krause <http://www.dcc.ru.nl/anc/index.php?staff=krause>`_, Radboud 
-  University Nijmegen, The Netherlands
+* `Florian Krause <http://www.fladd.de/research>`_, Brain Innovation, Maastricht
+University, The Netherlands
     
 * `Oliver Lindemann 
   <http://www.psych.uni-potsdam.de/people/lindemann/index-e.html>`_, University 
