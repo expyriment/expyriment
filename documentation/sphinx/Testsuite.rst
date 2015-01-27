@@ -33,10 +33,30 @@ Here is a brief explanation of the available options:
 
 1. *Visual stimulus presentation*
 
- * Tests if stimuli can be presented timing accurately
- * Tests if stimulus presentation is synchronized to the refresh rate of the 
-   screen
- * Tests the video card's settings for buffering
+ * Tests the visual stimulus presentation timing specifics of the system
+
+ The following results will be reported:
+  * "Estimated Screen Refresh Rate": The refresh rate of the screen in Hz and
+    the approximated time of a single refresh in ms
+  * "Detected Framebuffer Pages": The amount of buffers used for drawing to the
+    screen; if only one buffer is used, new stimuli will be drawn directly to the
+    screen; if two buffers (double buffer) are used, new stimuli will be drawn to
+    an additional page, and a screen update will replace the screen with this page
+    and put the screen contents into the page (i.e. the two buffers are swapped);
+    if three buffers (tripple buffer) are used, new stimuli will be drawn to a third
+    page, and a screen update will replace the screen with this page, and put the
+    screen contents into the second page (i.e. a history of 2 former screens is
+    kept)
+  * "Average Reporting Inaccuracy": The average time in ms between Expyriment
+    reporting that the stimulus has been presented (i.e. the present() method
+    returns) and the actual time the stimulus could actually been physically
+    shown on the screen, given the refresh rate; an inaccuracy of 0 ms (marked
+    green) will indicate that blocking on the vertical retrace functions
+    properly; an inaccuracy of 1 ms or more (marked red) will indicate that
+    blocking on the vertical does not function properly
+  * "Unexplained Presentation Delays": The amount in percent of presentations
+    that will take longer than a single refresh rate
+  * A histogram showing the obtained presentation timings
 
 2. *Auditory stimulus presentation*
 

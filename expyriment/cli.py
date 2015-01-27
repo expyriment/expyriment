@@ -28,7 +28,10 @@ methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 
     OPTIONS:
-      -g              No OpenGL
+      -g | -0         No OpenGL (no vsync / no blocking)
+      -1              OpenGL (vsync / no blocking)
+      -2              OpenGL (vsync / blocking)
+      -3              OpenGL (vsync / alternative blocking)
       -t              No time stamps for output files
       -w              Window mode
       -f              Fast mode (no initialize delay and fast quitting)
@@ -133,16 +136,16 @@ if __name__ == "__main__":
                             print "* Window mode"
                             expyriment.control.defaults.window_mode = True
                         elif arg == 'g' or arg == 0:
-                            print "* No OpenGL"
+                            print "* No OpenGL (no vsync / no blocking)"
                             expyriment.control.defaults.open_gl = False
                         elif arg == '1':
-                            print "* OpenGL mode 1"
+                            print "* OpenGL (vsync / no blocking)"
                             expyriment.control.defaults.open_gl = 1
                         elif arg == '2':
-                            print "* OpenGL mode 2"
+                            print "* OpenGL (vsync / blocking)"
                             expyriment.control.defaults.open_gl = 2
                         elif arg == '3':
-                            print "* OpenGL mode 3"
+                            print "* OpenGL (vsync / alternative blocking)"
                             expyriment.control.defaults.open_gl = 3
                         elif arg == 't':
                             print "* No time stamps"

@@ -228,7 +228,7 @@ After the test, you will be asked to indicate which (if any) of those two square
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, text_colour=results3_colour, position=(0, -20))
         if delayed > 10:
-            results4_colour = [255, 0 ,0]
+            results4_colour = [255, 0, 0]
         elif 10 > delayed > 1:
             results4_colour = [255, 255, 0]
         else:

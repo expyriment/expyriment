@@ -3,7 +3,6 @@
 Platform-specific instructions: Linux
 =====================================
 
-
 Debian, Ubuntu and derivatives
 -------------------------------
 

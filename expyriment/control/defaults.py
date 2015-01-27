@@ -1,7 +1,7 @@
 """
 Default settings for the control package.
 
-.. code-block::
+.. ::
     audiosystem_autostart : bool
         start the audiosystem when Expyriment is initialized
         
@@ -23,13 +23,17 @@ Default settings for the control package.
     event_logging : int or bool
         O/False = no event logging
         1       = normal event logging (logging of all input & output events)
-        2       = intensive logging; logs much more; use only for debugging puposes
+        2       = intensive logging; logs much more; use only for debugging
+                  purposes
         
         NOTES
         =====
         In most cases, it should be avoided to switch of logging (loglevel=0).
-        If log files become to big due to certain repetitive events, it is suggested to switch of the logging of individual stimuli or IO event (see the method .set_logging() of this object).
-        The logging of all events can also be changed via expyriment.design.Experiment().set_logging.
+        If log files become to big due to certain repetitive events, it is
+        suggested to switch of the logging of individual stimuli or IO event
+        (see the method .set_logging() of this object).
+        The logging of all events can also be changed via
+        expyriment.design.Experiment().set_logging.
         
     fast_quit : bool
         quit immediately without showing a goodbye message
@@ -41,80 +45,85 @@ Default settings for the control package.
         the text to be shown when ending an experiment
         
     initialize_delay : int
-        a delay (in seconds) to wait before running an experiment to give Python time to start properly
+        a delay (in seconds) to wait before running an experiment to give
+        Python time to start properly
         
         NOTES
         =====
-        Python needs about 10 seconds to start up properly. Before that, timing accuracy can be worse.
+        Python needs about 10 seconds to start up properly. Before that,
+        timing accuracy can be worse.
         
     open_gl : int or bool
-        0/False = PyGame mode (no OpenGL)
-        1       = OpenGL mode vsync
-        2       = OpenGL mode vsync/blocking
-        3       = OpenGL mode vsync/blocking (alternative)
+        0/False = no OpenGL (no vsync / no blocking)
+        1       = OpenGL (vsync / no blocking)
+        2       = OpenGL (vsync / blocking)
+        3       = OpenGL (vsync / alternative blocking)
         
         NOTES
         =====
-        PyGame mode
-        -----------
+        no OpenGL (no vsync / no blocking)
+        ----------------------------------
         * Short preloading times
             Pygame is used to write directly to the display
         * Unsynchronized display updating
-            Pixels are starting to change at wherever the vertical retrace is at
-            the moment of presentation
+            Pixels are starting to change at wherever the vertical retrace is
+            at the moment of presentation
         
-        This mode can be useful for dynamic displays, where an acurate stimulus timing
-        is not required, but rather very fast display changes have high priority and
-        stimuli have to be created and on the fly (e.g. questionnairs, video game-like
-        scenarios).
+        This mode can be useful for dynamic displays, where an accurate
+        stimulus timing is not required, but rather very fast display changes
+        have high priority and stimuli have to be created and on the fly (e.g.
+        questionnairs, video game-like scenarios).
         
-        OpenGL mode vsync
-        -----------------
+        OpenGL (vsync / no blocking)
+        ----------------------------
         * Longer preloading times
-            OpenGL is used to write to the display and a conversion to an OpenGL
-            texture is needed
+            OpenGL is used to write to the display and a conversion to an
+            OpenGL texture is needed
         * Synchronized display updating
-            Pixels are starting to change always when the vertical retrace is at
-            the left top corner
-        * Innacurate presentation time reporting
+            Pixels are starting to change always when the vertical retrace is
+            at the left top corner
+        * Innaccurate presentation time reporting
             Exact time of pixels changing on screen is not known
             
-        This mode can be useful for dynamic displays, where an acurate stimulus timing
-        is not required, but rather fast and fluid (e.g. non-tearing) display changes
-        have high priority and preloaded stimuli can be used (e.g. well-controlled
-        motion stimuli).
+        This mode can be useful for dynamic displays, where an accurate
+        stimulus timing is not required, but rather fast and fluid (e.g.
+        non-tearing) display changes have high priority and preloaded stimuli
+        can be used (e.g. well-controlled motion stimuli).
     
-        OpenGL mode vsync/blocking
-        --------------------------
+        OpenGL (vsync / blocking)
+        -------------------------
         * Longer preloading times
-            OpenGL is used to write to the display and a conversion to an OpenGL
-            texture is needed
+            OpenGL is used to write to the display and a conversion to an
+            OpenGL texture is needed
         * Synchronized display updating
-            Pixels are starting to change always when the vertical retrace is at
-            the left top corner
-        * Acurate presentation time reporting
-            present() method will only return when all drawing has been finished
+            Pixels are starting to change always when the vertical retrace is
+            at the left top corner
+        * Accurate presentation time reporting
+            present() method will only return when all drawing has been
+            finished
     
-        This can be useful for static stimulus presentation, where getting an acurate
-        presentation time report is of highest priority. Since this will be the case
-        for most psychological and neuroscientific settings, it is the default mode
-        used by Expyriment.
+        This can be useful for static stimulus presentation, where getting an
+        accurate  presentation time report is of highest priority. Since this
+        will be the case for most psychological and neuroscientific settings,
+        it is the default mode used by Expyriment.
     
-        OpenGL mode vsync/blocking (alternative)
-        ----------------------------------------
+        OpenGL (vsync / alternative blocking)
+        -------------------------------------
         * Longer preloading times
-            OpenGL is used to write to the display and a conversion to an OpenGL
-            texture is needed
+            OpenGL is used to write to the display and a conversion to an
+            OpenGL texture is needed
         * Synchronized display updating
-            Pixels are starting to change always when the vertical retrace is at
-            the left top corner
-        * Acurate presentation time reporting (alternative method)
-            present() method will only return when all drawing has been finished
-            and the then empty back buffer is available for drawing on it again
+            Pixels are starting to change always when the vertical retrace is
+            at the left top corner
+        * Accurate presentation time reporting (alternative method)
+            present() method will only return when all drawing has been
+            finished and the then empty back buffer is available for drawing
+            on it again
     
-        This can be useful for static stimulus presentation, where getting an acurate
-        presentation time report is of highest priority and the former mode does not
-        work correctly (due to different video card driver implementations).
+        This can be useful for static stimulus presentation, where getting an
+        accurate presentation time report is of highest priority and the
+        former mode does not work correctly (due to different video card
+        driver implementations).
         
     pause_key : int
         the key to be used for pausing an experiment
@@ -126,7 +135,8 @@ Default settings for the control package.
         the key to be used for refreshing the screen
         
     stdout_logging: bool
-        log errors and warnings which go to the standard output (terminal window)
+        log errors and warnings which go to the standard output (terminal
+        window)
         
     window_mode : bool
         run experiment in window instead of fullscreen
