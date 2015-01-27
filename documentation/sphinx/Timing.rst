@@ -56,7 +56,7 @@ has been just over the center line when the screen update was issued.
 In some rare cases, this blocking mechanism will not work. This is due to
 specifics of the video card driver implementation. Should blocking on the
 vertical retrace indeed not work (as can be revealed by the
-:doc:`Expyriment test suite <Testsuite.a>`), an alternative blocking mechanism
+:doc:`Expyriment test suite <Testsuite>`), an alternative blocking mechanism
 is available by using OpenGL set to "vsync / alternative blocking"
 (control.defaults.open_gl=3).
 
