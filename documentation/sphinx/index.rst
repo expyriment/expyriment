@@ -19,12 +19,13 @@ Contents
    :maxdepth: 2
 
    Overview
-   API Reference <expyriment>
+   API reference <expyriment>
    Advanced
    Technical issues <Technical>
    Frequently Asked Questions <FAQ>
    Changelog
-
+   `Previous versions <http://docs.expyriment.org/old/>`_
+   
 **Getting Started**
 
 .. toctree::
