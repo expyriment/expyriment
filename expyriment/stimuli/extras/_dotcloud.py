@@ -19,7 +19,7 @@ import pygame
 
 import expyriment
 from expyriment.stimuli._visual import Visual
-from expyriment.stimuli._dot import Dot as Dot
+from expyriment.stimuli._circle import Circle as Circle
 import  defaults
 
 
@@ -146,7 +146,7 @@ class DotCloud(Visual):
     def create_area(self):
         """Create the area of the cloud (a dot object itself)."""
 
-        self._area = Dot(radius=self._radius,
+        self._area = Circle(diameter=self._radius*2,
                          position=(0, 0),
                          colour=self._background_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
@@ -203,13 +203,13 @@ class DotCloud(Visual):
             remix = remix + 1
             reps = 0
             while(True): #find a solution
-                dot = Dot(radius=dot_radius)
+                dot = Circle(diameter=dot_radius*2)
                 expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
                 dot.position = (random.randint(top_left, bottom_right),
                                 random.randint(top_left, bottom_right))
                 reps = reps + 1
 
-                if dot.is_inside(self.area):
+                if dot.inside_circle(self.area):
                     if not self._is_overlapping_with_point(dot, gap):
                         self._cloud.append(dot)
                         reps = 0
