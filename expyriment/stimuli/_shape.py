@@ -358,8 +358,7 @@ class Shape(Visual):
     def is_point_inside(self, point_xy):
         """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
 
-        print "WARNING: is_point_inside is an obsolete method. Please use overlapping_with_position"
-        return self.native_overlapping_with_position(point_xy)
+        raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
     def overlapping_with_shape(self, other):
         """Return true if shape overlaps with other shape.
@@ -403,8 +402,7 @@ class Shape(Visual):
     def is_shape_overlapping(self, shape2):
         """OBSOLETE METHOD: Please use 'overlapping_with_shape'."""
 
-        print "WARNING: is_shape_overlapping is an obsolete method. Please use overlapping_with_shape."
-        return self.overlapping_with_shape(shape2)
+        raise DeprecationWarning("is_shape_overlapping is an obsolete method. Please use overlapping_with_shape.")
 
     def native_rotate(self, degree):
         """Rotate the shape.

@@ -21,7 +21,7 @@ class Dot(object):
 
         """
 
-        raise RuntimeError("Dot is an obsolete class. Please use Circle!")
+        raise DeprecationWarning("Dot is an obsolete class. Please use Circle!")
 
 
 class Frame(object):
@@ -32,4 +32,4 @@ class Frame(object):
         """OBSOLETE CLASS: Please use Rectangle with a line_width > 0!
 
         """
-        raise RuntimeError("Frame is an obsolete class. Please use Rectangle with a line_width > 0!")
+        raise DeprecationWarning("Frame is an obsolete class. Please use Rectangle with a line_width > 0!")

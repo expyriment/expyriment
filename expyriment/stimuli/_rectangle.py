@@ -138,8 +138,7 @@ class Rectangle(Visual):
     def is_point_inside(self, point_xy):
         """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
 
-        print "WARNING: is_point_inside is an obsolete method. Please use overlapping_with_position"
-        return self.overlapping_with_position(point_xy)
+        raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
 if __name__ == "__main__":
     from expyriment import control

@@ -47,8 +47,7 @@ class FixCross(Shape):
         """
 
         if cross_size is not None and size is None:
-            print "WARNING: Property cross_size is obsolete. Please use size"
-            size = (cross_size, cross_size)
+            raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
         if position is None:
             position = defaults.fixcross_position
@@ -93,8 +92,7 @@ class FixCross(Shape):
     def cross_size(self):
         """OBSOLETE property, please use size"""
 
-        print "WARNING: Property cross_size is obsolete. Please use size"
-        return self.size
+        raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):
