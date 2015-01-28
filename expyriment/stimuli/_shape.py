@@ -356,9 +356,9 @@ class Shape(Visual):
         return pt.is_inside_polygon(self.xy_points_on_screen)
 
     def is_point_inside(self, point_xy):
-        """DEPRECATED METHOD: Please use 'native_overlapping_with_position'."""
+        """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
 
-        return self.native_overlapping_with_position(point_xy)
+        raise RuntimeError("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
     def overlapping_with_shape(self, other):
         """Return true if shape overlaps with other shape.
@@ -400,9 +400,9 @@ class Shape(Visual):
         return False
 
     def is_shape_overlapping(self, shape2):
-        """DEPRECATED METHOD: Please use 'overlapping_with_shape'."""
+        """OBSOLETE METHOD: Please use 'overlapping_with_shape'."""
 
-        return self.overlapping_with_shape(shape2)
+        raise RuntimeError("is_shape_overlapping is an obsolete method. Please use overlapping_with_shape.")
 
 
     def native_rotate(self, degree):

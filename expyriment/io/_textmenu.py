@@ -118,8 +118,8 @@ class TextMenu(Input):
         self._line_size = (width, expyriment.stimuli.TextLine(
             menu_items[0], text_size=text_size).surface_size[1] + 2)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
-        self._frame = expyriment.stimuli.Frame(
-            frame_line_width=select_frame_line_width,
+        self._frame = expyriment.stimuli.Rectangle(
+            line_width=select_frame_line_width,
             size=(self._line_size[0] + 2 * select_frame_line_width,
                   self._line_size[1] + 2 * select_frame_line_width),
             colour=select_frame_colour)
@@ -353,5 +353,5 @@ if __name__ == "__main__":
     menu = TextMenu(heading="Expyriment TextMenu",
                     menu_items=["Items 1", "Items 1", "Items 3", "Items 4",
                            "Items 5"],
-                    width=250)
+                    width=250, select_frame_line_width = 5)
     print menu.get()

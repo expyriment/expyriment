@@ -22,7 +22,7 @@ class FixCross(Shape):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
-                 colour=None, anti_aliasing=None, cross_size=None):
+                 colour=None, anti_aliasing=None):
         """Create a fixation cross.
 
         Parameters
@@ -37,13 +37,15 @@ class FixCross(Shape):
             colour of the cross
         anti_aliasing :  int, optional
             anti aliasing parameter (good anti_aliasing with 10)
-        cross_size : (int, int) DEPRECATED argument
-            please use 'size' and specify x and y dimensions.
+
+
+        NOTE
+        ----
+        The parameter cross_size is now OBSOLETE.
+        Please use 'size' and specify x and y dimensions.
 
         """
 
-        if cross_size is not None and size is None:
-            size = (cross_size, cross_size)
         if position is None:
             position = defaults.fixcross_position
         if colour is None:
@@ -85,9 +87,9 @@ class FixCross(Shape):
 
     @property
     def cross_size(self):
-        """DEPRECATED getter, please use size"""
+        """OBSOLETE property, please use size"""
 
-        return self.size
+        RuntimeError ("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):

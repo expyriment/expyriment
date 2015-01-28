@@ -20,7 +20,6 @@ from _circle import Circle
 from _rectangle import Rectangle
 from _line import Line
 from _ellipse import Ellipse
-from _dot import Dot
 from _shape import Shape
 from _blankscreen import BlankScreen
 from _textline import TextLine
@@ -29,5 +28,6 @@ from _textbox import TextBox
 from _textscreen import TextScreen
 from _picture import Picture
 from _tone import Tone
-from _frame import Frame
 import extras
+
+from _obsolete import Dot, Frame

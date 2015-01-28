@@ -46,6 +46,7 @@ New Features:
 - control.defaults.blocking_mode for setting the blocking_mode
 
 Changed:
+- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
   off automatically, if Expyriment is not running in fullscreen modus.
 - ParallelPort: Polling will now return 4 bits, including also the status of
@@ -58,6 +59,10 @@ Changed:
     1       - OpenGL (vsync / no blocking)
     2/True  - OpenGL (vsync / blocking)
     3       - OpenGL (vsync / alternative blocking)
+- stimuli.Rectangle: is_point_inside is now obsolete
+- stimuli.Shape: is_point_inside and is_shape_overlapping are now obsolete
+- stimuli.Fixcross: fixcross_size parameter and cross_size property are now
+  obsolete
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired
