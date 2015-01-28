@@ -22,7 +22,7 @@ class FixCross(Shape):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
-                 colour=None, anti_aliasing=None):
+                 colour=None, anti_aliasing=None, cross_size=None):
         """Create a fixation cross.
 
         Parameters
@@ -45,6 +45,10 @@ class FixCross(Shape):
         Please use 'size' and specify x and y dimensions.
 
         """
+
+        if cross_size is not None and size is None:
+            print "WARNING: Property cross_size is obsolete. Please use size"
+            size = (cross_size, cross_size)
 
         if position is None:
             position = defaults.fixcross_position
@@ -89,7 +93,8 @@ class FixCross(Shape):
     def cross_size(self):
         """OBSOLETE property, please use size"""
 
-        raise RuntimeError("Property cross_size is obsolete. Please use size")
+        print "WARNING: Property cross_size is obsolete. Please use size"
+        return self.size
 
     @property
     def line_width(self):
