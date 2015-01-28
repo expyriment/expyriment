@@ -89,7 +89,7 @@ class FixCross(Shape):
     def cross_size(self):
         """OBSOLETE property, please use size"""
 
-        RuntimeError ("Property cross_size is obsolete. Please use size")
+        raise RuntimeError("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):
