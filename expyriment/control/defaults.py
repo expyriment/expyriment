@@ -1,7 +1,6 @@
 """
-Default settings for the control package.
+Default settings for the control package. ::
 
-.. ::
     audiosystem_autostart : bool
         start the audiosystem when Expyriment is initialized
         

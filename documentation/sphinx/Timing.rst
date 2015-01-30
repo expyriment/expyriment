@@ -26,7 +26,7 @@ content, being visible. What is even worse is that you will never know in which
 phase of the redrawing the new redraw was started. Thus, you cannot be sure 
 when exactly the new content is fully visible on screen. This should be the
 behaviour of Expyriment, when OpenGL is switched off
-(control.defaults.open_gl=0)
+(``control.defaults.open_gl=0``; see `Defaults`_)
 
 The first step towards getting around this problem is to synchronize the actual 
 redraw to the vertical retrace of the screen. This means that a change in 
@@ -34,13 +34,13 @@ content will never happen immediately, but always only when the retrace is at
 the top left position. When synchronizing to the vertical retrace, the graphic 
 card is told to update the screen the next time it starts redrawing the first 
 line. This should be the behaviour of Expyriment, when OpenGL is switched on
-and set to "vsync / no blocking" (control.defaults.open_gl=1).
+and set to "vsync / no blocking" (``control.defaults.open_gl=1``; see `Defaults`_).
 While this will solve the problem of artifacts, you will still face the
 problem of not knowing when exactly something was visible on the screen, since
 the graphic card handles this synchronization itself in the background.
 
 Solving this problem is the exact (and only) reason why Expyriment will use
-OpenGL set to "vsync / blocking" (control.defaults.open_gl=2) by default.
+OpenGL set to "vsync / blocking" (``control.defaults.open_gl=2``; see `Defaults`_) by default.
 It allows to wait for the vertical retrace to actually happen before
 proceeding with the code that tells the graphics card to update the screen
 (this is also known as blocking on the vertical retrace). This means that
@@ -58,7 +58,7 @@ specifics of the video card driver implementation. Should blocking on the
 vertical retrace indeed not work (as can be revealed by the
 :doc:`Expyriment test suite <Testsuite>`), an alternative blocking mechanism
 is available by using OpenGL set to "vsync / alternative blocking"
-(control.defaults.open_gl=3).
+(``control.defaults.open_gl=3``; see `Defaults`_).
 
 *It is important to set your graphic card's driver settings to support 
 synchronizing to the vertical retrace ("Sync to VBlank" or "V-sync") and to 
@@ -75,7 +75,7 @@ After each screen presentation, a marker was send via the serial port to the
 oscilloscope. Testing was done on an Intel Core Duo PC with an Nvidia Quadro 
 NVS 290 graphics card, running Microsoft Windows XP SP3. The monitor used was a 
 Samsung SyncMaster 2233. Expyriment was running in the default OpenGL mode
-(control.defaults.open_gl=2).
+(``control.defaults.open_gl=2``; see `Defaults`_).
 
 The results revealed:
 

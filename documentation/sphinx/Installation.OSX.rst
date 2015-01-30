@@ -8,9 +8,10 @@ The easiest way is to let MacPorts take care of all dependencies.
 Alternatively, all dependencies can be downloaded and installed manually.
 Both options will install an additional Python environment and will not alter
 the Python environment provided by Apple.
-If, after installation, you get errors about Expyriment (or one of its dependencies)
-not being installed, chances are that you trying to import Expyriment in the "wrong"
-(i.e. Apple's) Python environment.
+
+**If, after installation, you get errors about Expyriment (or one of its dependencies)
+not being installed, chances are you trying to import Expyriment in the "wrong"
+(i.e. Apple's) Python environment.**
 
 Using MacPorts (recommended)
 ----------------------------
@@ -28,18 +29,21 @@ To install Expyriment, download "expyriment-|release|.zip from the `Release page
 Manually (alternative)
 ----------------------
 To install basic dependencies, download the following installers and follow their instructions:
-* `Python 2`_
-* Tcl_
-* XQuartz_ (only for OS X 10.9 and higher)
-* Pygame_
-* NumPy_
+
+ * `Python 2`_
+ * Tcl_
+ * XQuartz_ (only for OS X 10.9 and higher)
+ * Pygame_
+ * NumPy_
 
 In addition:
-* Download PyOpenGL_ and install as described here_
-* Download PySerial_ and install as described here_
+
+ * Download PyOpenGL_ and install as described here_
+ * Download PySerial_ and install as described here_
 
 To install Expyriment:
-* Download "expyriment-|release|.zip from the `Release page`_ and install as described here_
+
+ * Download "expyriment-|release|.zip from the `Release page`_ and install as described here_
 
 Notes
 -----
