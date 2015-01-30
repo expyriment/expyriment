@@ -93,6 +93,7 @@ OpenGL will be deactivated!"
                                                        pygame.FULLSCREEN)
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
+                pygame.display.set_caption('Expyriment')
         else:
             try:
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
@@ -106,6 +107,7 @@ OpenGL will be deactivated!"
                 self._surface = pygame.display.set_mode(
                     self._window_size,
                     pygame.DOUBLEBUF | pygame.OPENGL)
+                pygame.display.set_caption('Expyriment')
 
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:

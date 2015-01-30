@@ -9,8 +9,10 @@ functionality/usage.
 Eventually, all test results can be saved as a protocol, together with some 
 information about the system.
 
+.. image:: test_suite.png
+
 Usage
-------
+-----
 Starting the test suite
 ~~~~~~~~~~~~~~~~~~~~~~~
 The test suite can either be started from within an experiment, or from an 
