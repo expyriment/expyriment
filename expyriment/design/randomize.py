@@ -75,6 +75,7 @@ def rand_element(list_):
 
 def coin_flip():
     """Return randomly True or False.
+
     Returns
     -------
     rnd : bool
@@ -102,14 +103,14 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
     list_ : int
         list to shuffle
     max_repetitions : int, optional
-        maximum number of allowed repetitions of one identical items. If no
+        maximum number of allowed repetitions of one identical items; if no
         solution can be found (i.e., Python's recursion limit is reached), the
         function returns `False` and the list will be randomized without
-        constrains. (see Notes). default = None
+        constrains (see Notes); default = None
     n_segments : int, optional
         randomize list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
-        randomized. If n_segments is None or < 2, this parameter has no effect.
+        randomized; if n_segments is None or < 2, this parameter has no effect;
         default = None
 
     Returns

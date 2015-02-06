@@ -458,8 +458,8 @@ class Experiment(object):
 
         - O no event logging
         - 1 normal event logging (logging of all input & output events)
-        - 2 intensive logging. Logs much more. Please use this only for
-          debugging proposes.
+        - 2 intensive logging; logs much more; please use this only for
+          debugging proposes
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
         If log files become to big due to certain repetitive events, it is
@@ -597,15 +597,15 @@ class Experiment(object):
         Parameters
         ----------
         permutation_type : int (permutation type)
-            type of block order permutation (permutation type)
-            Permutation types defined in misc.constants:
+            type of block order permutation (permutation type);
+            permutation types defined in misc.constants:
             P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, and P_RANDOM
         factor_names : list (of strings), optional
-            list of the factor names to be considered while permutation.
-            If factor_names are not defined (None) all factors will be used.
+            list of the factor names to be considered while permutation;
+            if factor_names are not defined (None) all factors will be used.
         subject_id : int, optional
-            subject number for this permutation
-            If subject_id is defined or none (default) and experiment has
+            subject number for this permutation;
+            if subject_id is defined or none (default) and experiment has
             been started, the current subject number will be used
 
         """
@@ -970,22 +970,23 @@ type".format(permutation_type))
         The following functions will call the currently registered callback function
         (at least once!):
 
-        - control.wait_end_audiosystem
-        - misc.clock.wait
-        - misc.clock.wait_seconds
-        - misc.clock.wait_minutes
-        - io.keyboard.wait
-        - io.keyboard.wait_char
-        - io.buttonbox.wait
-        - io.gamepad.wait_press
-        - io.triggerinput.wait
-        - io.mouse.wait_press
-        - io.serialport.read_line
-        - io.textinput.get
-        - io.TouchScreenButtonBox.wait
-        - io.extras.CedrusResponseDevice.wait
-        - stimulus.video.wait_frame
-        - stimulus.video.wait_end
+            - control.wait_end_audiosystem
+            - misc.Clock.wait
+            - misc.Clock.wait_seconds
+            - misc.Clock.wait_minutes
+            - io.Keyboard.wait
+            - io.Keyboard.wait_char
+            - io.StreamingButtonBox.wait
+            - io.EventButtonBox.wait
+            - io.GamePad.wait_press
+            - io.TriggerInput.wait
+            - io.Mouse.wait_press
+            - io.SerialPort.read_line
+            - io.TextInput.get
+            - io.TouchScreenButtonBox.wait
+            - io.extras.CedrusResponseDevice.wait
+            - stimulus.Video.wait_frame
+            - stimulus.Video.wait_end
 
         Parameters
         ----------
@@ -1243,7 +1244,7 @@ class Block(object):
         copies : int, optional
             number of copies to add (default = 1)
         random_position : bool, optional
-            True  = insert trials at random position,
+            True  = insert trials at random position;
             False = append trials at the end (default=False)
 
         """
@@ -1528,12 +1529,12 @@ class Block(object):
 
         The following randomization methods are defined:
 
-                0 = total randomization of trial order (default),
+                0 = total randomization of trial order (default)
 
                 1 = randomization within small miniblocks. Each miniblock
-                contains one trial of each type (only defined by factors!)
-                In other words, copies of one trial type are always in
-                different miniblocks.
+                contains one trial of each type (only defined by factors!);
+                in other words, copies of one trial type are always in
+                different miniblocks
 
         Parameters
         ----------
@@ -1542,7 +1543,7 @@ class Block(object):
         max_repetitions : int, optional
             see documentation of `randomize.shuffle_list` (default = None)
         n_segments : int, optional
-            This parameter will be only considered for randomization method 0.
+            this parameter will be only considered for randomization method 0;
             see documentation of `randomize.shuffle_list` (default = None)
 
         Returns
@@ -1833,7 +1834,7 @@ class Trial(object):
         Returns
         -------
         success : bool
-            returns if randomization was successful and fulfilled the specified
+            randomization was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         See Also

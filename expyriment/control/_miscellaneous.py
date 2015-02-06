@@ -217,14 +217,23 @@ def register_wait_callback_function(function, exp=None):
     all Expyriment wait and event loops that wait for an external input.
     That is, they are executed by the following functions (at least once!):
 
-        control.wait_end_audiosystem,
-        misc.clock.wait,         misc.clock.wait_seconds,
-        misc.clock.wait_minutes  io.keyboard.wait,
-        io.keyboard.wait_char,   io.buttonbox.wait,
-        io.gamepad.wait_press,   io.triggerinput.wait,
-        io.mouse.wait_press,     io.serialport.read_line,
-        io.textinput.get,        stimulus.video.wait_frame,
-        stimulus.video.wait_end
+        - control.wait_end_audiosystem
+        - misc.Clock.wait
+        - misc.Clock.wait_seconds
+        - misc.Clock.wait_minutes
+        - io.Keyboard.wait
+        - io.Keyboard.wait_char
+        - io.Mouse.wait_press
+        - io.SerialPort.read_line
+        - io.StreamingButtonBox.wait
+        - io.EventButtonBox.wait
+        - io.GamePad.wait_press
+        - io.TriggerInput.wait
+        - io.TextInput.get
+        - io.TouchScreenButtonBox.wait
+        - io.extras.CedrusResponseDevice.wait
+        - stimuli.Video.wait_frame
+        - stimuli.Video.wait_end
 
     Parameters
     ----------
