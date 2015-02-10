@@ -97,9 +97,9 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         if android is not None:
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
             fields = [stimuli.Circle(radius=100, colour=(70, 70, 70),
-                                     position=(0, 70)),
+                                     position=(0, 70), anti_aliasing=10),
                       stimuli.Circle(radius=100, colour=(70, 70, 70),
-                                     position=(0, -70)),
+                                     position=(0, -70), anti_aliasing=10),
                       stimuli.Rectangle(size=(50, 50), colour=(70, 70, 70),
                                         position=(120, 0))]
             fields[0].scale((0.25, 0.25))
@@ -108,14 +108,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 stimuli.TextLine("Subject Number:", text_size=24,
                                  text_colour=constants.C_EXPYRIMENT_PURPLE,
                                  position=(-182, 0)),
-                stimuli.TextLine(text="+", text_size=36, position=(0, 70),
-                                 text_font="FreeMono",
-                                 text_colour=(0, 0, 0)),
-                #stimuli.TextLine(text="-", text_size=36, position=(0, -70),
-                #                 text_font="FreeMono",
-                #                 text_colour=(0, 0, 0)),
-                stimuli.FixCross(size=(15, 15), position=(0, -70),
-                                 colour=(0, 0, 0)),
+                stimuli.FixCross(size=(15, 15), position=(0, 70),
+                                 colour=(0, 0, 0), line_width=2),
+                stimuli.FixCross(size=(15, 2), position=(0, -70),
+                                 colour=(0, 0, 0), line_width=2),
                 stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
                                  text_colour=(0, 0, 0))]
             subject_id = default_number
