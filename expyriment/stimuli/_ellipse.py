@@ -24,14 +24,14 @@ import expyriment
 class Ellipse(Visual):
     """A class implementing a basic 2D ellipse."""
 
-    def __init__(self, size, colour=None, line_width=None, position=None,
+    def __init__(self, radii, colour=None, line_width=None, position=None,
                  anti_aliasing=None):
         """Create an ellipse.
 
         Parameters
         ----------
-        size : (int, int)
-            size of the ellipse (major and minor axis)
+        radii : (int, int)
+            major and minor radii of the ellipse
         colour : (int, int, int), optional
             colour of the ellipse
         line_width : int, optional
@@ -45,41 +45,42 @@ class Ellipse(Visual):
         """
 
         if position is None:
-            position = defaults.circle_position
+            position = defaults.ellipse_position
         Visual.__init__(self, position)
-        self._size = size
+        self._radii = radii
+        self._size = [x * 2 for x in radii]
         if colour is None:
-            colour = defaults.circle_colour
+            colour = defaults.ellipse_colour
         if colour is not None:
             self._colour = colour
         else:
             self._colour = expyriment._active_exp.foreground_colour
         if line_width is None:
-            line_width = defaults.circle_line_width
+            line_width = defaults.ellipse_line_width
         elif line_width < 0 or line_width >= min(self._size):
             line_width = 0
         self._line_width = line_width
         if anti_aliasing is not None:
             self._anti_aliasing = anti_aliasing
         else:
-            self._anti_aliasing = defaults.shape_anti_aliasing
+            self._anti_aliasing = defaults.ellipse_anti_aliasing
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
     @property
-    def size(self):
-        """Getter for size."""
-        return self._size
+    def radii(self):
+        """Getter for radii."""
+        return self._radii
 
-    @size.setter
-    def size(self, value):
-        """Setter for size."""
+    @radii.setter
+    def radii(self, value):
+        """Setter for radii."""
 
         if self.has_surface:
             raise AttributeError(Ellipse._getter_exception_message.format(
-                "size"))
+                "radii"))
         else:
-            self._size = value
+            self._radii = value
 
     @property
     def colour(self):
@@ -133,7 +134,9 @@ class Ellipse(Visual):
             aa_scaling = (self._anti_aliasing / 5.0) + 1
         else:
             aa_scaling = 1
-        size = (self._size[0] * aa_scaling, self._size[1] * aa_scaling)
+
+        size = [(self._size[0]) * aa_scaling,
+                  (self._size[1]) * aa_scaling]
 
         if self._line_width == 0:
             surface = pygame.surface.Surface(
@@ -178,6 +181,6 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     defaults.event_logging = 0
     exp = control.initialize()
-    ellipse = Ellipse(size=[200, 200], anti_aliasing=10)
+    ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
     ellipse.present()
     exp.clock.wait(1000)

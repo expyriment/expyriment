@@ -94,13 +94,13 @@ class _LaminaPanelSurface(object):
                                        self._winsize[0] / 2 + \
                                        self._position[0],
                                        screensize[1] / 2 - \
-                                       self._winsize[1] / 2 + \
+                                       int(round(self._winsize[1] / 2.0)) + \
                                        self._position[1], 0)
         bottomright = oglu.gluUnProject(screensize[0] / 2 + \
-                                        self._winsize[0] / 2 + \
+                                        int(round(self._winsize[0] / 2.0)) + \
                                         self._position[0],
                                         screensize[1] / 2 - \
-                                        self._winsize[1] / 2 + \
+                                        int(round(self._winsize[1] / 2.0)) + \
                                         self._position[1], 0)
         topleft = oglu.gluUnProject(screensize[0] / 2 - \
                                     self._winsize[0] / 2 + \
@@ -109,11 +109,12 @@ class _LaminaPanelSurface(object):
                                     self._winsize[1] / 2 + \
                                     self._position[1], 0)
         topright = oglu.gluUnProject(screensize[0] / 2 + \
-                                     self._winsize[0] / 2 + \
+                                     int(round(self._winsize[0] / 2.0)) + \
                                      self._position[0],
                                      screensize[1] / 2 + \
                                      self._winsize[1] / 2 + \
                                      self._position[1], 0)
+
         self.dims = topleft, topright, bottomright, bottomleft
         width = topright[0] - topleft[0]
         height = topright[1] - bottomright[1]
@@ -142,7 +143,7 @@ class _LaminaPanelSurface(object):
         ogl.glEnd()
         ogl.glDisable(ogl.GL_BLEND)
         ogl.glDisable(ogl.GL_TEXTURE_2D)
-    # End of code bsed on Lamina module
+    # End of code based on Lamina module
 
 
 class Visual(Stimulus):
@@ -188,7 +189,7 @@ class Visual(Stimulus):
                             ogl.GL_NEAREST)
         ogl.glDisable(ogl.GL_TEXTURE_2D)
         return txtr
-    # End of code bsed on Lamina module
+    # End of code based on Lamina module
 
     def __init__(self, position=None, log_comment=None):
         """Create a visual stimulus.

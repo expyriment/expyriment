@@ -94,7 +94,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         default_number = subject_id
 
     if not auto_create_subject_id:
-        if android is not None:
+        if android is None:
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
             fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
                                      position=(0, 70)),
@@ -111,9 +111,11 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 stimuli.TextLine(text="+", text_size=36, position=(0, 70),
                                  text_font="FreeMono",
                                  text_colour=(0, 0, 0)),
-                stimuli.TextLine(text="-", text_size=36, position=(0, -70),
-                                 text_font="FreeMono",
-                                 text_colour=(0, 0, 0)),
+                #stimuli.TextLine(text="-", text_size=36, position=(0, -70),
+                #                 text_font="FreeMono",
+                #                 text_colour=(0, 0, 0)),
+                stimuli.FixCross(size=(15, 15), position=(0, -70),
+                                 colour=(0, 0, 0)),
                 stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
                                  text_colour=(0, 0, 0))]
             subject_id = default_number

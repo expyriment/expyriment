@@ -42,27 +42,29 @@ New Features:
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
 - new feature: improved functionality of randomize.shuffle_list
-- Testsuite summarizes delay histograms for visual presentations
+- Test suite summarizes delay histograms for visual presentations
 - control.defaults.blocking_mode for setting the blocking_mode
 
 Changed:
-- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
   off automatically, if Expyriment is not running in fullscreen modus.
+- ATTENTION: stimuli.Ellipse is now defined by radii (Not backwards compatible!)
+- ATTENTION: stimuli.Circle is now defined by radius (Not backwards compatible!)
+- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
 - ParallelPort: Polling will now return 4 bits, including also the status of
   the Busy status line
   (ATTENTION: Byte order in the output of other status lines has changed!)
-- changes at Simon example
-- the property Shape.size has been renamed to shape.shape_size
 - io.screen.open_gl and control.defaults.open_gl have new parameters:
     0/False - No OpenGL (no vsync / no blocking)
     1       - OpenGL (vsync / no blocking)
     2/True  - OpenGL (vsync / blocking)
     3       - OpenGL (vsync / alternative blocking)
+- the property Shape.size has been renamed to shape.shape_size
 - stimuli.Rectangle: is_point_inside is now obsolete
 - stimuli.Shape: is_point_inside and is_shape_overlapping are now obsolete
 - stimuli.Fixcross: fixcross_size parameter and cross_size property are now
   obsolete
+- changes at Simon example
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired
@@ -71,6 +73,7 @@ Fixed:
 - unicode bug in TextMenu
 - bug in anti_aliasing shapes
 - some method parameters that require a list and didn't work with tuples 
+- stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
