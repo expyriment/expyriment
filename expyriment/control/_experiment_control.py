@@ -94,11 +94,11 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         default_number = subject_id
 
     if not auto_create_subject_id:
-        if android is None:
+        if android is not None:
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
-            fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
+            fields = [stimuli.Circle(radius=100, colour=(70, 70, 70),
                                      position=(0, 70)),
-                      stimuli.Circle(diameter=200, colour=(70, 70, 70),
+                      stimuli.Circle(radius=100, colour=(70, 70, 70),
                                      position=(0, -70)),
                       stimuli.Rectangle(size=(50, 50), colour=(70, 70, 70),
                                         position=(120, 0))]

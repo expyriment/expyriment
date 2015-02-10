@@ -56,7 +56,7 @@ class Circle(Ellipse):
             self._anti_aliasing = anti_aliasing
         else:
             self._anti_aliasing = defaults.circle_anti_aliasing
-        Ellipse.__init__(self, [radius, radius], None, colour, line_width,
+        Ellipse.__init__(self, [radius, radius], colour, line_width,
                          position, anti_aliasing)
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
