@@ -22,7 +22,7 @@ class HSVColour(object):
     colours. Use the property Colour.rgb. E.g.::
 
         my_colour = misc.HSVColour(hue=128, saturation=200, value = 128)
-        stimuli.Circle(diameter = 40, colour = my_colour.rgb).present()
+        stimuli.Circle(radius = 40, colour = my_colour.rgb).present()
 
     """
 

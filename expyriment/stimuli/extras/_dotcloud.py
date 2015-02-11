@@ -146,7 +146,7 @@ class DotCloud(Visual):
     def create_area(self):
         """Create the area of the cloud (a dot object itself)."""
 
-        self._area = Circle(diameter=self._radius*2,
+        self._area = Circle(radius=self._radius,
                          position=(0, 0),
                          colour=self._background_colour)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
@@ -203,7 +203,7 @@ class DotCloud(Visual):
             remix = remix + 1
             reps = 0
             while(True): #find a solution
-                dot = Circle(diameter=dot_radius*2)
+                dot = Circle(radius=dot_radius)
                 expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
                 dot.position = (random.randint(top_left, bottom_right),
                                 random.randint(top_left, bottom_right))

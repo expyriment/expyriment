@@ -13,7 +13,7 @@ control.start()
 radius = 20
 movement = [4, 8]
 arena = (exp.screen.size[0] / 2 - radius, exp.screen.size[1] / 2 - radius)
-dot = stimuli.Circle(diameter=radius, colour=misc.constants.C_YELLOW)
+dot = stimuli.Circle(radius=radius, colour=misc.constants.C_YELLOW)
 
 stimuli.BlankScreen().present()
 

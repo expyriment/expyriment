@@ -31,7 +31,7 @@ class RandomDotKinematogram(Stimulus):
 
     def __init__(self, area_radius, n_dots, target_direction, target_dot_ratio,
                 position = None, dot_speed = None, dot_lifetime = None,
-                dot_diameter = None, dot_colour=None,
+                dot_radius = None, dot_colour=None,
                 background_colour = None, north_up_clockwise = None):
         """Create a Random Dot Kinematogram
 
@@ -54,8 +54,8 @@ class RandomDotKinematogram(Stimulus):
             the moving speed in pixel per second (default=100)
         dot_lifetime : int, optional
             the time the object lives in milliseconds (default 400)
-        dot_diameter : int, optional
-            diameter of the dots (default = 5)
+        dot_radius : int, optional
+            radius of the dots (default = 3)
         dot_colour : (int, int, int), optional
             colour (RGB) of the dots (default=experiment.foreground_colour)
         background_colour : (int, int, int), optional
@@ -74,8 +74,8 @@ class RandomDotKinematogram(Stimulus):
             dot_speed = defaults.randomdotkinematogram_dot_speed
         if dot_lifetime is None:
             dot_lifetime = defaults.randomdotkinematogram_dot_lifetime
-        if dot_diameter is None:
-            dot_diameter = defaults.randomdotkinematogram_dot_diameter
+        if dot_radius is None:
+            dot_radius = defaults.randomdotkinematogram_dot_radius
         if dot_colour is None:
             dot_colour = defaults.randomdotkinematogram_dot_colour
         if north_up_clockwise is None:
@@ -88,11 +88,11 @@ class RandomDotKinematogram(Stimulus):
         self.area_radius = area_radius
         self.dot_speed = dot_speed
         self.dot_lifetime = dot_lifetime
-        self.dot_diameter = dot_diameter
+        self.dot_radius = dot_radius
         self.dot_colour = dot_colour
         self.north_up_clockwise = north_up_clockwise
-        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_diameter),
-                                    2*(self.area_radius + self.dot_diameter)),
+        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_radius),
+                                    2*(self.area_radius + self.dot_radius)),
                                     position=position, colour=background_colour)
         self.reset(n_dots=n_dots, target_direction=target_direction,
                         target_dot_ratio=target_dot_ratio)
@@ -232,7 +232,7 @@ class RandomDotKinematogram(Stimulus):
                     d.is_target = True
                 else:
                     d = self._make_random_dot()
-            Circle(position = d.position, diameter=self.dot_diameter,
+            Circle(position = d.position, radius=self.dot_radius,
                         colour=self.dot_colour).plot(self._canvas)
             return d
         self.dots = map(_process_dot, self.dots)
@@ -410,7 +410,7 @@ if __name__ == "__main__":
           target_direction = direction,
           target_dot_ratio = 0.20,
           dot_speed = 80, dot_lifetime = 600,
-          dot_diameter=5, dot_colour=None)
+          dot_radius = 3, dot_colour=None)
     key, rt = rdk.present_and_wait_keyboard()
 
     # smae direct buy with 80% consitency
@@ -418,6 +418,6 @@ if __name__ == "__main__":
           target_direction = direction,
           target_dot_ratio = 0.80,
           dot_speed = 80, dot_lifetime = 600,
-          dot_diameter=5, dot_colour=None)
+          dot_colour = None)
     key, rt = rdk.present_and_wait_keyboard()
     print direction
