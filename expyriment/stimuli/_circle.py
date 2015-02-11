@@ -50,8 +50,8 @@ class Circle(Ellipse):
             colour = defaults.circle_colour
         if line_width is None:
             line_width = defaults.circle_line_width
-        elif line_width < 0 or line_width >= self._diameter/2.0:
-            raise AttributeError("line_width must be >= 0 and < diameter/2!")
+        elif line_width < 0 or line_width >= self._radius:
+            raise AttributeError("line_width must be >= 0 and < radius!")
         if anti_aliasing is not None:
             self._anti_aliasing = anti_aliasing
         else:
