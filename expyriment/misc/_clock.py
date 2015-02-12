@@ -108,6 +108,11 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+            
         See Also
         --------
         design.experiment.register_wait_callback_function
@@ -142,6 +147,11 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+        
         See Also
         --------
         Clock.wait, design.experiment.register_wait_callback_function
@@ -160,6 +170,11 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+            
         See Also
         --------
         Clock.wait, design.experiment.register_wait_callback_function
