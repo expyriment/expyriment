@@ -31,9 +31,10 @@ also allows to export the concatenated data as an R data frames,
 which can then be imported into R.
 Please be aware that this functionality needs the rpy2_ package installed.
 
-Alternatively, the R function expyriment_data.R_ concatenates all raw data and returns an R data
-frame with all subjects. Between subject factors will be added as variables to
-the data matrix.
+Alternatively, you may use the R module expyriment_data.R_ to handle xpd files without
+data preprocessing in Python. The R function ``read.expyriment.data`` concatinates all
+raw data and returns an R data frame with all subjects. Between subject factors will 
+be added as variables to the data matrix.
 
 .. _expyriment_data.R: https://raw.githubusercontent.com/expyriment/expyriment/master/tools/expyriment_data.R
 .. _rpy2: http://rpy.sourceforge.net
