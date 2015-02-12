@@ -6,35 +6,22 @@
 Expyriment documentation
 ========================
 .. image:: expyriment_logo.png
-*Python library for cognitive and neuroscientific experiments*. :doc:`Read more 
+*A Python library for cognitive and neuroscientific experiments*. :doc:`Read more
 ...<Overview>`
 
 Contents
 --------
-
-**About Expyriment**
 
 .. toctree::
    :titlesonly:
    :maxdepth: 2
 
    Overview
-   API reference <expyriment>
+   Getting started <GettingStarted>
    Advanced
-   Technical issues <Technical>
-   Frequently Asked Questions <FAQ>
+   API reference <expyriment>
    Changelog
    `Previous versions <http://docs.expyriment.org/old/>`_
-   
-**Getting Started**
-
-.. toctree::
-   :titlesonly:
-   :maxdepth: 2
-
-   Installation
-   Beginner`s tutorial <Tutorial>
-   Example experiments <Examples>
 
 News
 ----
