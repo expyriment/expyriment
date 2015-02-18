@@ -1,11 +1,23 @@
 Beginner's tutorial to get started with Expyriment
 ====================================================
 
+Note, Expyriment is a library for the programming language Python.  That is, 
+you have to know at least a bit, how to program in Python, before using 
+Expyriment. The are couple of `excelent tutorials`_ online.
+
+To start programming a new experiment you can actually take any text editor.  
+We suggest for the development, however, a programming editor or IDE that 
+captures and displays the error messages. Syntax highlighting is also a very 
+convenient features of these editors. A simple Python editor is  `IDLE`_, which 
+is under Windows part of any Python installation.  We have furthermore made 
+very good experiences with `Pycharm`_ as a platform independent Python IDE.
+
+.. _`excelent tutorials`: http://www.greenteapress.com/thinkpython/)
+.. _`IDLE`: http://en.wikipedia.org/wiki/IDLE_%28Python%29
+.. _`Pycharm`: https://www.jetbrains.com/pycharm/
+
 How to get started with Expyriment?
 -----------------------------------
-To start programming a new experiment you can take any text editor. Preferably 
-one with syntax highlighting for Python of course. (If you are on Windows you 
-might want to use *IDLE* which is part of the Python installation).
 
 Let's start right away with a very basic example!
 
