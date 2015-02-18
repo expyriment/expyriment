@@ -12,7 +12,7 @@ convenient features of these editors. A simple Python editor is  `IDLE`_, which
 is under Windows part of any Python installation.  We have furthermore made 
 very good experiences with `Pycharm`_ as a platform independent Python IDE.
 
-.. _`excelent tutorials`: http://www.greenteapress.com/thinkpython/
+.. _`excelent tutorials`: http://docs.python-guide.org/en/latest/intro/learning/
 .. _`IDLE`: http://en.wikipedia.org/wiki/IDLE_%28Python%29
 .. _`Pycharm`: https://www.jetbrains.com/pycharm/
 
