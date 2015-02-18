@@ -3,7 +3,7 @@ Beginner's tutorial to get started with Expyriment
 
 Note, Expyriment is a library for the programming language Python.  That is, 
 you have to know at least a bit, how to program in Python before using 
-Expyriment. The are couple of `excelent tutorials`_ online.
+Expyriment. The are many `excelent tutorials`_ online.
 
 To start programming a new experiment you can actually take any text editor.  
 We suggest for the development, however, a programming editor or IDE that 
