@@ -5,8 +5,8 @@ Note, Expyriment is a library for the programming language Python.  That is,
 you have to know at least a bit, how to program in Python before using 
 Expyriment. The are many `excelent tutorials`_ online.
 
-To start programming a new experiment you can actually take any text editor.  
-We suggest for the development, however, a programming editor or IDE that 
+To programming an experiment you can actually take any text editor.  
+We suggest for the development, however, a programming editor or an IDE that 
 captures and displays the error messages. Syntax highlighting is also a very 
 convenient features of these editors. A simple Python editor is  `IDLE`_, which 
 is under Windows part of any Python installation.  We have furthermore made 
