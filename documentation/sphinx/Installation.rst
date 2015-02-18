@@ -17,7 +17,8 @@ PyParallel_ (>=0.2) (to use parallel port communication) and NumPy_ (>=1.6) (to
 use data preprocessing). Please be aware that Expyriment plugins (extras) might 
 have additional dependencies. 
 
-**Importantly, Expyriment relies on 32-bit versions of all these packages!**
+**Importantly, Expyriment only runs with a 32-bit version of Python 2. Also all 
+required packages have to be 32-bit compiled!**
 
 We provide more detailed platform-specific instructions for installing 
 Expyriment here:

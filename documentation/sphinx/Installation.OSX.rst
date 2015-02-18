@@ -41,12 +41,16 @@ In addition:
  * Download PyOpenGL_ and install as described here_
  * Download PySerial_ and install as described here_
 
+Note, Expyriment only runs with a 32-bit version of Python 2. Also all required 
+packages have to be 32-bit compiled!
+
 To install Expyriment:
 
  * Download "expyriment-|release|.zip from the `Release page`_ and install as described here_
 
 Notes
 -----
+
 **Do not start your experiments out of IDLE**
 
     If you are using the IDLE editor that comes with the Python installation, 

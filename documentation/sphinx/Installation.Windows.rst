@@ -15,6 +15,8 @@ and, if needed:
 * PyParallel_ and giveio_
 * NumPy_
 
+Expyriment only runs with a 32-bit version of Python 2. Also all required 
+packages have to be 32-bit compiled!
 
 Installing Expyriment
 ---------------------
@@ -23,7 +25,7 @@ To install the latest version of Expyriment, download
 
 Notes
 -----
-**Do not start your experiments out of IDLE**
+**Do not start your experiments out of IDLE when testing participants**
 
     If you are using the IDLE editor that comes with the Python installation, 
     be aware that IDLE itself is written in Python. Starting your Expyriment 
