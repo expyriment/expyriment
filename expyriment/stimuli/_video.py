@@ -200,7 +200,7 @@ class Video(_visual.Stimulus):
             self._file.set_display(self._surface)
             self._is_preloaded = True
 
-    def unload(self):
+    def unload(self, **kwargs):
         """Unload stimulus from memory.
 
         This removes the reference to the object in memory.

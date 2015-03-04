@@ -1,7 +1,6 @@
 ========================
 Expyriment Release Notes
 ========================
- 
 
 Version 0.8.0 (soon)
 --------------------
@@ -74,6 +73,7 @@ Fixed:
 - bug in anti_aliasing shapes
 - some method parameters that require a list and didn't work with tuples 
 - stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
+- bug in stimuli.Audio.unload() and stimuli.Video.unload()
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
