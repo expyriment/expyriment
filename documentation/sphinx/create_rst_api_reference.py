@@ -47,10 +47,10 @@ def create_module_rst(mod_name, no_members=False):
     with open(mod_name + ".rst", 'w') as fl:
         fl.write(heading(mod_name))
         fl.write("\n.. automodule:: " + mod_name + "\n")
-        fl.write("   :members:\n")
-        fl.write("   :undoc-members:\n")
-        fl.write("   :show-inheritance:\n")
-        fl.write("   :inherited-members:\n")
+        #fl.write("   :members:\n")
+        #fl.write("   :undoc-members:\n")
+        #fl.write("   :show-inheritance:\n")
+        #fl.write("   :inherited-members:\n")
 
         modules, classes, methods, functions, attributes = inspect_members(mod_name)
         if len(attributes)>0:
