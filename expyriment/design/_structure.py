@@ -1725,7 +1725,7 @@ class Trial(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + "{0}={1}, ".format(
-                unicode2str(f), unicode2str(self.get_factor(f)))
+                unicode2str(f), unicode2str(str(self.get_factor(f))))
         return all_factors
 
     def compare(self, trial):
