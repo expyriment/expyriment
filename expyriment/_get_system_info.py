@@ -235,8 +235,8 @@ def get_system_info(as_string=False):
             proc = subprocess.Popen(['sysctl', '-a', 'hw.memsize'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            tmp = int(proc.stdout.readline().split(":")[1].strip()) / 1024 ** 2
-            hardware_memory_total = str(tmp) + " MB"
+            mem_total = int(proc.stdout.readline().split(":")[1].strip()) / 1024 ** 2
+            hardware_memory_total = str(mem_total) + " MB"
         except:
             hardware_memory_total = ""
 
@@ -247,15 +247,15 @@ def get_system_info(as_string=False):
                                     stdin=subprocess.PIPE)
             output = proc.stdout.read().split("\n")
             for item in output:
-                x = item.find("Pages free:")
+                x = item.find("Pages active:")
                 y = item.find("page size of")
                 if x > -1:
                     non_decimal = re.compile(r'[^\d.]+')
-                    free = int(non_decimal.sub('', item).strip("."))
+                    active = int(non_decimal.sub('', item).strip("."))
                 if y > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     page = int(non_decimal.sub('', item).strip("."))
-            hardware_memory_free = str((free * page) / 1024 ** 2) + "MB "
+            hardware_memory_free = str(mem_total - (active * page) / 1024 ** 2) + " MB"
 
         except:
             hardware_memory_free = ""
