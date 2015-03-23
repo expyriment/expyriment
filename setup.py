@@ -140,7 +140,7 @@ if __name__=="__main__":
     # Check if we are building/installing from unreleased code
     if get_revision_from_file("expyriment/__init__.py") == '':
         # Try to add date and revision stamp from Git and build/install
-        try:
+        if True:
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
@@ -165,7 +165,7 @@ if __name__=="__main__":
     
             print ""
             print "Expyriment Version:", version_nr, "(from repository)"
-        except:
+        else:
             raise RuntimeError("Building from repository failed!")
 
     # If not, we are building/installing from a released download
