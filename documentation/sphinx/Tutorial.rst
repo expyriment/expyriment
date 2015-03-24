@@ -431,14 +431,14 @@ will overwrite any previous default settings!  One of the most common things to
 do, while developing is to change the default presentation mode from fullscreen 
 to a window:
 
-    ``expyriment.control.window_mode = True``
+    ``expyriment.control.defaults.window_mode = True``
 
-    ``expyriment.control.window_size = (800,600)``
+    ``expyriment.control.defaults.window_size = (800,600)``
 
     Also, when using older machines with very old video cards, you might want 
     to run in fullscreen, but without using OpenGL:
 
-    ``expyriment.control.open_gl = False``
+    ``expyriment.control.defaults.open_gl = False``
 
 That's it so far. We are at the end of the getting started tutorial. As a 
 summary, have a look at the following code, which again show the overall 
