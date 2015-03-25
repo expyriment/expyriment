@@ -43,16 +43,19 @@ New Features:
 - new feature: improved functionality of randomize.shuffle_list
 - Test suite summarizes delay histograms for visual presentations
 - control.defaults.blocking_mode for setting the blocking_mode
+- New io.ParallelPort implementation, based on PsychoPy code; it now
+  supports reading of 5 status pins (10, 11, 12, 13, 15) and all 8 data pins;
+  in addition, the module now works on 64bit Windows system.
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
-  off automatically, if Expyriment is not running in fullscreen modus.
+  off automatically, if Expyriment is not running in fullscreen mode.
 - ATTENTION: stimuli.Ellipse is now defined by radii (Not backwards compatible!)
 - ATTENTION: stimuli.Circle is now defined by radius (Not backwards compatible!)
 - ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
-- ParallelPort: Polling will now return 4 bits, including also the status of
-  the Busy status line
-  (ATTENTION: Byte order in the output of other status lines has changed!)
+- ATTENTION: ParallelPort has been changed a lot and is not backwards compatible
+  anymore; the old implementation is still available as
+  io.extras.SimpleParallelPort
 - io.screen.open_gl and control.defaults.open_gl have new parameters:
     0/False - No OpenGL (no vsync / no blocking)
     1       - OpenGL (vsync / no blocking)
@@ -74,6 +77,7 @@ Fixed:
 - some method parameters that require a list and didn't work with tuples 
 - stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
 - bug in stimuli.Audio.unload() and stimuli.Video.unload()
+- bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
