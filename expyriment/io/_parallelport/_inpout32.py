@@ -19,7 +19,7 @@ class PParallelInpOut32(object):
             LPT3 = 0x0278
         """
 
-        from numpy import uint8
+        #from numpy import uint8
         from ctypes import windll
 
         if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
@@ -28,15 +28,19 @@ class PParallelInpOut32(object):
             self.base = address
         self.port = windll.inpout32
 
-        BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)
+        #BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)
+        BYTEMODEMASK = (1 << 5 | 1 << 6 | 1 << 7) & 255
 
         # Put the port into Byte Mode (ECP register)
+        #self.port.Out32( self.base + 0x402,
+        #            int((self.port.Inp32(self.base + 0x402) & ~BYTEMODEMASK) | (1 << 5)) )
         self.port.Out32( self.base + 0x402,
-                    int((self.port.Inp32(self.base + 0x402) & ~BYTEMODEMASK) | (1 << 5)) )
+                    int((self.port.Inp32(self.base + 0x402) & (~BYTEMODEMASK & 255)) | (1 << 5)) )
 
         # Now to make sure the port is in output mode we need to make
         # sure that bit 5 of the control register is not set
-        self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & ~uint8( 1 << 5 )) )
+        #self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & ~uint8( 1 << 5 )) )
+        self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & (~(1 << 5) & 255)) )
         self.status = None
 
     def setData(self, data):

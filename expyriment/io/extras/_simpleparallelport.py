@@ -116,14 +116,14 @@ The Python package 'pyParallel' is not installed."""
 
     @staticmethod
     def get_available_ports():
-        """Return an array of strings representing the available serial ports.
+        """Return an array of strings representing the available parallel ports.
 
         If pyparallel is not installed, 'None' will be returned.
 
         Returns
         -------
         ports : list
-            array of strings representing the available serial ports
+            array of strings representing the available parallel ports
 
         """
 

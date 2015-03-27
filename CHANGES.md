@@ -14,8 +14,8 @@ New Features:
 - new stimulus: stimuli.extras.ThermometerDisplay
 - new io device: io.extras.TbvNetworkClient
 - new io device: io.extras.TcpClient
-- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
-  The stimulus depends on the package "matplotlib".
+- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch();
+  the stimulus depends on the package "matplotlib".
 - new feature: data_preprocessing methodsallow now to read in only certain
   variables (see parameter `read_variables`)
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
@@ -24,8 +24,8 @@ New Features:
 - new method in data_preprocessing: save to to R data frame
 - new method in data_preprocessing: get_experiment_duration
 - new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
-- new mouse function: experiments can be quited by mouse events (triple click).
-  See documentation of property "mouse_quit_event". This function is only switched
+- new mouse function: experiments can be quited by mouse events (triple click);
+  see documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
 - new method visual stimuli.replace
 - new method control.is_android_running
@@ -45,7 +45,8 @@ New Features:
 - control.defaults.blocking_mode for setting the blocking_mode
 - New io.ParallelPort implementation, based on PsychoPy code; it now
   supports reading of 5 status pins (10, 11, 12, 13, 15) and all 8 data pins;
-  in addition, the module now works on 64bit Windows system.
+  in addition, the module now works on 64bit Windows system
+- Test suite: New ParallelPort test
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
