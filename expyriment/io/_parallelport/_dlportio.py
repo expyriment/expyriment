@@ -67,12 +67,30 @@ class PParallelDLPortIO(object):
         except Exception, e:
             print "Could not import DLportIO driver, parallel Ports not available"
             raise e
-        
+
         if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
             self.base = int(address, 16)
         else:
             self.base = address
+        self.reverse = False
         self.status = None
+
+    @property
+    def reverse(self):
+        """Getter for reverse."""
+
+        return self._reverse
+
+    @reverse.setter
+    def reverse(self, value):
+        """Setter for reverse."""
+
+        if value:
+            self.port.DlPortWritePortUchar(self.base + 2, int(self.port.DlPortReadPortUchar(self.base + 2) | ((1 << 5) & 255)))
+            self._reverse = True
+        else:
+            self.port.DlPortWritePortUchar(self.base + 2, int(self.port.DlPortReadPortUchar(self.base + 2) & (~(1 << 5) & 255)))
+            self._reverse = False
 
     def setData(self, data):
         """Set the data to be presented on the parallel port (one ubyte).
@@ -105,9 +123,27 @@ class PParallelDLPortIO(object):
         # I can't see how to do this without reading and writing the data
         # or caching the registers which seems like a very bad idea...
         if state:
-            self.port.DlPortWritePortUchar( self.base, self.port.DlPortReadPortUchar( self.base ) | (2**(pinNumber-2)) )
+            if pinNumber in range(2, 10):
+                self.port.DlPortWritePortUchar( self.base, self.port.DlPortReadPortUchar( self.base ) | (2**(pinNumber-2)) )
+            elif pinNumber==1:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2) | 1 )
+            elif pinNumber==14:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2) | 2 )
+            elif pinNumber==16:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2) | 4 )
+            elif pinNumber==17:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2) | 8 )
         else:
-            self.port.DlPortWritePortUchar( self.base, self.port.DlPortReadPortUchar( self.base ) & (255 ^ 2**(pinNumber-2)) )
+            if pinNumber in range(2, 10):
+                self.port.DlPortWritePortUchar( self.base, self.port.DlPortReadPortUchar( self.base ) & (255 ^ 2**(pinNumber-2)) )
+            elif pinNumber==1:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2 ) & (255 ^ 1) )
+            elif pinNumber==14:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2 ) & (255 ^ 2) )
+            elif pinNumber==16:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2 ) & (255 ^ 4) )
+            elif pinNumber==17:
+                self.port.DlPortWritePortUchar( self.base + 2, self.port.DlPortReadPortUchar( self.base + 2 ) & (255 ^ 8) )
 
     def readData(self):
         """Return the value currently set on the data pins (2-9)"""
@@ -116,7 +152,7 @@ class PParallelDLPortIO(object):
     def readPin(self, pinNumber):
         """Determine whether a desired (input) pin is high(1) or low(0).
 
-        Pins 2-13 and 15 are currently read here
+        Pins 1-17 are currently read here
         """
         if pinNumber==10:
             return (self.port.DlPortReadPortUchar( self.base + 1 ) >> 6) & 1 # 10 = ACK
@@ -130,6 +166,14 @@ class PParallelDLPortIO(object):
             return (self.port.DlPortReadPortUchar( self.base + 1 ) >> 3) & 1 # 15 = ERROR
         elif pinNumber >= 2 and pinNumber <= 9:
             return (self.port.DlPortReadPortUchar( self.base ) >> (pinNumber - 2)) & 1
+        elif pinNumber==1:
+            return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 0) & 1 # STROBE
+        elif pinNumber==14:
+            return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 1) & 1 # LineFeed
+        elif pinNumber==16:
+            return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 2) & 1 # RESET
+        elif pinNumber==17:
+            return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 3) & 1 # Select Printer
         else:
             print 'Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber)
 

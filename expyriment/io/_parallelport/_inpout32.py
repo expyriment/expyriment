@@ -40,8 +40,26 @@ class PParallelInpOut32(object):
         # Now to make sure the port is in output mode we need to make
         # sure that bit 5 of the control register is not set
         #self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & ~uint8( 1 << 5 )) )
-        self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & (~(1 << 5) & 255)) )
+        #self.port.Out32( self.base + 2, int(self.port.Inp32(self.base + 2) & (~(1 << 5) & 255)) )
+        self.reverse = False
         self.status = None
+
+    @property
+    def reverse(self):
+        """Getter for reverse."""
+
+        return self._reverse
+
+    @reverse.setter
+    def reverse(self, value):
+        """Setter for reverse."""
+
+        if value:
+            self.port.Out32(self.base + 2, int(self.port.Inp32(self.base + 2) | ((1 << 5) & 255)))
+            self._reverse = True
+        else:
+            self.port.Out32(self.base + 2, int(self.port.Inp32(self.base + 2) & (~(1 << 5) & 255)))
+            self._reverse = False
 
     def setData(self, data):
         """Set the data to be presented on the parallel port (one ubyte).
@@ -65,16 +83,35 @@ class PParallelInpOut32(object):
     def setPin(self, pinNumber, state):
         """Set a desired pin to be high(1) or low(0).
 
-        Only pins 2-9 (incl) are normally used for data output::
+        Only pins 2-9 (incl) are normally used for data output,
+        but status pins (1, 14, 16, 17) can be used, too::
 
             parallel.setPin(3, 1)#sets pin 3 high
             parallel.setPin(3, 0)#sets pin 3 low
         """
         # I can't see how to do this without reading and writing the data
         if state:
-            self.port.Out32( self.base, self.port.Inp32( self.base ) | (2**(pinNumber-2)) )
+            if pinNumber in range(2, 10):
+                self.port.Out32( self.base, self.port.Inp32( self.base ) | (2**(pinNumber-2)) )
+            elif pinNumber==1:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base +2 ) | 1 )
+            elif pinNumber==14:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base +2 ) | 2 )
+            elif pinNumber==16:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base +2 ) | 4 )
+            elif pinNumber==17:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base +2 ) | 8 )
         else:
-            self.port.Out32( self.base, self.port.Inp32( self.base ) & (255 ^ 2**(pinNumber-2)) )
+            if pinNumber in range(2, 10):
+                self.port.Out32( self.base, self.port.Inp32( self.base ) & (255 ^ 2**(pinNumber-2)) )
+            elif pinNumber==1:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base + 2 ) & (255 ^ 1) )
+            elif pinNumber==14:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base + 2 ) & (255 ^ 2) )
+            elif pinNumber==16:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base + 2 ) & (255 ^ 4) )
+            elif pinNumber==17:
+                self.port.Out32( self.base + 2, self.port.Inp32( self.base + 2 ) & (255 ^ 8) )
 
     def readData(self):
         """Return the value currently set on the data pins (2-9)"""
@@ -83,7 +120,7 @@ class PParallelInpOut32(object):
     def readPin(self, pinNumber):
         """Determine whether a desired (input) pin is high(1) or low(0).
 
-        Pins 2-13 and 15 are currently read here
+        Pins 1-17 are currently read here
         """
         if pinNumber==10:
             return (self.port.Inp32( self.base + 1 ) >> 6) & 1   # 10 = ACK
@@ -97,6 +134,13 @@ class PParallelInpOut32(object):
             return (self.port.Inp32( self.base + 1 ) >> 3) & 1 # 15 = ERROR
         elif pinNumber >= 2 and pinNumber <= 9:
             return (self.port.Inp32( self.base ) >> (pinNumber - 2)) & 1
+        elif pinNumber==1:
+            return (self.port.Inp32( self.base + 2 ) >> 0) & 1 # 0 = STROBE
+        elif pinNumber==14:
+            return (self.port.Inp32( self.base + 2 ) >> 1) & 1 # 0 = LineFeed
+        elif pinNumber==16:
+            return (self.port.Inp32( self.base + 2 ) >> 2) & 1 # 0 = RESET
+        elif pinNumber==17:
+            return (self.port.Inp32( self.base + 2 ) >> 3) & 1 # 0 = Select Printer
         else:
             print 'Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber)
-

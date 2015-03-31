@@ -34,11 +34,29 @@ class PParallelLinux(object):
             raise Exception('Failed to import pyparallel - is it installed?')
 
         self.port = pyp.Parallel(address)
+        self.reverse = False
         self.status = None
 
     def __del__(self):
         if hasattr(self, 'port'):
             del self.port
+
+    @property
+    def reverse(self):
+        """Getter for reverse."""
+
+        return self._reverse
+
+    @reverse.setter
+    def reverse(self, value):
+        """Setter for reverse."""
+
+        if value:
+            self.port.PPDATADIR(False)
+            self._reverse = True
+        else:
+            self.port.PPDATADIR(True)
+            self._reverse = False
 
     def setData(self, data):
         """Set the data to be presented on the parallel port (one ubyte).
@@ -69,9 +87,27 @@ class PParallelLinux(object):
         """
         # I can't see how to do this without reading and writing the data
         if state:
-            self.port.setData(self.port.PPRDATA() | (2**(pinNumber-2)))
+            if pinNumber in range(2, 10):
+                self.port.setData(self.port.PPRDATA() | (2**(pinNumber-2)))
+            elif pinNumber==1:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() | 1)
+            elif pinNumber==14:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() | 2)
+            elif pinNumber==16:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() | 4)
+            elif pinNumber==17:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() | 8)
         else:
-            self.port.setData(self.port.PPRDATA() & (255 ^ 2**(pinNumber-2)))
+            if pinNumber in range(2, 10):
+                self.port.setData(self.port.PPRDATA() & (255 ^ 2**(pinNumber-2)))
+            elif pinNumber==1:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() & (255 ^ 1))
+            elif pinNumber==14:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() & (255 ^ 2))
+            elif pinNumber==16:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() & (255 ^ 4))
+            elif pinNumber==17:
+                self.port.PPWCONTROL(self.port.PPRCONTROL() & (255 ^ 8))
 
     def readData(self):
         """Return the value currently set on the data pins (2-9)"""
@@ -80,7 +116,7 @@ class PParallelLinux(object):
     def readPin(self, pinNumber):
         """Determine whether a desired (input) pin is high(1) or low(0).
 
-        Pins 2-13 and 15 are currently read here """
+        Pins 1-17 are currently read here """
         if pinNumber==10:
             return self.port.getInAcknowledge()
         elif pinNumber==11:
@@ -93,6 +129,13 @@ class PParallelLinux(object):
             return self.port.getInError()
         elif pinNumber>=2 and pinNumber <=9:
             return (self.port.PPRDATA() >> (pinNumber - 2)) & 1
+        elif pinNumber==1:
+            return (self.port.PPRCONTROL() >> 0) & 1 # 0 = STROBE
+        elif pinNumber==14:
+            return (self.port.PPRCONTROL() >> 1) & 1 # 0 = LineFeed
+        elif pinNumber==16:
+            return (self.port.PPRCONTROL() >> 2) & 1 # 0 = RESET
+        elif pinNumber==17:
+            return (self.port.PPRCONTROL() >> 3) & 1 # 0 = Select Printer
         else:
             print 'Pin %i cannot be read (by PParallelLinux.readPin() yet)' % (pinNumber)
-
