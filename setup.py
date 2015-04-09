@@ -6,12 +6,19 @@ Setup file for Expyriment
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+
 import stat
 from subprocess import Popen, PIPE
-from distutils.core import setup
-from distutils.command.build_py import build_py
-from distutils.command.install import install
-from distutils.command.bdist_wininst import bdist_wininst
+try:
+    from setuptools import setup
+    from setuptools.command.build_py import build_py
+    from setuptools.command.install import install
+    from setuptools.command.bdist_wininst import bdist_wininst
+except ImportError:
+    from distutils.core import setup
+    from distutils.command.build_py import build_py
+    from distutils.command.install import install
+    from distutils.command.bdist_wininst import bdist_wininst
 from os import remove, close, chmod, path
 from shutil import move, rmtree
 from tempfile import mkstemp
@@ -27,6 +34,12 @@ packages = ['expyriment',
             'expyriment.design', 'expyriment.design.extras']
 
 package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
+
+install_requires = ["pygame>=1.9", "pyopengl>3.0"]
+
+extras_require = ["pyserial>=2.5", "pyparallel>=0.2", "numpy>=1.6", "pillow>1.0", "pyxid>1.0"]
+
+dependency_links = ["http://www.lfd.uci.edu/~gohlke/pythonlibs/"]
 
 
 # Clear old installation when installing
@@ -140,7 +153,7 @@ if __name__=="__main__":
     # Check if we are building/installing from unreleased code
     if get_revision_from_file("expyriment/__init__.py") == '':
         # Try to add date and revision stamp from Git and build/install
-        try:
+        if True:
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
@@ -150,6 +163,31 @@ if __name__=="__main__":
             date = get_git_date()
             # Build
             x = setup(name='expyriment',
+                      version=version_nr,
+                      description='A Python library for cognitive and neuroscientific experiments',
+                      author='Florian Krause, Oliver Lindemann',
+                      author_email='florian@expyriment.org, oliver@expyriment.org',
+                      license='GNU GPLv3',
+                      url='http://www.expyriment.org',
+                      packages=packages,
+                      package_dir={'expyriment': 'expyriment'},
+                      package_data=package_data,
+                      install_requires=install_requires,
+                      extras_require=extras_require,
+                      dependency_links=dependency_links,
+                      cmdclass={'build_py': Build, 'install': Install,
+                                'bdist_wininst': Wininst}
+            )
+    
+            print ""
+            print "Expyriment Version:", version_nr, "(from repository)"
+        else:
+            raise RuntimeError("Building from repository failed!")
+
+    # If not, we are building/installing from a released download
+    else:
+        # Build
+        setup(name='expyriment',
               version=version_nr,
               description='A Python library for cognitive and neuroscientific experiments',
               author='Florian Krause, Oliver Lindemann',
@@ -159,29 +197,10 @@ if __name__=="__main__":
               packages=packages,
               package_dir={'expyriment': 'expyriment'},
               package_data=package_data,
-              cmdclass={'build_py': Build, 'install': Install,
-                        'bdist_wininst': Wininst}
-              )
-    
-            print ""
-            print "Expyriment Version:", version_nr, "(from repository)"
-        except:
-            raise RuntimeError("Building from repository failed!")
-
-    # If not, we are building/installing from a released download
-    else:
-        # Build
-        setup(name='expyriment',
-          version=version_nr,
-          description='A Python library for cognitive and neuroscientific experiments',
-          author='Florian Krause, Oliver Lindemann',
-          author_email='florian@expyriment.org, oliver@expyriment.org',
-          license='GNU GPLv3',
-          url='http://www.expyriment.org',
-          packages=packages,
-          package_dir={'expyriment': 'expyriment'},
-          package_data=package_data,
-          cmdclass={'install': Install, 'bdist_wininst': Wininst}
+              install_requires=install_requires,
+              extras_require=extras_require,
+              dependency_links=dependency_links,
+              cmdclass={'install': Install, 'bdist_wininst': Wininst}
           )
 
         print ""
