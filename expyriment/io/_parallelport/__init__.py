@@ -4,7 +4,7 @@ Input and output parallel port.
 This module contains a class implementing parallel port input/output on Linux
 and Windows.
 
-This module is a modified version of the parallel module of PsychoPy
+The module is a modified version of the parallel module of PsychoPy
 (www.psychopy.org).
 The code in this file, as well as in the files '_inpout32.py', '_dlportio.py'
 and '_linux.py' are heavily based on the original code.
@@ -89,13 +89,16 @@ class ParallelPort(Input, Output):
 
     """
 
-    def __init__(self, address):
+    def __init__(self, address, reverse=False):
         """Create a parallel port input and output.
 
         Parameters
         ----------
         address : hex or str
             The address of the port to use.
+        reverse : bool
+            Whether the port should be in reverse mode (default=False).
+            Reverse mode enables to read from the data pins.
 
         Notes
         -----
@@ -134,11 +137,11 @@ class ParallelPort(Input, Output):
             raise RuntimeError(
                 "Could not initiate parallel port at {0}".format(address))
         self.input_history = False  # dummy
-        self._reverse = False
+        self._reverse = reverse
 
     @property
     def address(self):
-        """Getter for port."""
+        """Getter for address."""
         return self._address
 
     @property
@@ -215,7 +218,7 @@ class ParallelPort(Input, Output):
 
         """
 
-        # TODO: Propper implementaion that does not rely on single pins!
+        # TODO: Proper implementation that does not rely on single pins!
 
         bits = "{0}{1}{2}{3}{4}".format(int(self.read_pin(11)),
                                         int(self.read_pin(10)),
@@ -246,7 +249,7 @@ class ParallelPort(Input, Output):
 
         """
 
-        # TODO: Propper implementaion that does not rely on single pins!
+        # TODO: Proper implementation that does not rely on single pins!
 
         bits = "{0}{1}{2}{3}".format(int(self.read_pin(17)),
                                      int(self.read_pin(16)),
@@ -351,7 +354,7 @@ class ParallelPort(Input, Output):
 
         """
 
-        # TODO: Propper implementaion that does not rely on single pins!
+        # TODO: Proper implementation that does not rely on single pins!
 
         self._parallel.setPin(1, data & 1)
         self._parallel.setPin(14, data & 2)
@@ -380,7 +383,7 @@ class ParallelPort(Input, Output):
 
         """
 
-        # TODO: Propper implementaion that does not rely on single pins!
+        # TODO: Proper implementation that does not rely on single pins!
 
         d = data & 255
         c = data & 2048 >> 8
@@ -467,12 +470,13 @@ class ParallelPort(Input, Output):
                    "'0x0378', which is ofter the address of LPT1). " \
                    "On Linux it will be of the form '/dev/parportX', "\
                    "where X denotes the number of the port.\n\n" \
-                   "Once the port is opened, a list of status and data " \
-                   "pins is presented. Bright green lights indicate " \
+                   "Once the port is opened, a list of control, status and " \
+                   "data pins is presented. Bright green lights indicate " \
                    "input activity of a pin. Bright red lights indicate " \
                    "output activity of a pin. With the number keys on the " \
                    "keyboard, sending can be toggled on and off for each " \
-                   "data pin.\n\n\n\n" \
+                   "data pin. Reverse mode can be toggled on an of with " \
+                   "the 'r' key.\n\n\n\n" \
                    "[Press RETURN to continue]"
             t = expyriment.stimuli.TextScreen("ParallelPort test", text)
             t.present()
