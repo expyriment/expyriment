@@ -90,8 +90,7 @@ def get_version():
                               _sys.version_info[1],
                               _sys.version_info[2])
             #no use of .major, .minor to ensure MacOS compatibility
-    return "{0} (Revision {1}; Python {2})".format(__version__, \
-                               __revision__, pv)
+    return "{0} (Python {1})".format(__version__, pv)
 
 
 
