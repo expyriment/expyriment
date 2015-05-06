@@ -501,8 +501,8 @@ def show_documentation(docu_type=None):
     def call_info():
         print ""
         print "Call show_documentation with the following arguments to get further information:"
-        print "     show_documentation(1) -- Open online documentation"
-        print "     show_documentation(2) -- Open online API reference"
+        print "     show_documentation(1) -- Open local documentation in web browser"
+        print "     show_documentation(2) -- Open online documentation in web browser"
         print "     show_documentation(3) -- Open API Reference Tool"
         print ""
 
@@ -522,9 +522,14 @@ def show_documentation(docu_type=None):
         print "Authors: {0}".format(author)
         call_info()
     elif docu_type == 1:
-        webbrowser.open(
-            "http://expyriment.org",
-            new=1)
+        docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
+        if os.path.exists(docu):
+            from expyriment.misc import unicode2str
+            webbrowser.open(
+                unicode2str('file://' + docu),
+                new=1)
+        else:
+            print "No local documentation found"
     elif docu_type == 2:
         webbrowser.open(
             "http://docs.expyriment.org/",
