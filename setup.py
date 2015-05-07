@@ -57,8 +57,7 @@ data_files = [('share/expyriment/examples',
 
 install_requires = ["pygame>=1.9", "pyopengl>3.0"]
 
-extras_require = {"optional": ["pyserial>=2.5", "pyparallel>=0.2",
-                               "numpy>=1.6", "pillow>1.0", "pyxid>=1.0"]}
+extras_require = {"optional": ["pyserial>=2.5", "numpy>=1.6", "pillow>1.0", "pyxid>=1.0"]}
 
 dependency_links = ["http://www.lfd.uci.edu/~gohlke/pythonlibs/"]
 
