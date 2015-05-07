@@ -37,6 +37,7 @@ package_dir={'expyriment': 'expyriment'}
 packages = ['expyriment',
             'expyriment.control',
             'expyriment.io', 'expyriment.io.extras',
+            'expyriment.io._parallelport',
             'expyriment.misc', 'expyriment.misc.extras',
             'expyriment.stimuli', 'expyriment.stimuli.extras',
             'expyriment.design', 'expyriment.design.extras']
