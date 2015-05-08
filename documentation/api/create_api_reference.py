@@ -265,6 +265,10 @@ hr {color: #cccccc; background-color: #cccccc;}
     if cmd_folder not in sys.path:
         sys.path.insert(0, cmd_folder)
         import expyriment
+        import expyriment.io.extras
+        import expyriment.design.extras
+        import expyriment.stimuli.extras
+        import expyriment.misc.extras
         sys.path.remove(cmd_folder)
     create_page("expyriment")
 

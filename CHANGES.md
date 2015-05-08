@@ -57,7 +57,9 @@ Changed:
 - ATTENTION: ParallelPort has been changed a lot and is not backwards compatible
   anymore; the old implementation is still available as
   io.extras.SimpleParallelPort
-- io.screen.open_gl and control.defaults.open_gl have new parameters:
+- ATTENTION: extra modules will not anymore be imported automatically. Please 
+  call `import.<module_name>.extras`, if you want to use extra features.
+- ATTENTION: io.screen.open_gl and control.defaults.open_gl have new parameters:
     0/False - No OpenGL (no vsync / no blocking)
     1       - OpenGL (vsync / no blocking)
     2/True  - OpenGL (vsync / blocking)

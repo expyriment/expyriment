@@ -181,6 +181,11 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
+    import expyriment.io.extras
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.misc.extras
+
     defaults = {}
     defaults = _get_module_values(defaults, expyriment.design.defaults)
     defaults = _get_module_values(defaults, expyriment.control.defaults)

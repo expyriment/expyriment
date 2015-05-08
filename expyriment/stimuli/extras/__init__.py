@@ -1,7 +1,12 @@
 """The stimuli extra package.
 
-Extra stimuli classes are available directly via expyriment.stimuli.extras.*.
-(For expample: expyriment.stimuli.extras.DotCloud)
+Notes
+-----
+    Extra stimuli classes are available via expyriment.stimuli.extras.*.
+    (For expample: expyriment.stimuli.extras.DotCloud)
+
+    To us the extras module you have to import it manually by calling:
+    `import expyriment.io.extras`
 
 """
 

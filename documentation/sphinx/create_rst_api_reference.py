@@ -7,6 +7,11 @@ make rst files for the expyriment API reference
 import inspect
 
 import expyriment
+import expyriment.io.extras
+import expyriment.design.extras
+import expyriment.stimuli.extras
+import expyriment.misc.extras
+
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
