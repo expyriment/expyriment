@@ -29,7 +29,28 @@ class Shape(Visual):
                  anti_aliasing=None):
         """Create a shape.
 
-        A shape comprises always (0,0) as origin vertex
+        A shape is an object described by vertices. For more details about
+        vertex representations see:
+        http://en.wikipedia.org/wiki/Vertex_(geometry)
+
+        The vertex representation describes the contour of an object. Think of
+        it as if you would draw with a pen. You start somewhere and make
+        movements in different directions. A rectangle could be then for
+        instance described by a right, a down, a left and an up movement
+        (see example below).
+
+        As always in Expyriment, the center of the surface of the shape is its
+        position. That means, that with every new vertex, the shape size might
+        change and the shape position will be realigned.
+
+        Example
+        -------
+            r = stimuli.Shape(line_width = 0)
+            r.add_vertex((100,0))
+            r.add_vertices([(0,-50),(-100,0) ])
+            # three vertices are sufficient, because shapes are always closed
+            r.present()
+
 
         Parameters
         ----------

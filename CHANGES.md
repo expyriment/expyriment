@@ -79,6 +79,8 @@ Fixed:
 - stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
 - bug in stimuli.Audio.unload() and stimuli.Video.unload()
 - bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
+- bug in Shape: shapes now comensate for the Pygame bug of extended polygons 
+  along the horizontal axes
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
