@@ -76,7 +76,7 @@ class FixCross(Shape):
         self.add_vertex((0, -line_width))
         self.add_vertex((-x, 0))
         self.add_vertex((0, -y))
-        self.add_vertex((-line_width , 0))
+        self.add_vertex((-line_width, 0))
         self.add_vertex((0, y))
         self.add_vertex((-x, 0))
         self.add_vertex((0, line_width))

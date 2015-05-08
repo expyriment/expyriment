@@ -505,6 +505,16 @@ class Shape(Visual):
         self.scale((level, level))
         return int((get_time() - start) * 1000)
 
+    @staticmethod
+    def _compensate_for_pygame_polygon_bug(vertex):
+        """Pygame seems to add a pixel, if a polygon function is drawing
+        lines along the horizontal dimension. We therefore compress each vertex by
+        one pixel in its horizontal movement component.
+
+        """
+
+        return (vertex[0] - cmp(vertex[0], 0),  vertex[1])
+
     def _update_points(self):
         """Updates the points of the shape and the drawing rect.
 
@@ -522,7 +532,7 @@ class Shape(Visual):
 
         # Converts tmp_vtx to points in xy-coordinates
         xy_p = [expyriment.misc.geometry.XYPoint(0, 0)]
-        for v in tmp_vtx:
+        for v in map(Shape._compensate_for_pygame_polygon_bug ,tmp_vtx):
             x = (v[0] + xy_p[-1].x)
             y = (v[1] + xy_p[-1].y)
             xy_p.append(expyriment.misc.geometry.XYPoint(x, y))
@@ -581,12 +591,14 @@ class Shape(Visual):
         surface = pygame.surface.Surface(s,
                                         pygame.SRCALPHA).convert_alpha()
         #surface.fill((255, 0, 0)) # for debugging only
+        #create polygon
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
+        pygame.draw.polygon(surface, self.colour, poly, line_width)
+
         rot_centre = self.convert_expyriment_xy_to_surface_xy(
             self._native_rotation_centre)
-        pygame.draw.polygon(surface, self.colour, poly, line_width)
         if self._rotation_centre_display_colour is not None:
             pygame.draw.circle(surface, self._rotation_centre_display_colour,
                                rot_centre, 2)
