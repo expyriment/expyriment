@@ -6,7 +6,7 @@ Notes
     (For expample: expyriment.stimuli.extras.DotCloud)
 
     To us the extras module you have to import it manually by calling:
-    `import expyriment.io.extras`
+    `import expyriment.stimuli.extras`
 
 """
 
