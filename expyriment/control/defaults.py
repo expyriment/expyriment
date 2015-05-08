@@ -154,6 +154,7 @@ __date__ = ''
 
 from expyriment.misc import constants as _constants
 
+
 initialize_delay = 10  # After approximately 10 seconds Python is timecritical
 auto_create_subject_id = False
 goodbye_text = "Ending experiment..."
