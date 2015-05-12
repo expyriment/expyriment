@@ -7,18 +7,18 @@ How to install Expyriment?
 The latest releases of Expyriment can be downloaded from GitHub_. Note, that 
 Expyriment depends on the following software packages that have to be installed 
 on your system:
-    * `Python 2`_ (>=2.6),
-    * Pygame_ (>=1.9)
-    * PyOpenGL_ (>=3.0). 
+
+* `Python 2`_ (>=2.6)
+* Pygame_ (>=1.9)
+* PyOpenGL_ (>=3.0)
 
 Additional packages, which are optional and only required for some features of 
-Expyriment are PySerial_ (>=2.5) (to use serial port communication), 
-PyParallel_ (>=0.2) (to use parallel port communication) and NumPy_ (>=1.6) (to 
-use data preprocessing). Please be aware that Expyriment plugins (extras) might 
-have additional dependencies. 
+Expyriment are:
 
-**Importantly, Expyriment only runs with a 32-bit version of Python 2. Also all 
-required packages have to be 32-bit compiled!**
+* NumPy_ (>=1.6) (to use data preprocessing)
+* PySerial_ (>=2.5) (to use serial port communication)
+* PyParallel_ (>=0.2) (to use parallel port communication on Linux)
+* Matplotlib_ (>=1.3), Pillow_ (>=1.0) and Pyxid_ (>=1.0) (for Expyriment plugins)
 
 We provide more detailed platform-specific instructions for installing 
 Expyriment here:
@@ -40,4 +40,7 @@ Expyriment here:
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
 .. _NumPy: http://numpy.org/
+.. _Matplotlib: http://matplotlib.org
+.. _Pillow: https://pypi.python.org/pypi/Pillow/2.8.1
+.. _Pyxid: https://pypi.python.org/pypi/pyxid/1.0
 .. _GitHub: https://github.com/expyriment/expyriment/releases

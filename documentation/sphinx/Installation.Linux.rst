@@ -3,12 +3,40 @@
 Platform-specific instructions: Linux
 =====================================
 
+All Linux distributions
+-----------------------
+
+1. Use your distribution's package manager to install
+
+  * Python 2
+  * PIP
+  * Pygame
+
+2. In a command line, run ::
+
+    pip install expyriment
+
+For the alternative packages (optional):
+
+3. Use your distribution's package manager to install
+
+  * Matplotlib
+  * Numpy
+  * PyParallel
+  * PySerial
+  * Pillow
+
+4. In a command line, run ::
+
+    pip install pyxid
+
+
 Debian, Ubuntu and derivatives
--------------------------------
+------------------------------
 
 We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
-suggest to installed ``python-expyriment`` via `NeuroDebian`_, a platform 
-providing a large collection of neuroscience research software.  For detailed 
+suggest to install ``python-expyriment`` via `NeuroDebian`_, a platform
+providing a large collection of neuroscience research software. For detailed
 instructions see:
 `Installing Expyriment via Neurodebian <http://neuro.debian.net/pkgs/python-expyriment.html>`_
 
@@ -21,19 +49,6 @@ to match your Python version)::
 Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
 
 
-Other Linux distributions
--------------------------
-
-For all other Linux distributions, you can download the file
-expyriment-|release|.zip from the `release page`_ and install as described
-here_. Alternatively, you can use the following command, which is doing this
-for you::
-
-    wget -P /tmp 'https://raw.github.com/expyriment/expyriment/master/tools/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
-
-Don't forget to install all :doc:`required software packages </Installation>`.
-
-
 Notes
 -----
 **Switch off desktop effects, when running an experiment**
@@ -43,7 +58,6 @@ Notes
     presentation it is important to switch off desktop effects in your window
     manager!
 
-..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
 .. _`release page`: http://github.com/expyriment/expyriment/releases/latest
 .. _`Debian`: https://www.debian.org/
 .. _`NeuroDebian`: http://neuro.debian.net/
