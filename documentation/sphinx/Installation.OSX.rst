@@ -31,7 +31,7 @@ For the alternative packages (optional):
 
     sudo port selfupdate
     sudo port install py27-serial
-    sudo /opt/local/bin/python2.7 -m pip install matplotlib numpy pillow pyxid
+    sudo /opt/local/bin/python2.7 -m pip install numpy
 
 
 Manually (alternative)
@@ -42,29 +42,21 @@ Manually (alternative)
 3. Install XQuartz_ (only for OS X 10.9 and higher)
 4. Install Pygame_
 5. Install PyOpenGL_
-6. In a terminal, run ::
+6. Download |expyriment-wheel-code| from the `release page`_ and install it in a terminal with
 
-   sudo /usr/local/bin/python -m pip expyriment
+   .. parsed-literal::
+
+       sudo /usr/local/bin/python -m pip install |expyriment-wheel|
 
 For the additional packages (optional):
 
-7. Download Matplotlib_ and install it in a terminal with ::
+7. Download Numpy_ and install it in a terminal with
 
-    sudo /usr/local/bin/python -m pip install <downloaded file>
+   .. parsed-literal::
 
-8. Download Numpy_ and install it in a terminal with ::
+       sudo /usr/local/bin/python -m pip install |numpy-wheel|
 
-    sudo /usr/local/bin/python -m pip install <downloaded file>
-
-9. Download Pillow_ and install it in a terminal with ::
-
-    sudo /usr/local/bin/python -m pip install <downloaded file>
-
-10. Download PySerial_, unpack it, and install it in a terminal with ::
-
-    sudo /usr/local/bin/python setup.py install
-
-11. Download Pyxid_, unpack it, and install it in a terminal with ::
+8. Download PySerial_, unpack it, and install it in a terminal with ::
 
     sudo /usr/local/bin/python setup.py install
 
@@ -98,9 +90,8 @@ Notes
 .. _XQuartz: http://xquartz.macosforge.org/downloads/SL/XQuartz-2.7.7.dmg
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
 .. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.2.zip
-.. _Matplotlib: https://downloads.sourceforge.net/project/matplotlib/matplotlib/matplotlib-1.4.3/mac/matplotlib-1.4.3-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl
 .. _Numpy: https://pypi.python.org/packages/cp27/n/numpy/numpy-1.9.2-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl#md5=296f576bb648b8195b379b0bf39791ce
-.. _Pillow: https://pypi.python.org/packages/cp27/P/Pillow/Pillow-2.8.1-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl#md5=e1486bbd4777e6c9f35ad14081212f6f
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.tar.gz/download
-.. _Pyxid: https://pypi.python.org/packages/source/p/pyxid/pyxid-1.0.tar.gz
-.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest
+.. _`release page`: http://github.com/expyriment/expyriment/releases/latest
+
+.. |numpy-wheel| replace:: numpy-1.9.2-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl

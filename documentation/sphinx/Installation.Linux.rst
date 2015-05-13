@@ -20,15 +20,9 @@ For the alternative packages (optional):
 
 3. Use your distribution's package manager to install
 
-  * Matplotlib
   * Numpy
   * PyParallel
   * PySerial
-  * Pillow
-
-4. In a command line, run ::
-
-    pip install pyxid
 
 
 Debian, Ubuntu and derivatives

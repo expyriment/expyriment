@@ -2,10 +2,7 @@
 Command line interface
 ======================
 
-Usage
------
-
-::
+Usage::
 
     
     python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]

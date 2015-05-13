@@ -4,7 +4,7 @@ Installation
 How to install Expyriment?
 --------------------------
 
-The latest releases of Expyriment can be downloaded from GitHub_. Note, that 
+The latest releases of Expyriment can be downloaded from the `release page`_. Note, that
 Expyriment depends on the following software packages that have to be installed 
 on your system:
 
@@ -18,7 +18,6 @@ Expyriment are:
 * NumPy_ (>=1.6) (to use data preprocessing)
 * PySerial_ (>=2.5) (to use serial port communication)
 * PyParallel_ (>=0.2) (to use parallel port communication on Linux)
-* Matplotlib_ (>=1.3), Pillow_ (>=1.0) and Pyxid_ (>=1.0) (for Expyriment plugins)
 
 We provide more detailed platform-specific instructions for installing 
 Expyriment here:
@@ -40,7 +39,4 @@ Expyriment here:
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
 .. _NumPy: http://numpy.org/
-.. _Matplotlib: http://matplotlib.org
-.. _Pillow: https://pypi.python.org/pypi/Pillow/2.8.1
-.. _Pyxid: https://pypi.python.org/pypi/pyxid/1.0
-.. _GitHub: https://github.com/expyriment/expyriment/releases
+.. _`release page`: https://github.com/expyriment/expyriment/releases
