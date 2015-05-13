@@ -19,6 +19,8 @@ Expyriment are:
 * PySerial_ (>=2.5) (to use serial port communication)
 * PyParallel_ (>=0.2) (to use parallel port communication on Linux)
 
+Please be aware that Expyriment plugins (extras) might have additional dependencies.
+
 We provide more detailed platform-specific instructions for installing 
 Expyriment here:
 
