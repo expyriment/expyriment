@@ -20,7 +20,7 @@ except ImportError:
     from distutils.command.install import install
     from distutils.command.bdist_wininst import bdist_wininst
 from os import remove, close, chmod, path
-from shutil import move, rmtree
+from shutil import move, copytree, rmtree
 from tempfile import mkstemp
 from glob import glob
 
@@ -55,11 +55,7 @@ data_files = [('share/expyriment/examples',
               ('share/expyriment/documentation/sphinx/numpydoc',
                glob('documentation/sphinx/numpydoc/*.*'))]
 
-install_requires = ["pygame>=1.9", "pyopengl>3.0"]
-
-extras_require = {"optional": ["pyserial>=2.5", "numpy>=1.6", "pillow>1.0", "pyxid>=1.0"]}
-
-dependency_links = ["http://www.lfd.uci.edu/~gohlke/pythonlibs/"]
+install_requires = ["pyopengl>3.0"]
 
 
 # Clear old installation when installing
@@ -162,9 +158,10 @@ if __name__=="__main__":
     if version_nr == '':
         # Try to create html documentation
         html_created = False
-        try:
+        if True:
             import os
             cwd = os.getcwd()
+            copytree('expyriment', 'documentation/sphinx/expyriment')
             os.chdir('documentation/sphinx/')
             from subprocess import call
             call(["python", "./create_rst_api_reference.py"])
@@ -174,6 +171,7 @@ if __name__=="__main__":
             for file_ in glob("expyriment.*"):
                 os.remove(file_)
             os.chdir(cwd)
+            rmtree('documentation/sphinx/expyriment/')
             data_files.append(('share/expyriment/documentation/html',
                                glob('documentation/sphinx/_build/html/*.*')))
             data_files.append(('share/expyriment/documentation/html/_downloads',
@@ -185,11 +183,11 @@ if __name__=="__main__":
             data_files.append(('share/expyriment/documentation/html/_static',
                                glob('documentation/sphinx/_build/html/_static/*.*')))
             html_created = True
-        except:
+        else:
             print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
 
         # Try to add version_nr and date stamp from Git and build/install
-        if True:
+        try:
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
@@ -210,8 +208,6 @@ if __name__=="__main__":
                       package_data=package_data,
                       data_files=data_files,
                       install_requires=install_requires,
-                      extras_require=extras_require,
-                      dependency_links=dependency_links,
                       cmdclass={'build_py': Build, 'install': Install,
                                 'bdist_wininst': Wininst}
             )
@@ -222,7 +218,7 @@ if __name__=="__main__":
     
             print ""
             print "Expyriment Version:", version_nr, "(from repository)"
-        else:
+        except:
             raise RuntimeError("Building from repository failed!")
 
     # If not, we are building/installing from a released download
@@ -240,8 +236,6 @@ if __name__=="__main__":
               package_data=package_data,
               data_files=data_files,
               install_requires=install_requires,
-              extras_require=extras_require,
-              dependency_links=dependency_links,
               cmdclass={'install': Install, 'bdist_wininst': Wininst}
         )
 

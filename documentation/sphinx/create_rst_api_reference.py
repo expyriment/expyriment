@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 
-"""
-make rst files for the expyriment API reference
+"""Make rst files for the expyriment API reference"""
 
-"""
+
 import inspect
+import os
+import sys
+p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
+sys.path.insert(0, p)
 
 import expyriment
+
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
@@ -97,7 +101,7 @@ def create_module_rst(mod_name, no_members=False):
 def create_change_log_rst():
     """create well shaped Changelog.rst from CHANGES.md"""
 
-    changes_md = "../../CHANGES.md"
+    changes_md = os.path.join(p, "CHANGES.md")
     changelog_rst = "Changelog.rst"
 
     fl = open(changes_md, 'r')

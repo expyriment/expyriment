@@ -3,53 +3,75 @@
 Platform-specific instructions: OS X
 ====================================
 
-There are different ways to install Expyriment on OS X.
-The easiest way is to let MacPorts take care of all dependencies.
-Alternatively, all dependencies can be downloaded and installed manually.
-Both options will install an additional Python environment and will not alter
+There are two different ways to install Expyriment on OS X.
+
+Each will rely on an additional (different) Python environment and will not alter
 the Python environment provided by Apple.
 
-**If, after installation, you get errors about Expyriment (or one of its dependencies)
-not being installed, chances are you trying to import Expyriment in the "wrong"
-(i.e. Apple's) Python environment.**
 
-Using MacPorts (recommended)
-----------------------------
-After having installed MacPorts_ run the following command from the
-terminal to install all dependencies::
-    sudo port selfupdate && sudo port install xorg-server python27 py27-game py27-opengl py27-numpy py27-pil py27-serial
+Using MacPorts and PyPi (recommended)
+-------------------------------------
 
-To make the MacPorts Python the one that is called when typing "python"
-into a terminal, run the following command from the terminal::
+1. Install MacPorts_
+2. In a terminal, run ::
+
+    sudo port selfupdate
+    sudo port install xorg-server tcl python27 py27-pip py27-game
+    sudo /opt/local/bin/python2.7 -m pip install expyriment
+
+3. To make the MacPorts Python the one that is called when typing "python", in a terminal, run ::
+
     sudo port select --set python python27
-(Please note that this can be reversed by calling the command again, substituting "python27" with "none").
 
-To install Expyriment, download "expyriment-|release|.zip from the `Release page`_ and install as described here_.
+   (Please note that this can be reversed by calling the command again, substituting "python27" with "none").
+
+For the alternative packages (optional):
+
+4. In a terminal, run ::
+
+    sudo port selfupdate
+    sudo port install py27-serial
+    sudo /opt/local/bin/python2.7 -m pip install numpy
+
 
 Manually (alternative)
 ----------------------
-To install basic dependencies, download the following installers and follow their instructions:
 
- * `Python 2`_
- * Tcl_
- * XQuartz_ (only for OS X 10.9 and higher)
- * Pygame_
- * NumPy_
+1. Install `Python 2.7.9`_
+2. Install Tcl_
+3. Install XQuartz_ (only for OS X 10.9 and higher)
+4. Install Pygame_
+5. Install PyOpenGL_
+6. Download |expyriment-wheel-code| from the `release page`_ and install it in a terminal with
 
-In addition:
+   .. parsed-literal::
 
- * Download PyOpenGL_ and install as described here_
- * Download PySerial_ and install as described here_
+       sudo /usr/local/bin/python -m pip install |expyriment-wheel|
 
-Note, Expyriment only runs with a 32-bit version of Python 2. Also all required 
-packages have to be 32-bit compiled!
+For the additional packages (optional):
 
-To install Expyriment:
+7. Download Numpy_ and install it in a terminal with
 
- * Download "expyriment-|release|.zip from the `Release page`_ and install as described here_
+   .. parsed-literal::
+
+       sudo /usr/local/bin/python -m pip install |numpy-wheel|
+
+8. Download PySerial_, unpack it, and install it in a terminal with ::
+
+    sudo /usr/local/bin/python setup.py install
+
 
 Notes
 -----
+
+**Be aware of multiple Python installations**
+
+    If, after installation, you get errors about Expyriment (or one of its dependencies)
+    not being installed, chances are you try to import Expyriment in the "wrong"
+    (i.e. Apple's) Python environment.
+
+    Make sure you are calling ``/opt/local/bin/python2.7``
+    or ``/usr/local/bin/python``, depending on how you installed Expyriment.
 
 **Do not start your experiments out of IDLE**
 
@@ -61,13 +83,15 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
+
 .. _`MacPorts`: https://www.macports.org/install.php
-.. _`Python 2`: http://python.org/ftp/python/2.7.6/python-2.7.6-macosx10.3.dmg
+.. _`Python 2.7.9`: https://www.python.org/ftp/python/2.7.9/python-2.7.9-macosx10.5.pkg
 .. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
 .. _XQuartz: http://xquartz.macosforge.org/downloads/SL/XQuartz-2.7.7.dmg
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
-.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.8.0/numpy-1.8.0-py2.7-python.org-macosx10.6.dmg/download
 .. _PyOpenGL:  http://pypi.python.org/packages/source/P/PyOpenGL/PyOpenGL-3.0.2.zip
+.. _Numpy: https://pypi.python.org/packages/cp27/n/numpy/numpy-1.9.2-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl#md5=296f576bb648b8195b379b0bf39791ce
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.tar.gz/download
-..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
-.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest
+.. _`release page`: http://github.com/expyriment/expyriment/releases/latest
+
+.. |numpy-wheel| replace:: numpy-1.9.2-cp27-none-macosx_10_6_intel.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl

@@ -21,7 +21,8 @@ Contents
    Advanced
    API reference <expyriment>
    Changelog
-   `Previous versions <http://docs.expyriment.org/old/>`_
+
+`Previous Expyriment versions <http://docs.expyriment.org/old/>`_
 
 News
 ----
