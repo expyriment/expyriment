@@ -51,12 +51,6 @@ New Features:
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
   off automatically, if Expyriment is not running in fullscreen mode.
-- ATTENTION: stimuli.Ellipse is now defined by radii (Not backwards compatible!)
-- ATTENTION: stimuli.Circle is now defined by radius (Not backwards compatible!)
-- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
-- ATTENTION: ParallelPort has been changed a lot and is not backwards compatible
-  anymore; the old implementation is still available as
-  io.extras.SimpleParallelPort
 - ATTENTION: extra modules will not anymore be imported automatically. Please 
   call `import.<module_name>.extras`, if you want to use extra features.
 - ATTENTION: io.screen.open_gl and control.defaults.open_gl have new parameters:
@@ -64,6 +58,12 @@ Changed:
     1       - OpenGL (vsync / no blocking)
     2/True  - OpenGL (vsync / blocking)
     3       - OpenGL (vsync / alternative blocking)
+- ATTENTION: stimuli.Ellipse is now defined by radii (Not backwards compatible!)
+- ATTENTION: stimuli.Circle is now defined by radius (Not backwards compatible!)
+- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
+- ATTENTION: ParallelPort has been changed a lot and is not backwards compatible
+  anymore; the old implementation is still available as
+  io.extras.SimpleParallelPort
 - the property Shape.size has been renamed to shape.shape_size
 - stimuli.Rectangle: is_point_inside is now obsolete
 - stimuli.Shape: is_point_inside and is_shape_overlapping are now obsolete
