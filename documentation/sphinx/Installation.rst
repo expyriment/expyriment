@@ -18,6 +18,7 @@ Expyriment are:
 * NumPy_ (>=1.6) (to use data preprocessing)
 * PySerial_ (>=2.5) (to use serial port communication)
 * PyParallel_ (>=0.2) (to use parallel port communication on Linux)
+* Inpout32_ or dlportio_ (to use parallel port communication on Windows)
 
 Please be aware that Expyriment plugins (extras) might have additional dependencies.
 
@@ -41,4 +42,6 @@ Expyriment here:
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
 .. _NumPy: http://numpy.org/
+.. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
+.. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
 .. _`release page`: https://github.com/expyriment/expyriment/releases

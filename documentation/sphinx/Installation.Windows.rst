@@ -21,6 +21,8 @@ For the additional packages (optional):
 
       python -m pip install pyserial
 
+6. Install Inpout32_ or dlportio_
+
 
 Manually (alternative)
 ----------------------
@@ -41,6 +43,8 @@ For the additional packages (optional):
 
     python setup.py install
 
+7. Install Inpout32_ or dlportio_
+
 
 Notes
 -----
@@ -59,4 +63,6 @@ Notes
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
+.. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
+.. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
 .. _`release page`: http://github.com/expyriment/expyriment/releases/
