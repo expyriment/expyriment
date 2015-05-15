@@ -28,13 +28,17 @@ methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 
     OPTIONS:
-      -g              No OpenGL
+      -g | -0         No OpenGL (no vsync / no blocking)
+      -1              OpenGL (vsync / no blocking)
+      -2              OpenGL (vsync / blocking)
+      -3              OpenGL (vsync / alternative blocking)
       -t              No time stamps for output files
       -w              Window mode
       -f              Fast mode (no initialize delay and fast quitting)
       -a              Auto create subject ID
       -i              Intensive logging (log level 2)
-      -d              Develop mode (equivalent to -gwfat)
+      -d              Develop mode (equivalent to -wfat)
+      -b              Alternative blocking mode (blocking mode 2)
 
       -C              Create Expyriment template
       -J              Join data files to one single csv file
@@ -42,13 +46,13 @@ functions to join the data output.
       -S              Print system information
       -T              Run the Expyriment Test Suite
       -A              Start the Expyrimnent API Reference Tool
-      -B              Open browser with API refelence
+      -B              Open browser with API reference
       -h              Show this help
 """
 
 unknown_option = "Unknown option '{0}' (use --help for information)"
 
-def create_templet():
+def create_template():
     template_file = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -118,7 +122,6 @@ if __name__ == "__main__":
                     #sort args (capital letters last)
                     arguments = list(args[1:])
                     arguments.sort(reverse=True)
-
                     for arg in arguments:
                         if arg == 'd':
                             expyriment.control.set_develop_mode(True)
@@ -130,15 +133,23 @@ if __name__ == "__main__":
                             expyriment.control.defaults.initialize_delay = 0
                             expyriment.control.defaults.fast_quit = False
                         elif arg == 'w':
-                            print "* Window mode (No OpenGL)"
-                            expyriment.control.defaults.open_gl = False
+                            print "* Window mode"
                             expyriment.control.defaults.window_mode = True
-                        elif arg == 'g':
-                            print "* No OpenGL"
+                        elif arg == 'g' or arg == 0:
+                            print "* No OpenGL (no vsync / no blocking)"
                             expyriment.control.defaults.open_gl = False
+                        elif arg == '1':
+                            print "* OpenGL (vsync / no blocking)"
+                            expyriment.control.defaults.open_gl = 1
+                        elif arg == '2':
+                            print "* OpenGL (vsync / blocking)"
+                            expyriment.control.defaults.open_gl = 2
+                        elif arg == '3':
+                            print "* OpenGL (vsync / alternative blocking)"
+                            expyriment.control.defaults.open_gl = 3
                         elif arg == 't':
                             print "* No time stamps"
-                            expyriment.io.defaults.argvoutputfile_time_stamp =\
+                            expyriment.io.defaults.outputfile_time_stamp =\
                                     False
                         elif arg == 'a':
                             print "* Auto create subject id"
@@ -160,19 +171,19 @@ if __name__ == "__main__":
                             expyriment.show_documentation(3)
                             sys.exit()
                         elif arg == "C":
-                            create_templet()
+                            create_template()
                             sys.exit()
                         elif arg == "J":
                             d = join_data()
                             output =""
-                            while len(output)<=1:
+                            while len(output) <= 1:
                                 output = raw_input(" name of output csv file? ")
                             d.write_concatenated_data(output)
                             sys.exit()
                         elif arg == "R":
                             d = join_data()
                             output =""
-                            while len(output)<=1:
+                            while len(output) <= 1:
                                 output = raw_input(" name of RDS file? ")
                             d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()

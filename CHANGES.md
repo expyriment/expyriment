@@ -2,26 +2,30 @@
 Expyriment Release Notes
 ========================
 
-upcoming version
------------------
-
-Version 0.8.0
--------------
+Version 0.8.0 (soon)
+--------------------
 New Features:
+- Antialiasing option for stimuli.Ellipse() and stimuli.Circle()
+- new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
+- new function: quiting wait or event loops by callback_function, if this function
+  returns an instance of the new class control.CallbackQuitEvent
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
 - new stimulus: stimuli.extras.ThermometerDisplay
 - new io device: io.extras.TbvNetworkClient
 - new io device: io.extras.TcpClient
-- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch()
-  The stimulus depends on the package "matplotlib".
+- new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch();
+  the stimulus depends on the package "matplotlib".
+- new feature: data_preprocessing methodsallow now to read in only certain
+  variables (see parameter `read_variables`)
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
 - new method in data_preprocessing: save to to R data frame
+- new method in data_preprocessing: get_experiment_duration
 - new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
-- new mouse function: experiments can be quitted by mouse events (triple click).
-  See documentation of property "mouse_quit_event". This function is only switched
+- new mouse function: experiments can be quited by mouse events (triple click);
+  see documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
 - new method visual stimuli.replace
 - new method control.is_android_running
@@ -33,26 +37,57 @@ New Features:
 - new feature: control.set_skip_wait_functions
 - io.Keyboard has static methods to set and get the quit_key and pause_key
 - new feature: too long text lines will be trimmed automatically if the 
-  max_width parameter has been defiend
+  max_width parameter has been defined
 - new feature: too long words in text boxes will be trimmed automatically, 
   this function can be switch off
+- new feature: improved functionality of randomize.shuffle_list
+- Test suite summarizes delay histograms for visual presentations
+- control.defaults.blocking_mode for setting the blocking_mode
+- New io.ParallelPort implementation, based on PsychoPy code; it now
+  supports reading of 5 status pins (10, 11, 12, 13, 15) and all 8 data pins;
+  in addition, the module now works on 64bit Windows system
+- Test suite: New ParallelPort test
 
 Changed:
-- ParallelPort: Polling will now return 4 bits, including also the status of
-  the Busy status line
-  (ATTENTION: Byte order in the output other status lines has changed!)
+- ATTENTION: Open_GL is now also used in window mode and will not be switch
+  off automatically, if Expyriment is not running in fullscreen mode.
+- ATTENTION: extra modules will not anymore be imported automatically. Please 
+  call `import.<module_name>.extras`, if you want to use extra features.
+- ATTENTION: io.screen.open_gl and control.defaults.open_gl have new parameters:
+    0/False - No OpenGL (no vsync / no blocking)
+    1       - OpenGL (vsync / no blocking)
+    2/True  - OpenGL (vsync / blocking)
+    3       - OpenGL (vsync / alternative blocking)
+- ATTENTION: stimuli.Ellipse is now defined by radii (Not backwards compatible!)
+- ATTENTION: stimuli.Circle is now defined by radius (Not backwards compatible!)
+- ATTENTION: two obsolete stimuli stimuli.Frame and stimuli.Dot (see doc)
+- ATTENTION: ParallelPort has been changed a lot and is not backwards compatible
+  anymore; the old implementation is still available as
+  io.extras.SimpleParallelPort
+- the property Shape.size has been renamed to shape.shape_size
+- stimuli.Rectangle: is_point_inside is now obsolete
+- stimuli.Shape: is_point_inside and is_shape_overlapping are now obsolete
+- stimuli.Fixcross: fixcross_size parameter and cross_size property are now
+  obsolete
 - changes at Simon example
 
 Fixed:
-- bug in io.TouchScreenButton crash if duration expired 
-- bug in command line inteface: order of argument is now irrelevant
+- bug in io.TouchScreenButton crash if duration expired
+- bug in command line interface: order of argument is now irrelevant
 - keypad bug in TextInput
-- unicode bug in textmenu
+- unicode bug in TextMenu
+- bug in anti_aliasing shapes
+- some method parameters that require a list and didn't work with tuples 
+- stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
+- bug in stimuli.Audio.unload() and stimuli.Video.unload()
+- bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
+- bug in Shape: shapes now comensate for the Pygame bug of extended polygons 
+  along the horizontal axes
 
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
-- new feature in testsuite: Font viewer 
+- new feature in testsuite: Font viewer
 - new extra stimulus: stimuli.extras.RandomDotKinematogram
 - new timer and experiment clock to ensure monotonic timing
 - Clock: new method (static) monotonic_time (this time should be always used)

@@ -63,12 +63,6 @@ textscreen_background_colour = None  # 'None' is transparent
 textscreen_size = None  # 'None' is 4/5 of full screen
 textscreen_position = (0, 0)
 
-# Frame
-frame_colour = None  # 'None' is experiment_text_colour
-frame_frame_line_width = 5
-frame_position = (0, 0)
-frame_anti_aliasing = 0
-
 # Ellipse
 ellipse_colour = None  # 'None' is experiment_text_colour
 ellipse_line_width = 0
@@ -87,11 +81,6 @@ circle_colour = None  # 'None' is experiment_text_colour
 circle_position = (0, 0)
 circle_anti_aliasing = 0
 circle_line_width = 0
-
-# Dot
-dot_colour = None  # 'None' is experiment_text_colour
-dot_position = (0, 0)
-dot_anti_aliasing = 0
 
 # Shape
 shape_colour = None  # 'None' is experiment_text_colour

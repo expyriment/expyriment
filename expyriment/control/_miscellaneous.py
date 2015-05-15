@@ -181,6 +181,11 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
+    import expyriment.io.extras
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.misc.extras
+
     defaults = {}
     defaults = _get_module_values(defaults, expyriment.design.defaults)
     defaults = _get_module_values(defaults, expyriment.control.defaults)
@@ -217,14 +222,23 @@ def register_wait_callback_function(function, exp=None):
     all Expyriment wait and event loops that wait for an external input.
     That is, they are executed by the following functions (at least once!):
 
-        control.wait_end_audiosystem,
-        misc.clock.wait,         misc.clock.wait_seconds,
-        misc.clock.wait_minutes  io.keyboard.wait,
-        io.keyboard.wait_char,   io.buttonbox.wait,
-        io.gamepad.wait_press,   io.triggerinput.wait,
-        io.mouse.wait_press,     io.serialport.read_line,
-        io.textinput.get,        stimulus.video.wait_frame,
-        stimulus.video.wait_end
+        - control.wait_end_audiosystem
+        - misc.Clock.wait
+        - misc.Clock.wait_seconds
+        - misc.Clock.wait_minutes
+        - io.Keyboard.wait
+        - io.Keyboard.wait_char
+        - io.Mouse.wait_press
+        - io.SerialPort.read_line
+        - io.StreamingButtonBox.wait
+        - io.EventButtonBox.wait
+        - io.GamePad.wait_press
+        - io.TriggerInput.wait
+        - io.TextInput.get
+        - io.TouchScreenButtonBox.wait
+        - io.extras.CedrusResponseDevice.wait
+        - stimuli.Video.wait_frame
+        - stimuli.Video.wait_end
 
     Parameters
     ----------
@@ -270,6 +284,33 @@ def unregister_wait_callback_function(exp=None):
     else:
         expyriment._active_exp.unregister_wait_callback_function()
 
+class CallbackQuitEvent():
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
+    def __init__(self, data=None):
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
+        self.data = data
+
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)
 
 def is_ipython_running():
     """Return True if IPython is running."""

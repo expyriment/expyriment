@@ -28,9 +28,9 @@ from expyriment.misc._timer import get_time
 from expyriment.misc import unicode2str
 from  _input_output import Input
 
-
 quit_key = None
 pause_key = None
+refresh_key = None
 end_function = None
 pause_function = None
 
@@ -74,6 +74,9 @@ class Keyboard(Input):
                         pause_function is not None:
                     pause_function()
                     return True
+                elif key_event.key == refresh_key:
+                    if expyriment._active_exp is not None:
+                        expyriment._active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
@@ -176,8 +179,11 @@ class Keyboard(Input):
 
         if keys is None:
             keys = self.default_keys
-        if type(keys) is not list and keys is not None:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         pygame.event.pump()
         pygame.event.clear(pygame.KEYUP)
         for event in pygame.event.get(pygame.KEYDOWN):
@@ -226,6 +232,10 @@ class Keyboard(Input):
         -----
         Keys are defined my keyboard constants (please use see misc.constants)
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -238,8 +248,11 @@ class Keyboard(Input):
         self.clear()
         if keys is None:
             keys = self.default_keys
-        if keys is not None and type(keys) is not list:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         if wait_for_keyup:
             target_event = pygame.KEYUP
         else:
@@ -247,7 +260,11 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                done = True
+                found_key = rtn_callback
+                rt = int((get_time() - start) * 1000)
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
@@ -294,6 +311,10 @@ class Keyboard(Input):
         rt : int
             reaction time in ms
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -302,12 +323,20 @@ class Keyboard(Input):
         rt = None
         found_char = None
         self.clear()
-        if type(char) is not list:
+        try:
+            char = list(char)
+        except:
             char = [char]
         pygame.event.pump()
         done = False
+
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                    done = True
+                    rt = int((get_time() - start) * 1000)
+                    found_char = rtn_callback
+
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True

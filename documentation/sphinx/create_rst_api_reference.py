@@ -1,12 +1,21 @@
 #!/usr/bin/env python
 
-"""
-make rst files for the expyriment API reference
+"""Make rst files for the expyriment API reference"""
 
-"""
+
 import inspect
+import os
+import sys
+p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
+sys.path.insert(0, p)
 
 import expyriment
+import expyriment.io.extras
+import expyriment.design.extras
+import expyriment.stimuli.extras
+import expyriment.misc.extras
+
+
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
@@ -47,10 +56,10 @@ def create_module_rst(mod_name, no_members=False):
     with open(mod_name + ".rst", 'w') as fl:
         fl.write(heading(mod_name))
         fl.write("\n.. automodule:: " + mod_name + "\n")
-        fl.write("   :members:\n")
-        fl.write("   :undoc-members:\n")
-        fl.write("   :show-inheritance:\n")
-        fl.write("   :inherited-members:\n")
+        #fl.write("   :members:\n")
+        #fl.write("   :undoc-members:\n")
+        #fl.write("   :show-inheritance:\n")
+        #fl.write("   :inherited-members:\n")
 
         modules, classes, methods, functions, attributes = inspect_members(mod_name)
         if len(attributes)>0:
@@ -60,8 +69,10 @@ def create_module_rst(mod_name, no_members=False):
                 att = mod_name + "." + att[0]
                 fl.write(".. py:data:: " + att + "\n\n")
                 #t = eval("type(" + att + ")")
-                v = eval("repr(" + att + ")")
-                fl.write("   default value: {0}\n\n".format(v))
+                if att.find("EXPYRIMENT_LOGO_FILE") == -1:
+                    # do not write default for EXPYRIMENT_LOGO_FILE
+                    v = eval("repr(" + att + ")")
+                    fl.write("   default value: {0}\n\n".format(v))
 
         if len(modules)>0:
             fl.write(heading("\n\nModules", "-"))
@@ -95,7 +106,7 @@ def create_module_rst(mod_name, no_members=False):
 def create_change_log_rst():
     """create well shaped Changelog.rst from CHANGES.md"""
 
-    changes_md = "../../CHANGES.md"
+    changes_md = os.path.join(p, "CHANGES.md")
     changelog_rst = "Changelog.rst"
 
     fl = open(changes_md, 'r')

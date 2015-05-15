@@ -24,33 +24,47 @@ updated (the lines are drawn) the result might lead to artifacts, since the
 update occurs immediately, leading to parts of both, the new and the old screen 
 content, being visible. What is even worse is that you will never know in which 
 phase of the redrawing the new redraw was started. Thus, you cannot be sure 
-when exactly the new content is fully visible on screen.
+when exactly the new content is fully visible on screen. This should be the
+behaviour of Expyriment, when OpenGL is switched off
+(``control.defaults.open_gl=0``; see `Defaults`_)
 
 The first step towards getting around this problem is to synchronize the actual 
 redraw to the vertical retrace of the screen. This means that a change in 
 content will never happen immediately, but always only when the retrace is at 
 the top left position. When synchronizing to the vertical retrace, the graphic 
 card is told to update the screen the next time it starts redrawing the first 
-line. While this will solve the problem of artifacts, you will still face the 
-problem of not knowing when exactly something was visible on the screen, since 
+line. This should be the behaviour of Expyriment, when OpenGL is switched on
+and set to "vsync / no blocking" (``control.defaults.open_gl=1``; see `Defaults`_).
+While this will solve the problem of artifacts, you will still face the
+problem of not knowing when exactly something was visible on the screen, since
 the graphic card handles this synchronization itself in the background.
 
-Solving this problem is the exact (and only) reason why Expyriment uses OpenGL 
-by default. It allows to wait for the vertical retrace to actually happen 
-before proceeding with the code that tells the graphics card to update the 
-screen (this is also known as blocking on the vertical retrace). This means 
-that whenever something should be presented on screen, no matter in which line 
-the redraw is at this point in time, the graphic card will wait for the redraw 
-to be in the first line and then present the stimulus. Since the code is 
-blocking, the time Expyriment reports the stimulus to be presented on screen 
-will always be the time when the redraw is starting at the first line. Coming 
-back to the example of the small dot in the center of the screen: Expyriment 
-will correctly report a longer presentation time when the redraw has been just 
-over the center line when the screen update was issued.
+Solving this problem is the exact (and only) reason why Expyriment will use
+OpenGL set to "vsync / blocking" (``control.defaults.open_gl=2``; see `Defaults`_) by default.
+It allows to wait for the vertical retrace to actually happen before
+proceeding with the code that tells the graphics card to update the screen
+(this is also known as blocking on the vertical retrace). This means that
+whenever something should be presented on screen, no matter in which line the
+redraw is at this point in time, the graphic card will wait for the redraw to
+be in the first line and then present the stimulus. Since the code is
+blocking, the time Expyriment reports the stimulus to be presented on screen
+will always be the time when the redraw is starting at the first line.
+Coming back to the example of the small dot in the center of the screen:
+Expyriment will correctly report a longer presentation time when the redraw
+has been just over the center line when the screen update was issued.
+
+In some rare cases, this blocking mechanism will not work. This is due to
+specifics of the video card driver implementation. Should blocking on the
+vertical retrace indeed not work (as can be revealed by the
+:doc:`Expyriment test suite <Testsuite>`), an alternative blocking mechanism
+is available by using OpenGL set to "vsync / alternative blocking"
+(``control.defaults.open_gl=3``; see `Defaults`_).
 
 *It is important to set your graphic card's driver settings to support 
 synchronizing to the vertical retrace ("Sync to VBlank" or "V-sync") and to 
 switch off any power saving schemes on the graphic card.*
+*Also, please be aware that blocking on the vertical retrace is not accurate
+in window mode!*
 
 **Test results**
 
@@ -60,7 +74,8 @@ the screen was recorded using an optic sensor attached to an oscilloscope.
 After each screen presentation, a marker was send via the serial port to the 
 oscilloscope. Testing was done on an Intel Core Duo PC with an Nvidia Quadro 
 NVS 290 graphics card, running Microsoft Windows XP SP3. The monitor used was a 
-Samsung SyncMaster 2233. Expyriment was running in OpenGL mode (default).
+Samsung SyncMaster 2233. Expyriment was running in the default OpenGL mode
+(``control.defaults.open_gl=2``; see `Defaults`_).
 
 The results revealed:
 
@@ -124,17 +139,19 @@ Video
 
 Video presentation is a tricky subject. In Expyriment, the present() method of 
 a video stimulus will start playback and present the first (current) frame on 
-the screen. Thus, visual onset of this frame will be synchronized with the 
+the screen. Thus, visual onset of this frame can be synchronized with the
 vertical retrace (see visual stimulus presentation above). Each following frame 
 has to be plotted on the screen and the screen has to be updated. The 
 wait_end() method of a video stimulus will automatically present each frame on 
-the screen until the video is over. When Expyriment is in OpenGL mode, the 
-process of plotting each frame might take longer than one refresh rate which 
-will result in dropping frames (e.g. frames not being presented at all). To 
-control for this, the wait_end() method will report and log if any frames were 
-dropped during video playback.
+the screen until the video is over. When Expyriment is in OpenGL mode "vsync /
+(alternative) blocking", the process of plotting each frame might take longer
+than one refresh rate which will result in dropping frames (e.g. frames not
+being presented at all). To control for this, the wait_end() method will
+report and log if any frames were dropped during video playback.
 
-*Unfortunetly, right now, Expyriment can only handle MPEG-1 encoded videos!*
+*Unfortunately, right now, Expyriment can only handle MPEG-1 encoded videos!*
+*However, videos can be easily converted to the correct format, using ffmpeg.*
+*See :doc:`stimuli.Video <expyriment.stimuli.Video>` for more information.*
 
 Measuring user input
 --------------------

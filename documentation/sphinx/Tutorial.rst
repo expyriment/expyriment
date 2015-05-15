@@ -1,11 +1,23 @@
 Beginner's tutorial to get started with Expyriment
 ====================================================
 
+Note, Expyriment is a library for the programming language Python.  That is, 
+you have to know at least a bit, how to program in Python before using 
+Expyriment. The are many `excelent tutorials`_ online.
+
+To programming an experiment you can actually take any text editor.  
+We suggest for the development, however, a programming editor or an IDE that 
+captures and displays the error messages. Syntax highlighting is also a very 
+convenient features of these editors. A simple Python editor is  `IDLE`_, which 
+is under Windows part of any Python installation.  We have furthermore made 
+very good experiences with `Pycharm`_ as a platform independent Python IDE.
+
+.. _`excelent tutorials`: http://docs.python-guide.org/en/latest/intro/learning/
+.. _`IDLE`: http://en.wikipedia.org/wiki/IDLE_%28Python%29
+.. _`Pycharm`: https://www.jetbrains.com/pycharm/
+
 How to get started with Expyriment?
 -----------------------------------
-To start programming a new experiment you can take any text editor. Preferably 
-one with syntax highlighting for Python of course. (If you are on Windows you 
-might want to use *IDLE* which is part of the Python installation).
 
 Let's start right away with a very basic example!
 
@@ -390,12 +402,15 @@ Let's see why this is:
     Now have a look at the "data" and "events" directories (in the same 
     directory where your first_example.py is located). The "data" directory 
     contains data log files, named according to the experiment name, the 
-    subject number and a timestamp. The file ending is .xpd. The event 
-    directory contains event log files with the ending .xpe. Open the latest 
-    data file to see the data we just logged. Notice that the first rows are a 
-    header with some information about the file. However, it would be nice to 
-    also have the variable names of what is logged in there. To do this, add 
-    the following lines above where you start the experiment:
+    subject number and a timestamp. The file ending is .xpd. (Note: To 
+    disable time stamps in output filenames, you have change the defauls of
+    the io module before you initialize your experiment: 
+    ``expyriment.io.defaults.outputfile_time_stamp = False``)  The event 
+    directory contains event log files with the ending .xpe.
+    Open the latest data file to see the data we just logged. Notice that the 
+    first rows are a header with some information about the file. However, it 
+    would be nice to also have the variable names of what is logged in there. 
+    To do this, add the following lines above where you start the experiment:
 
     ``exp.data_variable_names = ["Block", "Trial", "Key", "RT"]``
 
@@ -416,14 +431,14 @@ will overwrite any previous default settings!  One of the most common things to
 do, while developing is to change the default presentation mode from fullscreen 
 to a window:
 
-    ``expyriment.control.window_mode = True``
+    ``expyriment.control.defaults.window_mode = True``
 
-    ``expyriment.control.window_size = (800,600)``
+    ``expyriment.control.defaults.window_size = (800,600)``
 
     Also, when using older machines with very old video cards, you might want 
     to run in fullscreen, but without using OpenGL:
 
-    ``expyriment.control.open_gl = False``
+    ``expyriment.control.defaults.open_gl = False``
 
 That's it so far. We are at the end of the getting started tutorial. As a 
 summary, have a look at the following code, which again show the overall 

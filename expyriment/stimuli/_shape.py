@@ -29,7 +29,28 @@ class Shape(Visual):
                  anti_aliasing=None):
         """Create a shape.
 
-        A shape comprises always (0,0) as origin vertex
+        A shape is an object described by vertices. For more details about
+        vertex representations see:
+        http://en.wikipedia.org/wiki/Vertex_(geometry)
+
+        The vertex representation describes the contour of an object. Think of
+        it as if you would draw with a pen. You start somewhere and make
+        movements in different directions. A rectangle could be then for
+        instance described by a right, a down, a left and an up movement
+        (see example below).
+
+        As always in Expyriment, the center of the surface of the shape is its
+        position. That means, that with every new vertex, the shape size might
+        change and the shape position will be realigned.
+
+        Example
+        -------
+            r = stimuli.Shape(line_width = 0)
+            r.add_vertex((100,0))
+            r.add_vertices([(0,-50),(-100,0) ])
+            # three vertices are sufficient, because shapes are always closed
+            r.present()
+
 
         Parameters
         ----------
@@ -141,14 +162,14 @@ class Shape(Visual):
 
     @property
     def width(self):
-        return self.rect[3] - self.rect[1]#r-l
+        return self._rect[3] - self._rect[1]#r-l
 
     @property
     def height(self):
-        return self.rect[0] - self.rect[2]#t-b
+        return self._rect[0] - self._rect[2]#t-b
 
     @property
-    def size(self):
+    def shape_size(self):
         return (self.width, self.height)
 
     @property
@@ -356,9 +377,9 @@ class Shape(Visual):
         return pt.is_inside_polygon(self.xy_points_on_screen)
 
     def is_point_inside(self, point_xy):
-        """DEPRECATED METHOD: Please use 'native_overlapping_with_position'."""
+        """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
 
-        return self.native_overlapping_with_position(point_xy)
+        raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
     def overlapping_with_shape(self, other):
         """Return true if shape overlaps with other shape.
@@ -400,10 +421,9 @@ class Shape(Visual):
         return False
 
     def is_shape_overlapping(self, shape2):
-        """DEPRECATED METHOD: Please use 'overlapping_with_shape'."""
+        """OBSOLETE METHOD: Please use 'overlapping_with_shape'."""
 
-        return self.overlapping_with_shape(shape2)
-
+        raise DeprecationWarning("is_shape_overlapping is an obsolete method. Please use overlapping_with_shape.")
 
     def native_rotate(self, degree):
         """Rotate the shape.
@@ -444,7 +464,7 @@ class Shape(Visual):
 
         """
 
-        if (type(factors) is not list):
+        if type(factors) is not list and type(factors) is not tuple:
             factors = [factors, factors]
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
@@ -452,7 +472,8 @@ class Shape(Visual):
 
         self._native_scaling[0] = self._native_scaling[0] * factors[0]
         self._native_scaling[1] = self._native_scaling[1] * factors[1]
-        self._line_width = self._line_width * sqrt(factors[0] * factors[1])
+        if scale_line_width:
+            self._line_width = self._line_width * sqrt(factors[0] * factors[1])
         self._update_points()
 
     def native_flip(self, booleans):
@@ -505,6 +526,16 @@ class Shape(Visual):
         self.scale((level, level))
         return int((get_time() - start) * 1000)
 
+    @staticmethod
+    def _compensate_for_pygame_polygon_bug(vertex):
+        """Pygame seems to add a pixel, if a polygon function is drawing
+        lines along the horizontal dimension. We therefore compress each vertex by
+        one pixel in its horizontal movement component.
+
+        """
+
+        return (vertex[0] - cmp(vertex[0], 0),  vertex[1])
+
     def _update_points(self):
         """Updates the points of the shape and the drawing rect.
 
@@ -522,7 +553,7 @@ class Shape(Visual):
 
         # Converts tmp_vtx to points in xy-coordinates
         xy_p = [expyriment.misc.geometry.XYPoint(0, 0)]
-        for v in tmp_vtx:
+        for v in map(Shape._compensate_for_pygame_polygon_bug ,tmp_vtx):
             x = (v[0] + xy_p[-1].x)
             y = (v[1] + xy_p[-1].y)
             xy_p.append(expyriment.misc.geometry.XYPoint(x, y))
@@ -573,21 +604,22 @@ class Shape(Visual):
         if self._anti_aliasing > 0: # Draw enlarged shape
             aa_scaling = (self._anti_aliasing / 5.0) + 1
             old_scaling = copy.copy(self._native_scaling)
-            old_line_width = self._line_width
             self.native_scale([aa_scaling, aa_scaling], scale_line_width=True)
 
         line_width = int(self._line_width)
         # Draw the rect
-        s = (self.size[0] + line_width, self.size[1] + line_width)
+        s = (self.width + line_width, self.height + line_width)
         surface = pygame.surface.Surface(s,
                                         pygame.SRCALPHA).convert_alpha()
         #surface.fill((255, 0, 0)) # for debugging only
+        #create polygon
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
+        pygame.draw.polygon(surface, self.colour, poly, line_width)
+
         rot_centre = self.convert_expyriment_xy_to_surface_xy(
             self._native_rotation_centre)
-        pygame.draw.polygon(surface, self.colour, poly, line_width)
         if self._rotation_centre_display_colour is not None:
             pygame.draw.circle(surface, self._rotation_centre_display_colour,
                                rot_centre, 2)
@@ -598,7 +630,6 @@ class Shape(Visual):
                                 (int(size[0] / aa_scaling),
                                  int(size[1] / aa_scaling)))
             self._native_scaling = old_scaling
-            self._line_width = old_line_width
             self._update_points()
         return surface
 

@@ -31,7 +31,7 @@ class RandomDotKinematogram(Stimulus):
 
     def __init__(self, area_radius, n_dots, target_direction, target_dot_ratio,
                 position = None, dot_speed = None, dot_lifetime = None,
-                dot_diameter = None, dot_colour=None,
+                dot_radius = None, dot_colour=None,
                 background_colour = None, north_up_clockwise = None):
         """Create a Random Dot Kinematogram
 
@@ -54,8 +54,8 @@ class RandomDotKinematogram(Stimulus):
             the moving speed in pixel per second (default=100)
         dot_lifetime : int, optional
             the time the object lives in milliseconds (default 400)
-        dot_diameter : int, optional
-            diameter of the dots (default = 5)
+        dot_radius : int, optional
+            radius of the dots (default = 3)
         dot_colour : (int, int, int), optional
             colour (RGB) of the dots (default=experiment.foreground_colour)
         background_colour : (int, int, int), optional
@@ -74,8 +74,8 @@ class RandomDotKinematogram(Stimulus):
             dot_speed = defaults.randomdotkinematogram_dot_speed
         if dot_lifetime is None:
             dot_lifetime = defaults.randomdotkinematogram_dot_lifetime
-        if dot_diameter is None:
-            dot_diameter = defaults.randomdotkinematogram_dot_diameter
+        if dot_radius is None:
+            dot_radius = defaults.randomdotkinematogram_dot_radius
         if dot_colour is None:
             dot_colour = defaults.randomdotkinematogram_dot_colour
         if north_up_clockwise is None:
@@ -88,11 +88,11 @@ class RandomDotKinematogram(Stimulus):
         self.area_radius = area_radius
         self.dot_speed = dot_speed
         self.dot_lifetime = dot_lifetime
-        self.dot_diameter = dot_diameter
+        self.dot_radius = dot_radius
         self.dot_colour = dot_colour
         self.north_up_clockwise = north_up_clockwise
-        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_diameter),
-                                    2*(self.area_radius + self.dot_diameter)),
+        self._canvas = Canvas(size=(2*(self.area_radius + self.dot_radius),
+                                    2*(self.area_radius + self.dot_radius)),
                                     position=position, colour=background_colour)
         self.reset(n_dots=n_dots, target_direction=target_direction,
                         target_dot_ratio=target_dot_ratio)
@@ -115,10 +115,12 @@ class RandomDotKinematogram(Stimulus):
 
         """
         self.target_direction = target_direction
-        self.dots = map(lambda x : self._make_random_dot(direction=None,
-                            extra_age=int(random.random() * self.dot_lifetime)),
-                        range(n_dots))
+        self.dots = map(lambda x : self._make_random_dot(direction=None), range(n_dots))
         self.target_dot_ratio = target_dot_ratio
+
+    def reset_all_ages(self, randomize_ages=False):
+        """Reset all ages (born at current time) and randomize start age if required"""
+        map(lambda x : x.reset_age(randomize_age=randomize_ages), self.dots)
 
     @property
     def n_dots(self):
@@ -165,8 +167,7 @@ class RandomDotKinematogram(Stimulus):
                     if not d.is_target:
                         self.dots.remove(d)
                         break
-                d = self._make_random_dot(direction=self.target_direction,
-                        extra_age=int(random.random() * self.dot_lifetime))
+                d = self._make_random_dot(direction=self.target_direction, randomize_age=True)
                 d.is_target = True
                 self.dots.append(d)
             elif goal_n_targets < curr_n_targets:
@@ -175,8 +176,7 @@ class RandomDotKinematogram(Stimulus):
                     if d.is_target:
                         self.dots.remove(d)
                         break
-                self.dots.append(self._make_random_dot(direction=None,
-                        extra_age=int(random.random() * self.dot_lifetime)))
+                self.dots.append(self._make_random_dot(direction=None, randomize_age=True))
             curr_n_targets = self.n_target_dots
 
     @property
@@ -184,7 +184,8 @@ class RandomDotKinematogram(Stimulus):
         """Getter for the last plotted stimulus"""
         return self._canvas
 
-    def _make_random_dot(self, direction=None, extra_age=0):
+    def _make_random_dot(self, direction=None, randomize_age=False):
+        """make a random dot"""
         while (True):
             pos = (int(self.area_radius - random.random()*2*self.area_radius),
               int(self.area_radius - random.random()*2*self.area_radius))
@@ -192,12 +193,14 @@ class RandomDotKinematogram(Stimulus):
                 break
         if direction is None:
             direction = random.random() * 360
-        return MovingPosition(position=pos,
+        rtn = MovingPosition(position=pos,
                         direction=direction,
                         speed = self.dot_speed,
-                        extra_age=extra_age,
                         lifetime = self.dot_lifetime,
                         north_up_clockwise=self.north_up_clockwise)
+        if randomize_age:
+            rtn.reset_age(randomize_age=True)
+        return rtn
 
     def make_frame(self, background_stimulus=None):
         """Make new frame. The function creates the current random dot kinematogram
@@ -229,7 +232,7 @@ class RandomDotKinematogram(Stimulus):
                     d.is_target = True
                 else:
                     d = self._make_random_dot()
-            Circle(position = d.position, diameter=self.dot_diameter,
+            Circle(position = d.position, radius=self.dot_radius,
                         colour=self.dot_colour).plot(self._canvas)
             return d
         self.dots = map(_process_dot, self.dots)
@@ -264,6 +267,7 @@ class RandomDotKinematogram(Stimulus):
         if button_box is None:
             button_box = _active_exp.keyboard
         button_box.clear()
+        self.reset_all_ages(randomize_ages=True)
         last_change_time = RT.stopwatch_time
         while(True):
             if None not in change_parameter:
@@ -278,12 +282,14 @@ class RandomDotKinematogram(Stimulus):
             else:
                 _active_exp.keyboard.process_control_keys()
                 key = button_box.check(codes=check_keys)
-                
+
             if key is not None:
                 break
             if duration is not None and RT.stopwatch_time >= duration:
                 return (None, None)
         return key, RT.stopwatch_time
+
+
 
 class MovingPosition(object):
 
@@ -303,7 +309,7 @@ class MovingPosition(object):
         lifetime : int
             the time the object lives in milliseconds
         extra_age : int, optional
-            the object can have already an age when creating
+            the object can have already an age when creating or resetting
             (default=0)
         north_up_clockwise : bool, optional
             if true (default) all directional information refer to an
@@ -326,7 +332,18 @@ class MovingPosition(object):
     @property
     def is_dead(self):
         """Return True is lifetime of the object is over"""
-        return (self._clock.time + self.extra_age >= self.lifetime)
+        return (self.age >= self.lifetime)
+
+    @property
+    def age(self):
+        """Return the age of a dot"""
+        return self._clock.stopwatch_time + self.extra_age
+
+    def reset_age(self, randomize_age=False):
+        """Reset the age to zero (born at current time) or if randomize_age=True, age will randomized."""
+        if randomize_age:
+            self.extra_age = int(random.random() * self.lifetime)
+        self._clock.reset_stopwatch()
 
     def is_outside(self, the_range):
         """Return True the object is outside the range from (0,0)"""
@@ -345,9 +362,9 @@ class MovingPosition(object):
         position is moving.
 
         """
-        return (self._start_position[0] + self._clock.time *
+        return (self._start_position[0] + self._clock.stopwatch_time *
                             self._movement_vector[0],
-            self._start_position[1] + self._clock.time *
+            self._start_position[1] + self._clock.stopwatch_time *
                             self._movement_vector[1])
 
     @property
@@ -393,7 +410,7 @@ if __name__ == "__main__":
           target_direction = direction,
           target_dot_ratio = 0.20,
           dot_speed = 80, dot_lifetime = 600,
-          dot_diameter=5, dot_colour=None)
+          dot_radius = 3, dot_colour=None)
     key, rt = rdk.present_and_wait_keyboard()
 
     # smae direct buy with 80% consitency
@@ -401,8 +418,6 @@ if __name__ == "__main__":
           target_direction = direction,
           target_dot_ratio = 0.80,
           dot_speed = 80, dot_lifetime = 600,
-          dot_diameter=5, dot_colour=None)
+          dot_colour = None)
     key, rt = rdk.present_and_wait_keyboard()
     print direction
-
-

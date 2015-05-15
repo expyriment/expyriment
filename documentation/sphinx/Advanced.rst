@@ -8,7 +8,11 @@ Advanced
     API reference tool <APIReferenceTool>
     Test suite <Testsuite>
     Command line interface <CommandLineInterface>
-    Data preprocessing <DataPreprocessing>
-    Importing data into R <ImportDataIntoR>
+    Data preprocessing and exporting <DataPreprocessing>
     Using non-English characters <Unicode>
+    Using fonts <Fonts>
     Plugin system (extras) <Plugins>
+    Defaults (settings) <Defaults>
+    Hardware compatibility <Hardware>
+    Timing <Timing>
+    Problems & Limitations <Problems>

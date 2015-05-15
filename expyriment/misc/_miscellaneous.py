@@ -270,4 +270,3 @@ def get_monitor_resolution():
         pygame.display.init()
         return (pygame.display.Info().current_w,
                 pygame.display.Info().current_h)
-

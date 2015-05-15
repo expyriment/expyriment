@@ -47,9 +47,13 @@ class TouchScreenButtonBox(Input):
 
         Input.__init__(self)
 
-        if type(button_fields) is not list:
+        try:
+            button_fields = list(button_fields)
+        except:
             button_fields = [button_fields]
-        if type(stimuli) is not list:
+        try:
+            stimuli = list(stimuli)
+        except:
             stimuli = [stimuli]
 
         self._mouse = expyriment._active_exp.mouse
@@ -186,8 +190,11 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if button_fields is not None and type(button_fields) is not list:
-            button_fields = [button_fields]
+        if button_fields is not None:
+            try:
+                button_fields = list(button_fields)
+            except:
+                button_fields = [button_fields]
         if check_for_control_keys:
             expyriment.io.Keyboard.process_control_keys()
 
@@ -236,6 +243,10 @@ class TouchScreenButtonBox(Input):
         -----
         Don't forget to show the TouchScreenButtonBox.
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -243,13 +254,15 @@ class TouchScreenButtonBox(Input):
         start = get_time()
         self.clear_event_buffer()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time()-start)*1000)
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
             if pressed_button_field is not None:
-                rt = int(touch_time - start)
+                rt = int((get_time()-start)*1000)
                 break
-            elif (duration is not None and get_time()-start>=duration):
+            elif (duration is not None and int((get_time()-start)*1000)>=duration):
                 pressed_button_field, rt = None, None
                 break
         return pressed_button_field, rt

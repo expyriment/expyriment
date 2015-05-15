@@ -21,10 +21,10 @@ except:
     parallel = None
 
 import expyriment
-from  _input_output  import Input, Output
+from  expyriment.io._input_output  import Input, Output
 
 
-class ParallelPort(Input, Output):
+class SimpleParallelPort(Input, Output):
     """A class implementing a parallel port input and output.
 
     Notes
@@ -46,7 +46,7 @@ class ParallelPort(Input, Output):
 
         import types
         if type(parallel) is not types.ModuleType:
-            message = """ParallelPort can not be initialized.
+            message = """SimpleParallelPort can not be initialized.
 The Python package 'pyParallel' is not installed."""
             raise ImportError(message)
 
@@ -81,7 +81,7 @@ The Python package 'pyParallel' is not installed."""
         return False
 
     def clear(self):
-        """Clear the parallell port.
+        """Clear the parallel port.
 
         Dummy method required for port interfaces (see e.g. ButtonBox)
 
@@ -92,38 +92,38 @@ The Python package 'pyParallel' is not installed."""
     def poll(self):
         """Poll the parallel port.
 
-        The parlallel port will be polled and the result will be returned.
-        The parallel module for Python can only read the 4 status lines.
-        The result is thus coded in four bits:
+        The parallel port will be polled and the result will be returned.
+        The parallel module for Python can only read three of the status
+        lines.
+        The result is thus coded in three bits:
 
-        Acknowledge Busy Paper-Out Selected
+        Acknowledge Paper-Out Selected
 
-        Example: '4' means only Paper-Out is receiving data ("0010").
+        Example: '4' means only Selected is receiving data ("001").
 
         To send out data the actual data lines are used.
 
         """
 
-        bits = "{3}{2}{1}{0}".format(int(self._parallel.getInAcknowledge()),
-                                     int(self._parallel.getInPaperBusy()),
-                                     int(self._parallel.getInPaperOut()),
-                                     int(self._parallel.getInSelected()))
-        byte = int(bits, 2)
+        bits = "{2}{1}{0}".format(int(self._parallel.getInAcknowledge()),
+                                  int(self._parallel.getInPaperOut()),
+                                  int(self._parallel.getInSelected()))
+        code = int(bits, 2)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                    "ParallelPort,received,{0},poll".format(ord(byte)), 2)
-        return ord(byte)
+                    "SimpleParallelPort,received,{0},poll".format(code), 2)
+        return code
 
     @staticmethod
     def get_available_ports():
-        """Return an array of strings representing the available serial ports.
+        """Return an array of strings representing the available parallel ports.
 
         If pyparallel is not installed, 'None' will be returned.
 
         Returns
         -------
         ports : list
-            array of strings representing the available serial ports
+            array of strings representing the available parallel ports
 
         """
 
@@ -163,4 +163,4 @@ The Python package 'pyParallel' is not installed."""
         self.parallel.setData(data)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                                    "ParallelPort,sent,{0}".format(data), 2)
+                                    "SimpleParallelPort,sent,{0}".format(data), 2)

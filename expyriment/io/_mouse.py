@@ -263,17 +263,19 @@ class Mouse(Input):
         """Get the last button down event.
         All earlier button down events will be removed from the queue.
 
+        Parameters
+        ----------
+        process_quit_event : boolean, optional
+            if False, the current location will not be processed for mouse
+                quitting events in the case that a button down event has been
+                found (default = True).
+            
         Returns
         -------
         btn_id : int
             button number (0,1,2) or 3 for wheel up or 4 for wheel down,
             if quit screen mouse action has been performed, the method
             returns -1
-
-        process_quit_event : boolean, optional
-            if False, the current location will not be processed for mouse
-                quitting events in the case that a button down event has been
-                found (default = True).
 
         """
 
@@ -309,10 +311,14 @@ class Mouse(Input):
     def check_button_pressed(self, button_number):
         """Return False or button id if a specific button is currently pressed.
 
+        Parameters
+        ----------
+        button_number : int
+            the button number (0,1,2) to be checked
+            
         Returns
         -------
-        btn_id : int
-            button number (0,1,2)
+        is_pressed: boolean
 
         """
 
@@ -429,6 +435,10 @@ class Mouse(Input):
         - 3       for wheel up or
         - 4       for wheel down (wheel works only for keydown events).
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -441,10 +451,17 @@ class Mouse(Input):
         motion_occured = False
         if buttons is None:
             buttons = [0, 1, 2, 3, 4]
-        if type(buttons) is not list:
-            buttons = [buttons]
+        else:
+            try:
+                buttons = list(buttons)
+            except:
+                buttons = [buttons]
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                btn_id = rtn_callback
+                rt = int((get_time() - start) * 1000)
+                break
             if wait_motion:
                 motion_occured = old_pos != pygame.mouse.get_pos()
             if wait_button:
@@ -527,7 +544,11 @@ class Mouse(Input):
 
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                         duration=duration, wait_for_buttonup=False)
-        return rtn[2], rtn[3]
+
+        if isinstance(rtn[0], expyriment.control.CallbackQuitEvent):
+            return rtn[0], rtn[3]
+        else:
+            return rtn[2], rtn[3]
 
 
     def show_cursor(self, track_button_events=True, track_motion_events=False):

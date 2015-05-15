@@ -6,27 +6,56 @@ Setup file for Expyriment
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+
 import stat
 from subprocess import Popen, PIPE
-from distutils.core import setup
-from distutils.command.build_py import build_py
-from distutils.command.install import install
-from distutils.command.bdist_wininst import bdist_wininst
+try:
+    from setuptools import setup
+    from setuptools.command.build_py import build_py
+    from setuptools.command.install import install
+    from setuptools.command.bdist_wininst import bdist_wininst
+except ImportError:
+    from distutils.core import setup
+    from distutils.command.build_py import build_py
+    from distutils.command.install import install
+    from distutils.command.bdist_wininst import bdist_wininst
 from os import remove, close, chmod, path
-from shutil import move, rmtree
+from shutil import move, copytree, rmtree
 from tempfile import mkstemp
 from glob import glob
 
 
 # Settings
+description='A Python library for cognitive and neuroscientific experiments'
+author='Florian Krause, Oliver Lindemann'
+author_email='florian@expyriment.org, oliver@expyriment.org'
+license='GNU GPLv3'
+url='http://www.expyriment.org'
+
+package_dir={'expyriment': 'expyriment'}
+
 packages = ['expyriment',
             'expyriment.control',
             'expyriment.io', 'expyriment.io.extras',
+            'expyriment.io._parallelport',
             'expyriment.misc', 'expyriment.misc.extras',
             'expyriment.stimuli', 'expyriment.stimuli.extras',
             'expyriment.design', 'expyriment.design.extras']
 
 package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
+
+data_files = [('share/expyriment/examples',
+               glob('examples/*.*')),
+              ('share/expyriment/tools',
+               glob('tools/*.*')),
+              ('share/expyriment/documentation/api',
+               glob('documentation/api/*.*')),
+              ('share/expyriment/documentation/sphinx',
+               glob('documentation/sphinx/*.*')),
+              ('share/expyriment/documentation/sphinx/numpydoc',
+               glob('documentation/sphinx/numpydoc/*.*'))]
+
+install_requires = ["pyopengl>3.0"]
 
 
 # Clear old installation when installing
@@ -35,13 +64,16 @@ class Install(install):
 
     def run(self):
         # Clear old installation
-        olddir = path.abspath(self.install_lib + path.sep + "expyriment")
-        oldegginfo = glob(path.abspath(self.install_lib) + path.sep +
-                          "expyriment*.egg-info")
-        for egginfo in oldegginfo:
-            remove(egginfo)
-        if path.isdir(olddir):
-            rmtree(olddir)
+        try:
+            olddir = path.abspath(self.install_lib + path.sep + "expyriment")
+            oldegginfo = glob(path.abspath(self.install_lib) + path.sep +
+                              "expyriment*.egg-info")
+            for egginfo in oldegginfo:
+                remove(egginfo)
+            if path.isdir(olddir):
+                rmtree(olddir)
+        except:
+            pass
         install.run(self)
 
 
@@ -82,9 +114,6 @@ class Build(build_py):
                     if line[0:11] == '__version__':
                         new_file.write("__version__ = '" + version_nr + "'" +
                                        '\n')
-                    elif line[0:12] == '__revision__':
-                        new_file.write("__revision__ = '" + revision_nr + "'"
-                                       + '\n')
                     elif line[0:8] == '__date__':
                         new_file.write("__date__ = '" + date + "'" + '\n')
                     else:
@@ -101,84 +130,114 @@ class Build(build_py):
                       stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH)
         build_py.byte_compile(self, files)
 
-def get_version():
-    # read version for CHANGES.md
+def get_version_from_git():
     version_nr = "{0}"
-    with open('CHANGES.md') as f:
-        for line in f:
-            if line[0:8].lower() == "upcoming":
-                version_nr += "+"
-            if line[0:7] == "Version":
-                length = line[8:].find(" ")
-                version_nr = version_nr.format(line[8:8+length])
-                break
-    return version_nr
-
-def get_git_revision():
-        proc = Popen(['git', 'log', '--format=%H', '-1'], \
+    proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
-        return proc.stdout.read().strip()[:7]
 
-def get_git_date():
+    return version_nr.format(proc.stdout.read().lstrip("v").strip())
+
+def get_date_from_git():
         proc = Popen(['git', 'log', '--format=%cd', '-1'],
                      stdout=PIPE, stderr=PIPE)
         return proc.stdout.readline().strip()
 
-def get_revision_from_file(filename):
-    # get the revision (___revision___) from a particular file
-    # not yet used but maybe usefule to implement (instead git check)
+def get_version_from_file(filename):
+    """Get the version (___version___) from a particular file."""
+
     with open(filename) as f:
         for line in f:
-            if line.startswith("__revision__"):
+            if line.startswith("__version__"):
                 rtn = line.split("'")
                 return rtn[1]
     return ''
 
 if __name__=="__main__":
-    version_nr = get_version()
+    # Check if we are building/installing from unreleased code
+    version_nr = get_version_from_file("expyriment/__init__.py")
+    if version_nr == '':
+        # Try to create html documentation
+        html_created = False
+        if True:
+            import os
+            cwd = os.getcwd()
+            copytree('expyriment', 'documentation/sphinx/expyriment')
+            os.chdir('documentation/sphinx/')
+            from subprocess import call
+            call(["python", "./create_rst_api_reference.py"])
+            # sphinx-build -b html -d _build/doctrees . _build/html
+            call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
+            # rm expyriment.*
+            for file_ in glob("expyriment.*"):
+                os.remove(file_)
+            os.chdir(cwd)
+            rmtree('documentation/sphinx/expyriment/')
+            data_files.append(('share/expyriment/documentation/html',
+                               glob('documentation/sphinx/_build/html/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_downloads',
+                               glob('documentation/sphinx/_build/html/_downloads/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_images',
+                               glob('documentation/sphinx/_build/html/_images/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_sources',
+                               glob('documentation/sphinx/_build/html/_sources/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_static',
+                               glob('documentation/sphinx/_build/html/_static/*.*')))
+            html_created = True
+        else:
+            print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
 
-    # Check if we are building/installing from the repository
-    try:
-        proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
-                     stdout=PIPE, stderr=PIPE)
-        initial_revision = proc.stdout.readline()
-        if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
-            raise Exception
-        revision_nr = get_git_revision()
-        date = get_git_date()
-        # Build
-        x = setup(name='expyriment',
-          version=version_nr,
-          description='A Python library for cognitive and neuroscientific experiments',
-          author='Florian Krause, Oliver Lindemann',
-          author_email='florian@expyriment.org, oliver@expyriment.org',
-          license='GNU GPLv3',
-          url='http://www.expyriment.org',
-          packages=packages,
-          package_dir={'expyriment': 'expyriment'},
-          package_data=package_data,
-          cmdclass={'build_py': Build, 'install': Install,
-                    'bdist_wininst': Wininst}
-          )
+        # Try to add version_nr and date stamp from Git and build/install
+        try:
+            proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                         stdout=PIPE, stderr=PIPE)
+            initial_revision = proc.stdout.readline()
+            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
+                raise Exception
+            version_nr = get_version_from_git()
+            date = get_date_from_git()
+            # Build
+            x = setup(name='expyriment',
+                      version=version_nr,
+                      description=description,
+                      author=author,
+                      author_email=author_email,
+                      license=license,
+                      url=url,
+                      packages=packages,
+                      package_dir=package_dir,
+                      package_data=package_data,
+                      data_files=data_files,
+                      install_requires=install_requires,
+                      cmdclass={'build_py': Build, 'install': Install,
+                                'bdist_wininst': Wininst}
+            )
 
-        print ""
-        print "Expyriment Version:", version_nr, "(from repository)"
+            if html_created:
+                import shutil
+                shutil.rmtree("documentation/sphinx/_build")
+    
+            print ""
+            print "Expyriment Version:", version_nr, "(from repository)"
+        except:
+            raise RuntimeError("Building from repository failed!")
 
-# If not, we are building/installing from a released download
-    except:
+    # If not, we are building/installing from a released download
+    else:
         # Build
         setup(name='expyriment',
-          version=version_nr,
-          description='A Python library for cognitive and neuroscientific experiments',
-          author='Florian Krause, Oliver Lindemann',
-          author_email='florian@expyriment.org, oliver@expyriment.org',
-          license='GNU GPLv3',
-          url='http://www.expyriment.org',
-          packages=packages,
-          package_dir={'expyriment': 'expyriment'},
-          package_data=package_data,
-          cmdclass={'install': Install, 'bdist_wininst': Wininst}
-          )
+              version=version_nr,
+              description=description,
+              author=author,
+              author_email=author_email,
+              license=license,
+              url=url,
+              packages=packages,
+              package_dir=package_dir,
+              package_data=package_data,
+              data_files=data_files,
+              install_requires=install_requires,
+              cmdclass={'install': Install, 'bdist_wininst': Wininst}
+        )
 
         print ""
         print "Expyriment Version:", version_nr

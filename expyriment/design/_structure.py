@@ -101,7 +101,7 @@ class Experiment(object):
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = 0  # will be set from initialize
+        self._log_level = None  # will be set from initialize
         self._wait_callback_function = None
 
     @property
@@ -257,7 +257,9 @@ class Experiment(object):
         """
         if variable_names is None:
             return
-        if type(variable_names) is not list:
+        try:
+            variable_names = list(variable_names)
+        except:
             variable_names = [variable_names]
         self._data_variable_names.extend(variable_names)
         if self.data is not None:
@@ -281,8 +283,11 @@ class Experiment(object):
 
         if text is None:
             return
-        if type(text) is not list:
+        try:
+            text = list(text)
+        except:
             text = [text]
+
         self._experiment_info.extend(text)
         if self.data is not None:
             self.data.add_experiment_info(text)
@@ -332,7 +337,9 @@ class Experiment(object):
 
         """
 
-        if type(conditions) is not list:
+        try:
+            conditions = list(conditions)
+        except:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
@@ -451,11 +458,11 @@ class Experiment(object):
 
         - O no event logging
         - 1 normal event logging (logging of all input & output events)
-        - 2 intensive logging. Logs much more. Please use this only for
-          debugging proposes.
+        - 2 intensive logging; logs much more; please use this only for
+          debugging proposes
 
         In most cases, it should be avoided to switch of logging (loglevel=0).
-        It log files become to big due to certain repetitive events, it is
+        If log files become to big due to certain repetitive events, it is
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
@@ -559,10 +566,29 @@ class Experiment(object):
         else:
             return False
 
-    def shuffle_blocks(self):
-        """Shuffle all blocks."""
+    def shuffle_blocks(self, max_repetitions=None, n_segments=None):
+        """Shuffle all blocks.
 
-        randomize.shuffle_list(self._blocks)
+        Parameters
+        ----------
+        max_repetitions : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+        n_segments : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+
+        Returns
+        -------
+        success : bool
+            returns if randomization was successful and fulfilled the specified
+            constrains (see max_repetitions)
+
+        See Also
+        --------
+        randomize.shuffle_list
+
+        """
+
+        return randomize.shuffle_list(self._blocks)
 
     def permute_blocks(self, permutation_type, factor_names=None,
                        subject_id=None):
@@ -571,15 +597,15 @@ class Experiment(object):
         Parameters
         ----------
         permutation_type : int (permutation type)
-            type of block order permutation (permutation type)
-            Permutation types defined in misc.constants:
+            type of block order permutation (permutation type);
+            permutation types defined in misc.constants:
             P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, and P_RANDOM
         factor_names : list (of strings), optional
-            list of the factor names to be considered while permutation.
-            If factor_names are not defined (None) all factors will be used.
+            list of the factor names to be considered while permutation;
+            if factor_names are not defined (None) all factors will be used.
         subject_id : int, optional
-            subject number for this permutation
-            If subject_id is defined or none (default) and experiment has
+            subject number for this permutation;
+            if subject_id is defined or none (default) and experiment has
             been started, the current subject number will be used
 
         """
@@ -934,36 +960,47 @@ type".format(permutation_type))
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
 
-        Notes
-        -----
-        CAUTION! If wait callback function takes longer than 1 ms to process,
-        Expyriment timing will be affected!
-
         The registered wait callback function will be repetitively executed in
-        all Expyriment wait and event loops that wait for an external input.
-        That is, they are executed by the following functions (at least once!):
+        all Expyriment wait and event loops that wait for an external input (see below).
 
-        - control.wait_end_audiosystem
-        - misc.clock.wait
-        - misc.clock.wait_seconds
-        - misc.clock.wait_minutes
-        - io.keyboard.wait
-        - io.keyboard.wait_char
-        - io.buttonbox.wait
-        - io.gamepad.wait_press
-        - io.triggerinput.wait
-        - io.mouse.wait_press
-        - io.serialport.read_line
-        - io.textinput.get
-        - io.TouchScreenButtonBox.wait
-        - io.extras.CedrusResponseDevice.wait
-        - stimulus.video.wait_frame
-        - stimulus.video.wait_end
+        If the callback function returns a control.CallbackQuitEvent the calling wait
+        or event loop will be force to quit. The CallbackQuitEvent object will be then
+        return (as first return value in the case of multiple return values).
+
+        The following functions will call the currently registered callback function
+        (at least once!):
+
+            - control.wait_end_audiosystem
+            - misc.Clock.wait
+            - misc.Clock.wait_seconds
+            - misc.Clock.wait_minutes
+            - io.Keyboard.wait
+            - io.Keyboard.wait_char
+            - io.StreamingButtonBox.wait
+            - io.EventButtonBox.wait
+            - io.GamePad.wait_press
+            - io.TriggerInput.wait
+            - io.Mouse.wait_press
+            - io.SerialPort.read_line
+            - io.TextInput.get
+            - io.TouchScreenButtonBox.wait
+            - io.extras.CedrusResponseDevice.wait
+            - stimulus.Video.wait_frame
+            - stimulus.Video.wait_end
 
         Parameters
         ----------
         function : function
             wait function (function)
+
+        Notes
+        -----
+        CAUTION! If wait callback function takes longer than 1 ms to process,
+        Expyriment timing will be affected!
+
+        See Also
+        --------
+        control.CallbackQuitEvent
 
         """
 
@@ -981,15 +1018,23 @@ type".format(permutation_type))
     def _execute_wait_callback(self):
         """Execute wait function.
 
-        Returns True if wait function is defined and executed.
+        Returns the return value of the callback function or
+        False if callback is not defines.
 
         """
 
         if self._wait_callback_function is not None:
-            self._wait_callback_function()
-            return True
+            return self._wait_callback_function()
         else:
             return False
+
+    @property
+    def is_callback_registered(self):
+        """This property indicates whether a callback function has been
+        registered or not.
+
+        """
+        return (self._wait_callback_function is not None)
 
 
 class Block(object):
@@ -1152,6 +1197,26 @@ class Block(object):
 
         return self._factors.keys()
 
+    def compare(self, block):
+        """Compares this block with another block and returns `True` if all
+        factors associated with both blocks are identical.
+
+        Parameter
+        ---------
+        block : design.Block
+
+        Returns
+        -------
+        identical: boolean
+
+        See also
+        --------
+        Trials.compare()
+
+        """
+
+        return (self.factor_dict == block.factor_dict)
+
     def get_random_trial(self):
         """Returns a randomly selected trial.
 
@@ -1163,6 +1228,7 @@ class Block(object):
         -------
         rnd : design.Trial
             random Expyriment trial
+
         """
 
         rnd = randomize.rand_int(0, len(self._trials) - 1)
@@ -1178,7 +1244,7 @@ class Block(object):
         copies : int, optional
             number of copies to add (default = 1)
         random_position : bool, optional
-            True  = insert trials at random position,
+            True  = insert trials at random position;
             False = append trials at the end (default=False)
 
         """
@@ -1385,7 +1451,7 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = deepcopy(str2unicode(row))
+                    factor_names = map(lambda x: str2unicode(x), row)
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
@@ -1452,7 +1518,8 @@ class Block(object):
                 cnt = 0
         return max_reps
 
-    def shuffle_trials(self, method=0, max_repetitions=None):
+    def shuffle_trials(self, method=0, max_repetitions=None,
+                       n_segments=None):
         """Shuffle all trials.
 
         The function returns False if no randomization could be found that
@@ -1462,20 +1529,22 @@ class Block(object):
 
         The following randomization methods are defined:
 
-                0 = total randomization of trial order (default),
+                0 = total randomization of trial order (default)
 
                 1 = randomization within small miniblocks. Each miniblock
-                contains one trial of each type (only defined by factors!).
-                In other words, copies of one trial type are always in
-                different miniblocks.
+                contains one trial of each type (only defined by factors!);
+                in other words, copies of one trial type are always in
+                different miniblocks
 
         Parameters
         ----------
         method : int, optional
             method of trial randomization (default=0)
         max_repetitions : int, optional
-            maximum number of allowed immediate repetitions.
-            If None the repetition criterion will be ignored
+            see documentation of `randomize.shuffle_list` (default = None)
+        n_segments : int, optional
+            this parameter will be only considered for randomization method 0;
+            see documentation of `randomize.shuffle_list` (default = None)
 
         Returns
         -------
@@ -1483,49 +1552,38 @@ class Block(object):
 
         """
 
-        start = Clock._cpu_time()
-        cnt = 0
-        while True:
-            cnt += 1
-            self._shuffle_trials(method)
-            if max_repetitions is None or \
-                    (self.max_trial_repetitions <= max_repetitions):
-                return True
-            else:
-                if (Clock._cpu_time() - start) * 1000 >= \
-                        defaults.max_shuffle_time:
-                    print "Warning: Could not find an appropriate trial " + \
-                          "randomization ({0} attempts)!".format(cnt)
-                    return False
-
-    def _shuffle_trials(self, method):
-        """actual implementation of the trial shuffling"""
-        if method == 1:  # shuffling blockwise
-            cp = self.copy()
-            randomize.shuffle_list(cp._trials)
+        if method == 1: # make segments
+            tmp = self._trials
             self._trials = []
             types_occured = []
             cnt = 0
-            while len(cp._trials) > 0:
-                tr = cp._trials[cnt]
-                new = True
-                tr_type = tr.factors_as_text
+            n_segments = 1
+            while len(tmp) > 0:
+                is_new = True
+                tr_type = tmp[cnt].factors_as_text
                 for occ in types_occured:
                     if tr_type == occ:
-                        new = False
+                        is_new = False
                         break
-                if new:
-                    self._trials.append(tr)
-                    cp._trials.pop(cnt)
+                if is_new:
+                    self._trials.append(tmp.pop(cnt))
                     types_occured.append(tr_type)
                     cnt = 0
                 else:
                     cnt = cnt + 1
-                    if cnt >= len(cp._trials):
+                    if cnt >= len(tmp):
                         types_occured = []
                         cnt = 0
-        else:
-            randomize.shuffle_list(self._trials)
+                        if len(tmp)>0:
+                            n_segments += 1
+
+        rtn = randomize.shuffle_list(self._trials,
+                                   max_repetitions=max_repetitions,
+                                   n_segments=n_segments)
+        if rtn == False:
+            print "Warning: Could not find an appropriate trial " + \
+                          "randomization!"
+        return rtn
 
     def sort_trials(self):
         """Sort the trials according to their indices from low to high."""
@@ -1667,8 +1725,25 @@ class Trial(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + "{0}={1}, ".format(
-                unicode2str(f), unicode2str(self.get_factor(f)))
+                unicode2str(f), unicode2str(str(self.get_factor(f))))
         return all_factors
+
+    def compare(self, trial):
+        """Compares this trial with another trail and returns `True` if all
+        factors associated with both trials are identical. Added stimuli will
+        be ignored for the comparison.
+
+        Parameter
+        ---------
+        trail : design.Trial
+
+        Returns
+        -------
+        identical: boolean
+
+        """
+
+        return (self.factor_dict == trial.factor_dict)
 
     def add_stimulus(self, stimulus):
         """Add a stimulus to the trial.
@@ -1746,10 +1821,31 @@ class Trial(object):
         else:
             return False
 
-    def shuffle_stimuli(self):
-        """Shuffle all stimuli."""
+    def shuffle_stimuli(self, max_repetitions=None, n_segments=None):
+        """Shuffle all stimuli.
 
-        randomize.shuffle_list(self.stimuli)
+        Parameters
+        ----------
+        max_repetitions : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+        n_segments : int, optional
+            see documentation of `randomize.shuffle_list`, default = None
+
+        Returns
+        -------
+        success : bool
+            randomization was successful and fulfilled the specified
+            constrains (see max_repetitions)
+
+        See Also
+        ----------
+        randomize.shuffle_list
+
+        """
+
+        return randomize.shuffle_list(self.stimuli,
+                               max_repetitions=max_repetitions,
+                               n_segments=n_segments)
 
     def sort_stimuli(self):
         """Sort the stimuli according to their IDs from low to high."""

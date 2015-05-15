@@ -50,15 +50,15 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     Parameters
     ----------
     experiment : design.Experiment, optional (DEPRECATED)
-        Don't use this parameter, it only exists to keep backward compatibility.
+        don't use this parameter, it only exists to keep backward compatibility
     auto_create_subject_id : bool, optional
-        if True new subject id will be created automatically.
+        if True new subject id will be created automatically
     subject_id : integer, optional
-        start with a specific subject_id. No subject id input mask will be
-        presented.  Subject_id must be an integer.  Setting this paramter
-        overrules auto_create_subject_id.
-    skip_ready_screen : boolen, optional
-        if True ready screen will be skipped. default=False
+        start with a specific subject_id;
+        no subject id input mask will be presented; subject_id must be an
+        integer; setting this paramter overrules auto_create_subject_id
+    skip_ready_screen : bool, optional
+        if True ready screen will be skipped (default=False)
 
     Returns
     -------
@@ -96,10 +96,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     if not auto_create_subject_id:
         if android is not None:
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
-            fields = [stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                                     position=(0, 70)),
-                      stimuli.Circle(diameter=200, colour=(70, 70, 70),
-                                     position=(0, -70)),
+            fields = [stimuli.Circle(radius=100, colour=(70, 70, 70),
+                                     position=(0, 70), anti_aliasing=10),
+                      stimuli.Circle(radius=100, colour=(70, 70, 70),
+                                     position=(0, -70), anti_aliasing=10),
                       stimuli.Rectangle(size=(50, 50), colour=(70, 70, 70),
                                         position=(120, 0))]
             fields[0].scale((0.25, 0.25))
@@ -108,12 +108,10 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 stimuli.TextLine("Subject Number:", text_size=24,
                                  text_colour=constants.C_EXPYRIMENT_PURPLE,
                                  position=(-182, 0)),
-                stimuli.TextLine(text="+", text_size=36, position=(0, 70),
-                                 text_font="FreeMono",
-                                 text_colour=(0, 0, 0)),
-                stimuli.TextLine(text="-", text_size=36, position=(0, -70),
-                                 text_font="FreeMono",
-                                 text_colour=(0, 0, 0)),
+                stimuli.FixCross(size=(15, 15), position=(0, 70),
+                                 colour=(0, 0, 0), line_width=2),
+                stimuli.FixCross(size=(15, 2), position=(0, -70),
+                                 colour=(0, 0, 0), line_width=2),
                 stimuli.TextLine(text = "Go", text_size=18, position=(120, 0),
                                  text_colour=(0, 0, 0))]
             subject_id = default_number
@@ -259,7 +257,6 @@ def pause():
     else:
         experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
-    return key
 
 
 def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
@@ -268,7 +265,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     Parameters
     ----------
-    goodbye_text  : str, obligatory
+    goodbye_text  : str, optional
         text to present on the screen when quitting
     goodbye_delay : int, optional
         period to show the goodbye_text
@@ -326,11 +323,15 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
             pygame.display.set_mode(experiment.screen._window_size)
             pygame.display.iconify()
 
-    experiment._screen.colour = [0, 0, 0]
-    stimuli.TextLine(goodbye_text, position=(0, 0),
-                     text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                     text_size=24).present()
-    stimuli._stimulus.Stimulus._id_counter -= 1
+    try:
+        experiment._screen.colour = [0, 0, 0]
+        stimuli.TextLine(goodbye_text, position=(0, 0),
+                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                         text_size=24).present()
+        stimuli._stimulus.Stimulus._id_counter -= 1
+    except:
+        pass
+    
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
     expyriment._active_exp = design.Experiment("None")
@@ -372,8 +373,9 @@ def initialize(experiment=None):
 
     if experiment is None:
         experiment = design.Experiment()
-        experiment.set_log_level(defaults.event_logging)
 
+    if experiment.log_level is None:
+        experiment.set_log_level(defaults.event_logging)
 
     if is_interactive_mode() and not expyriment.control.defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
@@ -393,6 +395,7 @@ fullscreen."""
 
     _keyboard.quit_key = defaults.quit_key
     _keyboard.pause_key = defaults.pause_key
+    _keyboard.refresh_key = defaults.refresh_key
     _keyboard.end_function = end
     _keyboard.pause_function = pause
 
@@ -405,8 +408,10 @@ fullscreen."""
         mixer.init()  # Needed on some systems
 
     experiment._clock = misc.Clock()
-    experiment._screen = Screen((0, 0, 0), defaults.open_gl,
-                                defaults.window_mode, defaults.window_size)
+    experiment._screen = Screen(colour=(0, 0, 0),
+                                open_gl=defaults.open_gl,
+                                window_mode=defaults.window_mode,
+                                window_size=defaults.window_size)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
     if is_idle_running() and sys.argv[0] != "":
         try:

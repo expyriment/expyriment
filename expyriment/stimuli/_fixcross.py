@@ -37,13 +37,18 @@ class FixCross(Shape):
             colour of the cross
         anti_aliasing :  int, optional
             anti aliasing parameter (good anti_aliasing with 10)
-        cross_size : (int, int) DEPRECATED argument
-            please use 'size' and specify x and y dimensions.
+
+
+        NOTE
+        ----
+        The parameter cross_size is now OBSOLETE.
+        Please use 'size' and specify x and y dimensions.
 
         """
 
         if cross_size is not None and size is None:
-            size = (cross_size, cross_size)
+            raise DeprecationWarning("Property cross_size is obsolete. Please use size")
+
         if position is None:
             position = defaults.fixcross_position
         if colour is None:
@@ -63,7 +68,6 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        self._line_width = line_width
         x = (self._size[0] - line_width) / 2
         y = (self._size[1] - line_width) / 2
         self.add_vertex((line_width, 0))
@@ -72,7 +76,7 @@ class FixCross(Shape):
         self.add_vertex((0, -line_width))
         self.add_vertex((-x, 0))
         self.add_vertex((0, -y))
-        self.add_vertex((-line_width , 0))
+        self.add_vertex((-line_width, 0))
         self.add_vertex((0, y))
         self.add_vertex((-x, 0))
         self.add_vertex((0, line_width))
@@ -86,9 +90,9 @@ class FixCross(Shape):
 
     @property
     def cross_size(self):
-        """DEPRECATED getter, please use size"""
+        """OBSOLETE property, please use size"""
 
-        return self.size
+        raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):
