@@ -158,7 +158,7 @@ if __name__=="__main__":
     if version_nr == '':
         # Try to create html documentation
         html_created = False
-        if True:
+        try:
             import os
             cwd = os.getcwd()
             copytree('expyriment', 'documentation/sphinx/expyriment')
@@ -183,7 +183,7 @@ if __name__=="__main__":
             data_files.append(('share/expyriment/documentation/html/_static',
                                glob('documentation/sphinx/_build/html/_static/*.*')))
             html_created = True
-        else:
+        except:
             print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
 
         # Try to add version_nr and date stamp from Git and build/install

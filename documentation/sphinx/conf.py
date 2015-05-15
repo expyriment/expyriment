@@ -51,34 +51,33 @@ copyright = u'{0}, Florian Krause & Oliver Lindemann'.format(
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-try:
-    from subprocess import Popen, PIPE
-    proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
-                         stdout=PIPE, stderr=PIPE)
-    initial_revision = proc.stdout.readline()
-    if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
-        raise Exception
-    release = "{0}"
-    proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
-                        stdout=PIPE, stderr=PIPE)
-    release = release.format(proc.stdout.read().lstrip("v").strip())
-    version_nr = release[:5]
-    version = version_nr[:3]
-except:
-    file_path = os.path.split(os.path.abspath(__file__))[0]
-    p = os.path.abspath('{0}/../../CHANGES.md'.format(file_path))
-    version_nr = "{0}"
-    with open(p) as f:
-        for line in f:
-            if line[0:8].lower() == "upcoming":
-                version_nr += "+"
-            if line[0:7] == "Version":
-                version_nr = version_nr.format(line[8:13])
-                break
-    # The short X.Y version.
-    version = version_nr[:3]
-    # The full version, including alpha/beta/rc tags.
-    release = version_nr
+filename = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..',
+                                        '..', 'expyriment', '__init__.py'))
+release = ""
+with open(filename) as f:
+    for line in f:
+        if line.startswith("__version__"):
+            release = line.split("'")[1]
+if release == "":
+    try:
+        from subprocess import Popen, PIPE
+        proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                             stdout=PIPE, stderr=PIPE)
+        initial_revision = proc.stdout.readline()
+        if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
+            raise Exception
+        release = "{0}"
+        proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
+                            stdout=PIPE, stderr=PIPE)
+        release = release.format(proc.stdout.read().lstrip("v").strip())
+    except:
+        pass
+
+# The normal X.Y.Z version.
+version_nr = release[:5]
+
+# The short X.Y version.
+version = version_nr[:3]
 
 rst_epilog = """
 .. |expyriment-wheel| replace:: expyriment-{0}-py2-none-any.whl
