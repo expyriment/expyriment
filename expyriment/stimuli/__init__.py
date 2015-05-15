@@ -28,6 +28,5 @@ from _textbox import TextBox
 from _textscreen import TextScreen
 from _picture import Picture
 from _tone import Tone
-import extras
 
 from _obsolete import Dot, Frame

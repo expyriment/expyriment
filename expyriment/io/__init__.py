@@ -29,4 +29,3 @@ from _markeroutput import MarkerOutput
 from _textinput import TextInput
 from _textmenu import TextMenu
 from _touchscreenbuttonbox import TouchScreenButtonBox
-import extras

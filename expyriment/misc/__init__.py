@@ -24,4 +24,3 @@ from _hsv_colour import HSVColour
 import geometry
 import data_preprocessing
 import statistics
-import extras

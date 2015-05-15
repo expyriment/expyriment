@@ -1,6 +1,11 @@
 """
 The misc extra package.
 
+Notes
+-----
+    To us the extras module you have to import it manually by calling:
+    `import expyriment.misc.extras`
+
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org> \

@@ -88,6 +88,11 @@ def show_GUI():
     """Show the GUI."""
 
     import types
+    import expyriment.io.extras
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.misc.extras
+
     if type(_tk) is not types.ModuleType:
         raise ImportError("""API Reference Tool could not be started.
 The Python package 'Tkinter' is not installed""")

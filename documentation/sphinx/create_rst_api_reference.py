@@ -10,6 +10,11 @@ p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
 sys.path.insert(0, p)
 
 import expyriment
+import expyriment.io.extras
+import expyriment.design.extras
+import expyriment.stimuli.extras
+import expyriment.misc.extras
+
 
 
 def inspect_members(item):
