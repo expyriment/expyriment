@@ -114,6 +114,9 @@ class Build(build_py):
                     if line[0:11] == '__version__':
                         new_file.write("__version__ = '" + version_nr + "'" +
                                        '\n')
+                    elif line[0:12] == '__revision__':
+                        new_file.write("__revision__ = '" + revision_nr + "'"
+                                       + '\n')
                     elif line[0:8] == '__date__':
                         new_file.write("__date__ = '" + date + "'" + '\n')
                     else:
@@ -137,17 +140,42 @@ def get_version_from_git():
 
     return version_nr.format(proc.stdout.read().lstrip("v").strip())
 
+def get_revision_from_git():
+        proc = Popen(['git', 'log', '--format=%H', '-1'], \
+                        stdout=PIPE, stderr=PIPE)
+        return proc.stdout.read().strip()[:7]
+
 def get_date_from_git():
         proc = Popen(['git', 'log', '--format=%cd', '-1'],
                      stdout=PIPE, stderr=PIPE)
         return proc.stdout.readline().strip()
 
 def get_version_from_file(filename):
-    """Get the version (___version___) from a particular file."""
+    """Get the version (__version__) from a particular file."""
 
     with open(filename) as f:
         for line in f:
             if line.startswith("__version__"):
+                rtn = line.split("'")
+                return rtn[1]
+    return ''
+
+def get_revision_from_file(filename):
+    """Get the revision(__revision__) from a particular file."""
+
+    with open(filename) as f:
+        for line in f:
+            if line.startswith("__revision__"):
+                rtn = line.split("'")
+                return rtn[1]
+    return ''
+
+def get_date_from_file(filename):
+    """Get the date(__date__) from a particular file."""
+
+    with open(filename) as f:
+        for line in f:
+            if line.startswith("__date__"):
                 rtn = line.split("'")
                 return rtn[1]
     return ''
@@ -194,6 +222,7 @@ if __name__=="__main__":
             if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
                 raise Exception
             version_nr = get_version_from_git()
+            revision_nr = get_revision_from_git()
             date = get_date_from_git()
             # Build
             x = setup(name='expyriment',
