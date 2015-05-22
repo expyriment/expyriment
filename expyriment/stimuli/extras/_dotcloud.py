@@ -14,6 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 
+import types
 import random
 import pygame
 
@@ -43,7 +44,7 @@ class DotCloud(Visual):
         background_colour : (int, int, int), optional
             colour of the background
         dot_colour : (int, int, int), optional
-            colour of the dots
+            colour of the dots. See also make_multi_colour_cloud.
 
         """
 
@@ -180,30 +181,53 @@ class DotCloud(Visual):
                 return True
         return False
 
-    def make(self, n_dots, dot_radius, gap=0):
+    def make(self, n_dots, dot_radius, gap=0, multi_colour=None):
         """Make the cloud by randomly putting dots on it.
 
         Parameters
         ----------
-        n_dots : int
-            number of dots to put into the cloud
+        n_dots : integer (or list of integers, if multi-colour cloud)
+            number of dots to put into the cloud. In the case of a
+            multi_colour cloud, the list n_dots specifies the distribution
+            of the differently colours dots.
         dot_radius : int
             radius of the dots
         gap : int, optional
             gap between dots (default = 0)
+        multi_colour : list of colours
+            If the multi_colour list is defined, n_dots has to be a list of
+            integers of the same length. The cloud comprises then dots
+            in different colours according the specified distribution
 
         """
+
+        if multi_colour is not None:
+            dot_distribution = list(n_dots)
+            if len(multi_colour) != len(n_dots):
+                raise RuntimeError("Length of n_dots and multi_colours "+
+                        "have to have the same length,")
+            n_dots = sum(dot_distribution)
 
         top_left = dot_radius - self._radius
         bottom_right = self._radius - dot_radius
         remix = 0
-
         while True: #remix-loop
             self._cloud = []
             remix = remix + 1
             reps = 0
             while True: #find a solution
-                dot = Circle(radius=dot_radius, colour = self._dot_colour)
+                if multi_colour is None:
+                    dot = Circle(radius=dot_radius, colour = self._dot_colour)
+                else:
+                    # find colour counter
+                    s = 0
+                    for colour_cnt, d in enumerate(dot_distribution):
+                        s += d
+                        if len(self._cloud) < s:
+                            break
+                    dot = Circle(radius=dot_radius,
+                                colour=multi_colour[colour_cnt])
+
                 expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
                 dot.position = (random.randint(top_left, bottom_right),
                                 random.randint(top_left, bottom_right))

@@ -47,6 +47,7 @@ New Features:
   supports reading of 5 status pins (10, 11, 12, 13, 15) and all 8 data pins;
   in addition, the module now works on 64bit Windows system
 - Test suite: New ParallelPort test
+- stimuli.extra.DotCloud: DotCloud can be multi coloured (see make method)
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
@@ -83,7 +84,8 @@ Fixed:
 - bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
 - bug in Shape: shapes now comensate for the Pygame bug of extended polygons 
   along the horizontal axes
-- bug in extras.dot_cloud: colour of dots could not be changed
+- bug in stimuli.extras.DotCloud: colour of dots could not be changed
+
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
