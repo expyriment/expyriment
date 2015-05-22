@@ -44,7 +44,7 @@ class DotCloud(Visual):
         background_colour : (int, int, int), optional
             colour of the background
         dot_colour : (int, int, int), optional
-            colour of the dots. See also make_multi_colour_cloud.
+            colour of the dots.
 
         """
 
