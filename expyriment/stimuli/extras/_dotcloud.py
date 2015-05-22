@@ -19,7 +19,7 @@ import pygame
 
 import expyriment
 from expyriment.stimuli._visual import Visual
-from expyriment.stimuli._circle import Circle as Circle
+from expyriment.stimuli._circle import Circle
 import  defaults
 
 
@@ -198,12 +198,12 @@ class DotCloud(Visual):
         bottom_right = self._radius - dot_radius
         remix = 0
 
-        while(True): #remix-loop
+        while True: #remix-loop
             self._cloud = []
             remix = remix + 1
             reps = 0
-            while(True): #find a solution
-                dot = Circle(radius=dot_radius)
+            while True: #find a solution
+                dot = Circle(radius=dot_radius, colour = self._dot_colour)
                 expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
                 dot.position = (random.randint(top_left, bottom_right),
                                 random.randint(top_left, bottom_right))

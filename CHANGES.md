@@ -83,7 +83,7 @@ Fixed:
 - bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
 - bug in Shape: shapes now comensate for the Pygame bug of extended polygons 
   along the horizontal axes
-
+- bug in extras.dot_cloud: colour of dots could not be changed
 Version 0.7.0 (2 Mar 2014)
 --------------------------
 New Features:
