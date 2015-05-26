@@ -52,6 +52,8 @@ data_files = [('share/expyriment/examples',
                glob('documentation/api/*.*')),
               ('share/expyriment/documentation/sphinx',
                glob('documentation/sphinx/*.*')),
+              ('share/expyriment/documentation/sphinx',
+               glob('documentation/sphinx/Makefile')),
               ('share/expyriment/documentation/sphinx/numpydoc',
                glob('documentation/sphinx/numpydoc/*.*'))]
 

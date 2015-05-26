@@ -17,9 +17,8 @@ Installing Expyriment
 ---------------------
 The easiest way to run experiments on Android devices is to use our "Expyriment
 Android Runtime" appplication.
-You can only download the current version from our `Android download
-page`_. In the future it will also be available in the Google Play 
-Store.
+You can download the current version from our `Android download
+page`_.
 
 Installing Expyriment scripts
 -----------------------------
