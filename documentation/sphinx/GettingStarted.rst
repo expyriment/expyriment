@@ -8,4 +8,3 @@ Getting started
   Installation
   Beginner`s tutorial <Tutorial>
   Example experiments <Examples>
-  Frequently Asked Questions <FAQ>
