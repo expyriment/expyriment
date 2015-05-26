@@ -16,9 +16,12 @@ Working configurations
 ~~~~~~~~~~~~~~~~~~~~~~
 Here are some configurations we observed to work:
 
+* GeForce GT 520 (Linux-x86; Debian default driver)
+* GeForce GT 520 (Windows XP; NIVIDA driver 285.62)
 * Nvidia GTX 650 (Linux-x86; NVIDIA driver 310.14)
 * Nvidia Quadro NVS 290 (Linux-x86; NVIDIA driver 295.40)
 * Nvidia Quadro NVS 290 (Windows XP SP3; NVIDIA driver)
+* Toshiba Satellite Pro Laptop (Windows 7)
 * Apple MacBook Pro 2013 (OS X 10.10; using alternative blocking!)
 
 *We recommend to always use the Expyriment test suite to check the 
