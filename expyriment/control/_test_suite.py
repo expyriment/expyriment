@@ -28,10 +28,6 @@ from expyriment import stimuli, io
 from expyriment.misc import constants, statistics
 from expyriment.misc._timer import get_time
 from expyriment.design import randomize
-import expyriment.design.extras
-import expyriment.stimuli.extras
-import expyriment.io.extras
-import expyriment.misc.extras
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -533,6 +529,11 @@ def _find_self_tests():
 
 def run_test_suite():
     """Run the Expyriment test suite."""
+
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.io.extras
+    import expyriment.misc.extras
 
     quit_experiment = False
     if not expyriment._active_exp.is_initialized:
