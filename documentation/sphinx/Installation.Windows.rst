@@ -7,7 +7,7 @@ There are two different ways to install Expyriment on Windows.
 Using PyPi (recommended)
 ------------------------
 
-1. Install `Python 2.7.9`_
+1. Install `Python 2.7.10`_ (during installation, also select "Add python.exe to Path"!)
 2. Install Pygame_
 3. In a command prompt, run ::
 
@@ -27,7 +27,7 @@ For the additional packages (optional):
 Manually (alternative)
 ----------------------
 
-1. Install `Python 2.7.9`_
+1. Install `Python 2.7.10`_
 2. Install Pygame_
 3. Install PyOpenGL_
 4. Download |expyriment-wheel-code| from the `release page`_ and install it in a command prompt with
@@ -48,6 +48,13 @@ For the additional packages (optional):
 
 Notes
 -----
+
+**Make sure python.exe is in your Path**
+    If you get an an error that `'python' is not recognized as an internal or
+    external command, operable program or batch file`, Windows does not know
+    where to find the Python interpreter. To fix this, add python.exe to the
+    Path, as described `here <https://docs.python.org/2/using/windows.html#setting-envvars>`_.
+
 **Do not start your experiments out of IDLE when testing participants**
 
     If you are using the IDLE editor that comes with the Python installation, 
@@ -58,7 +65,7 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
-.. _`Python 2.7.9`: http://www.python.org/ftp/python/2.7.9/python-2.7.9.msi
+.. _`Python 2.7.10`: https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
