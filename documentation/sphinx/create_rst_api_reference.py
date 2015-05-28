@@ -119,12 +119,12 @@ def create_change_log_rst():
 
     version_found = False
     for line in fl:
-        if line.startswith("Version"):
+        if line.startswith("Version") or line.startswith("Coming"):
             version_found = True
         if version_found:
             if line.startswith("New Feature") or line.startswith("Fixed") or\
                     line.startswith("Changes") or line.startswith("Changed"):
-                out.write("\n" + line + "\n") # additonal blanklines
+                out.write("\n" + line + "\n")  # additional blanklines
             elif line.startswith("--"):
                 out.write(line + "\n")
             elif line.startswith("  - "):
@@ -143,7 +143,9 @@ def make_cli_rst():
 Command line interface
 ======================
 
-Usage::
+Usage
+-----
+
 """)
          s = info.replace("\n", "\n    ").replace("Usage: ", "")
          fl.write("\n    " + s)

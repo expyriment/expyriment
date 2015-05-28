@@ -195,11 +195,11 @@ if __name__=="__main__":
             os.chdir('documentation/sphinx/')
             from subprocess import call
             call(["python", "./create_rst_api_reference.py"])
-            # sphinx-build -b html -d _build/doctrees . _build/html
             call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
-            # rm expyriment.*
             for file_ in glob("expyriment.*"):
                 os.remove(file_)
+            os.remove("Changelog.rst")
+            os.remove("CommandLineInterface.rst")
             os.chdir(cwd)
             rmtree('documentation/sphinx/expyriment/')
             data_files.append(('share/expyriment/documentation/html',
