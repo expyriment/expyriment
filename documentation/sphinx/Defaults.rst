@@ -19,35 +19,30 @@ expyriment.design.defaults_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.design can be set via:
-```
-expyriment.design.defaults.classname_parametername = x
-```
+``expyriment.design.defaults.classname_parametername = x``
 
 `expyriment.stimuli.defaults`_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.stimuli can be set via:
-``expyriment.stimuli.defaults.classname_parametername = x
-``
+``expyriment.stimuli.defaults.classname_parametername = x``
 
 `expyriment.io.defaults`_
 ~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.io can be set via:
-``expyriment.io.defaults.classname_parametername = x
-``
+``expyriment.io.defaults.classname_parametername = x``
 
 `expyriment.misc.defaults`_
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.misc can be set via:
-``expyriment.misc.defaults.classname_parametername = x
-``
+``expyriment.misc.defaults.classname_parametername = x``
 
 Development
 -----------
 When developing `Plugins`_ default values can be integrated into extras.defaults.
 Upon start, Expyriment will read all files in the extra folder that have the same
-name as the plugin, followd by "_defaults.py" (e.g. dotcloud_defaults.py).
+name as the plugin, followd by ``_defaults.py`` (e.g. ``dotcloud_defaults.py``).
 All variables within this file will be integrated into the namespace and will
-be available in extras.defaults (e.g. expyriment.stimuli.extras.defaults).
+be available in extras.defaults (e.g. ``expyriment.stimuli.extras.defaults``).

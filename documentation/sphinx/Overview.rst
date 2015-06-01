@@ -136,9 +136,9 @@ To ask questions or to have real-time discussions with other users and the devel
 
 Social networks
 ---------------
-* Subscribe to `/r/expyriment <http://www.reddit.com/r/expyriment`_ on Reddit
-* Follow `@expyriment <http://www.twitter.com/expyriment`_ on Twitter
-* Like `Expyriment <http://www.facebook.com/expyriment`_ on Facebook
+* Subscribe to `/r/expyriment <http://www.reddit.com/r/expyriment>`_ on Reddit
+* Follow `@expyriment <http://www.twitter.com/expyriment>`_ on Twitter
+* Like `Expyriment <http://www.facebook.com/expyriment>`_ on Facebook
 * +1 `+ExpyrimentOrg <http://google.com/+ExpyrimentOrg>`_ on Google+
 
 

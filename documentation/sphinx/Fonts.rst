@@ -6,10 +6,10 @@ Fonts by name
 -------------
 When started, Expyriment will scan for available fonts on the system it runs
 on and create names for each of them.
-To get a list of available names and correspinding fonts, run::
+To get a list of available names and corresponding fonts, run::
     expyriment.misc.list_fonts()
 
-When setting a font by name in a text-based stimulus (e.g. stimuli.TextLine),
+When setting a font by name in a text-based stimulus (e.g. ``stimuli.TextLine``),
 Expyriment will always try to match the given name of the font to a font it has
 found on the system that is most similar.
 For instance, to set a mono spaced font, one of the following will work::

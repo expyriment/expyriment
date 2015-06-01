@@ -119,7 +119,7 @@ def create_change_log_rst():
 
     version_found = False
     for line in fl:
-        if line.startswith("Version") or line.startswith("Coming"):
+        if line.startswith("Version"):
             version_found = True
         if version_found:
             if line.startswith("New Feature") or line.startswith("Fixed") or\
@@ -145,6 +145,7 @@ Command line interface
 
 Usage
 -----
+::
 
 """)
          s = info.replace("\n", "\n    ").replace("Usage: ", "")

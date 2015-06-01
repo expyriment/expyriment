@@ -17,7 +17,7 @@ Installing Expyriment
 ---------------------
 The easiest way to run experiments on Android devices is to use our "Expyriment
 Android Runtime" appplication.
-You can download the current version from our `Android download
+You can download the current version from our `Android release
 page`_.
 
 Installing Expyriment scripts
@@ -40,4 +40,4 @@ Notes
     The current version of the "Expyriment Android Runtime" does not support extras plugins.
 
 .. _`PGS4A`: http://pygame.renpy.org
-.. _`Android download page`: https://github.com/expyriment/expyriment-android-runtime/releases
+.. _`Android release page`: https://github.com/expyriment/expyriment-android-runtime/releases

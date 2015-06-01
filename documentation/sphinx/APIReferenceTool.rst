@@ -1,6 +1,6 @@
 API reference tool
 ==================
-Besides this documentation, Expyriment includes a full offline API
+Besides this HTML documentation, Expyriment includes a full offline API
 reference tool which will allow you to browse and search the API offline, 
 using a graphical user interface.
 
@@ -13,7 +13,7 @@ To show the API reference tool, call the following from within Python::
     expyriment.show_documentation(3)
 
 
-Alternatively, the API reference tool can be started with the `CommandLineInterface`_:
+Alternatively, the API reference tool can be started with the `command line interface <CommandLineInterface>`:
 
     python -m expyriment.cli -A
 

@@ -1,19 +1,17 @@
 Beginner's tutorial to get started with Expyriment
 ====================================================
 
-Note, Expyriment is a library for the programming language Python.  That is, 
-you have to know at least a bit, how to program in Python before using 
-Expyriment. The are many `excelent tutorials`_ online.
+Since Expyriment is a library for the programming language Python,
+basic Python knowledge will be needed. Python is relatively easy to
+learn, and there are many excellent `Python tutorials`_ online.
 
-To programming an experiment you can actually take any text editor.  
-We suggest for the development, however, a programming editor or an IDE that 
-captures and displays the error messages. Syntax highlighting is also a very 
-convenient features of these editors. A simple Python editor is  `IDLE`_, which 
-is under Windows part of any Python installation.  We have furthermore made 
-very good experiences with `Pycharm`_ as a platform independent Python IDE.
+To programme an experiment, any text editor is suitable.
+We, however, suggest a good programming editor or IDE that offers syntax
+highlighting and code completion. If you do not have a favourite editor yet,
+give `Pycharm`_ a try, which is also offered as a free version (community edition)
+that runs on Windows, Linux and OS X.
 
-.. _`excelent tutorials`: http://docs.python-guide.org/en/latest/intro/learning/
-.. _`IDLE`: http://en.wikipedia.org/wiki/IDLE_%28Python%29
+.. _`Python tutorials`: http://docs.python-guide.org/en/latest/intro/learning/
 .. _`Pycharm`: https://www.jetbrains.com/pycharm/
 
 How to get started with Expyriment?
@@ -29,7 +27,7 @@ first_experiment.py::
     exp = expyriment.design.Experiment(name="First Experiment")
     expyriment.control.initialize(exp)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     expyriment.control.end()
 
@@ -72,9 +70,9 @@ Let's see what we just did in more detail:
       ``exp.events``)
     * Present the "Preparing experiment..." screen
 
-    ``expyriment.control.start(exp)``
+    ``expyriment.control.start()``
 
-    We started running the experiment we just created.
+    We started running the currently active (initiated) experiment.
     This does the following:
 
     * Present a screen to ask for the subject number (which thereafter will be 
@@ -100,7 +98,7 @@ want to present a stimulus. Change the code to look like this::
     stim = expyriment.stimuli.TextLine(text="Hello World")
     stim.preload()
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     stim.present()
     exp.clock.wait(1000)
@@ -158,7 +156,7 @@ Modify the code to look like this::
     block.add_trial(trial)
     exp.add_block(block)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     stim.present()
     exp.clock.wait(1000)
@@ -236,7 +234,7 @@ exactly one stimulus. Change the code to look like this::
     exp.add_block(block_two)
 
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     for block in exp.blocks:
         for trial in block.trials:
@@ -358,7 +356,7 @@ Modify the code to look like this::
     block_two.add_trial(trial_two)
     exp.add_block(block_two)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     for block in exp.blocks:
         for trial in block.trials:
@@ -454,7 +452,7 @@ structure of an Expyriment file with the 3 main parts::
     # Create stimuli (and put them into trials)
     # Create input/output devices (like button boxes etc.)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     # Experiment conduction
     # Loop over blocks and trials, present stimuli and get user input

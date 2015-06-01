@@ -2,9 +2,9 @@ Expyriment test suite
 =====================
 
 The Expyriment test suite is a guided tool for testing your computer's 
-abilities/performance. This includes timing accuracy of visual stimulus 
-presentation, audio playback functionality, mouse functionality and serial port 
-functionality/usage.
+abilities and performance. This includes timing accuracy of visual stimulus
+presentation, audio playback functionality, mouse functionality and
+serial/parallel port functionality.
 
 Eventually, all test results can be saved as a protocol, together with some 
 information about the system.
@@ -73,15 +73,19 @@ Here is a brief explanation of the available options:
  * Tests mouse accuracy (polling time)
  * Tests functionality of mouse buttons
 
-5. **Serial port test**
+5. **Parallel Port test**
+
+ * Tests functionality of devices connected via the parallel port
+
+6. **Serial port test**
 
  * Tests functionality of devices connected via the serial port
 
-6. **Write protocol**
+7. **Write protocol**
 
  * Saves all test results, as well as information about the system, as a text 
    file.
 
-7. **Quit**
+8. **Quit**
 
  * Quits the test suite

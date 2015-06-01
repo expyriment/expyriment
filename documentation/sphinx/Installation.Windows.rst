@@ -38,7 +38,7 @@ Manually (alternative)
 
 For the additional packages (optional):
 
-5. Install NumPy_
+5. Install Numpy_
 6. Install PySerial_ ::
 
     python setup.py install
@@ -68,7 +68,7 @@ Notes
 .. _`Python 2.7.10`: https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
-.. _NumPy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
+.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
 .. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
 .. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/

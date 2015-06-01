@@ -10,7 +10,7 @@ when the 'GL_ARB_texture_non_power_of_two' extension is present.
 
 On some some integrated Intel cards syncing to the vertical retrace does not seem
 to work with the default settings! In those cases, please try using OpenGL set to
-"vsync / alternative blocking" (control.defaults.open_gl=3).
+"vsync / alternative blocking" (``control.defaults.open_gl=3``).
 
 Working configurations
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -24,8 +24,8 @@ Here are some configurations we observed to work:
 * Toshiba Satellite Pro Laptop (Windows 7)
 * Apple MacBook Pro 2013 (OS X 10.10; using alternative blocking!)
 
-*We recommend to always use the Expyriment test suite to check the 
-performance of your specific configuration!*
+**We recommend to always use the Expyriment test suite to check the
+performance of your specific configuration!**
 
 External devices
 ----------------
