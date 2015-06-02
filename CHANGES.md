@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Coming up
----------
+Version 0.8.0b2 (2 Jun 2015)
+----------------------------
 New Features:
 - Antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
@@ -16,7 +16,7 @@ New Features:
 - new io device: io.extras.TcpClient
 - new stimulus: GaborPatches can be created with stimuli.extras.GaborPatch();
   the stimulus depends on the package "matplotlib".
-- new feature: data_preprocessing methodsallow now to read in only certain
+- new feature: data_preprocessing method sallow now to read in only certain
   variables (see parameter `read_variables`)
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
@@ -54,7 +54,7 @@ Changed:
   off automatically, if Expyriment is not running in fullscreen mode.
 - ATTENTION: extra modules will not anymore be imported automatically. Please 
   call `import.<module_name>.extras`, if you want to use extra features.
-- ATTENTION: io.screen.open_gl and control.defaults.open_gl have new parameters:
+- ATTENTION: io.screen.open_gl and control.defaults.open_gl have new parameters::
     0/False - No OpenGL (no vsync / no blocking)
     1       - OpenGL (vsync / no blocking)
     2/True  - OpenGL (vsync / blocking)
