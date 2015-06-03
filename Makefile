@@ -65,6 +65,7 @@ debian_package:
 dist:
 	mkdir -p build
 	python setup.py bdist_wheel | tee build/wheel.log
+	@mv expyriment.egg-info build
 
 build/wheel_version: dist 
 	@grep "Expyriment Version:" build/wheel.log | sed  \
@@ -91,7 +92,6 @@ clean:
 	@make --directory=documentation/api clean
 	@rm -rf build \
 			dist \
-			expyriment.egg-info \
 			documentation/Expyriment.pdf\
 			documentation/api_ref_html\
 			documentation/html
