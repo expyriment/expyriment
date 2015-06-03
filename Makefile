@@ -62,7 +62,7 @@ debian_package:
 		#rm -rf $$DIR;	
 
 wheel:
-    python setup.py bdist_wheel
+	python setup.py bdist_wheel
 
 install:
 	python setup.py install
