@@ -8,7 +8,7 @@ html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
 build: build/release
-wheel: build/wheel build/wheel/version
+wheel: dist build/wheel_version
 
 build/release: documentation/html documentation/Expyriment.pdf documentation/api_ref_html
 	python setup.py build
@@ -62,17 +62,14 @@ debian_package:
 		cd ..;\
 		#rm -rf $$DIR;	
 
-build/wheel:
-	mkdir -p build/wheel
-	python setup.py bdist_wheel | tee build/wheel/wheel.log
-	@mv dist/* build/wheel;\
-		mv expyriment.egg-info build/wheel ;\
-		rmdir dist
+dist:
+	mkdir -p build
+	python setup.py bdist_wheel | tee build/wheel.log
 
-build/wheel/version: build/wheel
-	@grep "Expyriment Version:" build/wheel/wheel.log | sed  \
+build/wheel_version: dist 
+	@grep "Expyriment Version:" build/wheel.log | sed  \
 				-e 's/.*\(\[.\+\]\).*/\1/g'  \
-				-e "s/\]//" -e "s/\[//" > build/wheel/version 
+				-e "s/\]//" -e "s/\[//" > build/wheel_version 
 
 install:
 	python setup.py install
@@ -93,6 +90,8 @@ clean:
 	@make --directory=documentation/sphinx clean
 	@make --directory=documentation/api clean
 	@rm -rf build \
+			dist \
+			expyriment.egg-info \
 			documentation/Expyriment.pdf\
 			documentation/api_ref_html\
 			documentation/html
