@@ -61,8 +61,20 @@ debian_package:
 		cd ..;\
 		#rm -rf $$DIR;	
 
-wheel:
-	python setup.py bdist_wheel
+wheel: build/wheel build/wheel/version
+
+build/wheel:
+	rm -rf build/wheel
+	mkdir -p build/wheel
+	python setup.py bdist_wheel | tee build/wheel/wheel.log
+	@mv dist/* build/wheel;\
+		mv expyriment.egg-info build/wheel ;\
+		rmdir dist
+
+build/wheel/version: build/wheel
+	@grep "Expyriment Version:" build/wheel/wheel.log | sed  \
+				-e 's/.*\(\[.\+\]\).*/\1/g'  \
+				-e "s/\]//" -e "s/\[//" > build/wheel/version 
 
 install:
 	python setup.py install

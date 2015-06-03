@@ -246,9 +246,10 @@ if __name__=="__main__":
             if html_created:
                 import shutil
                 shutil.rmtree("documentation/sphinx/_build")
-    
+
             print ""
-            print "Expyriment Version:", version_nr, "(from repository)"
+            print "Expyriment Version: [{0}] (from repository)".format(
+                version_nr) # version_nr should be  to parse
         except:
             raise RuntimeError("Building from repository failed!")
 
