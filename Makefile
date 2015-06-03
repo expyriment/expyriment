@@ -64,7 +64,6 @@ debian_package:
 wheel: build/wheel build/wheel/version
 
 build/wheel:
-	rm -rf build/wheel
 	mkdir -p build/wheel
 	python setup.py bdist_wheel | tee build/wheel/wheel.log
 	@mv dist/* build/wheel;\
