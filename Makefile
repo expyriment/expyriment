@@ -7,7 +7,7 @@
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
-build: build/release
+release: wheel tarball
 wheel: dist build/wheel_version
 
 tarball: dist build/wheel_version
