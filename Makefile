@@ -11,7 +11,7 @@ build: build/release
 wheel: dist build/wheel_version
 
 tarball: dist build/wheel_version
-	unzip dist/* expyriment -d build ;\
+	unzip dist/* -d build ;\
 	VER=$$(cat build/wheel_version);\
 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
 	DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
