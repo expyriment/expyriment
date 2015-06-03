@@ -249,7 +249,7 @@ if __name__=="__main__":
 
             print ""
             print "Expyriment Version: [{0}] (from repository)".format(
-                version_nr) # version_nr should be  to parse
+                version_nr) # version_nr should be easy to parse
         except:
             raise RuntimeError("Building from repository failed!")
 
@@ -272,4 +272,4 @@ if __name__=="__main__":
         )
 
         print ""
-        print "Expyriment Version:", version_nr
+        print "Expyriment Version: [{0}]".format(version_nr)
