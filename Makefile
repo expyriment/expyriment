@@ -8,6 +8,7 @@ html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
 build: build/release
+wheel: build/wheel build/wheel/version
 
 build/release: documentation/html documentation/Expyriment.pdf documentation/api_ref_html
 	python setup.py build
@@ -60,8 +61,6 @@ debian_package:
 		debuild -rfakeroot -S ;\
 		cd ..;\
 		#rm -rf $$DIR;	
-
-wheel: build/wheel build/wheel/version
 
 build/wheel:
 	mkdir -p build/wheel
