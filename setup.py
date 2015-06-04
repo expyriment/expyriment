@@ -182,6 +182,15 @@ def get_date_from_file(filename):
                 return rtn[1]
     return ''
 
+
+def clean_up():
+    #TODO WHEN TO CALL?
+    # clean up sphinx folder
+    rmtree("documentation/sphinx/_build", ignore_errors=True)
+    rmtree("documentation/sphinx/build", ignore_errors=True)
+    rmtree("documentation/sphinx/expyriment", ignore_errors=True)
+
+
 if __name__=="__main__":
     # Check if we are building/installing from unreleased code
     version_nr = get_version_from_file("expyriment/__init__.py")
@@ -243,10 +252,6 @@ if __name__=="__main__":
                                 'bdist_wininst': Wininst}
             )
 
-            if html_created:
-                import shutil
-                shutil.rmtree("documentation/sphinx/_build")
-
             print ""
             print "Expyriment Version: [{0}] (from repository)".format(
                 version_nr) # version_nr should be easy to parse
@@ -270,6 +275,7 @@ if __name__=="__main__":
               install_requires=install_requires,
               cmdclass={'install': Install, 'bdist_wininst': Wininst}
         )
+
 
         print ""
         print "Expyriment Version: [{0}]".format(version_nr)
