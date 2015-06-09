@@ -183,14 +183,11 @@ def get_date_from_file(filename):
                 return rtn[1]
     return ''
 
-
-def clean_up():
-    #TODO WHEN TO CALL?
-    # clean up sphinx folder
-    rmtree("documentation/sphinx/_build", ignore_errors=True)
-    rmtree("documentation/sphinx/build", ignore_errors=True)
-    rmtree("documentation/sphinx/expyriment", ignore_errors=True)
-
+def remove_file(file_):
+    try:
+        os.remove(file_)
+    except:
+        pass
 
 if __name__=="__main__":
     # Check if we are building/installing from unreleased code
@@ -205,12 +202,7 @@ if __name__=="__main__":
             from subprocess import call
             call(["python", "./create_rst_api_reference.py"])
             call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
-            for file_ in glob("expyriment.*"):
-                os.remove(file_)
-            os.remove("Changelog.rst")
-            os.remove("CommandLineInterface.rst")
             os.chdir(cwd)
-            rmtree('documentation/sphinx/expyriment/')
             data_files.append(('share/expyriment/documentation/html',
                                glob('documentation/sphinx/_build/html/*.*')))
             data_files.append(('share/expyriment/documentation/html/_downloads',
@@ -226,12 +218,21 @@ if __name__=="__main__":
             print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
             os.chdir(cwd)
 
+        # clean up sphinx folder
+        rmtree("documentation/sphinx/build", ignore_errors=True)
+        rmtree("documentation/sphinx/expyriment", ignore_errors=True)
+        for file_ in glob("documentation/sphinx/expyriment.*"):
+            remove_file(file_)
+        remove_file("documentation/sphinx/Changelog.rst")
+        remove_file("documentation/sphinx/CommandLineInterface.rst")
+
         # Try to add version_nr and date stamp from Git and build/install
         try:
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
-            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
+            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
+                                                            initial_revision:
                 raise Exception
             version_nr = get_version_from_git()
             revision_nr = get_revision_from_git()
