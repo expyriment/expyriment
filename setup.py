@@ -9,7 +9,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import stat
 import os
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, call
 try:
     from setuptools import setup
     from setuptools.command.build_py import build_py
@@ -192,6 +192,7 @@ def remove_file(file_):
 if __name__=="__main__":
     # Check if we are building/installing from unreleased code
     version_nr = get_version_from_file("expyriment/__init__.py")
+    warning = ""
     if version_nr == '':
         # Try to create html documentation
         html_created = False
@@ -199,7 +200,6 @@ if __name__=="__main__":
         try:
             copytree('expyriment', 'documentation/sphinx/expyriment')
             os.chdir('documentation/sphinx/')
-            from subprocess import call
             call(["python", "./create_rst_api_reference.py"])
             call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
             os.chdir(cwd)
@@ -215,7 +215,7 @@ if __name__=="__main__":
                                glob('documentation/sphinx/_build/html/_static/*.*')))
             html_created = True
         except:
-            print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
+            warning = "HTML documentation NOT created! (sphinx and numpydoc installed?)"
             os.chdir(cwd)
 
         # clean up sphinx folder
@@ -281,3 +281,6 @@ if __name__=="__main__":
 
         print ""
         print "Expyriment Version: [{0}]".format(version_nr)
+
+    if len(warning)>0:
+        print "Warning:", warning
