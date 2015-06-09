@@ -7,7 +7,7 @@
 #
 # Arguments:
 #     folder           -- the data folder (string)
-#		  filename_pattern -- the pattern with which the names of each data file
+#     filename_pattern -- the pattern with which the names of each data file
 #                         start (string)
 #
 # Copyright: 2012-2015 Florian Krause <siebenhundertzehn@googlemail.com>
