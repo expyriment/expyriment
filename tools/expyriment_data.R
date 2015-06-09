@@ -1,23 +1,23 @@
 #!/usr/bin/Rscript
-# read.expyriment.data(folder, file)
+# read.expyriment.data(folder, filename_pattern)
 #
 # Import Exypriment data into R. The function concatinates all data and returns
 # a R data frame with all subjects. Between subject factors will be added as
 # variables to the data matrix.
 #
 # Arguments:
-#     folder             -- the data folder (string)
-#		filename_pattern -- the pattern with which the names of each data file
+#     folder           -- the data folder (string)
+#		  filename_pattern -- the pattern with which the names of each data file
 #                         start (string)
 #
-# Copyright: 2012-2014 Florian Krause <siebenhundertzehn@googlemail.com>
-#            2012-2014 Oliver Lindemann <lindemann09@googlemail.com>
+# Copyright: 2012-2015 Florian Krause <siebenhundertzehn@googlemail.com>
+#            2012-2015 Oliver Lindemann <lindemann09@googlemail.com>
 # License: GPL-3.0+
  
-read.expyriment.data = function(folder, file) 
+read.expyriment.data = function(folder, filename_pattern) 
 {
 	data = data.frame()
-	for (fl_name in list.files(path=folder, file)) {
+	for (fl_name in list.files(path=folder, paste("^", filename_pattern, sep="") )) {
 		path = file.path(folder, fl_name)
 		message("reading ", path)
 		d = read.csv(path, comment.char="#", na.strings=c("NA", "None"))
