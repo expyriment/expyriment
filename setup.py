@@ -8,6 +8,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 
 import stat
+import os
 from subprocess import Popen, PIPE
 try:
     from setuptools import setup
@@ -197,9 +198,8 @@ if __name__=="__main__":
     if version_nr == '':
         # Try to create html documentation
         html_created = False
+        cwd = os.getcwd()
         try:
-            import os
-            cwd = os.getcwd()
             copytree('expyriment', 'documentation/sphinx/expyriment')
             os.chdir('documentation/sphinx/')
             from subprocess import call
@@ -224,6 +224,7 @@ if __name__=="__main__":
             html_created = True
         except:
             print "HTML documentation NOT created! (sphinx and numpydoc installed?)"
+            os.chdir(cwd)
 
         # Try to add version_nr and date stamp from Git and build/install
         try:
