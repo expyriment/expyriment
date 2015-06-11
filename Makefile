@@ -29,7 +29,6 @@ tarball: dist build/wheel_version
 		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f ;\
 		cd build ;\
-		ls ;\
 		rm -f $$TAR;\
 		tar cfz $$TAR $$DIR;\
 		rm -rf $$DIR;\
