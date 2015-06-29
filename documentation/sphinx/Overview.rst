@@ -83,7 +83,7 @@ Public Licence <http://www.gnu.org/copyleft/gpl.html>`_ of the Free Software
 Foundation.
 
 
-Publications & Citation
+Publications & citation
 -----------------------
 If you have used Expyriment in your work, please cite the follwing 
 publication:
@@ -142,7 +142,7 @@ Social networks
 * +1 `+ExpyrimentOrg <http://google.com/+ExpyrimentOrg>`_ on Google+
 
 
-Related Projects
+Related projects
 ----------------
 If you are looking for a graphical experiment builder, we suggest OpenSesame, 
 which uses Expyriment as the default back-end: http://www.osdoc.cogsci.nl/.

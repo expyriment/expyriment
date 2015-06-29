@@ -11,6 +11,7 @@ Advanced
     Data preprocessing and exporting <DataPreprocessing>
     Using non-English characters <Unicode>
     Using fonts <Fonts>
+    Presenting videos <Video>
     Plugin system (extras) <Plugins>
     Defaults (settings) <Defaults>
     Hardware compatibility <Hardware>

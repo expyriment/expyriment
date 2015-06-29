@@ -9,8 +9,8 @@ Expyriment documentation
 *A Python library for cognitive and neuroscientific experiments*. :doc:`Read more
 ...<Overview>`
 
-Contents
---------
+Table Of Contents
+-----------------
 
 .. toctree::
    :titlesonly:
@@ -21,5 +21,4 @@ Contents
    Advanced
    API reference <expyriment>
    Changelog
-
-`Previous Expyriment versions <http://docs.expyriment.org/old/>`_
+   Previous versions <PreviousVersions>

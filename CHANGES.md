@@ -2,10 +2,10 @@
 Expyriment Release Notes
 ========================
 
-Version 0.8.0b2 (2 Jun 2015)
-----------------------------
+Version 0.8.0b3 (29 Jun 2015)
+-----------------------------
 New Features:
-- Antialiasing option for stimuli.Ellipse() and stimuli.Circle()
+- antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
 - new function: quiting wait or event loops by callback_function, if this function
   returns an instance of the new class control.CallbackQuitEvent
@@ -43,11 +43,12 @@ New Features:
 - new feature: improved functionality of randomize.shuffle_list
 - Test suite summarizes delay histograms for visual presentations
 - control.defaults.blocking_mode for setting the blocking_mode
-- New io.ParallelPort implementation, based on PsychoPy code; it now
+- new io.ParallelPort implementation, based on PsychoPy code; it now
   supports reading of 5 status pins (10, 11, 12, 13, 15) and all 8 data pins;
   in addition, the module now works on 64bit Windows system
 - Test suite: New ParallelPort test
 - stimuli.extra.DotCloud: DotCloud can be multi coloured (see make method)
+- lots of documentation improvements
 
 Changed:
 - ATTENTION: Open_GL is now also used in window mode and will not be switch
@@ -70,7 +71,7 @@ Changed:
 - stimuli.Shape: is_point_inside and is_shape_overlapping are now obsolete
 - stimuli.Fixcross: fixcross_size parameter and cross_size property are now
   obsolete
-- changes at Simon example
+- changes to Simon example
 
 Fixed:
 - bug in io.TouchScreenButton crash if duration expired
