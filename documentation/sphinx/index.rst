@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Expyriment documentation
-========================
+Expyriment |release| documentation
+==================================
 .. image:: expyriment_logo.png
 *A Python library for cognitive and neuroscientific experiments*. :doc:`Read more
 ...<Overview>`
