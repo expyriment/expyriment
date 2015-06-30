@@ -17,7 +17,8 @@ Using MacPorts and PyPi (recommended)
 
     sudo port selfupdate
     sudo port install xorg-server tcl python27 py27-pip py27-game
-    sudo /opt/local/bin/python2.7 -m pip install expyriment
+    sudo /opt/local/bin/python2.7 -m pip install --upgrade pip
+    sudo /opt/local/bin/python2.7 -m pip install --upgrade expyriment
 
 3. To make the MacPorts Python the one that is called when typing "python", in a terminal, run ::
 
@@ -29,7 +30,6 @@ For the alternative packages (optional):
 
 4. In a terminal, run ::
 
-    sudo port selfupdate
     sudo port install py27-serial
     sudo /opt/local/bin/python2.7 -m pip install numpy
 

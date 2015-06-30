@@ -9,12 +9,13 @@ All Linux distributions
 1. Use your distribution's package manager to install
 
   * Python 2
-  * PIP
+  * pip
   * Pygame
 
 2. In a command line, run ::
 
-    pip install expyriment
+    sudo pip install --upgrade pip
+    sudo pip install --upgrade expyriment
 
 For the alternative packages (optional):
 

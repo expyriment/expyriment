@@ -11,8 +11,8 @@ Using PyPi (recommended)
 2. Install Pygame_
 3. In a command prompt, run ::
 
-    python -m pip install expyriment
-
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade expyriment
 
 For the additional packages (optional):
 
