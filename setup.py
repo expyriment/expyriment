@@ -58,7 +58,7 @@ data_files = [('share/expyriment/examples',
               ('share/expyriment/documentation/sphinx/numpydoc',
                glob('documentation/sphinx/numpydoc/*.*'))]
 
-install_requires = ["pyopengl>3.0"]
+install_requires = ["pyopengl>=3.0"]
 
 
 # Clear old installation when installing
