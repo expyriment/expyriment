@@ -42,7 +42,7 @@ exp.data_variable_names = ["block", "mapping", "trial", "digit", "ISI",
 t_fixcross = 500
 min_max_ISI = [200, 750] # [min, max] inter_stimulus interval
 ITI = 1000
-t_error_screen = 1000
+t_error_screen = 2000
 no_training_trials = 10
 
 ######### INITIALIZE ##############
@@ -79,10 +79,13 @@ def run_trial(cnt, trial):
     else:
         error = (digit % 2 == 1 and btn == constants.K_LEFT) or \
                 (digit % 2 == 0 and btn == constants.K_RIGHT)
-    if error:
-        error_beep.present()
+
     #write data and clean up while inter-trial-interval
     blankscreen.present()
+    if error:
+        error_beep.present()
+        exp.clock.wait(t_error_screen)
+
     exp.clock.reset_stopwatch()
     exp.data.add([block.id, block.get_factor("mapping"),
                   cnt, target.text, ISI,

@@ -18,6 +18,7 @@ except ImportError:
     _locale = None  # Does not exist on Android
 import sys as _sys
 import types as _types
+from tempfile import mkstemp as _mkstemp
 from copy import copy as _copy
 import codecs as _codecs
 import re as _re
@@ -29,7 +30,8 @@ from expyriment.misc import unicode2str as _unicode2str
 from expyriment.misc import str2unicode as _str2unicode
 
 
-def read_datafile(filename, only_header_and_variable_names=False, encoding=None):
+def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
+                  read_variables=None):
     """Read an Expyriment data file.
 
     Returns the data, the variable names, the subject info & the comments:
@@ -41,6 +43,10 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
     only_header_and_variable_names : bool, optional
         if True the function reads only the header and variable names
         (default=False)
+    encoding : str, optional
+        the encoding with which the contents of the file will be read
+    read_variables : array of str, optional
+        array of variable names, read only the specified variables
 
     Returns
     -------
@@ -53,8 +59,6 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
         subject factors)
     comments : str
         string with remaining comments
-    encoding : str, optional
-        the encoding with which the contents of the file will be read
 
     """
 
@@ -77,6 +81,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
     else:
         encoding = [encoding]
 
+    read_in_columns = None
     fl = _codecs.open(filename, 'rb', encoding[0], errors='replace')
     for ln in fl:
         # parse infos
@@ -86,8 +91,15 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
                 variables = ln.split(delimiter)
                 if only_header_and_variable_names:
                     break
+                if read_variables is not None:
+                    read_in_columns = map(lambda x:variables.index(x),
+                                                            read_variables)
+                    variables = map(lambda x:variables[x], read_in_columns)
             else:
-                data.append(ln.split(delimiter))
+                row =ln.split(delimiter)
+                if read_in_columns is not None:
+                    row = map(lambda x:row[x], read_in_columns)
+                data.append(row)
         else:
             if ln.startswith("#s"):
                 ln = ln.replace("#s", "")
@@ -104,8 +116,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None)
                 comments = comments + "\n" + ln
     fl.close()
     # strip variables
-    for x in range(len(variables)):
-        variables[x] = variables[x].strip()
+    variables = map(lambda x:x.strip(), variables)
     return data, variables, subject_info, comments
 
 
@@ -155,7 +166,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
-                            delimiter=','):
+                            delimiter=',', to_R_data_frame=False):
     """Concatenate data and write it to a csv file.
 
     All files that start with this name will be considered for the
@@ -178,11 +189,49 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
         to {file_name}.csv
     delimiter : str, optional
         delimiter character (default=",")
+    to_R_data_frame: bool, optional
+        if True, data will be converted to a R data frame that is saved
+        in a RDS file
 
     """
 
-    return Aggregator(data_folder=data_folder, file_name=file_name)\
+    if to_R_data_frame:
+        return Aggregator(data_folder=data_folder, file_name=file_name)\
+        .write_concatenated_data_to_R_data_frame(output_file=output_file)
+    else:
+        return Aggregator(data_folder=data_folder, file_name=file_name)\
         .write_concatenated_data(output_file=output_file, delimiter=delimiter)
+
+
+
+def get_experiment_duration(event_filename):
+    """Extracts the experiment duration from event file and returns the time in
+    minutes.
+
+    Parameters
+    ----------
+    info_filename : str
+        name (fullpath) of the Expyriment event file
+
+    Returns
+    -------
+    minutes : float
+        experiment duration in minutes
+
+    """
+
+    data, _, _, _ = read_datafile(event_filename)
+
+    start = end = None
+    for r in data:
+        if r[1] == "Experiment":
+            if r[2]=="started":
+                start = int(r[0])
+            elif r[2]=="ended":
+                stop = int(r[0])
+
+    sec = (stop-start)/1000.0
+    return sec / 60.0
 
 
 class Aggregator(object):
@@ -226,7 +275,8 @@ class Aggregator(object):
 
     _default_suffix = ".xpd"
 
-    def __init__(self, data_folder, file_name, suffix=_default_suffix):
+    def __init__(self, data_folder, file_name, suffix=_default_suffix,
+                 read_variables=None):
         """Create an aggregator.
 
         Parameters
@@ -239,12 +289,14 @@ class Aggregator(object):
         suffix : str, optional
             if specified only files that end with this particular
             suffix will be considered (default=.xpd)
+        read_variables : array of str, optional
+            array of variable names, read only the specified variables
 
         """
 
         if type(_np) is not _types.ModuleType:
             message = """Aggregator can not be initialized.
-The Python package 'numpy' is not installed."""
+The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
         _version = _np.version.version.split(".")
@@ -255,7 +307,7 @@ The Python package 'numpy' is not installed."""
                               "\nPlease install Numpy 1.6 or higher.")
 
         print "** Expyriment Data Preprocessor **"
-        self.reset(data_folder, file_name, suffix)
+        self.reset(data_folder, file_name, suffix, read_variables)
 
     def __str__(self):
         """Getter for the current design as text string."""
@@ -595,7 +647,7 @@ The Python package 'numpy' is not installed."""
 
         return new_variable_names, factor_combinations
 
-    def reset(self, data_folder, file_name, suffix=_default_suffix):
+    def reset(self, data_folder, file_name, suffix=_default_suffix, variables=None):
         """Reset the aggregator class and clear design.
 
         Parameters
@@ -608,6 +660,9 @@ The Python package 'numpy' is not installed."""
         suffix : str, optional
             if specified only files that end with this particular suffix
             will be considered (default=.xpd)
+        variables : array of str, optional
+            array of variable names, process only the specified variables
+
 
         """
 
@@ -635,7 +690,8 @@ The Python package 'numpy' is not installed."""
             if flname.endswith(self._suffix) and \
                     flname.startswith(self._file_name):
                 _data, vnames, _subject_info, _comments = \
-                    read_datafile(self._data_folder + "/" + flname)
+                    read_datafile(self._data_folder + "/" + flname,
+                                  read_variables=variables)
 
                 if len(self._variables) < 1:
                     self._variables = vnames
@@ -960,13 +1016,13 @@ The Python package 'numpy' is not installed."""
         self._last_data = []
 
     def write_concatenated_data(self, output_file=None, delimiter=','):
-        """Concatenate data and write it to a csv file.
+        """Concatenates data and writes it to a csv file.
 
         Parameters
         ----------
         output_file : str, optional
             name of data output file
-            If no specified data will the save to {file_name}.csv
+            If not specified data will the save to {file_name}.csv
         delimiter : str
             delimiter character (default=",")
 
@@ -978,6 +1034,45 @@ The Python package 'numpy' is not installed."""
         data = self.concatenated_data
         write_csv_file(filename=output_file, data=data[0], varnames=data[1],
                        delimiter=delimiter)
+
+    def write_concatenated_data_to_R_data_frame(self, output_file):
+        """Creates a R data frame of the concatenated data and stores it in a
+        RDS file.
+
+        Parameters
+        ----------
+        output_file : str, optional
+            name of RDS output file
+            If not specified data will the save to {file_name}.csv
+
+        Notes
+        -----
+        This method requires R and the Python package 'Rpy2'.
+
+        """
+
+        try:
+            import rpy2.robjects as robjects
+        except:
+            message = "Saving data to R data frame requires the " +\
+                    "Python package 'Rpy2', which is not installed."""
+            raise ImportError(message)
+
+        if output_file is None:
+            output_file = u"{0}.rds".format(self.file_name)
+        fl, tmp_file_name = _mkstemp()
+        _os.close(fl)
+        self.write_concatenated_data(output_file=tmp_file_name, delimiter=',')
+
+        robjects.r('''data = read.csv("{0}", comment.char="#",
+        na.strings=c("NA", "None"))'''.format(tmp_file_name))
+        robjects.r('''str(data)''')
+        print("write file: {0}".format(output_file))
+        robjects.r('''saveRDS(data, file="{0}")'''.format(output_file))
+        try:
+            _os.remove(tmp_file_name)
+        except:
+            pass
 
     def set_independent_variables(self, variables):
         """Set the independent variables.

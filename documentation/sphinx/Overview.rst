@@ -20,8 +20,7 @@ experience.
 
 *Authors*
 
-* `Florian Krause <http://www.dcc.ru.nl/anc/index.php?staff=krause>`_, Radboud 
-  University Nijmegen, The Netherlands
+* `Florian Krause <http://www.fladd.de/research>`_, Brain Innovation, Maastricht University, The Netherlands
     
 * `Oliver Lindemann 
   <http://www.psych.uni-potsdam.de/people/lindemann/index-e.html>`_, University 
@@ -83,21 +82,20 @@ Expyriment is free software and released under the Open Source `GNU General
 Public Licence <http://www.gnu.org/copyleft/gpl.html>`_ of the Free Software 
 Foundation.
 
-Publications & Citation
+
+Publications & citation
 -----------------------
 If you have used Expyriment in your work, please cite the follwing 
 publication:
     
-Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive 
-and neuroscientific experiments. *Behavior Research Methods.*  
+Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive 
+and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.  
 `doi:10.3758/s13428-013-0390-6 <http://dx.doi.org/10.3758/s13428-013-0390-6>`_
 
-.. FIXME update BRM publication details
 
-Development repository
+Source code repository
 ----------------------
-
-The `Expyriment development repository 
+The `Expyriment source code repository
 <https://github.com/expyriment/expyriment>`_ is currently hosted on 
 GitHub. Get a local copy of this repository with this command::
 
@@ -119,14 +117,32 @@ contact the Expyriment users mailing list (visit `website
 expyriment-users+subscribe@googlegroups.com) or contact us directly by sending 
 an email to info@expyriment.org.  
 
+
 Suggestions and bug tracking
 ----------------------------
 If you want to make suggestions to improve Expyriment or you found a bug, 
 please post your comments to the `Expyriment issues page 
 <https://github.com/expyriment/expyriment/issues>`_ or contact us directly by 
-sending an email to info@expyriment.org.  
+sending an email to info@expyriment.org.
 
-Related Projects
+
+IRC channel
+-----------
+To ask questions or to have real-time discussions with other users and the developers. ::
+
+    Server: irc.freenode.org
+    Channel: #expyriment
+
+
+Social networks
+---------------
+* Subscribe to `/r/expyriment <http://www.reddit.com/r/expyriment>`_ on Reddit
+* Follow `@expyriment <http://www.twitter.com/expyriment>`_ on Twitter
+* Like `Expyriment <http://www.facebook.com/expyriment>`_ on Facebook
+* +1 `+ExpyrimentOrg <http://google.com/+ExpyrimentOrg>`_ on Google+
+
+
+Related projects
 ----------------
 If you are looking for a graphical experiment builder, we suggest OpenSesame, 
-which uses Expyriment as the default back-end:  http://www.osdoc.cogsci.nl/.
+which uses Expyriment as the default back-end: http://www.osdoc.cogsci.nl/.

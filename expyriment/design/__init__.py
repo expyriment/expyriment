@@ -16,4 +16,3 @@ import defaults
 import permute
 import randomize
 from _structure import Experiment, Block, Trial
-import extras

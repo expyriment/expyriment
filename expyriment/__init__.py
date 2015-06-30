@@ -1,26 +1,28 @@
-"""A Python library for cognitive and neuroscientific experiments.
+"""Python library for cognitive and neuroscientific experiments.
 
 Expyriment is an open-source and platform independent light-weight Python
 library for designing and conducting timing-critical behavioural and
 neuroimaging experiments. The major goal is to provide a well-structured
 Python library for a script-based experiment development with a high priority
-on the readability of the resulting programme code. It has been tested
-extensively under Linux and Windows.
+on the readability of the resulting programme code. Due to the availability of
+an Android runtime environment, Expyriment is also suitable for the
+development of experiments running on tablet PCs or smart-phones.
 
-Expyriment is an all-in-one solution, as it handles the stimulus presentation,
-recording of I/O events, communication with other devices and the collection
-and preprocessing of data. It offers furthermore a hierarchical design
-structure, which allows an intuitive transition from the experimental design
-to a running programme. It is therefore also suited for students as well as
-experimental psychologists and neuroscientists with little programming
+Expyriment has been tested extensively under Linux and Windows and is an
+all-in-one solution, as it handles stimulus presentation, the recording of
+input/output events, communication with other devices, and the collection
+and preprocessing of data. Furthermore, it offers a hierarchical design
+structure, which allows for an intuitive transition from the experimental
+design to a running program. It is therefore also suited for students, as well
+as for experimental psychologists and neuroscientists with little programming
 experience.
 
 Website: http://www.expyriment.org
 
 To cite Expyriment in publications, please refer to the following article:
 
-  Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive
-  and neuroscientific experiments. Behavior Research Methods.
+  Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive
+  and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.
 
   see http://dx.doi.org/10.3758/s13428-013-0390-6
 
@@ -35,9 +37,6 @@ __date__ = ''
 
 import sys as _sys
 import os as _os
-from hashlib import sha1 as _sha1
-
-
 
 class _Expyriment_object(object):
     """A class implementing a general Expyriment object.
@@ -91,41 +90,7 @@ def get_version():
                               _sys.version_info[1],
                               _sys.version_info[2])
             #no use of .major, .minor to ensure MacOS compatibility
-    return "{0} (Revision {1}; Python {2})".format(__version__, \
-                               __revision__, pv)
-
-_secure_hash = ""
-def get_experiment_secure_hash():
-    """Returns the first six places of the secure hash (sha1) of the main file
-    of the current experiment.
-
-    Returns
-    -------
-    hash: string or None
-        first six places of the experiment secure hash
-        (None if no main file can be found)
-
-    Notes
-    -----
-    Secure hashes for experiments help to ensure that the correct version is
-    running in the lab. Hash codes are written to all output files and
-    printed in the command line output. If you want to check post hoc the
-    version of your experiment, create the secure hash (sha1) of your
-    expyriment .py-file and compare the first six place with the code in the
-    output file.
-
-    """
-
-    global _secure_hash
-    if _secure_hash != "":
-        return _secure_hash
-
-    try:
-        with open(_os.path.split(_sys.argv[0])[1]) as f:
-            _secure_hash = _sha1(f.read()).hexdigest()[:6]
-    except:
-        _secure_hash = None
-    return get_experiment_secure_hash()
+    return "{0} (Python {1})".format(__version__, pv)
 
 
 
@@ -138,9 +103,6 @@ if not(_sys.version_info[0] == 2 and (_sys.version_info[1] == 6 or
                       "\nPlease use Python 2.6 or Python 2.7.")
 else:
     print("Expyriment {0} ".format(get_version()))
-    if get_experiment_secure_hash() is not None:
-        print("File: {0} ({1})".format(_os.path.split(_sys.argv[0])[1],
-                    get_experiment_secure_hash()))
 try:
     import pygame as _pygame
     if _pygame.vernum < (1, 9, 1):
@@ -185,6 +147,6 @@ except ImportError:
     from _api_reference_tool import show_documentation
 from _get_system_info import get_system_info
 import _importer_functions
-
+from _secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
 
 exec(_importer_functions.post_import_hook())

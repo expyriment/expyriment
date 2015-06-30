@@ -23,8 +23,11 @@ class Buffer(object):
         """Create an event buffer.
 
         Parameters
-        name  -- the name of the buffer (str)
-        clock -- an experimental clock (expyriment.Clock object) (optional)
+        ----------
+        name : str
+            the name of the buffer
+        clock : expyriment.Clock object (optional)
+            an experimental clock
 
         """
 
@@ -57,7 +60,9 @@ class Buffer(object):
         """Add an event to the buffer.
 
         Parameters
-        event -- the event to add (anything)
+        ----------
+        event : anything
+            the event to add
 
         """
 
@@ -70,14 +75,23 @@ class Buffer(object):
         All events get the same time stamp!
 
         Parameters
-        events -- the event list to add (list)
+        ----------
+        events : list
+            the event list to add
 
         """
         ts = [self._clock.time] * len(events)
         self._memory.extend(zip(events, ts))
 
     def get_size(self):
-        """Return the number of elements in the buffer."""
+        """Return the number of elements in the buffer.
+        
+        Returns
+        -------
+        size : int
+            the size of the buffer
+    
+        """
 
         return len(self._memory)
 
@@ -85,8 +99,15 @@ class Buffer(object):
         """Get an element (code, rt) from the buffer. 
 
         Parameters
-        position -- the position to get the element from (int)
-
+        ----------
+        position : int
+            the position to get the element from
+            
+        Returns
+        -------
+        element : (anything, float)
+            The element to get from the buffer
+            
         """
 
         if position < len(self._memory) and position >= 0:
@@ -101,7 +122,14 @@ class Buffer(object):
         self._memory = []
 
     def get_last_event(self):
-        """Get the last event (code, rt) in the buffer."""
+        """Get the last event (code, rt) in the buffer.
+        
+        Returns
+        -------
+        element : (anything, float)
+            the last element of the buffer
+            
+        """
 
         if len(self._memory) > 0:
             element = self._memory[-1]
@@ -110,7 +138,14 @@ class Buffer(object):
         return element
 
     def get_whole_buffer(self):
-        """Get a copy of the buffer."""
+        """Get a copy of the buffer.
+        
+        Returns
+        -------
+        copy : list
+            the copy of the buffer
+            
+        """
 
         bcopy = self._memory[:]
         return bcopy
@@ -128,8 +163,11 @@ class ByteBuffer(Buffer):
         """Create a buffer for bytes.
 
         Parameters
-        name  -- the name of the buffer (str)
-        clock -- an experimental clock (expyriment.Clock object) (optional)
+        ----------
+        name : str
+            the name of the buffer
+        clock : expyriment.Clock object (optional)
+            an experimental clock
 
         """
 
@@ -140,10 +178,17 @@ class ByteBuffer(Buffer):
         Check if bits are set in buffer bytes and return position.
 
         Parameters
-        search_byte           -- the byte to search for (int)
-        search_start_position -- position to start search from (int)
-                                 (optional)
-
+        ----------
+        search_byte : int
+            the byte to search for
+        search_start_position : int (optional)
+            position to start search from (int)
+        
+        Returns
+        -------
+        position : int
+            the position of element with set bits
+            
         """
 
         found_pos = 0
@@ -160,9 +205,16 @@ class ByteBuffer(Buffer):
         Check if bits are NOT set in buffer bytes and return position.
 
         Parameters
-        search_byte           -- the byte to search for (int)
-        search_start_position -- position to start search from (int)
-                                 (optional)
+        ----------
+        search_byte : int
+            the byte to search for
+        search_start_position : int (optional)
+            position to start search from
+            
+        Returns
+        -------
+        position : int
+            the position of element with unset bits
 
         """
 
@@ -180,9 +232,16 @@ class ByteBuffer(Buffer):
         Check if value is in buffer bytes and return the position.
 
         Parameters
-        value                 -- the value to check (int)
-        search_start_position -- position to start search from (int)
-                                 (optional)
+        ----------
+        value : int
+            the value to check
+        search_start_position : int (optional)
+            position to start search from
+            
+        Returns
+        -------
+        position : int
+            the position of element with value
 
         """
 

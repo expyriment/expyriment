@@ -1,5 +1,11 @@
 """The design extra package.
 
+Notes
+-----
+    To us the extras module you have to import it manually by calling:
+    `import expyriment.design.extras`
+
+
 """
 
 __author__ = 'Florian Krause <florian@expyriment.org> \

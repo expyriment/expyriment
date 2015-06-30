@@ -10,6 +10,8 @@ __revision__ = ''
 __date__ = ''
 
 
+import sys
+
 import pygame
 try:
     import OpenGL.GL as ogl
@@ -43,8 +45,11 @@ class Screen(Output):
         ----------
         colour : (int, int, int)
             colour of the screen
-        open_gl : bool
-             if OpenGL should be used
+        open_gl : int or bool
+            0/False - No OpenGL (no vsync / no blocking)
+            1       - OpenGL (vsync / no blocking)
+            2/True  - OpenGL (vsync / blocking)
+            3       - OpenGL (vsync / alternative blocking)
         window_mode : bool
              if screen should be a window
         window_size : (int, int)
@@ -55,9 +60,14 @@ class Screen(Output):
 
         Output.__init__(self)
         self._colour = colour
+        if open_gl == False:
+            open_gl = 0
+        elif open_gl == True:
+            open_gl = 2
         self._open_gl = open_gl
         self._fullscreen = not window_mode
         self._window_size = window_size
+
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
 OpenGL will be deactivated!"
@@ -65,16 +75,15 @@ OpenGL will be deactivated!"
             expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
 
-        if self._open_gl and not self._fullscreen:
-            warn_message = "OpenGL does not support window mode. \
-OpenGL will be deactivated!"
-            print("Warning: " + warn_message)
-            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
-            self._open_gl = False
         pygame.display.init()
+        if expyriment._active_exp.is_initialized:
+            self._monitor_resolution = \
+                        expyriment._active_exp.screen.monitor_resolution
+        else:
+            self._monitor_resolution = (pygame.display.Info().current_w,
+                                        pygame.display.Info().current_h)
         if self._fullscreen:
-            self._window_size = (pygame.display.Info().current_w,
-                                pygame.display.Info().current_h)
+            self._window_size = self._monitor_resolution
         else:
             self._window_size = window_size
 
@@ -84,10 +93,22 @@ OpenGL will be deactivated!"
                                                        pygame.FULLSCREEN)
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
+                pygame.display.set_caption('Expyriment')
         else:
-            self._surface = pygame.display.set_mode(
-            self._window_size,
-            pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            try:
+                pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
+            except:
+                pass
+            if self._fullscreen:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+            else:
+                self._surface = pygame.display.set_mode(
+                    self._window_size,
+                    pygame.DOUBLEBUF | pygame.OPENGL)
+                pygame.display.set_caption('Expyriment')
+
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
                 ogl_extensions = ogl.glGetString(ogl.GL_EXTENSIONS)
@@ -133,6 +154,12 @@ machine!")
 
         return self._window_size
 
+    @property
+    def monitor_resolution(self):
+        """Getter for monitor_resolution."""
+
+        return self._monitor_resolution
+
     def update(self):
         """Update the screen.
 
@@ -142,7 +169,12 @@ machine!")
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._open_gl:
+        if self._open_gl >= 2:
+            if self._open_gl == 3:
+                ogl.glBegin(ogl.GL_POINTS)
+                ogl.glColor4f(0, 0, 0, 0)
+                ogl.glVertex2i(0, 0)
+                ogl.glEnd()
             ogl.glFinish()
         if self._logging:
             expyriment._active_exp._event_file_log("Screen,updated", 2)
@@ -160,7 +192,10 @@ machine!")
             stimulus or a list of stimuli to update
 
         """
-        if type(stimuli) is not list:
+
+        try:
+            stimuli = list(stimuli)
+        except:
             stimuli = [stimuli]
 
         if not self._open_gl:

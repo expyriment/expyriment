@@ -4,8 +4,12 @@ Example Experiments
 Here you can find some code examples to see Expyriment in action. All examples 
 are fully working experiments.
 
+For offline usage, all example experiments are also included in Expyriment itself,
+and and can be found at `{prefix}/share/expyriment/examples/` after installation
+(where `{prefix}` is the directory of the Python binary; see also `sys.prefix`).
+
 Simon task
------------
+----------
 An experiment to asses a spatial stimulus-response compatibility effect (see 
 `wikipedia <http://en.wikipedia.org/wiki/Simon_effect>`_).
 
@@ -41,7 +45,7 @@ and the `Expyriment Android Runtime`_.
 
 Really short example
 --------------------
-Expyriment is efficient!. See here a very short example of an functioning 
+Expyriment is efficient! See here a very short example of an functioning 
 experiment in less than 20 lines of pure code.
 
 .. literalinclude:: ../../examples/really_short_exp.py
@@ -50,4 +54,4 @@ Data preprocessing
 ------------------
 Preprocessing the data of the SNARC experiment for further statistical analysis.
 
-.. literalinclude:: ../../examples/snarc_data_preprocessing.py 
+.. literalinclude:: ../../examples/snarc_data_preprocessing.py

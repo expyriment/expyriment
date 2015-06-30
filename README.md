@@ -14,7 +14,9 @@ Overview
 library for designing and conducting timing-critical behavioral and
 neuroimaging experiments. The major goal is to provide a well-structured
 Python library for script-based experiment development, with a high priority
-being the readability of the resulting program code.
+being the readability of the resulting program code. Due to the availability
+of an Android runtime environment, Expyriment is also suitable for the
+development of experiments running on tablet PCs or smart-phones.
 
 **Expyriment** has been tested extensively under Linux and Windows and is an
 all-in-one solution, as it handles stimulus presentation, the recording of
@@ -33,14 +35,12 @@ Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.or
 Documentation
 =============
 Documentation can be found in the directory "documentation".
-For online documentation see: 
-http://docs.expyriment.org
+For online documentation see: http://docs.expyriment.org
 
 Examples
 ========
 Examples can be found in the directory "examples".
-For online examples see: 
-http://docs.expyriment.org/Examples.html
+For online examples see: http://docs.expyriment.org/Examples.html
 
 Installation
 ============
@@ -51,4 +51,6 @@ http://docs.expyriment.org/Installation.html
 
 Reference
 =========
-Krause, F. & Lindemann, O. (2013). Expyriment: A Python library for cognitive and neuroscientific experiments. *Behavior Research Methods*. http://dx.doi.org/10.3758/s13428-013-0390-6
+Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive 
+and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428. 
+http://dx.doi.org/10.3758/s13428-013-0390-6

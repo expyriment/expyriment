@@ -47,9 +47,13 @@ class TouchScreenButtonBox(Input):
 
         Input.__init__(self)
 
-        if type(button_fields) is not list:
+        try:
+            button_fields = list(button_fields)
+        except:
             button_fields = [button_fields]
-        if type(stimuli) is not list:
+        try:
+            stimuli = list(stimuli)
+        except:
             stimuli = [stimuli]
 
         self._mouse = expyriment._active_exp.mouse
@@ -71,7 +75,7 @@ class TouchScreenButtonBox(Input):
         """
 
         if not isinstance(button_field, expyriment.stimuli._visual.Visual):
-            raise TypeError("Button field has to a visual Expyriment stimulus")
+            raise TypeError("Button field has to be a visual Expyriment stimulus")
         self._button_fields.append(button_field)
         self._canvas = None
 
@@ -86,7 +90,7 @@ class TouchScreenButtonBox(Input):
 
         """
         if not isinstance(stimulus, expyriment.stimuli._visual.Visual):
-            raise TypeError("Additional stimuli has to a visual Expyriment stimulus")
+            raise TypeError("Additional stimuli has to be a visual Expyriment stimulus")
         self._stimuli.append(stimulus)
         self._canvas = None
 
@@ -121,7 +125,7 @@ class TouchScreenButtonBox(Input):
         if stimulus is None:
             self._background_stimulus = expyriment.stimuli.BlankScreen()
         elif not isinstance(stimulus, expyriment.stimuli._visual.Visual):
-            raise TypeError("Background stimulus has to be be a " +
+            raise TypeError("Background stimulus has to be a " +
                             "visual Expyriment stimulus")
         else:
             self._background_stimulus = stimulus
@@ -186,8 +190,11 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if button_fields is not None and type(button_fields) is not list:
-            button_fields = [button_fields]
+        if button_fields is not None:
+            try:
+                button_fields = list(button_fields)
+            except:
+                button_fields = [button_fields]
         if check_for_control_keys:
             expyriment.io.Keyboard.process_control_keys()
 
@@ -214,7 +221,6 @@ class TouchScreenButtonBox(Input):
                 return bf
         return None
 
-
     def wait(self, duration=None, button_fields=None,
                 check_for_control_keys=True):
         """Wait for a touchscreen button box click.
@@ -237,18 +243,26 @@ class TouchScreenButtonBox(Input):
         -----
         Don't forget to show the TouchScreenButtonBox.
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         self.clear_event_buffer()
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time()-start)*1000)
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)
             if pressed_button_field is not None:
-                rt = int((touch_time - start) * 1000)
+                rt = int((get_time()-start)*1000)
                 break
-            elif (duration is not None and rt>= duration):
+            elif (duration is not None and int((get_time()-start)*1000)>=duration):
                 pressed_button_field, rt = None, None
                 break
         return pressed_button_field, rt

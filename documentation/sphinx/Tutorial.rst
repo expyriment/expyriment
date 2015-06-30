@@ -1,11 +1,21 @@
 Beginner's tutorial to get started with Expyriment
 ====================================================
 
+Since Expyriment is a library for the programming language Python,
+basic Python knowledge will be needed. Python is relatively easy to
+learn, and there are many excellent `Python tutorials`_ online.
+
+To programme an experiment, any text editor is suitable.
+We, however, suggest a good programming editor or IDE that offers syntax
+highlighting and code completion. If you do not have a favourite editor yet,
+give `Pycharm`_ a try, which is also offered as a free version (community edition)
+that runs on Windows, Linux and OS X.
+
+.. _`Python tutorials`: http://docs.python-guide.org/en/latest/intro/learning/
+.. _`Pycharm`: https://www.jetbrains.com/pycharm/
+
 How to get started with Expyriment?
 -----------------------------------
-To start programming a new experiment you can take any text editor. Preferably 
-one with syntax highlighting for Python of course. (If you are on Windows you 
-might want to use *IDLE* which is part of the Python installation).
 
 Let's start right away with a very basic example!
 
@@ -17,7 +27,7 @@ first_experiment.py::
     exp = expyriment.design.Experiment(name="First Experiment")
     expyriment.control.initialize(exp)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     expyriment.control.end()
 
@@ -60,9 +70,9 @@ Let's see what we just did in more detail:
       ``exp.events``)
     * Present the "Preparing experiment..." screen
 
-    ``expyriment.control.start(exp)``
+    ``expyriment.control.start()``
 
-    We started running the experiment we just created.
+    We started running the currently active (initiated) experiment.
     This does the following:
 
     * Present a screen to ask for the subject number (which thereafter will be 
@@ -88,7 +98,7 @@ want to present a stimulus. Change the code to look like this::
     stim = expyriment.stimuli.TextLine(text="Hello World")
     stim.preload()
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     stim.present()
     exp.clock.wait(1000)
@@ -146,7 +156,7 @@ Modify the code to look like this::
     block.add_trial(trial)
     exp.add_block(block)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     stim.present()
     exp.clock.wait(1000)
@@ -224,7 +234,7 @@ exactly one stimulus. Change the code to look like this::
     exp.add_block(block_two)
 
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     for block in exp.blocks:
         for trial in block.trials:
@@ -346,7 +356,7 @@ Modify the code to look like this::
     block_two.add_trial(trial_two)
     exp.add_block(block_two)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     for block in exp.blocks:
         for trial in block.trials:
@@ -390,12 +400,15 @@ Let's see why this is:
     Now have a look at the "data" and "events" directories (in the same 
     directory where your first_example.py is located). The "data" directory 
     contains data log files, named according to the experiment name, the 
-    subject number and a timestamp. The file ending is .xpd. The event 
-    directory contains event log files with the ending .xpe. Open the latest 
-    data file to see the data we just logged. Notice that the first rows are a 
-    header with some information about the file. However, it would be nice to 
-    also have the variable names of what is logged in there. To do this, add 
-    the following lines above where you start the experiment:
+    subject number and a timestamp. The file ending is .xpd. (Note: To 
+    disable time stamps in output filenames, you have change the defauls of
+    the io module before you initialize your experiment: 
+    ``expyriment.io.defaults.outputfile_time_stamp = False``)  The event 
+    directory contains event log files with the ending .xpe.
+    Open the latest data file to see the data we just logged. Notice that the 
+    first rows are a header with some information about the file. However, it 
+    would be nice to also have the variable names of what is logged in there. 
+    To do this, add the following lines above where you start the experiment:
 
     ``exp.data_variable_names = ["Block", "Trial", "Key", "RT"]``
 
@@ -416,14 +429,14 @@ will overwrite any previous default settings!  One of the most common things to
 do, while developing is to change the default presentation mode from fullscreen 
 to a window:
 
-    ``expyriment.control.window_mode = True``
+    ``expyriment.control.defaults.window_mode = True``
 
-    ``expyriment.control.window_size = (800,600)``
+    ``expyriment.control.defaults.window_size = (800,600)``
 
     Also, when using older machines with very old video cards, you might want 
     to run in fullscreen, but without using OpenGL:
 
-    ``expyriment.control.open_gl = False``
+    ``expyriment.control.defaults.open_gl = False``
 
 That's it so far. We are at the end of the getting started tutorial. As a 
 summary, have a look at the following code, which again show the overall 
@@ -439,7 +452,7 @@ structure of an Expyriment file with the 3 main parts::
     # Create stimuli (and put them into trials)
     # Create input/output devices (like button boxes etc.)
 
-    expyriment.control.start(exp)
+    expyriment.control.start()
 
     # Experiment conduction
     # Loop over blocks and trials, present stimuli and get user input

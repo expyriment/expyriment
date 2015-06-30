@@ -38,6 +38,12 @@ nosetests.xml
 .project
 .pydevproject
 
+# PyCharm
+.idea
+
+# PyPi
+.pypirc
+
 #### Expyriment specific
 test_suite_protocol.xpp
 data/

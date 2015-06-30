@@ -3,35 +3,56 @@
 Platform-specific instructions: Linux
 =====================================
 
-Dependencies
-------------
-If you are in the lucky position of working on a Linux system, installing the 
-required packages can be easily done via your package manager. On Debian-based 
-systems (e.g. Ubuntu) the following command will install everything in one go::
+All Linux distributions
+-----------------------
 
-    sudo apt-get install python python-pygame python-opengl python-serial python-parallel python-numpy
+1. Use your distribution's package manager to install
 
-Installing Expyriment
----------------------
-You can then install Expyriment with the online installer::
+  * Python 2
+  * pip
+  * Pygame
 
-    wget -P /tmp 'https://raw.github.com/expyriment/expyriment-tools/master/expyriment_online_install_linux.sh' && sh /tmp/expyriment_online_install_linux.sh
+2. In a command line, run ::
 
-Alternatively, you can download "expyriment-|release|.zip from the
-`Release page`_ and install as described here_.
+    sudo pip install --upgrade pip
+    sudo pip install --upgrade expyriment
 
-(For Ubuntu, there is furthermore an Expyriment package available through the 
-following third-party PPA: https://launchpad.net/~smathot/+archive/cogscinl.
-Please note that we do not provide support for this package.)
+For the alternative packages (optional):
+
+3. Use your distribution's package manager to install
+
+  * Numpy
+  * PyParallel
+  * PySerial
+
+
+Debian, Ubuntu and derivatives
+------------------------------
+
+We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
+suggest to install ``python-expyriment`` via `NeuroDebian`_, a platform
+providing a large collection of neuroscience research software. For detailed
+instructions see:
+`Installing Expyriment via Neurodebian <http://neuro.debian.net/pkgs/python-expyriment.html>`_
+
+*Note*: If you have a previous version of Expyriment installed from source,
+please first uninstall the old version using the following command (replace *X*
+to match your Python version)::
+
+    sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
+
+Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
+
 
 Notes
 -----
 **Switch off desktop effects, when running an experiment**
 
-    Several window managers nowadays come with a compositing engine to produce  
-    3D desktop effects. To get accurate timing of the visual stimulus 
-    presentation it is important to switch off desktop effects in your window 
+    Several window managers nowadays come with a compositing engine to produce
+    3D desktop effects. To get accurate timing of the visual stimulus
+    presentation it is important to switch off desktop effects in your window
     manager!
 
-..  _here: http://docs.python.org/install/index.html#the-new-standard-distutils
-.. _`Release page`: http://github.com/expyriment/expyriment/releases/latest
+.. _`release page`: http://github.com/expyriment/expyriment/releases/latest
+.. _`Debian`: https://www.debian.org/
+.. _`NeuroDebian`: http://neuro.debian.net/

@@ -103,7 +103,7 @@ class Audio(Stimulus):
             self._file = mixer.Sound(unicode2str(self._filename, fse=True))
             self._is_preloaded = True
 
-    def unload(self):
+    def unload(self, **kwargs):
         """Unload stimulus from memory.
 
         This removes the reference to the object in memory.

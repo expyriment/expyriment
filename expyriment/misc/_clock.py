@@ -108,15 +108,28 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+            
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return
         start = self.time
         if type(function) == types.FunctionType or\
-                                 expyriment._active_exp._execute_wait_callback():
+                                 expyriment._active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
-                expyriment._active_exp._execute_wait_callback()
+                rtn_callback = expyriment._active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                    return rtn_callback
         else:
             looptime = 200
             if (waiting_time > looptime):
@@ -125,7 +138,7 @@ class Clock(object) :
                 pass
 
     def wait_seconds(self, time_sec, function=None):
-        """Wait for a certain amout of seconds (see also wait() ).
+        """Wait for a certain amout of seconds.
 
         Parameters
         ----------
@@ -134,12 +147,21 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+        
+        See Also
+        --------
+        Clock.wait, design.experiment.register_wait_callback_function
+
         """
 
-        self.wait(time_sec * 1000, function)
+        return self.wait(time_sec * 1000, function)
 
     def wait_minutes(self, time_minutes, function=None):
-        """Wait for a certain amount of minutes (see also wait() ).
+        """Wait for a certain amount of minutes.
 
         Parameters
         ----------
@@ -148,6 +170,15 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
 
+        Returns
+        -------
+        quit_event : expyriment.control.CallbackQuitEvent object
+           the callback quit even in case a wait function has been registered
+            
+        See Also
+        --------
+        Clock.wait, design.experiment.register_wait_callback_function
+
         """
 
-        self.wait_seconds(time_minutes * 60, function)
+        return self.wait_seconds(time_minutes * 60, function)

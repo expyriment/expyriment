@@ -36,7 +36,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
-	rm -f Changelog.rst
+	rm -f Changelog.rst CommandLineInterface.rst
 
 rst:
 	@make expyriment.rst
@@ -47,37 +47,50 @@ expyriment.rst:
 	rm -f expyriment
 
 html:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
+	rm -f expyriment
 
 dirhtml:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/dirhtml."
+	rm -f expyriment
 
 singlehtml:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b singlehtml $(ALLSPHINXOPTS) $(BUILDDIR)/singlehtml
 	@echo
 	@echo "Build finished. The HTML page is in $(BUILDDIR)/singlehtml."
+	rm -f expyriment
 
 pickle:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b pickle $(ALLSPHINXOPTS) $(BUILDDIR)/pickle
 	@echo
 	@echo "Build finished; now you can process the pickle files."
+	rm -f expyriment
 
 json:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b json $(ALLSPHINXOPTS) $(BUILDDIR)/json
 	@echo
 	@echo "Build finished; now you can process the JSON files."
+	rm -f expyriment
 
 htmlhelp:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b htmlhelp $(ALLSPHINXOPTS) $(BUILDDIR)/htmlhelp
 	@echo
 	@echo "Build finished; now you can run HTML Help Workshop with the" \
 	      ".hhp project file in $(BUILDDIR)/htmlhelp."
+	rm -f expyriment
 
 qthelp:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b qthelp $(ALLSPHINXOPTS) $(BUILDDIR)/qthelp
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
@@ -85,8 +98,10 @@ qthelp:
 	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/Expyriment.qhcp"
 	@echo "To view the help file:"
 	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/Expyriment.qhc"
+	rm -f expyriment
 
 devhelp:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
@@ -94,47 +109,64 @@ devhelp:
 	@echo "# mkdir -p $$HOME/.local/share/devhelp/Expyriment"
 	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/Expyriment"
 	@echo "# devhelp"
+	rm -f expyriment
 
 epub:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b epub $(ALLSPHINXOPTS) $(BUILDDIR)/epub
 	@echo
 	@echo "Build finished. The epub file is in $(BUILDDIR)/epub."
+	rm -f expyriment
 
 latex:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo
 	@echo "Build finished; the LaTeX files are in $(BUILDDIR)/latex."
 	@echo "Run \`make' in that directory to run these through (pdf)latex" \
 	      "(use \`make latexpdf' here to do that automatically)."
+	rm -f expyriment
 
 latexpdf:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(BUILDDIR)/latex
 	@echo "Running LaTeX files through pdflatex..."
 	make -C $(BUILDDIR)/latex all-pdf
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
+	rm -f expyriment
 
 text:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
 	@echo
 	@echo "Build finished. The text files are in $(BUILDDIR)/text."
+	rm -f expyriment
 
 man:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b man $(ALLSPHINXOPTS) $(BUILDDIR)/man
 	@echo
 	@echo "Build finished. The manual pages are in $(BUILDDIR)/man."
+	rm -f expyriment
 
 changes:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b changes $(ALLSPHINXOPTS) $(BUILDDIR)/changes
 	@echo
 	@echo "The overview file is in $(BUILDDIR)/changes."
+	rm -f expyriment
 
 linkcheck: 
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b linkcheck $(ALLSPHINXOPTS) $(BUILDDIR)/linkcheck
 	@echo
 	@echo "Link check complete; look for any errors in the above output " \
 	      "or in $(BUILDDIR)/linkcheck/output.txt."
+	rm -f expyriment
 
 doctest:
+	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
+	rm -f expyriment

@@ -7,59 +7,41 @@
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
-build: build/release
+release: wheel tarball
+wheel: dist build/wheel_version
 
-build/release: documentation/html documentation/Expyriment.pdf documentation/api_ref_html
-	python setup.py build
-	make --directory=documentation/sphinx clean
-	make --directory=documentation/api clean
-	@git describe | sed -e 's/^v//' -e 's/-[0-9]/+xxx&/' -e 's/xxx-/git/' \
-				> build/release.version
-	@mv -f build/lib* build/release
-	@cp -ra documentation build/release
-	@cp -ra examples build/release
-	@cp -at build/release  CHANGES.md COPYING.txt README.md
-	@cp -at build/release  setup.py
-	@find build/release -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
-		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f
-
-zip: build/release
-	@cd build;\
-		VER=$$(cat release.version);\
-		ln -s release expyriment-$$VER;\
-		rm -f expyriment-$$VER.zip;\
-		zip -r expyriment-$$VER.all.zip expyriment-$$VER;\
-		rm expyriment-$$VER;\
-		sha1sum expyriment-$$VER.all.zip
-
-tarball: build/release
-	@cd build;\
-		VER=$$(cat release.version);\
-	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
+tarball: dist build/wheel_version
+	@VER=$$(cat build/wheel_version);\
+		read -p "Tarball version suffix: " VERSION_SUFFIX;\
 		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
 		TAR=python-expyriment_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
-		cp -ra release $$DIR;\
-		rm  $$DIR/expyriment/_fonts -rf;\
-		rm  $$DIR/documentation/html -rf;\
-		rm  $$DIR/documentation/Expyriment.pdf -rf;\
-		rm  $$DIR/documentation/api_ref_html -rf;\
+		mkdir -p build/$$DIR ;\
+		mkdir -p build/tmp ;\
+		unzip dist/* -d build/tmp ;\
+		mv build/tmp/expyriment build/$$DIR ;\
+		rm -rf build/tmp ;\
+		rm build/$$DIR/expyriment/_fonts -rf ;\
+		cp -ra documentation build/$$DIR ;\
+		rm build/$$DIR/documentation/sphinx/_build -r ;\
+		cp -ra examples build/$$DIR ;\
+		cp -at build/$$DIR  CHANGES.md COPYING.txt README.md ;\
+		cp -at build/$$DIR setup.py ;\
+		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
+		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f ;\
+		cd build ;\
+		rm -f $$TAR;\
 		tar cfz $$TAR $$DIR;\
 		rm -rf $$DIR;\
 		sha1sum $$TAR
 
-debian_package:
-	@cd build;\
-		VER=$$(cat release.version);\
-	 	read -p "Tarball version suffix: " VERSION_SUFFIX;\
-		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
-		TAR=python-expyriment_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
-		rm $$DIR -rf;\
-		tar xfz $$TAR;\
-		cd $$DIR;\
-		cp ../../debian ./ -ra;\
-		debuild -rfakeroot -S ;\
-		cd ..;\
-		#rm -rf $$DIR;	
+dist:
+	mkdir -p build
+	python setup.py bdist_wheel | tee build/wheel.log
+
+build/wheel_version: dist 
+	@grep "Expyriment Version:" build/wheel.log | sed  \
+				-e 's/.*\(\[.\+\]\).*/\1/g'  \
+				-e "s/\]//" -e "s/\[//" > build/wheel_version 
 
 install:
 	python setup.py install
@@ -80,6 +62,8 @@ clean:
 	@make --directory=documentation/sphinx clean
 	@make --directory=documentation/api clean
 	@rm -rf build \
+			dist \
+			expyriment.egg-info \
 			documentation/Expyriment.pdf\
 			documentation/api_ref_html\
 			documentation/html

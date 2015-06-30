@@ -100,7 +100,7 @@ class MarkerOutput(Output):
         ----------
         code : int, optional
             a specific code
-        durartion : int, optional
+        duration : int, optional
             duration (in ms) for sending a 0 after a code
 
         """

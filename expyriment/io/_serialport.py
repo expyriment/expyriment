@@ -379,6 +379,10 @@ The Python package 'pySerial' is not installed."""
         -------
         line : str
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         rtn_string = ""
@@ -391,7 +395,10 @@ The Python package 'pySerial' is not installed."""
                     repr(self._serial.port)), 2)
 
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                rtn_string = rtn_callback
+                break
             byte = self.poll()
             if byte:
                 byte = chr(byte)
@@ -441,7 +448,7 @@ The Python package 'pySerial' is not installed."""
                 for p in dev:
                     if p.startswith("ttyS") and len(p) == length:
                         ports.append("/dev/" + p)
-        elif platform == "dawin": #for MacOS
+        elif platform == "darwin": #for MacOS
             dev = sorted(listdir('/dev'))
             max_length = 0
             for d in dev:
@@ -520,9 +527,9 @@ The Python package 'pySerial' is not installed."""
                      4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800,
                      500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000,
                      2500000, 3000000, 3500000, 4000000]
-            idx = expyriment.io.TextMenu("Select Baudrate", rates, width=200,
-                                         justification=1, scroll_menu=2).get(
-                                             preselected_item=14)
+            idx = expyriment.io.TextMenu("Select Baudrate", [repr(x) for x in rates],
+                                         width=200, justification=1,
+                                         scroll_menu=2).get(preselected_item=14)
             baudrate = rates[idx]
 
             parities = ["N", "E", "O"]
@@ -532,9 +539,9 @@ The Python package 'pySerial' is not installed."""
             parity = parities[idx]
 
             stopbits = [0, 1, 1.5, 2]
-            idx = expyriment.io.TextMenu("Select Stopbits", stopbits, width=200,
-                                         justification=1, scroll_menu=2).get(
-                                             preselected_item=1)
+            idx = expyriment.io.TextMenu("Select Stopbits", [repr(x) for x in stopbits],
+                                         width=200, justification=1,
+                                         scroll_menu=2).get(preselected_item=1)
             stopbit = stopbits[idx]
 
             expyriment.stimuli.TextScreen("Serial Port {0}".format(comport),

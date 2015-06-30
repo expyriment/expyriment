@@ -1,3 +1,4 @@
+
 """MIDI input.
 
 This module contains a class implementing a MIDI input device.
@@ -36,7 +37,6 @@ class MidiIn(Input):
     stay in extras.
 
     """
-
     @staticmethod
     def get_devices():
         """Get a list of all MIDI input devices connected to the system."""
@@ -143,10 +143,16 @@ class MidiIn(Input):
         evt : int
             found event
         rt : int
-            reaction timein ms
+            reaction time in ms
+
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
 
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         _event = None
@@ -160,7 +166,9 @@ class MidiIn(Input):
             events = [events]
         done = False
         while not done:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback, int((get_time() - start) * 1000)
             event = self.read(1)
             if event is not None and event[0][0] in events:
                 rt = int((get_time() - start) * 1000)

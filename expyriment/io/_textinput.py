@@ -25,7 +25,8 @@ except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
 import defaults
-from expyriment.misc import find_font, unicode2str
+from expyriment.misc import find_font, unicode2str, constants, \
+                 numpad_digit_code2ascii
 import expyriment
 from _input_output import Input
 
@@ -187,6 +188,7 @@ class TextInput(Input):
         else:
             self._screen = expyriment._active_exp.screen
         if background_stimulus is not None:
+            # FIXME child of child of visual does not work as background stimulus, e.g. BlankScreen
             if background_stimulus.__class__.__base__ in \
                      [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
                 self._background_stimulus = background_stimulus
@@ -303,7 +305,10 @@ class TextInput(Input):
         """Get a key press."""
 
         while True:
-            expyriment._active_exp._execute_wait_callback()
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                return rtn_callback
+
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
                 return event.key, event.unicode
@@ -395,6 +400,10 @@ class TextInput(Input):
         default_input : str, optional
             default input in the textbox
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
         if android_show_keyboard is not None:
@@ -405,22 +414,27 @@ class TextInput(Input):
         self._create()
         self._update()
         if self._ascii_filter is None:
-            ascii_filter = range(0, 256)
+            ascii_filter = range(0, 256) + constants.K_ALL_KEYPAD_DIGITS
         else:
             ascii_filter = self._ascii_filter
         while True:
             inkey, string = self._get_key()
             if inkey == pygame.K_BACKSPACE:
                 self._user = self._user[0:-1]
-            elif inkey == pygame.K_RETURN:
+            elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
                 break
-            elif inkey != pygame.K_LCTRL or pygame.K_RCTRL:
+            elif inkey != pygame.K_LCTRL or inkey != pygame.K_RCTRL:
                 if not self._user_text_surface_size[0] >= self._max_size[0]:
                     if android is not None:
                         if inkey in ascii_filter:
+                            if inkey in constants.K_ALL_KEYPAD_DIGITS:
+                                inkey = numpad_digit_code2ascii(inkey)
                             self._user.append(chr(inkey))
                     else:
-                        if string and ord(string) in ascii_filter:
+                        if inkey in constants.K_ALL_KEYPAD_DIGITS:
+                            self._user.append(chr(numpad_digit_code2ascii(
+                                inkey)))
+                        elif string and ord(string) in ascii_filter:
                             self._user.append(string)
             self._update()
         got = "".join(self._user)

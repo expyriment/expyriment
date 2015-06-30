@@ -25,12 +25,12 @@ except ImportError:
 import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-
+from expyriment.misc import unicode2str
 from  _input_output import Input
-
 
 quit_key = None
 pause_key = None
+refresh_key = None
 end_function = None
 pause_function = None
 
@@ -51,7 +51,8 @@ class Keyboard(Input):
         Parameters
         ----------
         key_event : int, optional
-            key event to check
+            key event to check. If not defined, the Pygame event queue will be
+            checked for key down events.
 
         Returns
         -------
@@ -73,10 +74,16 @@ class Keyboard(Input):
                         pause_function is not None:
                     pause_function()
                     return True
+                elif key_event.key == refresh_key:
+                    if expyriment._active_exp is not None:
+                        expyriment._active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
-                return Keyboard.process_control_keys(event) # recursive
+                # recursion
+                return Keyboard.process_control_keys(event)
+
         return False
+
 
     def __init__(self, default_keys=None):
         """Create a keyboard input.
@@ -97,13 +104,40 @@ class Keyboard(Input):
     @property
     def default_keys(self):
         """Getter for default keys"""
+
         return self._default_keys
 
     @default_keys.setter
     def default_keys(self, value):
         """Setter for default keys"""
+
         self._default_keys = value
 
+    @staticmethod
+    def get_quit_key():
+        """Returns the currently defined quit key """
+
+        return quit_key
+
+    @staticmethod
+    def get_pause_key():
+        """Returns the currently defined pause key"""
+
+        return pause_key
+
+    @staticmethod
+    def set_quit_key(value):
+        """Set the currently defined quit key"""
+
+        global quit_key
+        quit_key = value
+
+    @staticmethod
+    def set_pause_key(value):
+        """Set the currently defined pause key"""
+
+        global pause_key
+        pause_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""
@@ -145,8 +179,11 @@ class Keyboard(Input):
 
         if keys is None:
             keys = self.default_keys
-        if type(keys) is not list and keys is not None:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         pygame.event.pump()
         pygame.event.clear(pygame.KEYUP)
         for event in pygame.event.get(pygame.KEYDOWN):
@@ -187,12 +224,22 @@ class Keyboard(Input):
         Returns
         -------
         found : char
-            pressed charater
+            pressed character
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        Keys are defined my keyboard constants (please use see misc.constants)
+
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         if android_show_keyboard is not None:
             android_show_keyboard()
         start = get_time()
@@ -201,8 +248,11 @@ class Keyboard(Input):
         self.clear()
         if keys is None:
             keys = self.default_keys
-        if keys is not None and type(keys) is not list:
-            keys = [keys]
+        else:
+            try:
+                keys = list(keys)
+            except:
+                keys = [keys]
         if wait_for_keyup:
             target_event = pygame.KEYUP
         else:
@@ -210,8 +260,12 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                done = True
+                found_key = rtn_callback
+                rt = int((get_time() - start) * 1000)
+            for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == target_event:
@@ -257,19 +311,33 @@ class Keyboard(Input):
         rt : int
             reaction time in ms
 
+        See Also
+        --------
+        design.experiment.register_wait_callback_function
+
         """
 
+        if expyriment.control.defaults._skip_wait_functions:
+            return None, None
         start = get_time()
         rt = None
         found_char = None
         self.clear()
-        if type(char) is not list:
+        try:
+            char = list(char)
+        except:
             char = [char]
         pygame.event.pump()
         done = False
+
         while not done:
-            expyriment._active_exp._execute_wait_callback()
-            for event in pygame.event.get():
+            rtn_callback = expyriment._active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                    done = True
+                    rt = int((get_time() - start) * 1000)
+                    found_char = rtn_callback
+
+            for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
@@ -282,5 +350,6 @@ class Keyboard(Input):
             time.sleep(0.0005)
         if self._logging:
             expyriment._active_exp._event_file_log(
-                        "Keyboard,received,{0},wait_char".format(found_char))
+                        "Keyboard,received,{0},wait_char".format(
+                        unicode2str(found_char)))
         return found_char, rt

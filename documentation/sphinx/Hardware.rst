@@ -8,18 +8,24 @@ mode should work with all drivers that use an OpenGL specification >=
 2.0.  Drivers implementing an older OpenGL specification (>= 1.4) should work 
 when the 'GL_ARB_texture_non_power_of_two' extension is present.
 
-On some some integrated Intel cards syncing to the vertical retrace does not seem to work!
+On some some integrated Intel cards syncing to the vertical retrace does not seem
+to work with the default settings! In those cases, please try using OpenGL set to
+"vsync / alternative blocking" (``control.defaults.open_gl=3``).
 
 Working configurations
 ~~~~~~~~~~~~~~~~~~~~~~
-Here is a list of configurations we observed to work:
+Here are some configurations we observed to work:
 
+* GeForce GT 520 (Linux-x86; Debian default driver)
+* GeForce GT 520 (Windows XP; NIVIDA driver 285.62)
 * Nvidia GTX 650 (Linux-x86; NVIDIA driver 310.14)
 * Nvidia Quadro NVS 290 (Linux-x86; NVIDIA driver 295.40)
 * Nvidia Quadro NVS 290 (Windows XP SP3; NVIDIA driver)
+* Toshiba Satellite Pro Laptop (Windows 7)
+* Apple MacBook Pro 2013 (OS X 10.10; using alternative blocking!)
 
-*We recommend to always use the Expyriment test suite to check the 
-performance of your specific configuration!*
+**We recommend to always use the Expyriment test suite to check the
+performance of your specific configuration!**
 
 External devices
 ----------------
@@ -175,8 +181,8 @@ Cedrus response devices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Expyriment comes with a high-level wrapper for Cedrus response devices 
-expyriment.io.extras.CedrusResponseDevice_, which allows you to easily use all 
-Cedrus response devices.
+:doc:`expyriment.io.extras.CedrusResponseDevice`, which allows you to easily 
+use all Cedrus response devices.
 
 To use these devices, however, the third-party Python package pyxid_ needs to 
 be installed on the system.
@@ -189,4 +195,3 @@ be installed on the system.
 .. _pyxid: https://github.com/cedrus-opensource/pyxid
 .. _Download: https://github.com/cedrus-opensource/pyxid/zipball/master
 .. _here: http://docs.python.org/install/index.html#the-new-standard-distutils 
-.. FIXME: io.extas.CedrusResponseDevice is not in docu yet

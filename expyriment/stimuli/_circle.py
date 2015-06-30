@@ -23,13 +23,14 @@ from _ellipse import Ellipse
 class Circle(Ellipse):
     """A class implementing a basic 2D circle."""
 
-    def __init__(self, diameter, colour=None, line_width=None, position=None):
+    def __init__(self, radius, colour=None, line_width=None, position=None,
+                 anti_aliasing=None):
         """Create a circle.
 
         Parameters
         ----------
-        diameter : int
-            diameter of the circle
+        radius : int
+            radius of the circle
         colour : (int,int,int), optional
             colour of the circle
         line_width : int, optional
@@ -37,43 +38,43 @@ class Circle(Ellipse):
             in a filled circle
         position : (int, int), optional
             position of the stimulus
+        anti_aliasing : int, optional
+            anti aliasing parameter (good anti_aliasing with 10)
 
         """
 
-        self._diameter = diameter
-        self._radius = diameter/2.0
+        self._radius = radius
         if position is None:
             position = defaults.circle_position
         if colour is None:
             colour = defaults.circle_colour
         if line_width is None:
             line_width = defaults.circle_line_width
-        elif line_width < 0 or line_width >= self._diameter/2.0:
-            raise AttributeError("line_width must be >= 0 and < diameter/2!")
-        Ellipse.__init__(self, [diameter, diameter], colour, line_width,
-                         position)
+        elif line_width < 0 or line_width >= self._radius:
+            raise AttributeError("line_width must be >= 0 and < radius!")
+        if anti_aliasing is not None:
+            self._anti_aliasing = anti_aliasing
+        else:
+            self._anti_aliasing = defaults.circle_anti_aliasing
+        Ellipse.__init__(self, [radius, radius], colour, line_width,
+                         position, anti_aliasing)
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
-
-    @property
-    def diameter(self):
-        """Getter for diameter."""
-        return self._diameter
-
-    @diameter.setter
-    def diameter(self, value):
-        """Setter for diameter."""
-
-        if self.has_surface:
-            raise AttributeError(Circle._getter_exception_message.format(
-                "diameter"))
-        else:
-            self._diameter = value
 
     @property
     def radius(self):
         """Getter for radius."""
         return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        """Setter for radius."""
+
+        if self.has_surface:
+            raise AttributeError(Circle._getter_exception_message.format(
+                "radius"))
+        else:
+            self._radius = value
 
     def get_polar_coordiantes(self):
         """Returns tuple with polar coordinates (radial, angle in degrees)."""
@@ -158,6 +159,6 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     defaults.event_logging = 0
     exp = control.initialize()
-    dot = Circle(diameter=100, line_width=3)
+    dot = Circle(radius=100, anti_aliasing=10)
     dot.present()
     exp.clock.wait(1000)

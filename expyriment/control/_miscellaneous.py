@@ -20,7 +20,9 @@ from expyriment.control import defaults as control_defaults
 def start_audiosystem():
     """Start the audio system.
 
-    NOTE: The audiosystem is automatically started when initializing an
+    Notes
+    ------
+    The audiosystem is automatically started when initializing an
     Experiment!
 
     """
@@ -75,8 +77,8 @@ def wait_end_audiosystem(channel=None):
     while get_audiosystem_is_playing(channel):
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and \
-                        (event.key == control_defaults.quit_key or
-                         event.key == control_defaults.pause_key):
+                        (event.key == expyriment.io.Keyboard.get_quit_key() or
+                         event.key == expyriment.io.Keyboard.get_pause_key()):
                     if channel is None:
                         pygame.mixer.stop()
                     else:
@@ -105,7 +107,7 @@ def set_develop_mode(onoff, intensive_logging=False):
         True sets expyriment.io.defaults.event_logging=2
         (default = False)
 
-"""
+    """
 
     if onoff:
         defaults._mode_settings = [defaults.initialize_delay,
@@ -137,6 +139,25 @@ def set_develop_mode(onoff, intensive_logging=False):
     if intensive_logging:
         expyriment.control.defaults.event_logging = 2
 
+def set_skip_wait_functions(onoff):
+    """Switch on/off skip wait function.
+    If skip-wait-functions is switch on (True) all wait functions in the
+    experiment (i.e.  all wait function in expyriment.io and the clock) will
+    be omitted.
+
+    Notes
+    -----
+    CAUTION!: This functions is only usefull for experiment test runs. Do not use
+    skip-wait-function while real experiments.
+
+    Parameters
+    ----------
+    onoff : bool
+        set skip-wait-function on (True) or off (False)
+
+    """
+
+    control_defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
     value = None
@@ -159,6 +180,11 @@ def get_defaults(search_str="", as_string=False):
         print as string instead of dict
 
     """
+
+    import expyriment.io.extras
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.misc.extras
 
     defaults = {}
     defaults = _get_module_values(defaults, expyriment.design.defaults)
@@ -196,14 +222,23 @@ def register_wait_callback_function(function, exp=None):
     all Expyriment wait and event loops that wait for an external input.
     That is, they are executed by the following functions (at least once!):
 
-        control.wait_end_audiosystem,
-        misc.clock.wait,         misc.clock.wait_seconds,
-        misc.clock.wait_minutes  io.keyboard.wait,
-        io.keyboard.wait_char,   io.buttonbox.wait,
-        io.gamepad.wait_press,   io.triggerinput.wait,
-        io.mouse.wait_press,     io.serialport.read_line,
-        io.textinput.get,        stimulus.video.wait_frame,
-        stimulus.video.wait_end
+        - control.wait_end_audiosystem
+        - misc.Clock.wait
+        - misc.Clock.wait_seconds
+        - misc.Clock.wait_minutes
+        - io.Keyboard.wait
+        - io.Keyboard.wait_char
+        - io.Mouse.wait_press
+        - io.SerialPort.read_line
+        - io.StreamingButtonBox.wait
+        - io.EventButtonBox.wait
+        - io.GamePad.wait_press
+        - io.TriggerInput.wait
+        - io.TextInput.get
+        - io.TouchScreenButtonBox.wait
+        - io.extras.CedrusResponseDevice.wait
+        - stimuli.Video.wait_frame
+        - stimuli.Video.wait_end
 
     Parameters
     ----------
@@ -217,6 +252,10 @@ def register_wait_callback_function(function, exp=None):
     CAUTION! If wait callback function takes longer than 1 ms to process,
     Expyriment timing will be affected!
 
+    See Also
+    --------
+    unregister_wait_callback_function
+
     """
 
     if exp is not None:
@@ -226,12 +265,17 @@ def register_wait_callback_function(function, exp=None):
 
 
 def unregister_wait_callback_function(exp=None):
-    """Unregister wait function.
+    """Unregister all wait callback functions.
 
     Parameters
     ----------
     exp : design.Experiment, optional
-        specific experiment for which to unregister wait function
+        specific experiment for which to unregister the wait callback function
+
+
+    See Also
+    --------
+    register_wait_callback_function
 
     """
 
@@ -240,6 +284,33 @@ def unregister_wait_callback_function(exp=None):
     else:
         expyriment._active_exp.unregister_wait_callback_function()
 
+class CallbackQuitEvent():
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
+    def __init__(self, data=None):
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
+        self.data = data
+
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)
 
 def is_ipython_running():
     """Return True if IPython is running."""
@@ -250,12 +321,31 @@ def is_ipython_running():
     except NameError:
         return False
 
-
 def is_idle_running():
     """Return True if IDLE is running."""
 
     return "idlelib.run" in sys.modules
 
+def is_interactive_mode():
+    """Returns if Python is running in interactive mode (such as IDLE or
+    IPthon)
+
+    Returns
+    -------
+        interactive_mode : boolean
+    """
+
+    # ps2 is only defined in interactive mode
+    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
+
+def is_android_running():
+    """Return True if Exypriment runs on Android."""
+
+    try:
+        import android
+    except ImportError:
+        return False
+    return True
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.

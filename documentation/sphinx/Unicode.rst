@@ -22,7 +22,7 @@ script file, the following three conditions have to be met:
 3. **Define the encoding in your 
    Expyriment script file!**::
      # -*- coding: <encoding> -*-
-   The line has to be one of the first two lines in the file, where <encoding>
+   The line has to be one of the first two lines in the file, where ``<encoding>``
    is the encoding used!
 
    For

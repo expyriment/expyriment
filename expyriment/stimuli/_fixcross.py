@@ -31,19 +31,24 @@ class FixCross(Shape):
             size of the cross
         position : (int, int), optional
             position of the stimulus
-        line_width : (int, int), optional
+        line_width : int optional
             width of the lines
-        colour : (int, int), optional
+        colour : (int, int, int), optional
             colour of the cross
-        anti_aliasing : (int, int), optional
-            anti aliasing parameter
-        cross_size : (int, int) DEPRECATED argument
-            please use 'size' and specify x and y dimensions.
+        anti_aliasing :  int, optional
+            anti aliasing parameter (good anti_aliasing with 10)
+
+
+        NOTE
+        ----
+        The parameter cross_size is now OBSOLETE.
+        Please use 'size' and specify x and y dimensions.
 
         """
 
         if cross_size is not None and size is None:
-            size = (cross_size, cross_size)
+            raise DeprecationWarning("Property cross_size is obsolete. Please use size")
+
         if position is None:
             position = defaults.fixcross_position
         if colour is None:
@@ -54,7 +59,8 @@ class FixCross(Shape):
             self._colour = expyriment._active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
-        Shape.__init__(self, position=position, colour=colour,
+        Shape.__init__(self, position=position, line_width=0,
+                         colour=colour,
                          anti_aliasing=anti_aliasing)
         if size is None:
             size = defaults.fixcross_size
@@ -70,7 +76,7 @@ class FixCross(Shape):
         self.add_vertex((0, -line_width))
         self.add_vertex((-x, 0))
         self.add_vertex((0, -y))
-        self.add_vertex((-line_width , 0))
+        self.add_vertex((-line_width, 0))
         self.add_vertex((0, y))
         self.add_vertex((-x, 0))
         self.add_vertex((0, line_width))
@@ -84,9 +90,9 @@ class FixCross(Shape):
 
     @property
     def cross_size(self):
-        """DEPRECATED getter, please use size"""
+        """OBSOLETE property, please use size"""
 
-        return self.size
+        raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):
