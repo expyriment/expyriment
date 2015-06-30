@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-Version 0.8.0b3 (29 Jun 2015)
------------------------------
+Version 0.8.0 (30 Jun 2015)
+---------------------------
 New Features:
 - antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
