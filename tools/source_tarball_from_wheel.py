@@ -20,7 +20,7 @@ if __name__=="__main__":
 
     if len(sys.argv)<=1:
        print "Usage: source_tarball_from_wheel <wheel file> [suffix]"
-       print "      Suffix is optional and requires from some Debain builds"
+       print "      Suffix is optional and required for some Debain builds"
        exit()
 
     # prepare filenames and folder
