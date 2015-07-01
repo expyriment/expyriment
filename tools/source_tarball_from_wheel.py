@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Linux script to build a source tarball from wheel file
+# Script to build a source tarball from wheel file under Linux
 # The script loads the required missing file (CHANGES.md, setup.py,
 # COPYING.txt, README.md) from GitHub repository
 #
@@ -32,7 +32,6 @@ if __name__=="__main__":
         else:
             version = None
     except:
-        print "hi"
         version = None
 
     if version is None:
