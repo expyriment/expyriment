@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Linux shell script to build a source tarball from wheel file
+# Linux script to build a source tarball from wheel file
 # The script loads the required missing file (CHANGES.md, setup.py,
 # COPYING.txt, README.md) from GitHub repository
 #
