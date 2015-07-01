@@ -39,10 +39,11 @@ if __name__=="__main__":
         exit()
 
     print "Expyriment {0} wheel found".format(version)
-    print "  Tarball version suffix: ",
-    suffix = raw_input()
-    suffix = suffix.strip()
 
+    if len(sys.argv)>2:
+        suffix = sys.argv[2]
+    else:
+        suffix = ""
     package_name = "python-expyriment-{0}{1}".format(version, suffix)
     package_tar = "python_expyriment-{0}{1}.orig.tar.gz".format(version, suffix)
     package_path = build + package_name + sep
