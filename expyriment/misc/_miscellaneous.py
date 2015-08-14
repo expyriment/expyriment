@@ -144,7 +144,7 @@ def unicode2str(u, fse=False):
         try:
             s = u.encode(locale_enc)
         except UnicodeEncodeError:
-            s = u.encode(u'uff-8', u'replace')
+            s = u.encode(u'utf-8', u'replace')
     return s
 
 def numpad_digit_code2ascii(keycode):
