@@ -845,7 +845,7 @@ The Python package 'Numpy' is not installed."""
                         if data[row][var_id] == old:
                             data[row][var_id] = new
 
-        data = _np.array(data, dtype='|S99')
+        data = _np.array(data, dtype='|U99')
         # compute new defined variables and append
         if compute_new_variables:
             for new_var_name, var_def in self._computes:
@@ -1368,7 +1368,7 @@ The Python package 'Numpy' is not installed."""
                     else:
                         row.append(_np.NaN)
             if result is None:
-                result = _np.array([row], dtype='|S99')
+                result = _np.array([row], dtype='|U99')
             else:
                 result = _np.r_[result, [row]]
 
