@@ -248,7 +248,7 @@ class Visual(Stimulus):
 
         """
 
-        self.replace(value)
+        self.reposition(value)
 
     @property
     def absolute_position(self):
@@ -449,8 +449,11 @@ class Visual(Stimulus):
         return geometry.XYPoint(
             self.position).distance(geometry.XYPoint(other.position))
 
-    def replace(self, new_position):
-        """Replace a stimulus to a new position.
+    def replace(self, dummy):
+        raise DeprecationWarning("Replace is an obsolete method. Please use reposition!")
+
+    def reposition(self, new_position):
+        """Move stimulus to a new position.
 
         When using OpenGL, this can take longer then 1ms!
 
@@ -463,6 +466,10 @@ class Visual(Stimulus):
         -------
         time : int
             the time it took to execute this method
+
+        Notes
+        --------
+        see also move
 
         """
         return self.move((new_position[0] - self.position[0],
@@ -482,6 +489,10 @@ class Visual(Stimulus):
         -------
         time : int
             the time it took to execute this method
+
+        Notes
+        --------
+        see also reposition
 
         """
 

@@ -2,6 +2,17 @@
 Expyriment Release Notes
 ========================
 
+upcoming
+--------
+New Features:
+
+Changed:
+- rename method: stimulus.replace --> stimulus.reposition
+
+Fixed:
+- bug fix in unicode2str
+
+
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
 New Features:
