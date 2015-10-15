@@ -267,7 +267,7 @@ class TextLine(Visual):
                                 self.background_colour)
         else:
             surface = _font.render(_text, True, self.text_colour)
-        surface.convert_alpha()
+        surface = surface.convert_alpha()
 
         if self._max_width > 0 and surface.get_size()[0] > self._max_width:
             # trim too long text lines
