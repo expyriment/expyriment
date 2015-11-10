@@ -12,7 +12,7 @@ Changed:
 Fixed:
 - bug fix in unicode2str
 - bug fix Experiment.add_experiment_info
-- bug fix in _secure_hash.py
+- minor bug fixes in _secure_hash.py, _files.py
 
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
