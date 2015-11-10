@@ -11,6 +11,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+# FIXME: use os.path.sep
 
 import atexit
 import os
