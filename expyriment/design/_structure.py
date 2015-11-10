@@ -283,10 +283,13 @@ class Experiment(object):
 
         if text is None:
             return
-        try:
-            text = list(text)
-        except:
+        elif isinstance(text, types.StringTypes):
             text = [text]
+        else:
+            try:
+                text = list(text)
+            except:
+                text = [text]
 
         self._experiment_info.extend(text)
         if self.data is not None:

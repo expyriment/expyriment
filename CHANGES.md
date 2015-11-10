@@ -11,6 +11,7 @@ Changed:
 
 Fixed:
 - bug fix in unicode2str
+- bug fix Experiment.add_experiment_info
 
 
 Version 0.8.0 (30 Jun 2015)
