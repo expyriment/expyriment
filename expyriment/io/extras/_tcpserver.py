@@ -1,6 +1,6 @@
-"""TCP client.
+"""TCP server.
 
-This module contains a class implementing a TCP network client.
+This module contains a class implementing a TCP network server.
 
 """
 
@@ -21,57 +21,38 @@ from expyriment.io._keyboard import Keyboard
 from expyriment.io._input_output import Input, Output
 
 
-class TcpClient(Input, Output):
-    """A class implementing a TCP network client."""
+class TcpServer(Input, Output):
+    """A class implementing a TCP network server for a single client."""
 
-    def __init__(self, host, port, default_package_size=None, connect=None):
-        """Create a TcpClient.
+    def __init__(self, port, default_package_size=None, start_listening=True):
+        """Create a TcpServer.
 
         Parameters:
         -----------
-        host : str
-            The hostname or IPv4 address of the server to connect to.
         port : int
             The port to connect to.
         default_package_size : int, optional
             The default size of the packages to be received.
-        connect : bool, optional
-            If True, connect immediately.
+        start_listening : bool
+            If True, start listening on port immediately.
 
         """
 
         Input.__init__(self)
         Output.__init__(self)
 
-        self._host = host
         self._port = port
         if default_package_size is None:
-            default_package_size = defaults.tcpclient_default_package_size
+            default_package_size = defaults.tcpserver_default_package_size
         self._default_package_size = default_package_size
         self._socket = None
         self._is_connected = False
-        if connect is None:
-            connect = defaults.tcpclient_connect
-        if connect:
-            self.connect()
+        if start_listening is None:
+            start_listening = defaults.tcpserver_start_listening
+        if start_listening:
+            self.listen()
 
     _getter_exception_message = "Cannot set {0} if connected!"
-
-    @property
-    def host(self):
-        """Getter for host."""
-
-        return self._host
-
-    @host.setter
-    def host(self, value):
-        """Setter for host."""
-
-        if self._is_connected:
-            raise AttributeError(
-                TcpClient._getter_exception_message.format("host"))
-        else:
-            self._host = value
 
     @property
     def port(self):
@@ -85,7 +66,7 @@ class TcpClient(Input, Output):
 
         if self._is_connected:
             raise AttributeError(
-                TcpClient._getter_exception_message.format("port"))
+                TcpServer._getter_exception_message.format("port"))
         else:
             self._port = value
 
@@ -101,7 +82,7 @@ class TcpClient(Input, Output):
 
         if self._is_connected:
             raise AttributeError(
-                TcpClient._getter_exception_message.format(
+                TcpServer._getter_exception_message.format(
                     "default_package_size"))
         else:
             self._default_package_size = value
@@ -112,23 +93,23 @@ class TcpClient(Input, Output):
 
         return self._is_connected
 
-    def connect(self):
-        """Connect to the server."""
+    def listen(self):
+        """Listen for a connection on port."""
 
         if not self._is_connected:
             try:
                 self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                self._socket.connect((self._host, self._port))
+                self._socket.bind(('', self._port))
+                self._socket.listen(1)
+                self._client = self._socket.accept()
                 self._is_connected = True
-                self._socket.settimeout(0)
             except socket.error:
                 raise RuntimeError(
-                    "TCP connection to {0}:{1} failed!".format(self._host,
-                                                               self._port))
+                    "Listening for TCP connection on port {0} failed!".format(
+                        self._port))
             if self._logging:
                 expyriment._active_exp._event_file_log(
-                    "TcpClient,connected,{0}:{1}".format(self._host,
-                                                         self._port))
+                    "TcpServer,client connected,{0}".format(self._client[1]))
 
     def send(self, data):
         """Send data.
@@ -142,20 +123,20 @@ class TcpClient(Input, Output):
 
         self._socket.sendall(data)
         if self._logging:
-            expyriment._active_exp._event_file_log(
-                "TcpClient,sent,{0}".format(data))
+                expyriment._active_exp._event_file_log(
+                    "TcpServer,sent,{0}".format(data))
 
-    def wait(self, length=None, package_size=None, duration=None,
+    def wait(self, length, package_size=None, duration=None,
              check_control_keys=True):
         """Wait for data.
 
         Parameters:
         -----------
-        length : int, optional
+        length : int
             The length of the data to be waited for in bytes.
             If not set, a single package will be waited for.
         package_size : int, optional
-            The size of the package to be waited for.
+            The size of the package to be waited for, optional.
             If not set, the default package size will be used.
             If length < package_size, package_size = length.
         duration: int, optional
@@ -169,11 +150,6 @@ class TcpClient(Input, Output):
             The received data.
         rt : int
             The time it took to receive the data in milliseconds.
-
-        See Also
-        --------
-        design.experiment.register_wait_callback_function
-
         """
 
         if expyriment.control.defaults._skip_wait_functions:
@@ -192,12 +168,12 @@ class TcpClient(Input, Output):
         while True:
             try:
                 if data is None:
-                    data = self._socket.recv(package_size)
+                    data = self._client[0].recv(package_size)
                 while len(data) < length:
                     if length - len(data) >= package_size:
-                        data = data + self._socket.recv(package_size)
+                        data = data + self._client[0].recv(package_size)
                     else:
-                        data = data + self._socket.recv(length - len(data))
+                        data = data + self._client[0].recv(length - len(data))
                     if duration:
                         if int((get_time() - start) * 1000) >= duration:
                             data = None
@@ -224,7 +200,8 @@ class TcpClient(Input, Output):
 
         if self._logging:
             expyriment._active_exp._event_file_log(
-                            "TcpClient,received,{0},wait".format(data))
+                            "TcpServer,received,{0},wait".format(data))
+
         return data, rt
 
 
@@ -235,18 +212,17 @@ class TcpClient(Input, Output):
             self._socket.recv(1024000000000)
         except:
             pass
-
         if self._logging:
             expyriment._active_exp._event_file_log(
-                            "TcpClient,cleared,wait", 2)
+                            "TcpServer,cleared,wait", 2)
 
     def close(self):
-        """Close the connection to the server."""
+        """Close the connection to the client."""
 
         if self._is_connected:
-            self._socket.close()
-            self._socket = None
+            self._client[0].close()
+            self._client = None
             self._is_connected = False
             if self._logging:
                 expyriment._active_exp._event_file_log(
-                    "TcpClient,closed")
+                    "TcpServer,closed")
