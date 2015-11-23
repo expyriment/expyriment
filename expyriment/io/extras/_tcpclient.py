@@ -145,15 +145,19 @@ class TcpClient(Input, Output):
             expyriment._active_exp._event_file_log(
                 "TcpClient,sent,{0}".format(data))
 
-    def wait(self, package_size=None, duration=None,
+    def wait(self, length=None, package_size=None, duration=None,
              check_control_keys=True):
         """Wait for data.
 
         Parameters:
         -----------
+        length : int, optional
+            The length of the data to be received in bytes.
+            If not set, a single package will be received.
         package_size : int, optional
-            The size of the package to be received, optional.
+            The size of the package to be received.
             If not set, the default package size will be used.
+            If length < package_size, package_size = length.
         duration: int, optional
             The duration to wait in milliseconds.
         process_control_keys : bool, optional
@@ -181,12 +185,19 @@ class TcpClient(Input, Output):
 
         if package_size is None:
             package_size = self._default_package_size
+        if length is None:
+            length = package_size
+        elif length < package_size:
+            package_size = length
         while True:
             try:
                 if data is None:
                     data = self._socket.recv(package_size)
-                while len(data) < package_size:
-                    data = data + self._socket.recv(package_size)
+                while len(data) < length:
+                    if length - len(data) >= package_size:
+                        data = data + self._socket.recv(package_size)
+                    else:
+                        data = data + self._socket.recv(length - len(data))
                     if duration:
                         if int((get_time() - start) * 1000) >= duration:
                             data = None
