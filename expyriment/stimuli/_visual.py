@@ -1074,7 +1074,7 @@ class Visual(Stimulus):
         pygame.image.save(self._get_surface(), location)
         return _picture.Picture(filename=location)
 
-    def rotate(self, degree):
+    def rotate(self, degree, filter=True):
         """Rotate the stimulus.
 
         This is a surface operation. After this, a surface will be present!
@@ -1085,6 +1085,8 @@ class Visual(Stimulus):
         ----------
         degree : int
             degree to rotate counterclockwise
+        filter : bool, optional
+            filter the surface content for better quality (default = True)
 
         Returns
         -------
@@ -1103,8 +1105,12 @@ class Visual(Stimulus):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "rotate()"))
         self.unload(keep_surface=True)
-        self._set_surface(pygame.transform.rotozoom(self._get_surface(),
-                                                  degree, 1.0))
+        if filter:
+            self._set_surface(pygame.transform.rotozoom(self._get_surface(),
+                                                        degree, 1.0))
+        else:
+            self._set_surface(pygame.transform.rotate(self._get_surface(),
+                                                      degree))
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,rotated,{0}, degree={1}".format(self.id, degree))
