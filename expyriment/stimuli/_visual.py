@@ -1103,8 +1103,8 @@ class Visual(Stimulus):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "rotate()"))
         self.unload(keep_surface=True)
-        self._set_surface(pygame.transform.rotate(self._get_surface(),
-                                                  degree))
+        self._set_surface(pygame.transform.rotozoom(self._get_surface(),
+                                                  degree, 1.0))
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,rotated,{0}, degree={1}".format(self.id, degree))
