@@ -2,6 +2,21 @@
 Expyriment Release Notes
 ========================
 
+upcoming
+--------
+New Features:
+- stimuli.Rectangle: Option to have rounded (anti-aliased) corners
+- rotate() method of stimuli applies filtering on the content now
+
+Changed:
+- rename method: stimulus.replace --> stimulus.reposition
+
+Fixed:
+- bug fix in unicode2str
+- bug fix Experiment.add_experiment_info
+- minor bug fixes in _secure_hash.py, _files.py
+- Correct anti-aliasing for Circle/Ellipse (now works on every background)
+
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
 New Features:

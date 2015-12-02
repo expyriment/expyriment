@@ -136,42 +136,44 @@ class Ellipse(Visual):
             aa_scaling = 1
 
         size = [(self._size[0]) * aa_scaling,
-                  (self._size[1]) * aa_scaling]
+                (self._size[1]) * aa_scaling]
 
         if self._line_width == 0:
             surface = pygame.surface.Surface(
                 size, pygame.SRCALPHA).convert_alpha()
-            pygame.draw.ellipse(surface, self._colour, pygame.Rect(
+            pygame.draw.ellipse(surface, (0, 0, 0), pygame.Rect(
                 (0, 0), size))
             if aa_scaling != 1:
                 surface = pygame.transform.smoothscale(surface,
                                 (int(size[0] / aa_scaling),
                                  int(size[1] / aa_scaling)))
+            surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         else:
-            # Invert colours and use it as colourkey for a temporal surface,
-            # fill the surface and draw a smaller ellipse with colourkey colour
-            colour = [abs(self._colour[0] - 255),
-                      abs(self._colour[1] - 255),
-                      abs(self._colour[2] - 255)]
             line_width = self._line_width * aa_scaling
             surface = pygame.surface.Surface(
                 [x + line_width for x in size],
                 pygame.SRCALPHA).convert_alpha()
+            pygame.draw.ellipse(surface, (0, 0, 0), pygame.Rect(
+                (0, 0),
+                [x + line_width for x in size]))
             tmp = pygame.surface.Surface(
-                [x + line_width for x in size]).convert()
-            tmp.set_colorkey(colour)
-            tmp.fill(colour)
-            pygame.draw.ellipse(tmp, self._colour, pygame.Rect(
-                (0, 0), [x + line_width for x in size]))
-            pygame.draw.ellipse(tmp, colour, pygame.Rect(
-                (line_width, line_width),
-                [x - line_width for x in size]))
-            surface.blit(tmp, (0, 0))
+                [x - line_width for x in size])
+            hole = pygame.surface.Surface(
+                [x - line_width for x in size],
+                pygame.SRCALPHA).convert_alpha()
+            tmp.fill([0, 0, 0])
+            pygame.draw.ellipse(tmp, (255, 255, 255), pygame.Rect(
+                (0, 0), [x - line_width for x in size]))
+            tmp.set_colorkey([255, 255, 255])
+            hole.blit(tmp, (0, 0))
+            surface.blit(hole, (line_width, line_width),
+                         special_flags=pygame.BLEND_RGBA_MIN)
             if aa_scaling != 1:
                 surface = pygame.transform.smoothscale(surface,
-                                (int(size[0] / aa_scaling),
-                                 int(size[1] / aa_scaling)))
+                                (int((size[0] + line_width) / aa_scaling),
+                                 int((size[1] + line_width) / aa_scaling)))
+            surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         return surface
 

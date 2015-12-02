@@ -573,7 +573,7 @@ class Mouse(Input):
         Parameters
         ----------
         track_button_events : bool, optional
-            tracking button events (default = True)
+            tracking button events (default = False)
         track_motion_events : bool, optional
             tracking motion events (default = False)
 

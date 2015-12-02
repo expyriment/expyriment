@@ -248,7 +248,7 @@ class Visual(Stimulus):
 
         """
 
-        self.replace(value)
+        self.reposition(value)
 
     @property
     def absolute_position(self):
@@ -449,8 +449,11 @@ class Visual(Stimulus):
         return geometry.XYPoint(
             self.position).distance(geometry.XYPoint(other.position))
 
-    def replace(self, new_position):
-        """Replace a stimulus to a new position.
+    def replace(self, dummy):
+        raise DeprecationWarning("Replace is an obsolete method. Please use reposition!")
+
+    def reposition(self, new_position):
+        """Move stimulus to a new position.
 
         When using OpenGL, this can take longer then 1ms!
 
@@ -463,6 +466,10 @@ class Visual(Stimulus):
         -------
         time : int
             the time it took to execute this method
+
+        Notes
+        --------
+        see also move
 
         """
         return self.move((new_position[0] - self.position[0],
@@ -482,6 +489,10 @@ class Visual(Stimulus):
         -------
         time : int
             the time it took to execute this method
+
+        Notes
+        --------
+        see also reposition
 
         """
 
@@ -1063,7 +1074,7 @@ class Visual(Stimulus):
         pygame.image.save(self._get_surface(), location)
         return _picture.Picture(filename=location)
 
-    def rotate(self, degree):
+    def rotate(self, degree, filter=True):
         """Rotate the stimulus.
 
         This is a surface operation. After this, a surface will be present!
@@ -1074,6 +1085,8 @@ class Visual(Stimulus):
         ----------
         degree : int
             degree to rotate counterclockwise
+        filter : bool, optional
+            filter the surface content for better quality (default = True)
 
         Returns
         -------
@@ -1092,8 +1105,12 @@ class Visual(Stimulus):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "rotate()"))
         self.unload(keep_surface=True)
-        self._set_surface(pygame.transform.rotate(self._get_surface(),
-                                                  degree))
+        if filter:
+            self._set_surface(pygame.transform.rotozoom(self._get_surface(),
+                                                        degree, 1.0))
+        else:
+            self._set_surface(pygame.transform.rotate(self._get_surface(),
+                                                      degree))
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Stimulus,rotated,{0}, degree={1}".format(self.id, degree))

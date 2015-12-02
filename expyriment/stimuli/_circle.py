@@ -34,8 +34,8 @@ class Circle(Ellipse):
         colour : (int,int,int), optional
             colour of the circle
         line_width : int, optional
-            line width in pixels; 0 or a value larger the radius will result
-            in a filled circle
+            line width in pixels betwee >= 0 and < radius,
+            0 will result in a filled circle
         position : (int, int), optional
             position of the stimulus
         anti_aliasing : int, optional

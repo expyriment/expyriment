@@ -1,11 +1,13 @@
 Platform-specific instructions: Windows
 =======================================
 
-There are two different ways to install Expyriment on Windows.
+There are two different ways to install Expyriment on Windows. If you need to install
+Expyriment on a computer that has no network connection (like lab PCs), please use 
+method 2. 
 
 
-Using PyPi (recommended)
-------------------------
+1) Using PyPi (recommended)
+---------------------------
 
 1. Install `Python 2.7.10`_ (during installation, also select "Add python.exe to Path"!)
 2. Install Pygame_
@@ -24,8 +26,8 @@ For the additional packages (optional):
 6. Install Inpout32_ or dlportio_
 
 
-Manually (alternative)
-----------------------
+2) Manually (alternative)
+--------------------------
 
 1. Install `Python 2.7.10`_
 2. Install Pygame_
@@ -39,10 +41,7 @@ Manually (alternative)
 For the additional packages (optional):
 
 5. Install Numpy_
-6. Install PySerial_ ::
-
-    python setup.py install
-
+6. Install PySerial_
 7. Install Inpout32_ or dlportio_
 
 

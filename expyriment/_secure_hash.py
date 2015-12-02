@@ -9,6 +9,7 @@ __revision__ = ''
 __date__ = ''
 
 import sys
+from os.path import sep
 from re import split
 from hashlib import sha1
 from copy import copy
@@ -82,6 +83,9 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                     modules = split(" |,", line)[1:]
                 else:
                     modules = []
+
+                modules = map(lambda x:x.replace(".", sep), modules)
+
                 for module in modules:
                     pyfile = module + ".py"
                     if not hash_dict.has_key(pyfile):

@@ -168,7 +168,8 @@ def make_multiplied_shuffled_list(list_, xtimes):
     list_ : list
         list to be shuffled
     xtimes : int
-        how often the list will be multiplied
+        how often the list will be multiplied. If xtimes==0, an
+        empty list will be returned.
 
     """
 

@@ -7,32 +7,8 @@
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
-release: wheel tarball
+release: wheel 
 wheel: dist build/wheel_version
-
-tarball: dist build/wheel_version
-	@VER=$$(cat build/wheel_version);\
-		read -p "Tarball version suffix: " VERSION_SUFFIX;\
-		DIR=python-expyriment-$$VER$$VERSION_SUFFIX;\
-		TAR=python-expyriment_$$VER$$VERSION_SUFFIX.orig.tar.gz;\
-		mkdir -p build/$$DIR ;\
-		mkdir -p build/tmp ;\
-		unzip dist/* -d build/tmp ;\
-		mv build/tmp/expyriment build/$$DIR ;\
-		rm -rf build/tmp ;\
-		rm build/$$DIR/expyriment/_fonts -rf ;\
-		cp -ra documentation build/$$DIR ;\
-		rm build/$$DIR/documentation/sphinx/_build -r ;\
-		cp -ra examples build/$$DIR ;\
-		cp -at build/$$DIR  CHANGES.md COPYING.txt README.md ;\
-		cp -at build/$$DIR setup.py ;\
-		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
-		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f ;\
-		cd build ;\
-		rm -f $$TAR;\
-		tar cfz $$TAR $$DIR;\
-		rm -rf $$DIR;\
-		sha1sum $$TAR
 
 dist:
 	mkdir -p build

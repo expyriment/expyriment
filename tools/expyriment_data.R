@@ -16,8 +16,10 @@
  
 read.expyriment.data = function(folder, filename_pattern) 
 {
+	pattern = paste("^", filename_pattern, ".*\\.xpd", sep="") 
+
 	data = data.frame()
-	for (fl_name in list.files(path=folder, paste("^", filename_pattern, sep="") )) {
+	for (fl_name in list.files(path=folder, pattern )) {
 		path = file.path(folder, fl_name)
 		message("reading ", path)
 		d = read.csv(path, comment.char="#", na.strings=c("NA", "None"))

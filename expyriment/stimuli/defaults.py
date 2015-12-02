@@ -96,6 +96,8 @@ line_anti_aliasing = 0
 rectangle_colour = None  # 'None' is experiment_text_colour
 rectangle_position = (0, 0)
 rectangle_line_width = 0
+rectangle_corner_rounding = 0
+rectangle_corner_anti_aliasing = 0
 
 # Picture
 picture_position = (0, 0)

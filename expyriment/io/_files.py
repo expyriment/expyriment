@@ -12,6 +12,7 @@ __revision__ = ''
 __date__ = ''
 
 
+
 import atexit
 import os
 try:
@@ -169,7 +170,7 @@ class OutputFile(Output):
         if not os.path.isdir(directory):
             os.mkdir(directory)
         self._filename = self.standard_file_name
-        self._fullpath = directory + "/{0}".format(self._filename)
+        self._fullpath = directory + "{0}{1}".format(os.path.sep, self._filename)
 
         atexit.register(self.save)
 
@@ -300,7 +301,7 @@ class OutputFile(Output):
     def rename(self, new_filename):
         """Renames the output file."""
         self.save()
-        new_fullpath = self.directory + "/{0}".format(new_filename)
+        new_fullpath = self.directory + "{0}{1}".format(os.path.sep, new_filename)
         os.rename(self._fullpath, new_fullpath)
         self._filename = new_filename
         self._fullpath = new_fullpath
@@ -509,7 +510,7 @@ class DataFile(OutputFile):
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                 or self._variable_names_changed:
             # Re-write header and varnames
-            tmpfile_name = "{0}/{1}".format(self.directory, uuid.uuid4())
+            tmpfile_name = "{0}{1}{2}".format(self.directory, os.path.sep, uuid.uuid4())
             os.rename(self._fullpath, tmpfile_name)
             fl = open(self._fullpath, 'w+')
             tmpfl = open(tmpfile_name, 'r')
