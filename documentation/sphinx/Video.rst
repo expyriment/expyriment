@@ -43,13 +43,15 @@ Example
 -------
 The following example shows how to present a video from start to end::
 
-    from expyriment import control, stimuli
+    import expyriment
+    from expyriment import control, design, stimuli
 
-    video = stimuli.Video("file")  # Create video object
+    video = stimuli.Video("test.mpeg")  # Create video object
 
+    exp = design.Experiment("Test")
+    control.initialize(exp)
     expyriment.control.stop_audiosystem()  # Stop audio system
 
-    v.preload()  # Preload video
-    v.present()  # Start video playback and present first frame
-    v.wait_end() # Continuously present the next frame until video stops
-
+    video.preload()  # Preload video
+    video.present()  # Start video playback and present first frame
+    video.wait_end() # Continuously present the next frame until video stops
