@@ -13,8 +13,9 @@ __revision__ = ''
 __date__ = ''
 
 
-import os as _os
-import tempfile as _tempfile
+from tempfile import mkdtemp as _mkdtemp
+from shutil import rmtree as _rmtree
+import atexit as _atexit
 
 # Visual
 visual_position = (0, 0)
@@ -111,10 +112,18 @@ tone_samplerate = 44100
 tone_bitdepth = 16
 tone_amplitude = 0.5
 
-
 # Create tmp for compressed stimuli folder
-tempdir = _tempfile.gettempdir() + "/expyriment_tmp"
 try:
-    _os.mkdir(tempdir)
+    tempdir = _mkdtemp(prefix="expyriment_")
 except:
+    tempdir = None
     pass
+
+def _remove_tempdir():
+    global tempdir
+    try:
+        _rmtree(tempdir)
+    except:
+        pass
+
+_atexit.register(_remove_tempdir)
