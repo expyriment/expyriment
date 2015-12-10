@@ -14,7 +14,7 @@ Changed:
 Fixed:
 - bug fix in unicode2str
 - bug fix Experiment.add_experiment_info
-- bug: issue #64, tempfolder at multiuser systems
+- bug: issue #65, tempfolder at multiuser systems
 - minor bug fixes in _secure_hash.py, _files.py
 - Correct anti-aliasing for Circle/Ellipse (now works on every background)
 
