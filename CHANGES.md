@@ -5,6 +5,8 @@ Expyriment Release Notes
 upcoming
 --------
 New Features:
+- Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
+  (see www.brainvoyager.com/products/turbosatori.html)
 
 Changed:
 - rename method: stimulus.replace --> stimulus.reposition
