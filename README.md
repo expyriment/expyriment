@@ -45,8 +45,9 @@ For online examples see: http://docs.expyriment.org/Examples.html
 Installation
 ============
 
-Detailed installation instructions can be found in the documentation.
-For online installation instructions see:
+The latest stable release of Expyriment can be found at Github:
+https://github.com/expyriment/expyriment/releases/latest 
+For detailed installation instructions, please see the online documentation: 
 http://docs.expyriment.org/Installation.html
 
 Reference
