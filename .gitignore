@@ -55,3 +55,6 @@ documentation/api_ref_html/
 documentation/sphinx/expyriment*.rst
 documentation/sphinx/expyriment
 documentation/sphinx/Changelog.rst
+
+# test script
+test_expyriment.py
