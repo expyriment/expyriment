@@ -135,7 +135,7 @@ if __name__ == "__main__":
                         elif arg == 'w':
                             print "* Window mode"
                             expyriment.control.defaults.window_mode = True
-                        elif arg == 'g' or arg == 0:
+                        elif arg == 'g' or arg == '0':
                             print "* No OpenGL (no vsync / no blocking)"
                             expyriment.control.defaults.open_gl = False
                         elif arg == '1':
