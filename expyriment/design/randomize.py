@@ -58,6 +58,7 @@ def rand_int(a, b):
 
     return _random.randint(a, b)
 
+
 def rand_element(list_):
     """Return a random element from a list
 
@@ -73,8 +74,14 @@ def rand_element(list_):
 
     return list_[_random.randint(0, len(list_) - 1)]
 
-def coin_flip():
-    """Return randomly True or False.
+
+def coin_flip(head_bias=0.5):
+    """Return randomly True (head) or False (tail).
+
+    Parameters
+    ----------
+    head_bias : numeric, optional
+        bias in favor of head (default=0.5, fair coin)
 
     Returns
     -------
@@ -82,10 +89,43 @@ def coin_flip():
 
     """
 
-    if _random.randint(1, 2) == 1:
-        return True
-    else:
-        return False
+    if head_bias < 0 or head_bias > 1:
+        raise RuntimeError("Head bias must be between 0 and 1!")
+
+    return _random.random() <= head_bias
+
+
+def rand_norm(a, b, mu=None, sigma=None):
+    """Normally distributed random number in given range.
+
+    Parameters
+    ----------
+    a : numeric
+        lowest number in range
+    b : numeric
+        highest number in range
+    mu : numeric, optional
+        distribution mean, default: mid point of the interval [a, b]
+    sigma : numeric, optional
+        distribution standard deviation, default: (b-a)/6.0
+
+    Returns
+    -------
+    rnd : numeric
+
+    """
+
+    if mu is None:
+        mu = a + (b-a)/2.0
+    if sigma is None:
+        sigma = (b-a)/6.0
+
+    r = _random.normalvariate(mu=mu, sigma=sigma)
+    if r < a or r > b:
+        return rand_norm(a=a, b=b)
+
+    return r
+
 
 def _compare_items(a, b):
     """Helper function for `shuffle_list` to compare two elements of a list"""
@@ -94,6 +134,7 @@ def _compare_items(a, b):
         return a.compare(b)
     else:
         return a == b
+
 
 def shuffle_list(list_, max_repetitions=None, n_segments=None):
     """Shuffle any list of objects. In place randomization of the list.
@@ -150,7 +191,7 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
                         return shuffle_list(list_=list_,
                                 max_repetitions=max_repetitions,
                                 n_segments=n_segments)
-                    except: # maximum recursion depth reached
+                    except:  # maximum recursion depth reached
                         return False
             else:
                 reps = 0

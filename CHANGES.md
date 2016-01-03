@@ -9,6 +9,8 @@ New Features:
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
 - rotate() method of stimuli applies filtering on the content now
+- randomize.coin_flip() with bias parameter ("unfair coins")
+- randomize.rand_norm() normally distributed random numbers
 
 Changed:
 - rename method: stimulus.replace --> stimulus.reposition
