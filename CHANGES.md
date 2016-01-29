@@ -5,6 +5,7 @@ Expyriment Release Notes
 upcoming
 --------
 New Features:
+- new io device: io.extras.TcpServer
 - Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
@@ -14,6 +15,7 @@ New Features:
 
 Changed:
 - rename method: stimulus.replace --> stimulus.reposition
+- improvements to io.extras.TcpClient
 
 Fixed:
 - bug fix in unicode2str
