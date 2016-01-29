@@ -67,8 +67,7 @@ class Rectangle(Visual):
             corner_rounding = defaults.rectangle_corner_rounding
         elif corner_rounding < 0 or corner_rounding > 100:
             raise AttributeError("corner_rounding must be >= 0 and < 100!")
-        else:
-            self._corner_rounding = corner_rounding
+        self._corner_rounding = corner_rounding
         if corner_anti_aliasing is not None:
             self._corner_anti_aliasing = corner_anti_aliasing
         else:
