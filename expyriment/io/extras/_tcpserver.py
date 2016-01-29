@@ -14,7 +14,7 @@ __date__ = ''
 import socket
 import errno
 
-import _tcpclient_defaults as defaults
+import _tcpserver_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.io._keyboard import Keyboard
