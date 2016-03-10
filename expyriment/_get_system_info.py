@@ -63,9 +63,9 @@ def get_system_info(as_string=False):
         os_platform = "Linux"
         os_name = platform.linux_distribution()[0]
         details = []
-        if os.environ.has_key("XDG_CURRENT_DESKTOP"):
+        if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
-        if os.environ.has_key("DESKTOP_SESSION"):
+        if "DESKTOP_SESSION" in os.environ:
             details.append(os.environ["DESKTOP_SESSION"])
         if details != []:
             os_details = ", ".join(details)

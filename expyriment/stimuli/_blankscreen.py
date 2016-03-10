@@ -6,6 +6,7 @@ A blank screen stimulus.
 This module contains a class implementing a blank screen stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,7 +16,7 @@ __date__ = ''
 
 
 import expyriment
-from _canvas import Canvas
+from ._canvas import Canvas
 
 class BlankScreen(Canvas):
     """A class implementing a blank screen."""

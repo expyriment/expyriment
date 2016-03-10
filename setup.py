@@ -2,6 +2,7 @@
 """
 Setup file for Expyriment
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -254,9 +255,9 @@ if __name__=="__main__":
                                 'bdist_wininst': Wininst}
             )
 
-            print ""
-            print "Expyriment Version: [{0}] (from repository)".format(
-                version_nr) # version_nr should be easy to parse
+            print("")
+            print("Expyriment Version: [{0}] (from repository)".format(
+                version_nr)) # version_nr should be easy to parse
         except:
             raise RuntimeError("Building from repository failed!")
 
@@ -279,8 +280,8 @@ if __name__=="__main__":
         )
 
 
-        print ""
-        print "Expyriment Version: [{0}]".format(version_nr)
+        print("")
+        print("Expyriment Version: [{0}]".format(version_nr))
 
     if len(warning)>0:
-        print "Warning:", warning
+        print("Warning:", warning)

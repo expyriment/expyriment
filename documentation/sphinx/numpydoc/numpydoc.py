@@ -15,9 +15,10 @@ It will:
 .. [1] http://projects.scipy.org/numpy/wiki/CodingStyleGuidelines#docstring-standard
 
 """
+from __future__ import absolute_import
 
 import os, re, pydoc
-from docscrape_sphinx import get_doc_object, SphinxDocString
+from .docscrape_sphinx import get_doc_object, SphinxDocString
 from sphinx.util.compat import Directive
 import inspect
 

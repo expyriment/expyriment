@@ -6,6 +6,7 @@ The tone stimulus module.
 This module contains a class implementing a tone stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,8 +23,8 @@ import itertools
 import tempfile
 import shutil
 
-import defaults
-from _audio import Audio
+from . import defaults
+from ._audio import Audio
 
 
 class Tone(Audio):

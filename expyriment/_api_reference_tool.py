@@ -7,6 +7,7 @@ This script contains an API reference browser and search GUI interface (TK), as
 well as a function to call this browser or the online documentation.
 
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -172,7 +173,7 @@ The Python package 'Tkinter' is not installed""")
         for index, item in enumerate(items):
             if type(eval(item)) == types.ModuleType:
                 items[index] = "# " + item
-            elif type(eval(item)) == types.TypeType:
+            elif type(eval(item)) == type:
                 items[index] = "+ " + item
             elif type(eval(item)) == types.MethodType:
                 items[index] = "- " + item
@@ -189,7 +190,7 @@ The Python package 'Tkinter' is not installed""")
         for index, item in enumerate(items):
             listbox.insert(_tk.END, item)
             if type(eval(item[2:])) == types.ModuleType or \
-               type(eval(item[2:])) == types.TypeType:
+               type(eval(item[2:])) == type:
                 listbox.itemconfig(index, fg="blue", selectforeground="blue")
         listbox.selection_set(_tk.ACTIVE)
         return True
@@ -219,7 +220,7 @@ The Python package 'Tkinter' is not installed""")
                     text.tag_config("heading", font=("Courier", 12, "bold"))
                     text.insert(_tk.END, item, "heading")
                     text.insert(_tk.END, "\n\n")
-                    if type(eval(item)) == types.TypeType:
+                    if type(eval(item)) == type:
                         text.insert(_tk.END, doc_dict[item])
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
@@ -278,11 +279,11 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, doc_dict[item])
-                    elif type(eval(item)) in (types.IntType, types.StringType,
-                                              types.BooleanType,
-                                              types.ListType,
-                                              types.TupleType,
-                                              types.DictionaryType):
+                    elif type(eval(item)) in (int, bytes,
+                                              bool,
+                                              list,
+                                              tuple,
+                                              dict):
                         pass
                     else:
                         if type(eval(item)) == property:
@@ -324,7 +325,7 @@ The Python package 'Tkinter' is not installed""")
                     update_search(None)
                 else:
                     if type(eval(item)) == types.ModuleType or \
-                       type(eval(item)) == types.TypeType:
+                       type(eval(item)) == type:
                         s = tmp.split(".")
                         if len(s) >= 1:
                             last_item = ".".join(s[0:-1])
@@ -338,7 +339,7 @@ The Python package 'Tkinter' is not installed""")
                             if item != "..":
                                 if type(eval(item)) == types.ModuleType:
                                     items[index] = "# " + item
-                                elif type(eval(item)) == types.TypeType:
+                                elif type(eval(item)) == type:
                                     items[index] = "+ " + item
                                 elif type(eval(item)) == types.MethodType:
                                     items[index] = "- " + item
@@ -354,7 +355,7 @@ The Python package 'Tkinter' is not installed""")
                             listbox.insert(_tk.END, item)
                             if item == ".." or \
                                type(eval(item[2:])) == types.ModuleType or \
-                               type(eval(item[2:])) == types.TypeType:
+                               type(eval(item[2:])) == type:
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)
@@ -504,12 +505,12 @@ def show_documentation(docu_type=None):
     from expyriment import get_version
 
     def call_info():
-        print ""
-        print "Call show_documentation with the following arguments to get further information:"
-        print "     show_documentation(1) -- Open local documentation in web browser"
-        print "     show_documentation(2) -- Open online documentation in web browser"
-        print "     show_documentation(3) -- Open API Reference Tool"
-        print ""
+        print("")
+        print("Call show_documentation with the following arguments to get further information:")
+        print("     show_documentation(1) -- Open local documentation in web browser")
+        print("     show_documentation(2) -- Open online documentation in web browser")
+        print("     show_documentation(3) -- Open API Reference Tool")
+        print("")
 
     import subprocess
     import os
@@ -519,12 +520,12 @@ def show_documentation(docu_type=None):
     f = os.path.abspath(__file__)
     path = os.path.abspath(os.path.join(os.path.split(f)[0], ".."))
     if docu_type is None:
-        print "Welcome to Expyriment {0}".format(get_version())
-        print ""
+        print("Welcome to Expyriment {0}".format(get_version()))
+        print("")
         author = __author__.replace(",", ",\n        ")
-        print "Website: http://expyriment.org"
-        print "License: GNU GPL v3"
-        print "Authors: {0}".format(author)
+        print("Website: http://expyriment.org")
+        print("License: GNU GPL v3")
+        print("Authors: {0}".format(author))
         call_info()
     elif docu_type == 1:
         docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
@@ -534,7 +535,7 @@ def show_documentation(docu_type=None):
                 unicode2str('file://' + docu),
                 new=1)
         else:
-            print "No local documentation found"
+            print("No local documentation found")
     elif docu_type == 2:
         webbrowser.open(
             "http://docs.expyriment.org/",
@@ -550,7 +551,7 @@ def show_documentation(docu_type=None):
             stdout=None,
             cwd=path)
     else:
-        print "Unknown documentation type"
+        print("Unknown documentation type")
         call_info()
 
 if __name__ == "__main__":

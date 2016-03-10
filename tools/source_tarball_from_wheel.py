@@ -6,6 +6,7 @@
 #
 # This file is part of Expyriment
 
+from __future__ import print_function
 import os
 import sys
 from shutil import rmtree, move
@@ -19,8 +20,8 @@ if __name__=="__main__":
     missing_files = ["CHANGES.md", "setup.py", "COPYING.txt", "README.md"]
 
     if len(sys.argv)<=1:
-       print "Usage: source_tarball_from_wheel <wheel file> [suffix]"
-       print "      Suffix is optional and required for some Debain builds"
+       print("Usage: source_tarball_from_wheel <wheel file> [suffix]")
+       print("      Suffix is optional and required for some Debain builds")
        exit()
 
     # prepare filenames and folder
@@ -35,10 +36,10 @@ if __name__=="__main__":
         version = None
 
     if version is None:
-        print "'{0}' is not a Expyriment wheel".format(wheel)
+        print("'{0}' is not a Expyriment wheel".format(wheel))
         exit()
 
-    print "Expyriment {0} wheel found".format(version)
+    print("Expyriment {0} wheel found".format(version))
 
     if len(sys.argv)>2:
         suffix = sys.argv[2]

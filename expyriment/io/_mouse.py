@@ -4,6 +4,7 @@ Mouse input.
 This module contains a class implementing pygame mouse input.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,11 +15,11 @@ __date__ = ''
 
 import pygame
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from _keyboard import Keyboard
-from _input_output  import Input
+from ._keyboard import Keyboard
+from ._input_output  import Input
 
 class Mouse(Input):
     """A class implementing a mouse input.

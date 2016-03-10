@@ -5,6 +5,7 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,7 +22,7 @@ try:
 except:
     ogl = None
 
-import defaults
+from . import defaults
 
 import expyriment
 from expyriment import stimuli, io
@@ -49,7 +50,7 @@ def _histogram(data):
     hist = {}
     for x in data: # make histogram
         x = int(x)
-        if hist.has_key(x):
+        if x in hist:
             hist[x] += 1
         else:
             hist[x] = 1
@@ -62,7 +63,7 @@ def _histogram(data):
             str1 = "dRT: "
             str2 = "  n: "
         str1 += "%4d" % x
-        if hist.has_key(x):
+        if x in hist:
             value = hist[x]
         else:
             value = 0

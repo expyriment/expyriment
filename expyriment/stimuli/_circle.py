@@ -6,6 +6,7 @@ A circle stimulus.
 This module contains a class implementing a circle stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,8 +17,8 @@ __date__ = ''
 
 import math
 
-import defaults
-from _ellipse import Ellipse
+from . import defaults
+from ._ellipse import Ellipse
 
 
 class Circle(Ellipse):

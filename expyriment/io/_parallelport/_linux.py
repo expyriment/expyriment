@@ -6,6 +6,7 @@
 # This is necessary to stop the local parallel.py masking the module
 # we actually want to find!
 from __future__ import absolute_import
+from __future__ import print_function
 
 # We duck-type the parallel port objects
 class PParallelLinux(object):
@@ -138,4 +139,4 @@ class PParallelLinux(object):
         elif pinNumber==17:
             return (self.port.PPRCONTROL() >> 3) & 1 # 0 = Select Printer
         else:
-            print 'Pin %i cannot be read (by PParallelLinux.readPin() yet)' % (pinNumber)
+            print('Pin %i cannot be read (by PParallelLinux.readPin() yet)' % (pinNumber))

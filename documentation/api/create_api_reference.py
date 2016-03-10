@@ -8,6 +8,7 @@ Importantly, it follows the actual namespace hierarchy and ignores everything
 that starts with _.
 
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -226,7 +227,7 @@ def create_page(item):
 
     p = os.path.abspath("{0}/{1}.html".format(os.path.split(os.path.abspath(__file__))[0],
                         item))
-    print "create", p
+    print("create", p)
     with open(p, 'w') as f:
         f.write(page)
     if modules:
@@ -273,7 +274,7 @@ hr {color: #cccccc; background-color: #cccccc;}
     create_page("expyriment")
 
     p = os.path.abspath("{0}/index.html".format(os.path.split(os.path.abspath(__file__))[0]))
-    print "create", p
+    print("create", p)
     with open(p, 'w') as f:
         content = """<html><head><meta http-equiv="refresh" content="0; URL=expyriment.html"></head>"""
         f.write(content)

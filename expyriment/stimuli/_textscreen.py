@@ -6,6 +6,7 @@ A text screen stimulus.
 This module contains a class implementing a text screen stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,10 +17,10 @@ __date__ = ''
 
 import pygame
 
-import defaults
-from _visual import Visual
-from _textline import TextLine
-from _textbox import TextBox
+from . import defaults
+from ._visual import Visual
+from ._textline import TextLine
+from ._textbox import TextBox
 from expyriment.misc import find_font, unicode2str
 import expyriment
 

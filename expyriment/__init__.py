@@ -27,6 +27,8 @@ To cite Expyriment in publications, please refer to the following article:
   see http://dx.doi.org/10.3758/s13428-013-0390-6
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -131,12 +133,12 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-import design
+from . import design
 _active_exp = design.Experiment("None")
-import control
-import stimuli
-import io
-import misc
+from . import control
+from . import stimuli
+from . import io
+from . import misc
 misc.add_fonts(misc.str2unicode(_os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "_fonts"))))
@@ -144,9 +146,9 @@ misc.add_fonts(misc.str2unicode(_os.path.abspath(
 try:
     import android
 except ImportError:
-    from _api_reference_tool import show_documentation
-from _get_system_info import get_system_info
-import _importer_functions
-from _secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
+    from ._api_reference_tool import show_documentation
+from ._get_system_info import get_system_info
+from . import _importer_functions
+from ._secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
 
 exec(_importer_functions.post_import_hook())

@@ -4,6 +4,8 @@ Input and output serial port.
 This module contains a class implementing serial port input/output.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,9 +23,9 @@ try:
 except:
     serial = None
 
-import defaults
+from . import defaults
 import expyriment
-from _input_output import Input, Output
+from ._input_output import Input, Output
 from expyriment.misc import ByteBuffer, Clock
 
 
@@ -322,7 +324,7 @@ The Python package 'pySerial' is not installed."""
                     warn_message = "{0} not updated for {1} ms!".format(
                                         self._input_history.name,
                                         read_time - last_time)
-                    print "Warning: " + warn_message
+                    print("Warning: " + warn_message)
                     expyriment._active_exp._event_file_warn(warn_message)
             if self._logging:
                 expyriment._active_exp._event_file_log(
@@ -353,7 +355,7 @@ The Python package 'pySerial' is not installed."""
                         warn_message = "{0} not updated for {1} ms!".format(
                                             self._input_history.name,
                                             poll_time - last[1])
-                        print "Warning: " + warn_message
+                        print("Warning: " + warn_message)
                         expyriment._active_exp._event_file_warn(warn_message)
             if self._logging:
                 expyriment._active_exp._event_file_log(

@@ -6,6 +6,7 @@ The Expyriment command line interface provides a collection of convenient
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -79,14 +80,14 @@ exp.keyboard.wait()
 ## end ##
 control.end()
 '''
-    print "Created template_expyriment.py"
+    print("Created template_expyriment.py")
     f = open('template_expyriment.py','w')
     f.write(template_file)
     f.close()
 
 def join_data():
     from expyriment.misc import data_preprocessing
-    print "Joining data"
+    print("Joining data")
     sys.stdout.write(" data subfolder [optional, default=data]? ")
     folder = raw_input()
     if len(folder)<=0:
@@ -99,7 +100,7 @@ def join_data():
 if __name__ == "__main__":
 
     if len(sys.argv) <= 1:
-        print short_info
+        print(short_info)
         sys.exit()
 
     script = None
@@ -110,12 +111,12 @@ if __name__ == "__main__":
                 # long options
                 if args.startswith("--"):
                      if args == "--help":
-                        print info
+                        print(info)
                         sys.exit()
                      elif args == "--version":
                         pass
                      else:
-                        print unknown_option.format(args)
+                        print(unknown_option.format(args))
 
                 #short options
                 else:
@@ -126,48 +127,48 @@ if __name__ == "__main__":
                         if arg == 'd':
                             expyriment.control.set_develop_mode(True)
                         elif arg == 'i':
-                            print "* Intensive logging"
+                            print("* Intensive logging")
                             expyriment.control.defaults.event_logging = 2
                         elif arg == 'f':
-                            print "* Fast mode"
+                            print("* Fast mode")
                             expyriment.control.defaults.initialize_delay = 0
                             expyriment.control.defaults.fast_quit = False
                         elif arg == 'w':
-                            print "* Window mode"
+                            print("* Window mode")
                             expyriment.control.defaults.window_mode = True
                         elif arg == 'g' or arg == '0':
-                            print "* No OpenGL (no vsync / no blocking)"
+                            print("* No OpenGL (no vsync / no blocking)")
                             expyriment.control.defaults.open_gl = False
                         elif arg == '1':
-                            print "* OpenGL (vsync / no blocking)"
+                            print("* OpenGL (vsync / no blocking)")
                             expyriment.control.defaults.open_gl = 1
                         elif arg == '2':
-                            print "* OpenGL (vsync / blocking)"
+                            print("* OpenGL (vsync / blocking)")
                             expyriment.control.defaults.open_gl = 2
                         elif arg == '3':
-                            print "* OpenGL (vsync / alternative blocking)"
+                            print("* OpenGL (vsync / alternative blocking)")
                             expyriment.control.defaults.open_gl = 3
                         elif arg == 't':
-                            print "* No time stamps"
+                            print("* No time stamps")
                             expyriment.io.defaults.outputfile_time_stamp =\
                                     False
                         elif arg == 'a':
-                            print "* Auto create subject id"
+                            print("* Auto create subject id")
                             expyriment.control.defaults.auto_create_subject_id\
                                              = True
                         elif arg == "S":
-                            print "System Info"
-                            print expyriment.get_system_info(as_string=True)
+                            print("System Info")
+                            print(expyriment.get_system_info(as_string=True))
                             sys.exit()
                         elif arg == "T":
-                            print "Run Test Suite"
+                            print("Run Test Suite")
                             expyriment.control.run_test_suite()
                             sys.exit()
                         elif arg == "B":
                             expyriment.show_documentation(2)
                             sys.exit()
                         elif arg == "A":
-                            print "Start API Reference Tool"
+                            print("Start API Reference Tool")
                             expyriment.show_documentation(3)
                             sys.exit()
                         elif arg == "C":
@@ -188,10 +189,10 @@ if __name__ == "__main__":
                             d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()
                         elif arg == 'h':
-                            print info
+                            print(info)
                             sys.exit()
                         else:
-                            print unknown_option.format(arg)
+                            print(unknown_option.format(arg))
                             sys.exit()
 
             #args starts not with "-"

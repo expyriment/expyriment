@@ -6,6 +6,7 @@ A Gabor patch stimulus.
 This module contains a class implementing a Gabor patch stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,7 +20,7 @@ import tempfile
 import pygame
 import expyriment
 from expyriment.stimuli._picture import Picture
-import defaults
+from . import defaults
 
 try:
     import numpy as np

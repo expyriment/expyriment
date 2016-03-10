@@ -2,6 +2,8 @@
 A screen.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,7 +21,7 @@ except ImportError:
     ogl = None
 
 import expyriment
-from _input_output import Output
+from ._input_output import Output
 
 
 class Screen(Output):

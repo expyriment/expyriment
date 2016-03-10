@@ -4,6 +4,7 @@ Keyboard input.
 This module contains a class implementing pygame keyboard input.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,11 +23,11 @@ try:
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.misc import unicode2str
-from  _input_output import Input
+from  ._input_output import Input
 
 quit_key = None
 pause_key = None

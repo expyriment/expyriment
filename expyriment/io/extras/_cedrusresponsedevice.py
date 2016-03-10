@@ -186,7 +186,7 @@ class CedrusResponseDevice(Input):
             if codes is None:
                 return self._buffer.memory[0]
             else:
-                if type(codes) is not types.ListType:
+                if type(codes) is not list:
                     codes = [codes]
                 for elem in self._buffer.memory:
                     if elem[0] in codes:

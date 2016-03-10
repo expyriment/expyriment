@@ -6,6 +6,7 @@ A text box stimulus.
 This module contains a class implementing a text box stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,10 +20,10 @@ import re
 
 import pygame
 
-import defaults
+from . import defaults
 from expyriment.misc import find_font, unicode2str, str2unicode
 import expyriment
-from _visual import Visual
+from ._visual import Visual
 
 
 class TextBox(Visual):

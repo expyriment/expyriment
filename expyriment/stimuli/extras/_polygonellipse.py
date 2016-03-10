@@ -6,6 +6,7 @@ An ellipse stimulus.
 This module contains a class implementing an ellipse stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,7 +16,7 @@ __date__ = ''
 
 
 import math as _math
-import defaults
+from . import defaults
 from expyriment.stimuli._shape import Shape
 from expyriment.misc import geometry as _geometry
 

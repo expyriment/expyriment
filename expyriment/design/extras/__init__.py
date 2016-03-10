@@ -7,6 +7,8 @@ Notes
 
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,7 +19,7 @@ __date__ = ''
 
 import os as _os
 
-import defaults
+from . import defaults
 from expyriment import _importer_functions
 
 

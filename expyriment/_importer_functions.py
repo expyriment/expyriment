@@ -5,6 +5,7 @@ This module contains helper function needed for importing plugins (extras) and
 for reading config file while import
 
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -124,8 +125,8 @@ def import_plugins_from_settings_folder(init_filename):
                             break
                     code[filename] = "from {0} import {1}\n".format(filename[:-3],
                                                                     name)
-                    print "import {0}.extras.{1} (from homefolder)".format(
-                                                        module, name)
+                    print("import {0}.extras.{1} (from homefolder)".format(
+                                                        module, name))
                 except:
                     print("Could not import {0}!".format(
                         os.path.dirname(folder) + os.sep + filename))
@@ -168,7 +169,7 @@ def post_import_hook():
 
     filename = home + os.sep + "post_import.py"
     if os.path.isfile(filename):
-        print "process {0}".format(filename)
+        print("process {0}".format(filename))
         return "execfile(r'{0}')\n".format(filename)
     else:
         return ""

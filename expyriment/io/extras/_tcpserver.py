@@ -181,7 +181,7 @@ class TcpServer(Input, Output):
                             break
                 rt = int((get_time() - start) * 1000)
                 break
-            except socket.error, e:
+            except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                     rtn_callback = expyriment._active_exp._execute_wait_callback()

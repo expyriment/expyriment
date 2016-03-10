@@ -4,6 +4,7 @@ A marker output.
 This module contains a class implementing a marker output
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,9 +13,9 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
+from . import defaults
 import expyriment
-from  _input_output  import Output
+from  ._input_output  import Output
 from expyriment.misc._timer import get_time
 
 

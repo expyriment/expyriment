@@ -4,6 +4,8 @@ A TextMenu.
 This module contains a class implementing a TextMenu.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,10 +13,10 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import defaults
+from . import defaults
 import expyriment
-from _keyboard import Keyboard
-from _input_output import Input
+from ._keyboard import Keyboard
+from ._input_output import Input
 
 
 class TextMenu(Input):
@@ -354,4 +356,4 @@ if __name__ == "__main__":
                     menu_items=["Items 1", "Items 1", "Items 3", "Items 4",
                            "Items 5"],
                     width=250, select_frame_line_width = 5)
-    print menu.get()
+    print(menu.get())

@@ -4,6 +4,7 @@ A streaming button box.
 This module contains a class implementing a streaming button box.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,12 +12,12 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.misc import compare_codes
 from expyriment.misc._timer import get_time
-from _keyboard import Keyboard
-from _input_output import Input, Output
+from ._keyboard import Keyboard
+from ._input_output import Input, Output
 
 
 class StreamingButtonBox(Input, Output):

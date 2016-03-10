@@ -8,6 +8,7 @@ The current script produces two files for different analysis of the SNARC
 effect (ANOVA vs. slopes analysis) using mean and median RTs
 
 """
+from __future__ import print_function
 
 from expyriment.misc import data_preprocessing, constants
 
@@ -24,7 +25,7 @@ agg.set_computed_variables(["parity = digit % 2", #0:odd, 1:even
 agg.set_exclusions(["RT > 1000", "RT < 200", "error == 1", "trial<0"])
 agg.set_dependent_variables(["mean(RT)"])
 agg.set_independent_variables(["size", "space"])
-print agg
+print(agg)
 agg.aggregate(output_file="rt_size_space.csv")
 # RTs: slopes analysis
 agg.set_independent_variables(["digit"])

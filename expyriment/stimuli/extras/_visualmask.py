@@ -6,6 +6,8 @@ A Visual Mask.
 This module contains a class implementing a Visual Mask.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -26,7 +28,7 @@ except:
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.stimuli._picture import Picture
-import defaults
+from . import defaults
 
 
 class VisualMask(Picture):
@@ -154,5 +156,5 @@ if __name__ == "__main__":
     exp = control.initialize()
     mask = VisualMask(size=(200, 200))
     mask.present()
-    print mask.surface_size
+    print(mask.surface_size)
     exp.clock.wait(1000)

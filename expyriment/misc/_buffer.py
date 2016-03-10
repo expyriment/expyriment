@@ -4,6 +4,7 @@ An event buffer.
 This module contains a class implementing an event buffer.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +14,7 @@ __date__ = ''
 
 
 import expyriment
-from _clock import Clock
+from ._clock import Clock
 
 
 class Buffer(object):

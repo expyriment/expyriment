@@ -4,6 +4,8 @@ Video playback.
 This module contains a class implementing video playback.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,8 +22,8 @@ try:
 except:
     import pygame.mixer as mixer
 
-import defaults
-import _visual
+from . import defaults
+from . import _visual
 from expyriment.io import Keyboard
 from expyriment.misc import unicode2str
 import expyriment
@@ -233,7 +235,7 @@ class Video(_visual.Stimulus):
         if mixer.get_init() is not None:
             message = "Mixer is still initialized, cannot play audio! Call \
 expyriment.control.stop_audiosystem() before preloading the video."
-            print "Warning: ", message
+            print("Warning: ", message)
             if self._logging:
                 expyriment._active_exp._event_file_log(
                     "Video,warning," + message)
@@ -352,7 +354,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
             diff = new_frame - old_frame
             if diff > 1:
                 warn_message = repr(diff - 1) + " video frames dropped!"
-                print warn_message
+                print(warn_message)
                 expyriment._active_exp._event_file_warn(
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):

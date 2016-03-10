@@ -6,6 +6,8 @@ A stimulus cloud stimulus.
 This module contains a class implementing a stimulus cloud stimulus.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''
@@ -17,7 +19,7 @@ import random
 
 import pygame
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.stimuli._visual import Visual
 
@@ -170,7 +172,7 @@ class StimulusCloud(Visual):
 
             if (remix > 10):
                 message = "Stimuluscloud make: Cannot find a solution."
-                print("Warning: ", message)
+                print(("Warning: ", message))
                 return False
 
     def shuffel_surface_sequence(self, from_idx=0, to_idx= -1):

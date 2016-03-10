@@ -4,6 +4,7 @@ File input and output.
 This module contains classes implementing file input and output.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -28,11 +29,11 @@ import time
 from time import strftime
 from platform import uname
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.misc import unicode2str, str2unicode
-from _input_output import Input, Output
+from ._input_output import Input, Output
 
 
 class InputFile(Input):
@@ -378,12 +379,12 @@ class DataFile(OutputFile):
         """Check if data are string or numeric and cast to string"""
         if data is None:
             data = "None"
-        if isinstance(data, types.UnicodeType):
+        if isinstance(data, str):
             return unicode2str(data)
-        elif isinstance(data, types.StringType):
+        elif isinstance(data, bytes):
             return str(data)
-        elif type(data) in [types.IntType, types.LongType, types.FloatType,
-                            types.BooleanType]:
+        elif type(data) in [int, int, float,
+                            bool]:
             return repr(data)
         else:
             message = "Data to be added must to be " + \
@@ -445,7 +446,7 @@ class DataFile(OutputFile):
 
         """
 
-        if isinstance(text, types.UnicodeType):
+        if isinstance(text, str):
             text = "{0}".format(unicode2str(text))
         elif type(text) is not str:
             text = "{0}".format(text)
@@ -665,7 +666,7 @@ class EventFile(OutputFile):
 
         """
 
-        if isinstance(event, types.UnicodeType):
+        if isinstance(event, str):
             event = unicode2str(event)
         line = repr(self._clock.time) + self.delimiter + str(event)
         self.write_line(line)

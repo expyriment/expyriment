@@ -4,6 +4,7 @@ This module contains several classes and functions that help
 to handle, preprocessing and aggregate Expyriment data files.
 
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -162,7 +163,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
                 cnt += 1
             f.write("\n")
 
-    print " ({0} cells in {1} rows)".format(cnt, len(data))
+    print(" ({0} cells in {1} rows)".format(cnt, len(data)))
 
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
@@ -306,7 +307,7 @@ The Python package 'Numpy' is not installed."""
                                   _np.version.version) +
                               "\nPlease install Numpy 1.6 or higher.")
 
-        print "** Expyriment Data Preprocessor **"
+        print("** Expyriment Data Preprocessor **")
         self.reset(data_folder, file_name, suffix, read_variables)
 
     def __str__(self):
@@ -708,10 +709,10 @@ The Python package 'Numpy' is not installed."""
             raise Exception("No data files found in {0}".format(
                 _unicode2str(self._data_folder)))
 
-        print "found {0} subject_data sets".format(len(self._data_files))
-        print "found {0} variables: {1}".format(len(self._variables),
+        print("found {0} subject_data sets".format(len(self._data_files)))
+        print("found {0} variables: {1}".format(len(self._variables),
                                                 [_unicode2str(x) for x
-                                                 in self._variables])
+                                                 in self._variables]))
 
     @property
     def data_folder(self):
@@ -836,7 +837,7 @@ The Python package 'Numpy' is not installed."""
 
         data, _vnames, subject_info, comments = \
             read_datafile(self._data_folder + "/" + filename)
-        print "   reading {0}".format(_unicode2str(filename))
+        print("   reading {0}".format(_unicode2str(filename)))
 
         if recode_variables:
             for var_id, recoding in self._recode:
@@ -1283,15 +1284,15 @@ The Python package 'Numpy' is not installed."""
         self.set_independent_variables(variables)
         result, varnames = self.aggregate()
         for row in result:
-            print "Subject {0}".format(row[0])
+            print("Subject {0}".format(row[0]))
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
                     if isinstance(row[cnt], unicode):
                         _row_data = _unicode2str(row[cnt])
                     else:
                         _row_data = row[cnt]
-                    print "\t{0}:\t{1}".format(var[4:], _row_data)
-        print "\n"
+                    print("\t{0}:\t{1}".format(var[4:], _row_data))
+        print("\n")
         self._dv = old_dv
         self._iv = old_iv
 

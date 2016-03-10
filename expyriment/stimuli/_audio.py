@@ -4,6 +4,7 @@ Audio playback.
 This module contains a class implementing audio playback.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,7 +21,7 @@ except:
     import pygame.mixer as mixer
 import expyriment
 from expyriment.misc import unicode2str
-from _stimulus import Stimulus
+from ._stimulus import Stimulus
 
 
 class Audio(Stimulus):

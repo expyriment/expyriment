@@ -4,6 +4,8 @@ The design._structure module of expyriment.
 This module contains a class implementing the experiment structure.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -27,13 +29,13 @@ except ImportError:
     from expyriment.misc import _csv_reader_android as csv
 from copy import deepcopy
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.misc import constants
 from expyriment.misc import Clock
 from expyriment.misc import unicode2str, str2unicode
-import randomize
-import permute
+from . import randomize
+from . import permute
 
 
 class Experiment(object):
@@ -283,7 +285,7 @@ class Experiment(object):
 
         if text is None:
             return
-        elif isinstance(text, types.StringTypes):
+        elif isinstance(text, str):
             text = [text]
         else:
             try:
@@ -845,7 +847,7 @@ type".format(permutation_type))
                         self.bws_factor_randomized = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
-                        print tmp[1].strip().split(",")
+                        print(tmp[1].strip().split(","))
                         self.add_bws_factor(tmp[0], tmp[1].strip().split(","))
 
                 else:  # data line
@@ -1154,8 +1156,8 @@ class Block(object):
 
         """
 
-        if type(value) in [types.StringType, types.UnicodeType, types.IntType,
-                           types.FloatType]:
+        if type(value) in [bytes, str, int,
+                           float]:
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \
@@ -1584,8 +1586,8 @@ class Block(object):
                                    max_repetitions=max_repetitions,
                                    n_segments=n_segments)
         if rtn == False:
-            print "Warning: Could not find an appropriate trial " + \
-                          "randomization!"
+            print("Warning: Could not find an appropriate trial " + \
+                          "randomization!")
         return rtn
 
     def sort_trials(self):
@@ -1676,8 +1678,8 @@ class Trial(object):
 
         """
 
-        if type(value) in [types.StringType, types.UnicodeType, types.IntType,
-                           types.LongType, types.FloatType]:
+        if type(value) in [bytes, str, int,
+                           int, float]:
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \

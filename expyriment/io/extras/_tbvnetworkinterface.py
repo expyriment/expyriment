@@ -4,6 +4,7 @@ This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,7 +15,7 @@ __date__ = ''
 
 import struct
 
-import _tbvnetworkinterface_defaults as defaults
+from . import _tbvnetworkinterface_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.misc._miscellaneous import str2unicode

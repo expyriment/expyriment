@@ -6,6 +6,8 @@ A dotcloud stimulus.
 This module contains a class implementing a dotcloud stimulus.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,7 +23,7 @@ import pygame
 import expyriment
 from expyriment.stimuli._visual import Visual
 from expyriment.stimuli._circle import Circle
-import  defaults
+from . import  defaults
 
 
 class DotCloud(Visual):
@@ -245,7 +247,7 @@ class DotCloud(Visual):
 
             if remix > 10:
                 message = "Dotcloud make: Cannot find a solution."
-                print("Warning: ", message)
+                print(("Warning: ", message))
                 if self._logging:
                     expyriment._active_exp._event_file_log(message)
                 return False

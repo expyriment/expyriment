@@ -2,6 +2,8 @@
 The control._experiment_control module of expyriment.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,13 +23,13 @@ try:
 except ImportError:
     import pygame.mixer as mixer
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment import design, stimuli, misc
 from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
 from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
-from _miscellaneous import _set_stdout_logging, is_idle_running, \
+from ._miscellaneous import _set_stdout_logging, is_idle_running, \
                 is_interactive_mode
 from expyriment.misc import unicode2str, constants
 
@@ -379,13 +381,13 @@ def initialize(experiment=None):
 
     if is_interactive_mode() and not expyriment.control.defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
-        print """
+        print("""
 Python is running in an interactive shell but Expyriment wants to initialize a
-fullscreen."""
+fullscreen.""")
         quest = "Do you want to switch to windows mode?"
         ans = raw_input(quest + " (Y/n) ").strip().lower()
         if ans=="" or ans=="y" or ans=="yes":
-            print "Switched to windows mode"
+            print("Switched to windows mode")
             expyriment.control.defaults.window_mode = True
 
     stdout_logging = defaults.stdout_logging

@@ -6,6 +6,7 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,9 +16,9 @@ __date__ = ''
 
 
 import math
-import defaults
+from . import defaults
 
-from _polygonrectangle import PolygonRectangle
+from ._polygonrectangle import PolygonRectangle
 import expyriment
 from expyriment import misc
 

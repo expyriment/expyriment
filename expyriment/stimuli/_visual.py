@@ -1,6 +1,7 @@
 """
 This module contains the base classes for visual stimuli.
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -23,9 +24,9 @@ except ImportError:
     oglu = None
     ogl = None
 
-import defaults
+from . import defaults
 import expyriment
-from _stimulus import Stimulus
+from ._stimulus import Stimulus
 from expyriment.misc import geometry
 from expyriment.misc import unicode2str
 from expyriment.misc._timer import get_time
@@ -1067,7 +1068,7 @@ class Visual(Stimulus):
 
         """
 
-        import _picture
+        from . import _picture
         fid, location = tempfile.mkstemp(dir=defaults.tempdir,
                                          suffix=".tga")
         os.close(fid)
@@ -1149,7 +1150,7 @@ class Visual(Stimulus):
                 "scale()"))
         self.unload(keep_surface=True)
         flip = [False, False]
-        if type(factors) in [types.IntType, types.FloatType]:
+        if type(factors) in [int, float]:
             factors = [factors, factors]
         else:
             factors = list(factors)
@@ -1350,7 +1351,7 @@ class Visual(Stimulus):
         to compute!
 
         """
-        import _rectangle
+        from . import _rectangle
         start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(

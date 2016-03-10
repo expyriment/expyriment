@@ -19,6 +19,7 @@ Each instance of the class can provide access to a different parallel
 port.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -35,17 +36,17 @@ from expyriment.io._input_output import Input, Output
 
 if sys.platform.startswith('linux'):
     try:
-        from _linux import PParallelLinux
+        from ._linux import PParallelLinux
         _ParallelPort = PParallelLinux
     except ImportError:
         _ParallelPort = None
 elif sys.platform == 'win32':
     from ctypes import windll
     if hasattr(windll, 'inpout32'):
-        from _inpout32 import PParallelInpOut32
+        from ._inpout32 import PParallelInpOut32
         _ParallelPort = PParallelInpOut32
     elif hasattr(windll, 'dlportio'):
-        from _dlportio import PParallelDLPortIO
+        from ._dlportio import PParallelDLPortIO
         _ParallelPort = PParallelDLPortIO
     else:
         _ParallelPort = None
@@ -113,7 +114,7 @@ class ParallelPort(Input, Output):
         """
 
         import types
-        if type(_ParallelPort) is types.NoneType:
+        if type(_ParallelPort) is type(None):
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
 "drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
@@ -446,7 +447,7 @@ class ParallelPort(Input, Output):
         result["testsuite_parallel_success"] = "No"
 
         import types
-        if type(_ParallelPort) is types.NoneType:
+        if type(_ParallelPort) is type(None):
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
 "drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \

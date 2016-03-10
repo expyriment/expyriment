@@ -6,6 +6,7 @@ A text line stimulus.
 This module contains a class implementing a text line stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,8 +19,8 @@ import os
 
 import pygame
 
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 from expyriment.misc import find_font, unicode2str, str2unicode
 import expyriment
 

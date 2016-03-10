@@ -6,6 +6,7 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,8 +19,8 @@ import math
 
 import pygame
 
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 import expyriment
 from expyriment import misc
 from expyriment.misc._timer import get_time

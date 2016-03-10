@@ -3,6 +3,7 @@
 This module contains a class implementing a TCP network client.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,7 +15,7 @@ __date__ = ''
 import socket
 import errno
 
-import _tcpclient_defaults as defaults
+from . import _tcpclient_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.io._keyboard import Keyboard
@@ -205,7 +206,7 @@ class TcpClient(Input, Output):
                             break
                 rt = int((get_time() - start) * 1000)
                 break
-            except socket.error, e:
+            except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
                     rtn_callback = expyriment._active_exp._execute_wait_callback()

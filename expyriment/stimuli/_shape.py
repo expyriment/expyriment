@@ -6,6 +6,7 @@ A Shape stimulus.
 This module contains a class implementing a shape stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,8 +18,8 @@ import copy
 from math import sqrt
 import pygame
 
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 import expyriment
 from expyriment.misc._timer import get_time
 

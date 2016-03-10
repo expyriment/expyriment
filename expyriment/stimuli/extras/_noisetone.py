@@ -6,6 +6,7 @@ The noise tone stimulus module.
 This module contains a class implementing a noise tone stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,7 +23,7 @@ import tempfile
 import shutil
 import random
 
-import defaults
+from . import defaults
 from expyriment.stimuli import defaults as stim_defaults
 from expyriment.stimuli._audio import Audio
 

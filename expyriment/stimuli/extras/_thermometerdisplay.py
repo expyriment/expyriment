@@ -6,6 +6,7 @@ A thermometer display stimulus.
 This module contains a class implementing a thermometer display stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''
@@ -15,7 +16,7 @@ __date__ = ''
 
 import pygame
 
-import defaults
+from . import defaults
 from expyriment.stimuli import Canvas, Rectangle
 from expyriment.stimuli._visual import Visual
 

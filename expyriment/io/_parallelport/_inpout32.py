@@ -1,3 +1,4 @@
+from __future__ import print_function
 # We deliberately delay importing the inpout32 module until we try
 # to use it - this allows us to import the class on machines
 # which don't have it and then worry about dealing with
@@ -143,4 +144,4 @@ class PParallelInpOut32(object):
         elif pinNumber==17:
             return (self.port.Inp32( self.base + 2 ) >> 3) & 1 # 0 = Select Printer
         else:
-            print 'Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber)
+            print('Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber))

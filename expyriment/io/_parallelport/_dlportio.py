@@ -1,3 +1,4 @@
+from __future__ import print_function
 # This code is heavily based upon winioport.py
 # Provides hardware port access for Python under Windows 95/98/NT/2000
 #
@@ -64,8 +65,8 @@ class PParallelDLPortIO(object):
         try:
             # Load dlportio.dll functions
             self.port = windll.dlportio
-        except Exception, e:
-            print "Could not import DLportIO driver, parallel Ports not available"
+        except Exception as e:
+            print("Could not import DLportIO driver, parallel Ports not available")
             raise e
 
         if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
@@ -175,5 +176,5 @@ class PParallelDLPortIO(object):
         elif pinNumber==17:
             return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 3) & 1 # Select Printer
         else:
-            print 'Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber)
+            print('Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber))
 

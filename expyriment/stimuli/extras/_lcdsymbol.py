@@ -6,6 +6,7 @@ A LCD symbol.
 This module contains a class implementing a LCD symbol.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,7 +20,7 @@ import copy
 
 import pygame
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.stimuli._visual import Visual
 from expyriment.stimuli.extras._polygondot import PolygonDot

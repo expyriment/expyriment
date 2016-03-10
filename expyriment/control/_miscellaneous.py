@@ -2,6 +2,8 @@
 The control._miscellaneous module of expyriment.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,7 +14,7 @@ __date__ = ''
 import sys
 import pygame
 
-import defaults
+from . import defaults
 import expyriment
 from expyriment.control import defaults as control_defaults
 
@@ -116,14 +118,14 @@ def set_develop_mode(onoff, intensive_logging=False):
                                    expyriment.io.defaults.outputfile_time_stamp,
                                    defaults.auto_create_subject_id]
 
-        print "*** DEVELOP MODE ***"
+        print("*** DEVELOP MODE ***")
         defaults.initialize_delay = 0
         defaults.window_mode = True
         defaults.fast_quit = True
         expyriment.io.defaults.outputfile_time_stamp = False
         defaults.auto_create_subject_id = True
     else:
-        print "*** NORMAL MODE ***"
+        print("*** NORMAL MODE ***")
         if defaults._mode_settings is not None:
             defaults.initialize_delay = defaults._mode_settings[0]
             defaults.window_mode = defaults._mode_settings[1]
@@ -380,9 +382,9 @@ def _set_stdout_logging(event_file):
             pass
 
     if is_ipython_running():
-        print "Standard output and error logging is switched off under IPython."
+        print("Standard output and error logging is switched off under IPython.")
     elif is_idle_running():
-        print "Standard output and error logging is switched off under IDLE."
+        print("Standard output and error logging is switched off under IDLE.")
     else:
         sys.stderr = Logger(event_file, "stderr")
         sys.stdout = Logger(event_file, "stdout")

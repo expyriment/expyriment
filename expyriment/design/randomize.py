@@ -3,6 +3,7 @@
 This module contains various functions for randomizing data
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +14,7 @@ __date__ = ''
 
 from copy import copy as _copy
 import random as _random
-import _structure
+from . import _structure
 
 _random.seed()
 

@@ -6,6 +6,7 @@ A Canvas stimulus.
 This module contains a class implementing a canvas stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,8 +17,8 @@ __date__ = ''
 
 import pygame
 
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 
 
 class Canvas(Visual):

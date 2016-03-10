@@ -6,6 +6,7 @@ A stimulus circle stimulus.
 This module contains a class implementing a stimulus circle stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,7 +20,7 @@ import math
 
 import pygame
 
-import defaults
+from . import defaults
 from expyriment.stimuli._visual import Visual
 
 

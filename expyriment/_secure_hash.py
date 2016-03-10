@@ -1,6 +1,7 @@
 """
 Secure hashes from files
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -43,7 +44,7 @@ def get_experiment_secure_hash():
 
     """
 
-    if secure_hashes.has_key(main_file):
+    if main_file in secure_hashes:
         return secure_hashes[main_file]
     else:
         return None
@@ -64,7 +65,7 @@ def get_module_hash_dictionary():
     secure hashes.
 
     """
-    if secure_hashes.has_key(main_file):
+    if main_file in secure_hashes:
         rtn = copy(secure_hashes)
         rtn.pop(main_file)
         return rtn
@@ -88,7 +89,7 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
 
                 for module in modules:
                     pyfile = module + ".py"
-                    if not hash_dict.has_key(pyfile):
+                    if pyfile not in hash_dict:
                         sha = _make_secure_hash(pyfile)
                         if sha is not None:
                             hash_dict[pyfile] = sha
@@ -114,7 +115,7 @@ def cout_hashes():
         print("Main file: {0} ({1})".format(main_file,
                             get_experiment_secure_hash()))
         if len(secure_hashes)>1:
-            print "Modules: " + module_hashes_as_string()
+            print("Modules: " + module_hashes_as_string())
 
 # print hash information when imported
 if not hasattr(sys, "ps2"): # ps2 is only defined in interactive mode

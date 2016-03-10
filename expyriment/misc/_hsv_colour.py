@@ -4,6 +4,7 @@ HSV Colour
 This module contains a class implementing HSV colours [hue, saturation, value]
 
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -120,4 +121,4 @@ class HSVColour(object):
 if __name__ == "__main__":
 
     my_colour = HSVColour(hue=20, saturation=200, value = 128)
-    print my_colour
+    print(my_colour)

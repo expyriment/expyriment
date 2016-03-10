@@ -6,6 +6,7 @@ A Rectangle stimulus.
 This module contains a class implementing a rectangle stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,7 +15,7 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
+from . import defaults
 from expyriment.stimuli._shape import Shape
 import expyriment
 

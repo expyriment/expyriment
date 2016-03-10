@@ -6,6 +6,7 @@ A picture stimulus.
 This module contains a class implementing a picture stimulus.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,8 +20,8 @@ import os
 import pygame
 import expyriment
 from expyriment.misc import unicode2str
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 
 
 class Picture(Visual):

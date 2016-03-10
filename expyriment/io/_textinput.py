@@ -4,6 +4,8 @@ A text input box.
 This module contains a class implementing a text input box for user input.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -24,11 +26,11 @@ try:
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-import defaults
+from . import defaults
 from expyriment.misc import find_font, unicode2str, constants, \
                  numpad_digit_code2ascii
 import expyriment
-from _input_output import Input
+from ._input_output import Input
 
 
 class TextInput(Input):
@@ -456,4 +458,4 @@ if __name__ == '__main__':
                           user_text_size=30,
                           user_text_colour=(255, 150, 50),
                           frame_colour=(70, 70, 70))
-    print textinput.get()
+    print(textinput.get())

@@ -3,6 +3,7 @@
 This module contains an experimental clock.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,7 +15,7 @@ __date__ = ''
 import sys
 import time
 import types
-from _timer import get_time
+from ._timer import get_time
 
 import expyriment
 

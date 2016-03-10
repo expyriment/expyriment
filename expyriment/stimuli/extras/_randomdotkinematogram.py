@@ -6,6 +6,8 @@ A random dot kinematogram (stimulus-like).
 This module contains a class implementing a random dot kinematogram.
 
 """
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,7 +19,7 @@ __date__ = ''
 import math
 import random
 
-import defaults
+from . import defaults
 
 from expyriment.io import Keyboard
 from expyriment.stimuli import Canvas, Circle
@@ -420,4 +422,4 @@ if __name__ == "__main__":
           dot_speed = 80, dot_lifetime = 600,
           dot_colour = None)
     key, rt = rdk.present_and_wait_keyboard()
-    print direction
+    print(direction)

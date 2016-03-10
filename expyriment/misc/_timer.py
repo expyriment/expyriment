@@ -9,6 +9,7 @@ Credits and references:
       http://stackoverflow.com/questions/1824399/get-mach-absolute-time-uptime-in-nanoseconds-in-python
       https://mail.python.org/pipermail/python-dev/2009-October/093173.html
 """
+from __future__ import print_function
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -111,4 +112,4 @@ if _use_time_module:
             return time.time()
 
 if __name__ == "__main__":
-    print get_time()
+    print(get_time())
