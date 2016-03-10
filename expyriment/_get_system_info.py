@@ -2,6 +2,9 @@
 Get System Information.
 """
 from __future__ import division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -40,10 +43,10 @@ import expyriment
 
 
 def _get_registry_value(key, subkey, value):
-    import _winreg
+    import winreg
     key = getattr(_winreg, key)
-    handle = _winreg.OpenKey(key, subkey)
-    (value, type) = _winreg.QueryValueEx(handle, value)
+    handle = winreg.OpenKey(key, subkey)
+    (value, type) = winreg.QueryValueEx(handle, value)
     return value
 
 
@@ -196,7 +199,7 @@ def get_system_info(as_string=False):
             _, disk_total, disk_free = ctypes.c_int64(), ctypes.c_int64(), \
                                        ctypes.c_int64()
             ret = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-                unicode(current_folder), ctypes.byref(_),
+                str(current_folder), ctypes.byref(_),
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
             hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
             hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
@@ -356,7 +359,7 @@ def get_system_info(as_string=False):
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:
-        sorted_keys = info.keys()
+        sorted_keys = list(info.keys())
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:

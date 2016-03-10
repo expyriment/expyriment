@@ -137,7 +137,7 @@ class Audio(Stimulus):
             self.preload()
         rtn = self._file.play(loops, maxtime, fade_ms)
         if self._logging:
-            if isinstance(self._filename, unicode):
+            if isinstance(self._filename, str):
                 import sys
                 filename = self._filename.encode(sys.getfilesystemencoding())
             else:

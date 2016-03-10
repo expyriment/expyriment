@@ -8,6 +8,8 @@ well as a function to call this browser or the online documentation.
 
 """
 from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,7 +22,7 @@ from pydoc import getdoc as _getdoc
 import inspect as _inspect
 
 try:
-    import Tkinter as _tk
+    import tkinter as _tk
 except:
     try:
         import tkinter as _tk  # for future (Python 3)
@@ -28,7 +30,7 @@ except:
         _tk = None
 
 try:
-    import ttk as _ttk
+    import tkinter.ttk as _ttk
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
@@ -72,7 +74,7 @@ def _search_doc(search_str, doc_dict):
     """
 
     rtn = []
-    for k in doc_dict.keys():
+    for k in list(doc_dict.keys()):
         if k.lower().find(search_str.lower()) > -1 or\
             doc_dict[k].lower().find(search_str.lower()) > -1:
             rtn.append(k)

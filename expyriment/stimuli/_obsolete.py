@@ -6,6 +6,7 @@ Obsolete stimuli
 Calls are merely defined to give user appropriate error feedback
 
 """
+from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

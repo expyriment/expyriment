@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import range
+from builtins import object
 # This code is heavily based upon winioport.py
 # Provides hardware port access for Python under Windows 95/98/NT/2000
 #
@@ -69,7 +71,7 @@ class PParallelDLPortIO(object):
             print("Could not import DLportIO driver, parallel Ports not available")
             raise e
 
-        if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
+        if isinstance(address, str) and address.startswith('0x'): #convert u"0x0378" into 0x0378
             self.base = int(address, 16)
         else:
             self.base = address

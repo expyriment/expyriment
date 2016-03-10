@@ -3,6 +3,8 @@ This module contains the base classes for visual stimuli.
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import range
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -1360,7 +1362,7 @@ class Visual(Stimulus):
         self.unload(keep_surface=True)
         number_of_pixel_x = int(self.surface_size[0] // grain_size) + 1
         number_of_pixel_y = int(self.surface_size[1] // grain_size) + 1
-        seq = range(number_of_pixel_x * number_of_pixel_y)
+        seq = list(range(number_of_pixel_x * number_of_pixel_y))
         random.seed()
         random.shuffle(seq)
 

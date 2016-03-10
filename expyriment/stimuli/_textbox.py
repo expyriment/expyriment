@@ -8,6 +8,7 @@ This module contains a class implementing a text box stimulus.
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import str
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -321,7 +322,7 @@ class TextBox(Visual):
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
 
-        if type(self.text) is not unicode:
+        if type(self.text) is not str:
             # Pygame wants latin-1 encoding here for character strings
             _text = str2unicode(self.text).encode('latin-1')
         else:
@@ -452,7 +453,7 @@ class TextBox(Visual):
         except:
             ws = None
         if ws:
-            lines = map(lambda x: x.replace(ws, '', 1), lines)
+            lines = [x.replace(ws, '', 1) for x in lines]
 
         # Remove leading/trailing blank lines (after leading ws removal)
         # We do this again in case there were pure-whitespace lines

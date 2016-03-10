@@ -7,6 +7,9 @@ This module contains a class implementing the experiment structure.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import str
+from builtins import range
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -220,7 +223,7 @@ class Experiment(object):
                 tmp_str = tmp_str + "latin square)\n"
             for f in self.bws_factor_names:
                 _bws_factor = \
-                    [unicode2str(x) if isinstance(x, unicode) else
+                    [unicode2str(x) if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
                 tmp_str = tmp_str + "    {0} = [{1}]\n".format(
                     unicode2str(f), ", ".join(_bws_factor))
@@ -864,10 +867,10 @@ type".format(permutation_type))
                             else:
                                 trial_factors[col] = var
 
-                        if not("cnt" in block_factors.values() and
-                               "id" in block_factors.values() and
-                               "cnt" in trial_factors.values() and
-                               "id" in trial_factors.values()):
+                        if not("cnt" in list(block_factors.values()) and
+                               "id" in list(block_factors.values()) and
+                               "cnt" in list(trial_factors.values()) and
+                               "id" in list(trial_factors.values())):
                             message = "Can't read design file. " + \
                                 "The file '{0}' ".format(
                                     unicode2str(filename)) + \
@@ -1119,7 +1122,7 @@ class Block(object):
                 if tf not in val:
                     val.append(tf)
             val.sort()
-            val = [repr(x) if type(x) not in [unicode, str]
+            val = [repr(x) if type(x) not in [str, str]
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(
                 f, ", ".join(val))
@@ -1200,7 +1203,7 @@ class Block(object):
 
         """
 
-        return self._factors.keys()
+        return list(self._factors.keys())
 
     def compare(self, block):
         """Compares this block with another block and returns `True` if all
@@ -1456,7 +1459,7 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = map(lambda x: str2unicode(x), row)
+                    factor_names = [str2unicode(x) for x in row]
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
@@ -1722,7 +1725,7 @@ class Trial(object):
     def factor_names(self):
         """Getter for factors names."""
 
-        return self._factors.keys()
+        return list(self._factors.keys())
 
     @property
     def factors_as_text(self):

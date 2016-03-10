@@ -129,7 +129,7 @@ class ParallelPort(Input, Output):
 
         Input.__init__(self)
         Output.__init__(self)
-        if isinstance(address, basestring) and address.startswith('0x'):
+        if isinstance(address, str) and address.startswith('0x'):
             address = int(address, 16)
         self._address = address
         try:
@@ -602,7 +602,7 @@ class ParallelPort(Input, Output):
 
             def _update(inputs_states, outputs_states, read_control,
                         read_data, read_status, read_poll):
-                for pin in inputs.keys():
+                for pin in list(inputs.keys()):
                     if inputs_states[pin] == True:
                         inputs[pin].colour = [0, 255, 0]
                     else:
@@ -612,7 +612,7 @@ class ParallelPort(Input, Output):
                     inputs[pin].present(clear=False, update=False)
 
                 send = 0
-                for pin in outputs.keys():
+                for pin in list(outputs.keys()):
                     if outputs_states[pin][0] == True:
                         send += outputs_states[pin][1]
                         outputs[pin].colour = [255, 0, 0]
@@ -757,7 +757,7 @@ class ParallelPort(Input, Output):
                 for pin, bit in {15:1, 13:2, 12:4, 10:8, 11:16, 2:32, 3:64,
                                  4:128, 5:256, 6:512, 7:1024, 8:2048,
                                  9:4096, 1:8192, 14:16384, 16:32768,
-                                 17:65536}.iteritems():
+                                 17:65536}.items():
                     if bit & p > 0:
                         inputs_states[pin] = True
                     else:

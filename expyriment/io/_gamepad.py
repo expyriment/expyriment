@@ -4,6 +4,7 @@ This module contains a class implementing a pygame gamepad.
 
 """
 from __future__ import absolute_import
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -236,7 +237,7 @@ class GamePad(Input, Output):
         _button = None
         self.clear()
         if buttons is None:
-            buttons = range(self.get_numbuttons())
+            buttons = list(range(self.get_numbuttons()))
         try:
             buttons = list(buttons)
         except:

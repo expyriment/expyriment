@@ -5,6 +5,7 @@ The control._miscellaneous module of expyriment.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -202,12 +203,12 @@ def get_defaults(search_str="", as_string=False):
     defaults = _get_module_values(defaults, expyriment.misc.extras.defaults)
     if len(search_str) >= 0:
         tmp = {}
-        for key in defaults.keys():
+        for key in list(defaults.keys()):
             if key.lower().find(search_str.lower()) >= 0:
                 tmp[key] = defaults[key]
         defaults = tmp
     if as_string:
-        sorted_keys = defaults.keys()
+        sorted_keys = list(defaults.keys())
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:
@@ -288,7 +289,7 @@ def unregister_wait_callback_function(exp=None):
     else:
         expyriment._active_exp.unregister_wait_callback_function()
 
-class CallbackQuitEvent():
+class CallbackQuitEvent(object):
     """A CallbackQuitEvent
 
     If a callback function returns a CallbackQuitEvent object the currently processed

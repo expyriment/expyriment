@@ -5,6 +5,7 @@ This module contains a class implementing a MIDI input device.
 
 """
 from __future__ import absolute_import
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

@@ -7,6 +7,7 @@ methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 """
 from __future__ import print_function
+from builtins import input
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -89,10 +90,10 @@ def join_data():
     from expyriment.misc import data_preprocessing
     print("Joining data")
     sys.stdout.write(" data subfolder [optional, default=data]? ")
-    folder = raw_input()
+    folder = input()
     if len(folder)<=0:
         folder = "data"
-    start_with = raw_input(" data files start with [optional]? ")
+    start_with = input(" data files start with [optional]? ")
     d = data_preprocessing.Aggregator(folder, start_with)
     return d
 
@@ -178,14 +179,14 @@ if __name__ == "__main__":
                             d = join_data()
                             output =""
                             while len(output) <= 1:
-                                output = raw_input(" name of output csv file? ")
+                                output = input(" name of output csv file? ")
                             d.write_concatenated_data(output)
                             sys.exit()
                         elif arg == "R":
                             d = join_data()
                             output =""
                             while len(output) <= 1:
-                                output = raw_input(" name of RDS file? ")
+                                output = input(" name of RDS file? ")
                             d.write_concatenated_data_to_R_data_frame(output)
                             sys.exit()
                         elif arg == 'h':

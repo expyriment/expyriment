@@ -6,6 +6,10 @@ This module contains a class implementing serial port input/output.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from builtins import chr
+from builtins import map
+from builtins import str
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -313,7 +317,7 @@ The Python package 'pySerial' is not installed."""
         read_time = self._clock.time
         read = self._serial.read(self._serial.inWaiting())
         if len(read) > 0:
-            read = map(ord, list(read))
+            read = list(map(ord, list(read)))
             if self.has_input_history:
                 if len(self._input_history.memory):
                     last_time = self._input_history.memory[-1][1]

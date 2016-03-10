@@ -8,6 +8,9 @@ This module contains a class implementing a tone stimulus.
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import map
+from builtins import zip
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -159,7 +162,7 @@ class Tone(Audio):
         """Write in chunks."""
 
         args = [iter(iterable)] * n
-        return itertools.izip_longest(fillvalue=fillvalue, *args)
+        return itertools.zip_longest(fillvalue=fillvalue, *args)
 
     def _create_sine_wave(self):
         """Create the sine wave."""
@@ -168,12 +171,12 @@ class Tone(Audio):
         lookup_table = [float(self._amplitude) * \
                         math.sin(2.0 * math.pi * float(self._frequency) * \
                                  (float(i % period) / float(self._samplerate))) \
-                        for i in xrange(period)]
+                        for i in range(period)]
         sine = (lookup_table[i % period] for i in itertools.count(0))
         channels = ((sine,),)
         n_samples = self._duration * self._samplerate
-        samples = itertools.islice(itertools.izip(
-            *(itertools.imap(sum, itertools.izip(*channel)) \
+        samples = itertools.islice(zip(
+            *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
         fid, filename = tempfile.mkstemp(dir=defaults.tempdir,
                         prefix="freq{0}_dur{1}_".format(self.frequency,

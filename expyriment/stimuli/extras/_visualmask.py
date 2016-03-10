@@ -9,6 +9,7 @@ This module contains a class implementing a Visual Mask.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -127,7 +128,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
         n_dots_x = int(s[0] / self.dot_size[0]) + 1
         n_dots_y = int(s[1] / self.dot_size[1]) + 1
-        dots = range(n_dots_x * n_dots_y)
+        dots = list(range(n_dots_x * n_dots_y))
         shuffle(dots)
         for d in dots[:int(len(dots) * self.dot_percentage / 100)]:
             y = (d // n_dots_x) * self.dot_size[1]

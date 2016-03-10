@@ -5,6 +5,7 @@ This module contains classes implementing file input and output.
 
 """
 from __future__ import absolute_import
+from builtins import str
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -251,7 +252,7 @@ class OutputFile(Output):
 
         """
 
-        if type(content) is unicode:
+        if type(content) is str:
             self._buffer.append(unicode2str(content))
         else:
             self._buffer.append(str(content))

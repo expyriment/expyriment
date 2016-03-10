@@ -85,7 +85,7 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                 else:
                     modules = []
 
-                modules = map(lambda x:x.replace(".", sep), modules)
+                modules = [x.replace(".", sep) for x in modules]
 
                 for module in modules:
                     pyfile = module + ".py"
@@ -103,7 +103,7 @@ def module_hashes_as_string():
     """helper function that converts dict to str"""
     if len(secure_hashes)>1:
         txt = ""
-        for fl, sha in get_module_hash_dictionary().iteritems():
+        for fl, sha in get_module_hash_dictionary().items():
             txt += "{0} ({1}), ".format(fl, sha)
         return txt[:-2]
     else:

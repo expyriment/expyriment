@@ -5,6 +5,8 @@ This module contains miscellaneous geometry functions for expyriment.
 
 """
 from __future__ import division
+from builtins import range
+from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -157,7 +159,7 @@ def lines_intersect(pa, pb, pc, pd):
 
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
 
-class XYPoint:
+class XYPoint(object):
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
         """Initialize a XYPoint.

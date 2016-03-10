@@ -6,6 +6,8 @@ This module contains a class implementing a network interface for Turbo-Satori
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import chr
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

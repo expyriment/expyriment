@@ -8,6 +8,7 @@ This module contains a class implementing a stimulus circle stimulus.
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

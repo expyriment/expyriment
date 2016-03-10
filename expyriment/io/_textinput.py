@@ -7,6 +7,8 @@ This module contains a class implementing a text input box for user input.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import chr
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -315,7 +317,7 @@ class TextInput(Input):
 
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
-                return event.key, event.unicode
+                return event.key, event.str
 
     def _create(self):
         """Create the input box."""
@@ -418,7 +420,7 @@ class TextInput(Input):
         self._create()
         self._update()
         if self._ascii_filter is None:
-            ascii_filter = range(0, 256) + constants.K_ALL_KEYPAD_DIGITS
+            ascii_filter = list(range(0, 256)) + constants.K_ALL_KEYPAD_DIGITS
         else:
             ascii_filter = self._ascii_filter
         while True:

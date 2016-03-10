@@ -4,6 +4,7 @@ Input and output parallel port.
 This module contains a class implementing parallel port input/output.
 
 """
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'

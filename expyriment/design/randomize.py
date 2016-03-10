@@ -5,6 +5,7 @@ This module contains various functions for randomizing data
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
@@ -36,7 +37,7 @@ def rand_int_sequence(first_elem, last_elem):
 
     """
 
-    list_ = range(first_elem, last_elem + 1)
+    list_ = list(range(first_elem, last_elem + 1))
     _random.shuffle(list_)
     return list_
 

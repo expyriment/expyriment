@@ -6,6 +6,7 @@ This module contains a class implementing HSV colours [hue, saturation, value]
 """
 from __future__ import print_function
 from __future__ import division
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

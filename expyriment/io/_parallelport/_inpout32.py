@@ -1,4 +1,6 @@
 from __future__ import print_function
+from builtins import range
+from builtins import object
 # We deliberately delay importing the inpout32 module until we try
 # to use it - this allows us to import the class on machines
 # which don't have it and then worry about dealing with
@@ -23,7 +25,7 @@ class PParallelInpOut32(object):
         #from numpy import uint8
         from ctypes import windll
 
-        if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
+        if isinstance(address, str) and address.startswith('0x'): #convert u"0x0378" into 0x0378
             self.base = int(address, 16)
         else:
             self.base = address

@@ -5,6 +5,8 @@ The control._experiment_control module of expyriment.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import input
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -175,7 +177,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        if isinstance(_permuted_bws_factor_condition, unicode):
+        if isinstance(_permuted_bws_factor_condition, str):
             _permuted_bws_factor_condition = \
                 unicode2str(_permuted_bws_factor_condition)
         experiment.data.add_subject_info("{0} = {1}".format(
@@ -387,7 +389,7 @@ def initialize(experiment=None):
 Python is running in an interactive shell but Expyriment wants to initialize a
 fullscreen.""")
         quest = "Do you want to switch to windows mode?"
-        ans = raw_input(quest + " (Y/n) ").strip().lower()
+        ans = input(quest + " (Y/n) ").strip().lower()
         if ans=="" or ans=="y" or ans=="yes":
             print("Switched to windows mode")
             expyriment.control.defaults.window_mode = True

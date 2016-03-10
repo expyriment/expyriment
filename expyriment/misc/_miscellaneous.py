@@ -77,7 +77,7 @@ def str2unicode(s, fse=False):
     A unicode-type string.
     """
 
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
 
     try:

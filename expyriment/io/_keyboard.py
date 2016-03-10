@@ -342,9 +342,9 @@ class Keyboard(Input):
                 if check_for_control_keys and Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
-                    if event.unicode in char:
+                    if event.str in char:
                         rt = int((get_time() - start) * 1000)
-                        found_char = event.unicode
+                        found_char = event.str
                         done = True
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration

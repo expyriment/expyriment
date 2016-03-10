@@ -5,6 +5,9 @@ This module contains a class implementing an event buffer.
 
 """
 from __future__ import absolute_import
+from builtins import zip
+from builtins import range
+from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -82,7 +85,7 @@ class Buffer(object):
 
         """
         ts = [self._clock.time] * len(events)
-        self._memory.extend(zip(events, ts))
+        self._memory.extend(list(zip(events, ts)))
 
     def get_size(self):
         """Return the number of elements in the buffer.

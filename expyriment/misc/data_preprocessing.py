@@ -6,6 +6,8 @@ to handle, preprocessing and aggregate Expyriment data files.
 """
 from __future__ import print_function
 from __future__ import division
+from builtins import range
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -95,13 +97,12 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 if only_header_and_variable_names:
                     break
                 if read_variables is not None:
-                    read_in_columns = map(lambda x:variables.index(x),
-                                                            read_variables)
-                    variables = map(lambda x:variables[x], read_in_columns)
+                    read_in_columns = [variables.index(x) for x in read_variables]
+                    variables = [variables[x] for x in read_in_columns]
             else:
                 row =ln.split(delimiter)
                 if read_in_columns is not None:
-                    row = map(lambda x:row[x], read_in_columns)
+                    row = [row[x] for x in read_in_columns]
                 data.append(row)
         else:
             if ln.startswith("#s"):
@@ -119,7 +120,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 comments = comments + "\n" + ln
     fl.close()
     # strip variables
-    variables = map(lambda x:x.strip(), variables)
+    variables = [x.strip() for x in variables]
     return data, variables, subject_info, comments
 
 
@@ -159,7 +160,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
             for c, v in enumerate(row):
                 if c > 0:
                     f.write(delimiter)
-                if isinstance(v, unicode):
+                if isinstance(v, str):
                     _unicode2str(v)
                 f.write(v)
                 cnt += 1
@@ -510,7 +511,7 @@ The Python package 'Numpy' is not installed."""
                 #find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
-                    if isinstance(row[iv], unicode):
+                    if isinstance(row[iv], str):
                         _row_data = _unicode2str(row[iv])
                     else:
                         _row_data = row[iv]
@@ -564,7 +565,7 @@ The Python package 'Numpy' is not installed."""
         result = {}
         for cnt, fac_cmb in enumerate(combinations):
             if fac_cmb == "total":
-                idx = range(0, data.shape[0])
+                idx = list(range(0, data.shape[0]))
             else:
                 # find idx of combinations
                 idx = None
@@ -1289,7 +1290,7 @@ The Python package 'Numpy' is not installed."""
             print("Subject {0}".format(row[0]))
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
-                    if isinstance(row[cnt], unicode):
+                    if isinstance(row[cnt], str):
                         _row_data = _unicode2str(row[cnt])
                     else:
                         _row_data = row[cnt]
@@ -1343,7 +1344,7 @@ The Python package 'Numpy' is not installed."""
             for dv in self._dv:
                 for fac_cmb in combinations:
                     if fac_cmb == "total":
-                        idx = range(0, mtx.shape[0])
+                        idx = list(range(0, mtx.shape[0]))
                     else:
                         # find idx of combinations
                         idx = None

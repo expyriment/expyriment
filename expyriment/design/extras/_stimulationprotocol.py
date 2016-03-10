@@ -6,6 +6,7 @@ A stimulation protocol.
 This module contains a class implementing a stimulation protocol.
 
 """
+from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,7 +22,7 @@ from expyriment.design.randomize import rand_int
 from expyriment.misc import unicode2str, str2unicode
 
 
-class StimulationProtocol:
+class StimulationProtocol(object):
     """A class implementing a stimulation protocol."""
 
     def __init__(self, unit):
@@ -109,7 +110,7 @@ class StimulationProtocol:
 
         if type(condition) == int:
             pos = condition
-        elif type(condition) == str or unicode:
+        elif type(condition) == str or str:
             pos = self._find_condition_by_name(condition)
             if pos is None:
                 raise ValueError("No condition with name '{0}' found!".format(

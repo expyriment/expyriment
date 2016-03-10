@@ -62,7 +62,7 @@ def mode(data):
 
     freq = frequence_table(data)
     Fmax = max(freq.values())
-    for x, f in freq.items():
+    for x, f in list(freq.items()):
         if f == Fmax:
             break
     return x
@@ -122,7 +122,7 @@ def median(data):
 
     tmp = []
     for elem in data: # remove non numerics
-        if isinstance(elem, (int, long, float)):
+        if isinstance(elem, (int, int, float)):
             tmp.append(elem)
     data = sorted(tmp)
     if len(data) % 2 == 1:

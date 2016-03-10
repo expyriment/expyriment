@@ -4,6 +4,7 @@ The permute module.
 This module implements permutation of blocks, trials and conditions.
 
 """
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -86,7 +87,7 @@ def balanced_latin_square(elements):
         # Make index list to sort columns [0,1,n-1,3,n-2,4,...]
         c_idx = [0, 1]
         take_last = True
-        tmp = range(2, n)
+        tmp = list(range(2, n))
         for _i in range(2, n):
             if take_last:
                 c_idx.append(tmp.pop())
@@ -119,7 +120,7 @@ def cycled_latin_square(elements):
         idx = cycled_latin_square(len(elements))
         square = _square_of_elements(elements, idx)
     else:
-        square = [range(0, elements)]
+        square = [list(range(0, elements))]
         for r in range(0, elements - 1):
             square.append(_cycle_list(square[r]))
     return square

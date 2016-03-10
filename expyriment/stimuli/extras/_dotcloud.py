@@ -9,6 +9,7 @@ This module contains a class implementing a dotcloud stimulus.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

@@ -3,6 +3,7 @@
 This module contains expyriment constants.
 
 """
+from builtins import range
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -151,9 +152,9 @@ K_BREAK = _pygame.K_BREAK
 K_MENU = _pygame.K_MENU
 K_POWER = _pygame.K_POWER
 K_EURO = _pygame.K_EURO
-K_ALL_LETTERS = range(K_a, K_z + 1)
-K_ALL_DIGITS = range(K_0, K_9 + 1)
-K_ALL_KEYPAD_DIGITS = range(K_KP0, K_KP9 + 1)
+K_ALL_LETTERS = list(range(K_a, K_z + 1))
+K_ALL_DIGITS = list(range(K_0, K_9 + 1))
+K_ALL_KEYPAD_DIGITS = list(range(K_KP0, K_KP9 + 1))
 
 # Colours
 C_BLACK = (0, 0, 0)

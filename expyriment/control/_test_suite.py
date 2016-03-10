@@ -6,6 +6,11 @@ running on.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+from builtins import zip
+from builtins import str
+from builtins import range
+from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -127,7 +132,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         s2 = stimuli.Circle(1, colour=exp.background_colour)
         s1.preload()
         s2.preload()
-        todo_time = range(0, 60) * 3
+        todo_time = list(range(0, 60)) * 3
         randomize.shuffle_list(todo_time)
         actual_time = []
         for x in todo_time:
@@ -181,19 +186,18 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = 1000.0 / refresh_rate
+            refresh_time = old_div(1000.0, refresh_rate)
             return refresh_time - (presentation_time % refresh_time)
         # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
-        unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
-                                zip(todo_time, actual_time))
+        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(todo_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
-        for key in hist.keys():
+        for key in list(hist.keys()):
             inaccuracies.extend([key % (1000 // refresh_rate)] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(round(sum(inaccuracies) / float(len(inaccuracies))))
+        inaccuracy = int(round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
         delayed = round(100 * delayed_presentations/180.0, 2)
 
         text = stimuli.TextScreen(
@@ -213,7 +217,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         info = stimuli.TextScreen("Results", "")
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(round(refresh_rate)), int(1000.0 / refresh_rate)),
+                        int(round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, position=(0, 40))
         results2 = stimuli.TextScreen("",
@@ -379,7 +383,7 @@ def _audio_playback(exp):
     return response
 
 def _font_viewer(exp):
-    all_fonts = expyriment.misc.list_fonts().keys()
+    all_fonts = list(expyriment.misc.list_fonts().keys())
 
     def info_screen():
         stimuli.TextScreen(heading="Expyriment Font Viewer",
@@ -420,10 +424,10 @@ abcdefghijklmnopqrstuvwxyz äöü
     # rects center, left, right, top, button]
     cl = (20, 20, 20)
     rects = [stimuli.Rectangle(size=bs, position=[0, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[(bs[0] - exp.screen.size[0]) / 2.2, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[(exp.screen.size[0] - bs[0]) / 2.2, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, (bs[1] - exp.screen.size[1]) / 2.2], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, (exp.screen.size[1] - bs [1]) / 2.2], colour=cl)]
+             stimuli.Rectangle(size=bs, position=[old_div((bs[0] - exp.screen.size[0]), 2.2), 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[old_div((exp.screen.size[0] - bs[0]), 2.2), 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, old_div((bs[1] - exp.screen.size[1]), 2.2)], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, old_div((exp.screen.size[1] - bs [1]), 2.2)], colour=cl)]
     rect_key_mapping = [constants.K_RETURN, constants.K_LEFT, constants.K_RIGHT,
                         constants.K_UP, constants.K_DOWN]
 
@@ -495,7 +499,7 @@ abcdefghijklmnopqrstuvwxyz äöü
 def _write_protocol(exp, results):
     """Write a protocol with all test results."""
 
-    sorted_keys = results.keys()
+    sorted_keys = list(results.keys())
     sorted_keys.sort()
     rtn = ""
     for key in sorted_keys:
@@ -590,9 +594,8 @@ def run_test_suite():
             results["testsuite_visual_timing_inaccuracy"] = str(rtn[3]) + " ms"
             results["testsuite_visual_timing_delayed"] = str(rtn[4]) + " %"
             results["testsuite_visual_flipping_user"] = rtn[5]
-            delay = map(lambda x:x[1]-x[0],
-                           zip(results["testsuite_visual_timing_todo"],
-                               results["testsuite_visual_timing_actual"]))
+            delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_todo"],
+                               results["testsuite_visual_timing_actual"])]
             results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
             if ogl is not None and exp.screen.open_gl:
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)

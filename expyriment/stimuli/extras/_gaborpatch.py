@@ -127,7 +127,7 @@ The Python package 'Matplotlib' is not installed."""
         norm = pyplot.normalize(vmin = np.min(self._pixel_array),
                                 vmax = np.max(self._pixel_array))
         bgc = color_map(norm(0))
-        self._background_colour = map(lambda x:int(x*255), bgc[:3])
+        self._background_colour = [int(x*255) for x in bgc[:3]]
 
     @property
     def background_colour(self):

@@ -9,6 +9,9 @@ This module contains a class implementing a random dot kinematogram.
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from builtins import map
+from builtins import range
+from builtins import object
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -119,7 +122,7 @@ class RandomDotKinematogram(Stimulus):
 
         """
         self.target_direction = target_direction
-        self.dots = map(lambda x : self._make_random_dot(direction=None), range(n_dots))
+        self.dots = [self._make_random_dot(direction=None) for x in range(n_dots)]
         self.target_dot_ratio = target_dot_ratio
 
     def reset_all_ages(self, randomize_ages=False):
@@ -149,7 +152,7 @@ class RandomDotKinematogram(Stimulus):
 
     @property
     def n_target_dots(self):
-        return sum(map(lambda x: int(x.is_target), self.dots))
+        return sum([int(x.is_target) for x in self.dots])
 
     @property
     def target_dot_ratio(self):
@@ -239,7 +242,7 @@ class RandomDotKinematogram(Stimulus):
             Circle(position = d.position, radius=self.dot_radius,
                         colour=self.dot_colour).plot(self._canvas)
             return d
-        self.dots = map(_process_dot, self.dots)
+        self.dots = list(map(_process_dot, self.dots))
         return self._canvas
 
     def present_and_wait_keyboard(self, background_stimulus=None,

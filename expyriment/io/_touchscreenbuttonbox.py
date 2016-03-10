@@ -5,6 +5,7 @@ This module contains a class implementing a touchscreen button box.
 
 """
 from __future__ import absolute_import
+from builtins import map
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

@@ -6,6 +6,8 @@ Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import chr
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

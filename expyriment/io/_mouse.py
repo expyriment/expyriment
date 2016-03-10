@@ -6,6 +6,7 @@ This module contains a class implementing pygame mouse input.
 """
 from __future__ import absolute_import
 from __future__ import division
+from builtins import str
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

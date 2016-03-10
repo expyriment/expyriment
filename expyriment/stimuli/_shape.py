@@ -8,6 +8,9 @@ This module contains a class implementing a shape stimulus.
 """
 from __future__ import absolute_import
 from __future__ import division
+from past.builtins import cmp
+from builtins import map
+from builtins import range
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
