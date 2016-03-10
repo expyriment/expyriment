@@ -31,10 +31,8 @@ from copy import deepcopy
 
 from . import defaults
 import expyriment
-from expyriment.misc import constants
-from expyriment.misc import Clock
-from expyriment.misc import unicode2str, str2unicode
-from . import randomize
+from expyriment.misc import constants, Clock, unicode2str, str2unicode
+from .randomize import rand_int, shuffle_list
 from . import permute
 
 
@@ -401,7 +399,7 @@ class Experiment(object):
                         cond_idx = self._randomized_condition_for_subject[
                             factor_name][subject_id]
                     except:  # If not yet randomized for this subject, do it
-                        cond_idx = randomize.rand_int(
+                        cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
                         self._randomized_condition_for_subject[
                             factor_name][subject_id] = cond_idx
@@ -593,7 +591,7 @@ class Experiment(object):
 
         """
 
-        return randomize.shuffle_list(self._blocks)
+        return shuffle_list(self._blocks)
 
     def permute_blocks(self, permutation_type, factor_names=None,
                        subject_id=None):
@@ -651,7 +649,7 @@ type".format(permutation_type))
             idx = (subject_id - 1) % len(permutation)
             permutation = permutation[idx]
         else:
-            randomize.shuffle_list(all_factor_combi)
+            shuffle_list(all_factor_combi)
             permutation = all_factor_combi
 
         tmp = self._blocks
@@ -1236,7 +1234,7 @@ class Block(object):
 
         """
 
-        rnd = randomize.rand_int(0, len(self._trials) - 1)
+        rnd = rand_int(0, len(self._trials) - 1)
         return self._trials[rnd]
 
     def add_trial(self, trial, copies=1, random_position=False):
@@ -1256,7 +1254,7 @@ class Block(object):
 
         for _x in range(0, copies):
             if random_position:
-                pos = randomize.rand_int(0, len(self._trials))
+                pos = rand_int(0, len(self._trials))
                 self._trials.insert(pos, trial.copy())
             else:
                 self._trials.append(trial.copy())
@@ -1582,7 +1580,7 @@ class Block(object):
                         if len(tmp)>0:
                             n_segments += 1
 
-        rtn = randomize.shuffle_list(self._trials,
+        rtn = shuffle_list(self._trials,
                                    max_repetitions=max_repetitions,
                                    n_segments=n_segments)
         if rtn == False:
@@ -1848,7 +1846,7 @@ class Trial(object):
 
         """
 
-        return randomize.shuffle_list(self.stimuli,
+        return shuffle_list(self.stimuli,
                                max_repetitions=max_repetitions,
                                n_segments=n_segments)
 
