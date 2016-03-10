@@ -58,3 +58,6 @@ documentation/sphinx/Changelog.rst
 
 # test script
 test_expyriment.py
+
+# backup file
+.bak

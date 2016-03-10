@@ -48,7 +48,7 @@ def import_plugins(init_filename):
                         tmp = line[6:].lstrip()
                         name = tmp[:len(filename[:-4])]
                         break
-                code[filename] = "from {0} import {1}\n".format(filename[:-3],
+                code[filename] = "from .{0} import {1}\n".format(filename[:-3],
                                                                 name)
             except:
                 print("Warning: Could not import {0}!".format(
@@ -123,9 +123,9 @@ def import_plugins_from_settings_folder(init_filename):
                             tmp = line[6:].lstrip()
                             name = tmp[:len(filename[:-4])]
                             break
-                    code[filename] = "from {0} import {1}\n".format(filename[:-3],
+                    code[filename] = "from .{0} import {1}\n".format(filename[:-3],
                                                                     name)
-                    print("import {0}.extras.{1} (from homefolder)".format(
+                    print("import .{0}.extras.{1} (from homefolder)".format(
                                                         module, name))
                 except:
                     print("Could not import {0}!".format(
