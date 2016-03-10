@@ -8,6 +8,8 @@ This module contains a class implementing a stimulus cloud stimulus.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''
@@ -105,8 +107,8 @@ class StimulusCloud(Visual):
         for stim in self._cloud:
             stim.rect = pygame.Rect((0, 0), stim.surface_size)
             surface_size = surface.get_size()
-            stim.rect.center = [stim.position[0] + surface_size[0] / 2,
-                                - stim.position[1] + surface_size[1] / 2]
+            stim.rect.center = [stim.position[0] + surface_size[0] // 2,
+                                - stim.position[1] + surface_size[1] // 2]
             surface.blit(stim._get_surface(), stim.rect)
         return surface
 
@@ -143,10 +145,10 @@ class StimulusCloud(Visual):
                 reps = 0
                 stimulus._set_surface(stimulus._get_surface())
                 while(True): #find a solution
-                    stimulus.position = (random.randint(-self.size[0] / 2,
-                                                        self.size[0] / 2),
-                                         random.randint(-self.size[1] / 2,
-                                                        self.size[1] / 2))
+                    stimulus.position = (random.randint(-self.size[0] // 2,
+                                                        self.size[0] // 2),
+                                         random.randint(-self.size[1] // 2,
+                                                        self.size[1] // 2))
                     reps = reps + 1
                     if stimulus.inside_stimulus(self):
                         okay = True

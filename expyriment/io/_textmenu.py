@@ -6,6 +6,8 @@ This module contains a class implementing a TextMenu.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -259,7 +261,7 @@ class TextMenu(Input):
         self._canvas.clear_surface()
         if self._background_stimulus is not None:
             self._background_stimulus.plot(self._canvas)
-        y_pos = int(((1.5 + n) * self._line_size[1]) + (n * self._gap)) / 2
+        y_pos = int(((1.5 + n) * self._line_size[1]) + (n * self._gap)) // 2
         self._heading.position = (self._position[0], y_pos + self._position[1])
         self._heading.plot(self._canvas)
         y_pos = y_pos - int(0.5 * self._line_size[1])
@@ -271,8 +273,8 @@ class TextMenu(Input):
                 if cnt == selected_item:
                     self._frame.position = (0, y_pos)
         else:  # scroll menu
-            for cnt in range(selected_item - self._scroll_menu / 2,
-                             selected_item + 1 + self._scroll_menu / 2):
+            for cnt in range(selected_item - self._scroll_menu // 2,
+                             selected_item + 1 + self._scroll_menu // 2):
                 y_pos -= (self._line_size[1] + self._gap)
                 if cnt >= 0 and cnt < len(self._menu_items):
                     self._append_item(self._menu_items[cnt],
@@ -333,8 +335,8 @@ class TextMenu(Input):
                             if self._menu_items[cnt].overlapping_with_position(pos):
                                 pressed = cnt
                 else:
-                    for cnt in range(selected-self._scroll_menu/2,
-                                     selected+1+self._scroll_menu/2):
+                    for cnt in range(selected-self._scroll_menu // 2,
+                                     selected+1+self._scroll_menu // 2):
                         if 0 <= cnt < len(self._menu_items):
                             if self._menu_items[cnt].overlapping_with_position(pos):
                                 pressed = cnt

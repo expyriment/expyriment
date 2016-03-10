@@ -7,6 +7,8 @@ This module contains a class implementing a dot stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -61,7 +63,7 @@ class PolygonDot(PolygonEllipse):
     @property
     def radius(self):
         """Getter for radius."""
-        return self.ellipse_size[0] / 2
+        return self.ellipse_size[0] // 2
 
     def is_center_inside(self, other):
         """Return True if the center is inside another dot.

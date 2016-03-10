@@ -1,13 +1,14 @@
 """
 Get System Information.
 """
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
-
 
 import sys
 import os
@@ -87,16 +88,16 @@ def get_system_info(as_string=False):
                 for line in f:
                     if line.startswith("MemTotal"):
                         mem_total = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("MemFree"):
                         mem_free = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("Buffers"):
                         mem_buffers = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("Cached"):
                         mem_cached = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
             hardware_memory_total = str(mem_total) + " MB"
             hardware_memory_free = str(mem_free + mem_buffers + mem_cached) + \
                                    " MB"
@@ -129,8 +130,8 @@ def get_system_info(as_string=False):
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
             s = os.statvfs(current_folder)
-            disk_total = int((s.f_frsize * s.f_blocks) / 1024 ** 2)
-            disk_free = int((s.f_frsize * s.f_bavail) / 1024 ** 2)
+            disk_total = int((s.f_frsize * s.f_blocks) // 1024 ** 2)
+            disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
         except:
@@ -184,8 +185,8 @@ def get_system_info(as_string=False):
 
             stat = MEMORYSTATUSEX()
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
-            hardware_memory_total = str(stat.ullTotalPhys / 1024 ** 2) + " MB"
-            hardware_memory_free = str(stat.ullAvailPhys / 1024 ** 2) + " MB"
+            hardware_memory_total = str(stat.ullTotalPhys // 1024 ** 2) + " MB"
+            hardware_memory_free = str(stat.ullAvailPhys // 1024 ** 2) + " MB"
         except:
             hardware_memory_total = ""
             hardware_memory_free = ""
@@ -197,8 +198,8 @@ def get_system_info(as_string=False):
             ret = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
                 unicode(current_folder), ctypes.byref(_),
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
-            hardware_disk_space_total = str(disk_total.value / 1024 ** 2) + " MB"
-            hardware_disk_space_free = str(disk_free.value / 1024 ** 2) + " MB"
+            hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
+            hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
         except:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
@@ -235,7 +236,7 @@ def get_system_info(as_string=False):
             proc = subprocess.Popen(['sysctl', '-a', 'hw.memsize'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            mem_total = int(proc.stdout.readline().split(":")[1].strip()) / 1024 ** 2
+            mem_total = int(proc.stdout.readline().split(":")[1].strip()) // 1024 ** 2
             hardware_memory_total = str(mem_total) + " MB"
         except:
             hardware_memory_total = ""
@@ -255,7 +256,7 @@ def get_system_info(as_string=False):
                 if y > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     page = int(non_decimal.sub('', item).strip("."))
-            hardware_memory_free = str(mem_total - (active * page) / 1024 ** 2) + " MB"
+            hardware_memory_free = str(mem_total - (active * page) // 1024 ** 2) + " MB"
 
         except:
             hardware_memory_free = ""
@@ -263,8 +264,8 @@ def get_system_info(as_string=False):
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
             s = os.statvfs(current_folder)
-            disk_total = int((s.f_frsize * s.f_blocks) / 1024 ** 2)
-            disk_free = int((s.f_frsize * s.f_bavail) / 1024 ** 2)
+            disk_total = int((s.f_frsize * s.f_blocks) // 1024 ** 2)
+            disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
         except:
@@ -359,7 +360,7 @@ def get_system_info(as_string=False):
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) / 8))
+            tabs = "\t" * (4 - int((len(key) + 1) // 8))
             try:
                 rtn += key + ":" + tabs + info[key] + "\n"
             except TypeError:

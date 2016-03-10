@@ -5,6 +5,8 @@ This module contains a class implementing pygame mouse input.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -145,8 +147,8 @@ class Mouse(Input):
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
                 if event.button > 0:
                     pos = pygame.mouse.get_pos()
-                    pos = (pos[0] - screen_size[0] / 2,
-                          -pos[1] + screen_size[1] / 2)
+                    pos = (pos[0] - screen_size[0] // 2,
+                          -pos[1] + screen_size[1] // 2)
                     break
             if pos is None:
                 return False
@@ -355,15 +357,15 @@ class Mouse(Input):
         pygame.event.pump()
         screen_size = expyriment._active_exp.screen.surface.get_size()
         pos = pygame.mouse.get_pos()
-        return (pos[0] - screen_size[0] / 2, -pos[1] + screen_size[1] / 2)
+        return (pos[0] - screen_size[0] // 2, -pos[1] + screen_size[1] // 2)
 
     @position.setter
     def position(self, position):
         """Setter for mouse position."""
 
         screen_size = expyriment._active_exp.screen.surface.get_size()
-        pos = (position[0] + screen_size[0] / 2,
-               - position[1] + screen_size[1] / 2)
+        pos = (position[0] + screen_size[0] // 2,
+               - position[1] + screen_size[1] // 2)
         pygame.mouse.set_pos(pos)
 
     def set_cursor(self, size, hotspot, xormasks, andmasks):

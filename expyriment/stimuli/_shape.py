@@ -7,6 +7,8 @@ This module contains a class implementing a shape stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -357,7 +359,7 @@ class Shape(Visual):
 
         """
 
-        jitter = self._line_width / 2
+        jitter = self._line_width // 2
         return (int(point_xy[0] - self.rect[1] + jitter),
                 - 1 * int(point_xy[1] - self.rect[0] - jitter))
 

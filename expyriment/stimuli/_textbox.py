@@ -7,6 +7,8 @@ This module contains a class implementing a text box stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -409,7 +411,7 @@ class TextBox(Visual):
                     surface.blit(tempsurface, (0, accumulated_height))
                 elif justification == 1:
                     surface.blit(tempsurface,
-                                 ((rect.width - tempsurface.get_width()) / 2,
+                                 ((rect.width - tempsurface.get_width()) // 2,
                                   accumulated_height))
                 elif justification == 2:
                     surface.blit(tempsurface,

@@ -8,6 +8,8 @@ This module contains a class implementing a Visual Mask.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -128,7 +130,7 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
         dots = range(n_dots_x * n_dots_y)
         shuffle(dots)
         for d in dots[:int(len(dots) * self.dot_percentage / 100)]:
-            y = (d / n_dots_x) * self.dot_size[1]
+            y = (d // n_dots_x) * self.dot_size[1]
             x = (d % n_dots_x) * self.dot_size[0]
             draw.rectangle([(x, y),
                             (x + self.dot_size[0], y + self.dot_size[1])],
@@ -138,9 +140,9 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
             im = im.filter(ImageFilter.BLUR).filter(ImageFilter.SMOOTH_MORE)
 
         #crop image and save
-        c = (im.size[0] / 2, im.size[1] / 2)
-        box = (c[0] - self._size[0] / 2, c[1] - self._size[1] / 2,
-               c[0] + self._size[0] / 2, c[1] + self._size[1] / 2)
+        c = (im.size[0] // 2, im.size[1] // 2)
+        box = (c[0] - self._size[0] // 2, c[1] - self._size[1] // 2,
+               c[0] + self._size[0] // 2, c[1] + self._size[1] // 2)
         im = im.crop(box)
         im.save(self._filename, format="png")
 

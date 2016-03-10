@@ -4,13 +4,13 @@ This module contains an experimental clock.
 
 """
 from __future__ import absolute_import
+from __future__ import division
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
-
 
 import sys
 import time
@@ -43,7 +43,7 @@ class Clock(object) :
         """
 
         if (sync_clock.__class__.__name__ == "Clock"):
-            self.__init_time = sync_clock.init_time / 1000
+            self.__init_time = sync_clock.init_time // 1000
         else:
             self.__init_time = get_time()
 
@@ -134,7 +134,7 @@ class Clock(object) :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                time.sleep((waiting_time - looptime) / 1000)
+                time.sleep((waiting_time - looptime) // 1000)
             while (self.time < start + waiting_time):
                 pass
 

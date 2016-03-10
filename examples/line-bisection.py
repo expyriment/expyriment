@@ -7,6 +7,7 @@ A line bisection task.
 This example is appropriate to illustrates the use of the Android runtime environment for Exypriment on tablet PC.
 
 """
+from __future__ import division
 
 from expyriment import control, stimuli, io, design, misc
 
@@ -18,7 +19,7 @@ line_length = 200
 def line_bisection_task(line_length, position):
     # make button
     button = stimuli.Rectangle(size=(40,20),
-                position=(exp.screen.size[0]/2-25, 15-exp.screen.size[1]/2))
+                position=(exp.screen.size[0]//2-25, 15-exp.screen.size[1]//2))
     button_text = stimuli.TextLine(text="ok", position=button.position,
                                 text_colour=misc.constants.C_WHITE)
     mark_position = None
@@ -41,7 +42,7 @@ def line_bisection_task(line_length, position):
         _id, pos, _rt = exp.mouse.wait_press()
         # process clicked position position
         if abs(pos[1]-line.position[1])<=50 and\
-                    abs(pos[0]-line.position[0])<=line_length/2:
+                    abs(pos[0]-line.position[0])<=line_length//2:
             mark_position = pos[0]
         else:
             if button.overlapping_with_position(pos): # is button pressed
@@ -66,7 +67,7 @@ exp.mouse.show_cursor()
 # trial loop
 while True:
     # find random position
-    rx, ry = ((exp.screen.size[0]-line_length)/2, (exp.screen.size[1]-50)/2)
+    rx, ry = ((exp.screen.size[0]-line_length)//2, (exp.screen.size[1]-50)//2)
     pos = [design.randomize.rand_int(-rx, rx), design.randomize.rand_int(-ry, ry)]
     # present task
     judgment = line_bisection_task(line_length, position=pos)

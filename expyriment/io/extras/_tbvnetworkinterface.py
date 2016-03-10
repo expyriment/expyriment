@@ -5,6 +5,8 @@ Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -557,7 +559,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[8 + x * 4:8 + x * 4 + 4])[0]
-                     for x in range(0, len(data[8:]) / 4)], rt)
+                     for x in range(0, len(data[8:]) // 4)], rt)
 
     def get_mean_of_roi_at_time_point(self, roi, time_point):
         """Get the mean of a ROI at a time point.
@@ -707,7 +709,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             _all = [struct.unpack('!i', data[4 + x * 4:4 + x * 4 + 4])[0]
-                    for x in range(0, len(data[4:]) / 4)]
+                    for x in range(0, len(data[4:]) // 4)]
             return [_all[x:x+3] for x in range(0, len(_all), 3)], rt
 
     # Volume Data Access Queries
@@ -773,7 +775,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_raw_value_of_all_voxels_at_time(self, time_point):
         """Get the raw value of all voxels at a certain time point.
@@ -804,7 +806,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_beta_of_voxel(self, beta, coords):
         """Get a specific beta value of a voxel.
@@ -862,7 +864,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!d', data[x * 8:x * 8 + 8])[0]
-                     for x in range(0, len(data) / 8)], rt)
+                     for x in range(0, len(data) // 8)], rt)
 
     def get_map_value_of_voxel(self, map, coords):
         """Get a specific map value of a voxel.
@@ -921,7 +923,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)
 
     # SVM Access Functions
     def get_number_of_classes(self):
@@ -965,4 +967,4 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)

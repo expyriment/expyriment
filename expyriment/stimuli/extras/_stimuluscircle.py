@@ -7,6 +7,7 @@ This module contains a class implementing a stimulus circle stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -128,8 +129,8 @@ class StimulusCircle(Visual):
         surface_size = surface.get_size()
         for stim in self._stimuli:
             stim_rect = pygame.Rect((0, 0), stim.surface_size)
-            stim_rect.center = [stim.position[0] + surface_size[0] / 2,
-                                - stim.position[1] + surface_size[1] / 2]
+            stim_rect.center = [stim.position[0] + surface_size[0] // 2,
+                                - stim.position[1] + surface_size[1] // 2]
             surface.blit(stim._get_surface(), stim_rect)
         return surface
 
@@ -196,12 +197,12 @@ class StimulusCircle(Visual):
         if shuffle:
             random.shuffle(pos_list)
         size = self.surface_size
-        center = (size[0] / 2, size[1] / 2)
+        center = (size[0] // 2, size[1] // 2)
         for i, elem in enumerate(pos_list):
             d = offset + i * step
             xy = self._get_circle_position(center, self._radius, d)
-            self._stimuli[elem].position = (xy[0] - size[0] / 2,
-                                            xy[1] - size[1] / 2)
+            self._stimuli[elem].position = (xy[0] - size[0] // 2,
+                                            xy[1] - size[1] // 2)
 
 
 if __name__ == "__main__":

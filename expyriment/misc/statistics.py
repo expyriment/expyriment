@@ -4,6 +4,8 @@ The statistics module.
 This module contains miscellaneous stastistical functions for expyriment.
 
 """
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -124,10 +126,10 @@ def median(data):
             tmp.append(elem)
     data = sorted(tmp)
     if len(data) % 2 == 1:
-        return data[(len(data) - 1) / 2 ]
+        return data[(len(data) - 1) // 2 ]
     else:
-        lower = data[len(data) / 2 - 1]
-        upper = data[len(data) / 2]
+        lower = data[len(data) // 2 - 1]
+        upper = data[len(data) // 2]
         return (float(lower + upper)) / 2.0
 
 def frequence_table(data):

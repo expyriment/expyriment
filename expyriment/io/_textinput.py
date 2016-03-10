@@ -6,6 +6,8 @@ This module contains a class implementing a text input box for user input.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -343,18 +345,18 @@ class TextInput(Input):
         self._canvas._set_surface(self._canvas._get_surface())
         self._canvas_size = self._canvas.surface_size
         pygame.draw.rect(self._canvas._get_surface(), self._background_colour,
-                         (self._canvas_size[0] / 2 - self._max_size[0] / 2 - 6,
+                         (self._canvas_size[0] // 2 - self._max_size[0] // 2 - 6,
                           self._message_surface_size[1] + self._gap,
                           self._max_size[0] + 12, self._max_size[1] + 5), 0)
         pygame.draw.rect(self._canvas._get_surface(), self._frame_colour,
-                         (self._canvas_size[0] / 2 - self._max_size[0] / 2 - 6,
+                         (self._canvas_size[0] // 2 - self._max_size[0] // 2 - 6,
                           self._message_surface_size[1] + self._gap,
                           self._max_size[0] + 12, self._max_size[1] + 5), 1)
         if len(self._message) != 0:
                     self._canvas._get_surface().blit(
                         message_text._get_surface(),
-                        (self._canvas.surface_size[0] / 2 -
-                         self._message_surface_size[0] / 2, 0))
+                        (self._canvas.surface_size[0] // 2 -
+                         self._message_surface_size[0] // 2, 0))
         background = expyriment.stimuli.BlankScreen(
             colour=self._background_colour)
         if self._background_stimulus is not None:
@@ -375,8 +377,8 @@ class TextInput(Input):
         offset = 2 + user_canvas_size[1] % 2
         user_canvas.position = (self._canvas.absolute_position[0],
                                 self._canvas.absolute_position[1] +
-                                self._canvas_size[1] / 2 -
-                                user_canvas_size[1] / 2 -
+                                self._canvas_size[1] // 2 -
+                                user_canvas_size[1] // 2 -
                                 self._message_surface_size[1] -
                                 self._gap - offset)
         user_text = expyriment.stimuli.TextLine(

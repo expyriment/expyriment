@@ -6,6 +6,8 @@ This module contains a class implementing the experiment structure.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -414,7 +416,7 @@ class Experiment(object):
                             break
                     if n_cond_lower_fac <= 0:
                         n_cond_lower_fac = 1
-                    cond_idx = ((subject_id - 1) / n_cond_lower_fac) % \
+                    cond_idx = ((subject_id - 1) // n_cond_lower_fac) % \
                         len(self.get_bws_factor(fac))
                 return self._bws_factors[factor_name][cond_idx]
 

@@ -7,6 +7,8 @@ This module contains a class implementing a Gabor patch stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -95,7 +97,7 @@ The Python package 'Matplotlib' is not installed."""
         Picture.__init__(self, filename, position)
 
         # make linear ramp
-        X0 = (np.linspace(1, size, size) / size) - .5
+        X0 = (np.linspace(1, size, size) // size) - .5
         # Set wavelength and phase
         freq = size / float(lambda_)
         phaseRad = phase * 2 * np.pi

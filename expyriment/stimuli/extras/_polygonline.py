@@ -7,6 +7,8 @@ This module contains a class implementing a line stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -58,8 +60,8 @@ class PolygonLine(PolygonRectangle):
         PolygonRectangle.__init__(self, size=(f.distance(t), line_width),
                                   colour=colour, anti_aliasing=anti_aliasing)
         self.native_rotate(math.atan2(d.y, d.x) * 180 / math.pi)
-        self.position[0] = f.x + (d.x / 2)
-        self.position[1] = f.y + (d.y / 2)
+        self.position[0] = f.x + (d.x // 2)
+        self.position[1] = f.y + (d.y // 2)
 
 
 if __name__ == "__main__":

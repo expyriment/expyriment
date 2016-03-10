@@ -7,6 +7,8 @@ This module contains a class implementing a fixation cross stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -69,8 +71,8 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        x = (self._size[0] - line_width) / 2
-        y = (self._size[1] - line_width) / 2
+        x = (self._size[0] - line_width) // 2
+        y = (self._size[1] - line_width) // 2
         self.add_vertex((line_width, 0))
         self.add_vertex((0, -y))
         self.add_vertex((x, 0))

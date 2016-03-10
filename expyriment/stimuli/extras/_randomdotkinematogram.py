@@ -8,6 +8,8 @@ This module contains a class implementing a random dot kinematogram.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -395,8 +397,8 @@ class MovingPosition(object):
             direction = 450 - self._direction
         else:
             direction = self._direction
-        angle = direction * (math.pi)/180
-        speed = self._speed/float(1000)
+        angle = direction * math.pi / 180.0
+        speed = self._speed / 1000.0
         self._movement_vector = (speed * math.cos(angle),
                                  speed * math.sin(angle))
 

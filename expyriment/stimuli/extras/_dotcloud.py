@@ -8,6 +8,8 @@ This module contains a class implementing a dotcloud stimulus.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -59,7 +61,7 @@ class DotCloud(Visual):
             if radius is None:
                 try:
                     self._radius = min(
-                        expyriment._active_exp.screen.surface.get_size()) / 2
+                        expyriment._active_exp.screen.surface.get_size()) // 2
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:
@@ -141,8 +143,8 @@ class DotCloud(Visual):
         for dot in self._cloud:
             dot.rect = pygame.Rect((0, 0), dot.surface_size)
             surface_size = surface.get_size()
-            dot.rect.center = [dot.position[0] + surface_size[0] / 2,
-                               dot.position[1] + surface_size[1] / 2]
+            dot.rect.center = [dot.position[0] + surface_size[0] // 2,
+                               dot.position[1] + surface_size[1] // 2]
             surface.blit(dot._get_surface(), dot.rect)
         return surface
 

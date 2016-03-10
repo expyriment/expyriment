@@ -36,8 +36,8 @@ def _make_graph(x, y, colour):
     graph = stimuli.Canvas(size=(max(x) * 3 + 10, max(y) * 3 + 10))
     for counter in range(len(x)):
         dot = stimuli.Dot(radius=1, colour=colour)
-        dot.position = (x[counter] * 3 - graph.size[0] / 2 + 5,
-                        y[counter] * 3 - graph.size[1] / 2 + 5)
+        dot.position = (x[counter] * 3 - graph.size[0] // 2 + 5,
+                        y[counter] * 3 - graph.size[1] // 2 + 5)
         dot.plot(graph)
     return graph
 
@@ -147,7 +147,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             start = get_time()
             s2.present(clear=False)
             tmp.append(get_time() - start)
-        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
+        refresh_rate = 1000 // (statistics.mean(tmp) * 1000)
 
         #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         #graph = _make_graph(todo_time, actual_time, [150, 150, 150])
@@ -181,7 +181,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = 1000.0/refresh_rate
+            refresh_time = 1000.0 / refresh_rate
             return refresh_time - (presentation_time % refresh_time)
         # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
         unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
@@ -190,10 +190,10 @@ After the test, you will be asked to indicate which (if any) of those two square
         inaccuracies = []
         delayed_presentations = 0
         for key in hist.keys():
-            inaccuracies.extend([key % (1000 / refresh_rate)] * hist[key])
+            inaccuracies.extend([key % (1000 // refresh_rate)] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(round(sum(inaccuracies)/float(len(inaccuracies))))
+        inaccuracy = int(round(sum(inaccuracies) / float(len(inaccuracies))))
         delayed = round(100 * delayed_presentations/180.0, 2)
 
         text = stimuli.TextScreen(
@@ -415,7 +415,7 @@ abcdefghijklmnopqrstuvwxyz äöü
     quest = io.TextInput(message="Please enter text: (Keep empty for default text)", length=35)
     mouse = io.Mouse(show_cursor=True)
 
-    bs = (exp.screen.size[0] / 3.5, exp.screen.size[1] / 3.5)
+    bs = (exp.screen.size[0] // 3.5, exp.screen.size[1] // 3.5)
 
     # rects center, left, right, top, button]
     cl = (20, 20, 20)
@@ -499,7 +499,7 @@ def _write_protocol(exp, results):
     sorted_keys.sort()
     rtn = ""
     for key in sorted_keys:
-        tabs = "\t" * (4 - int((len(key) + 1) / 8)) + "\t"
+        tabs = "\t" * (4 - int((len(key) + 1) // 8)) + "\t"
         try:
             rtn += key + ":" + tabs + results[key] + "\n"
         except TypeError:

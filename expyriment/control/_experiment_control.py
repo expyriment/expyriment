@@ -4,6 +4,8 @@ The control._experiment_control module of expyriment.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -183,7 +185,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         experiment.events._time_stamp = experiment.data._time_stamp
         experiment.events.rename(experiment.events.standard_file_name)
 
-    number = defaults.initialize_delay - int(experiment.clock.time / 1000)
+    number = defaults.initialize_delay - int(experiment.clock.time // 1000)
     if number > 0:
         text = stimuli.TextLine("Initializing, please wait...",
                                 text_size=24,

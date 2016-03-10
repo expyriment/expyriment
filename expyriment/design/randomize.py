@@ -4,6 +4,7 @@ This module contains various functions for randomizing data
 
 """
 from __future__ import absolute_import
+from __future__ import division
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
@@ -116,9 +117,9 @@ def rand_norm(a, b, mu=None, sigma=None):
     """
 
     if mu is None:
-        mu = a + (b-a)/2.0
+        mu = a + (b-a) / 2.0
     if sigma is None:
-        sigma = (b-a)/6.0
+        sigma = (b-a) / 6.0
 
     r = _random.normalvariate(mu=mu, sigma=sigma)
     if r < a or r > b:
@@ -170,7 +171,7 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
     """
 
     if n_segments > 1:
-        l = 1 + (len(list_) - 1) / int(n_segments)
+        l = 1 + (len(list_) - 1) // int(n_segments)
         for x in range(n_segments):
             t = (x + 1) * l
             if t > len(list_):

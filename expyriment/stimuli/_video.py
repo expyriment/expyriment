@@ -6,6 +6,8 @@ This module contains a class implementing video playback.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -193,9 +195,9 @@ class Video(_visual.Stimulus):
             self._file = pygame.movie.Movie(unicode2str(self._filename,
                                                         fse=True))
             screen_size = expyriment._active_exp.screen.surface.get_size()
-            self._pos = [screen_size[0] / 2 - self._file.get_size()[0] / 2 +
+            self._pos = [screen_size[0] // 2 - self._file.get_size()[0] // 2 +
                          self._position[0],
-                         screen_size[1] / 2 - self._file.get_size()[1] / 2 -
+                         screen_size[1] // 2 - self._file.get_size()[1] // 2 -
                          self._position[1]]
             size = self._file.get_size()
             self._surface = pygame.surface.Surface(size)

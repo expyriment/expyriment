@@ -4,6 +4,8 @@ The control._miscellaneous module of expyriment.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -209,7 +211,7 @@ def get_defaults(search_str="", as_string=False):
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) / 8))
+            tabs = "\t" * (4 - int((len(key) + 1) // 8))
             rtn += key + ":" + tabs + repr(defaults[key]) + "\n"
     else:
         rtn = defaults

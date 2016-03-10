@@ -7,6 +7,8 @@ This module contains a class implementing a text screen stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -171,10 +173,10 @@ class TextScreen(Visual):
                     self._size = (
                         expyriment._active_exp.screen.surface.get_size()[0] -
                         expyriment._active_exp.screen.surface.get_size()[0]
-                        / 5,
+                        // 5,
                         expyriment._active_exp.screen.surface.get_size()[1] -
                         expyriment._active_exp.screen.surface.get_size()[1]
-                        / 5)
+                        // 5)
                 except:
                     raise RuntimeError("Cannot get size of screen!")
 
@@ -479,14 +481,14 @@ class TextScreen(Visual):
                       text_underline=self.text_underline,
                       text_colour=self.text_colour,
                       background_colour=self.background_colour,
-                      size=(self.size[0], self.size[1] - self.size[1] / 5),
+                      size=(self.size[0], self.size[1] - self.size[1] // 5),
                       text_justification=self.text_justification)
         expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
         surface.blit(header._get_surface(),
-                     (self.size[0] / 2 - header.surface_size[0] / 2,
+                     (self.size[0] // 2 - header.surface_size[0] // 2,
                       0))
         surface.blit(box._get_surface(),
-                     (self.size[0] / 2 - box.size[0] / 2, self.size[1] / 5))
+                     (self.size[0] // 2 - box.size[0] // 2, self.size[1] // 5))
         return surface
 
 

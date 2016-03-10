@@ -5,6 +5,8 @@ to handle, preprocessing and aggregate Expyriment data files.
 
 """
 from __future__ import print_function
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -231,7 +233,7 @@ def get_experiment_duration(event_filename):
             elif r[2]=="ended":
                 stop = int(r[0])
 
-    sec = (stop-start)/1000.0
+    sec = (stop-start) / 1000.0
     return sec / 60.0
 
 

@@ -5,6 +5,8 @@ This module contains a class implementing a network interface for Turbo-Satori
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -326,7 +328,7 @@ class TurbosatoriNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!i', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)
 
     def get_raw_data_scale_factor(self):
         """Get the scale factor set in the GUI for raw data.

@@ -5,6 +5,8 @@ This module contains a class implementing HSV colours [hue, saturation, value]
 
 """
 from __future__ import print_function
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -58,8 +60,8 @@ class HSVColour(object):
     def hsv(self, hsv_colour):
         """Setter for HSV value [hue, saturation, value]"""
 
-        self._rgb = hsv_to_rgb(h = hsv_colour[0]/255.0, s = hsv_colour[1]/255.0,
-                            v = hsv_colour[2]/255.0)
+        self._rgb = hsv_to_rgb(h = hsv_colour[0] / 255.0, s = hsv_colour[1] / 255.0,
+                            v = hsv_colour[2] / 255.0)
 
     @property
     def rgb(self):
@@ -71,8 +73,8 @@ class HSVColour(object):
     def rgb(self, rgb_colour):
         """Setter for RGB value [red, green, blue]"""
 
-        self._rgb = (rgb_colour[0]/255.0, rgb_colour[1]/255.0,
-                    rgb_colour[2]/255.0)
+        self._rgb = (rgb_colour[0] / 255.0, rgb_colour[1] / 255.0,
+                    rgb_colour[2] / 255.0)
 
     @property
     def hue(self):

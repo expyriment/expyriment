@@ -7,6 +7,8 @@ This module contains a class implementing a line stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -65,8 +67,8 @@ class Line(Visual):
         s = misc.geometry.XYPoint(start_point)
         e = misc.geometry.XYPoint(end_point)
         d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
-        self._position[0] = s.x + (d.x / 2)
-        self._position[1] = s.y + (d.y / 2)
+        self._position[0] = s.x + (d.x // 2)
+        self._position[1] = s.y + (d.y // 2)
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 

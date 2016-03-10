@@ -7,6 +7,8 @@ This module contains a class implementing a tone stimulus.
 
 """
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -82,7 +84,7 @@ class Tone(Audio):
             raise AttributeError(Audio._getter_exception_message.format(
                 "duration"))
         else:
-            self._duration = value / 1000
+            self._duration = value / 1000.0
             self._filename = self._create_sine_wave()
 
     @property
@@ -179,7 +181,7 @@ class Tone(Audio):
                         suffix=".wav")
         os.close(fid)
         w = wave.open(filename, 'w')
-        w.setparams((1, self._bitdepth / 8, self._samplerate, n_samples, 'NONE',
+        w.setparams((1, self._bitdepth // 8, self._samplerate, n_samples, 'NONE',
                      'not compressed'))
         max_amplitude = float(int((2 ** (self._bitdepth)) / 2) - 1)
         for chunk in self._grouper(2048, samples):

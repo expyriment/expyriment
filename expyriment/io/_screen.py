@@ -4,6 +4,8 @@ A screen.
 """
 from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -202,12 +204,12 @@ machine!")
 
         if not self._open_gl:
             rectangles = []
-            half_screen_size = (self.size[0] / 2, self.size[1] / 2)
+            half_screen_size = (self.size[0] // 2, self.size[1] // 2)
             for stim in stimuli:
                 pos = stim.absolute_position
                 stim_size = stim.surface_size
-                rect_pos = (pos[0] + half_screen_size[0] - stim_size[0] / 2,
-                            - pos[1] + half_screen_size[1] - stim_size[1] / 2)
+                rect_pos = (pos[0] + half_screen_size[0] - stim_size[0] // 2,
+                            - pos[1] + half_screen_size[1] - stim_size[1] // 2)
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
             pygame.display.update(rectangles)
             if self._logging:
@@ -226,7 +228,7 @@ machine!")
 
         """
 
-        return self._window_size[0] / 2
+        return self._window_size[0] // 2
 
     @property
     def center_y(self):
@@ -239,7 +241,7 @@ machine!")
 
         """
         
-        return self._window_size[1] / 2
+        return self._window_size[1] // 2
 
     @property
     def size(self):

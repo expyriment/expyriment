@@ -10,6 +10,8 @@ Credits and references:
       https://mail.python.org/pipermail/python-dev/2009-October/093173.html
 """
 from __future__ import print_function
+from __future__ import division
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -89,7 +91,7 @@ elif platform == 'win32':
         def get_time():
             """Get high-resolution monotonic time stamp (float) """
             _winQPC(ctypes.byref(_fcounter))
-            return  _fcounter.value/_qpfreq
+            return  _fcounter.value / _qpfreq
         get_time()
     except:
         _use_time_module = True
