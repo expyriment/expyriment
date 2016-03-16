@@ -166,10 +166,11 @@ def set_skip_wait_functions(onoff):
 
 def _get_module_values(goal_dict, module):
     value = None
+    namespace = locals()
     for var in dir(module):
         if not var.startswith("_"):
-            exec("value = {0}.{1}".format(module.__name__, var))
-            goal_dict["{0}.{1}".format(module.__name__, var)] = value
+            exec("value = {0}.{1}".format(module.__name__, var), namespace)
+            goal_dict["{0}.{1}".format(module.__name__, var)] = namespace['value']
     return goal_dict
 
 

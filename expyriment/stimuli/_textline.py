@@ -6,14 +6,14 @@ A text line stimulus.
 This module contains a class implementing a text line stimulus.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, division, print_function
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
-
 
 import os
 
@@ -23,7 +23,6 @@ from . import defaults
 from ._visual import Visual
 from expyriment.misc import find_font, unicode2str, str2unicode
 import expyriment
-
 
 class TextLine(Visual):
     """A class implementing a single text line."""
@@ -270,7 +269,7 @@ class TextLine(Visual):
             surface = _font.render(_text, True, self.text_colour)
         surface = surface.convert_alpha()
 
-        if self._max_width > 0 and surface.get_size()[0] > self._max_width:
+        if self._max_width is not None and self._max_width > 0 and surface.get_size()[0] > self._max_width:
             # trim too long text lines
             self._text = self._text[:-2] + "~"
             surface = self._create_surface() # recursion

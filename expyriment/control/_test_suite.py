@@ -523,12 +523,14 @@ def _find_self_tests():
     classes = []
     method = []
     rtn = []
+    namesspace = {}
+    namesspace["expyriment"] = expyriment
     for module in ["expyriment.io", "expyriment.io.extras"]:
-        exec("classes = dir({0})".format(module))
-        for cl in classes:
+        exec("classes = dir({0})".format(module), namesspace)
+        for cl in namesspace['classes']:
             if not cl.startswith("_"):
-                exec("method = dir({0}.{1})".format(module, cl))
-                if "_self_test" in method:
+                exec("method = dir({0}.{1})".format(module, cl), namesspace)
+                if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
     return rtn
 
@@ -601,7 +603,7 @@ def run_test_suite():
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
                 results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
                 results["testsuite_visual_opengl_version"] = ogl.glGetString(ogl.GL_VERSION)
-                extensions = ogl.glGetString(ogl.GL_EXTENSIONS).split(" ")
+                extensions = ogl.glGetString(ogl.GL_EXTENSIONS).decode().split(" ")
                 if extensions[-1] == "":
                     extensions = extensions[:-1]
                 results["testsuite_visual_opengl_extensions"] = extensions
@@ -629,9 +631,16 @@ def run_test_suite():
             _font_viewer(exp)
             preselected_item = select + 1
         else:
-            exec(test_functions[select])
+            namesspace = {}
+            namesspace.update(globals())
+            namesspace.update(locals())
+            exec(test_functions[select], namesspace)
+            rtn = namesspace['rtn']
             results.update(rtn)
+            if 'go_on' in namesspace:
+                go_on = namesspace['go_on']
             preselected_item = select + 1
+            namesspace = None
 
     if quit_experiment:
         expyriment.control.end(goodbye_delay=0, goodbye_text="Quitting test suite")

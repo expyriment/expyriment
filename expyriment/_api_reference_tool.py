@@ -40,9 +40,6 @@ except:
 import expyriment
 
 
-_x = None
-_y = None
-
 def _get_doc_and_function(obj):
     rtn = []
     for var in dir(obj):
@@ -52,14 +49,15 @@ def _get_doc_and_function(obj):
 
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
+    namespace = locals()
     for cl in classes:
         cl = "{0}.{1}".format(mod.__name__, cl)
-        exec("_x =" + cl)
-        doc_dict[cl], functions = _get_doc_and_function(_x)
+        exec("_x =" + cl, namespace)
+        doc_dict[cl], functions = _get_doc_and_function(namespace['_x']) # FIXME shoul dwork but is unchecked for python 2/3 compatibility
         for fnc in functions:
             fnc = "{0}.{1}".format(cl, fnc)
-            exec("_y =" + fnc)
-            doc_dict[fnc], _tmp = _get_doc_and_function(_y)
+            exec("_y =" + fnc, namespace)
+            doc_dict[fnc], _tmp = _get_doc_and_function(namespace['_y'])
 
 def _search_doc(search_str, doc_dict):
     """Search the documentation.
