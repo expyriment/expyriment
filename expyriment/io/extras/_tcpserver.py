@@ -13,12 +13,11 @@ __date__ = ''
 
 import socket
 import errno
-
-import _tcpserver_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
 from expyriment.io._keyboard import Keyboard
 from expyriment.io._input_output import Input, Output
+from  . import _tcpserver_defaults as defaults
 
 
 class TcpServer(Input, Output):
