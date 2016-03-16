@@ -317,7 +317,7 @@ class TextInput(Input):
 
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
-                return event.key, event.str
+                return event.key, event.unicode
 
     def _create(self):
         """Create the input box."""
