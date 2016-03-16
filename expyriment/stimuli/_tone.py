@@ -174,7 +174,7 @@ class Tone(Audio):
                         for i in range(period)]
         sine = (lookup_table[i % period] for i in itertools.count(0))
         channels = ((sine,),)
-        n_samples = self._duration * self._samplerate
+        n_samples = int(self._duration * self._samplerate)
         samples = itertools.islice(zip(
             *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
