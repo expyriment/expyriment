@@ -16,11 +16,20 @@ __date__ = ''
 
 import os
 import sys
-
 try:
     import android
 except ImportError:
     android = None
+
+from . import PYTHON3
+
+
+def import_command(path):
+    # helper function to generate import command for extras that is Python2/3 compatible
+    if PYTHON3:
+        return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
+    else:
+        return "execfile(r'{0}')\n".format(path)
 
 
 def import_plugins(init_filename):
@@ -71,10 +80,10 @@ def import_plugin_defaults(init_filename):
 
     # extra defaults
     code = []
-    for _filename in os.listdir(os.path.dirname(init_filename)):
+    folder = os.path.dirname(init_filename)
+    for _filename in os.listdir(folder):
         if _filename.endswith("_defaults.py"):
-            code.append("execfile(r'{0}')\n".format(os.path.dirname(
-                init_filename) + os.sep + os.sep + _filename))
+            code.append( import_command(folder + os.sep +  _filename) )
     return code
 
 
@@ -154,8 +163,7 @@ def import_plugin_defaults_from_home(init_filename):
     try:
         for _filename in os.listdir(os.path.dirname(folder)):
             if _filename.endswith("_defaults.py"):
-                code.append("execfile(r'{0}')\n".format(os.path.dirname(
-                    folder) + os.sep + os.sep + _filename))
+                code.append( import_command(folder + os.sep + _filename) )
     except:
         pass
     return code
@@ -170,6 +178,6 @@ def post_import_hook():
     filename = home + os.sep + "post_import.py"
     if os.path.isfile(filename):
         print("process {0}".format(filename))
-        return "execfile(r'{0}')\n".format(filename)
+        return import_command(filename)
     else:
         return ""
