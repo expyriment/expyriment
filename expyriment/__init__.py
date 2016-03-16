@@ -41,6 +41,8 @@ __date__ = ''
 import sys as _sys
 import os as _os
 
+PYTHON3 = (_sys.version_info[0] == 3)
+
 class _Expyriment_object(object):
     """A class implementing a general Expyriment object.
        Parent of all stimuli and IO objects
@@ -96,14 +98,13 @@ def get_version():
     return "{0} (Python {1})".format(__version__, pv)
 
 
-
-if not(_sys.version_info[0] == 2 and (_sys.version_info[1] == 6 or
-                                         _sys.version_info[1] == 7)):
+if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
+        (PYTHON3 and _sys.version_info[1] >= 3) ):
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\nPlease use Python 2.6 or Python 2.7.")
+                      "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))
 try:

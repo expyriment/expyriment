@@ -5,6 +5,7 @@ Expyriment Release Notes
 upcoming
 --------
 New Features:
+- new global boolean constant expyriment.PYTHON3 indicates Python version
 - new io device: io.extras.TcpServer
 - Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
