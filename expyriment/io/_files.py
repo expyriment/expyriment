@@ -238,7 +238,7 @@ class OutputFile(Output):
         start = get_time()
         if self._buffer != []:
             with open(self._fullpath, 'a') as f:
-                f.write("".join(self._buffer))
+                f.write(unicode2str("".join(self._buffer)))
             self._buffer = []
         return int((get_time() - start) * 1000)
 
@@ -252,9 +252,7 @@ class OutputFile(Output):
 
         """
 
-        if type(content) is str:
-            self._buffer.append(unicode2str(content))
-        else:
+        if not isinstance(content, basestring):
             self._buffer.append(str(content))
 
     def write_line(self, content):
@@ -267,7 +265,7 @@ class OutputFile(Output):
 
         """
         self.write(content)
-        self.write(unicode2str(defaults.outputfile_eol))
+        self.write(defaults.outputfile_eol)
 
     def write_list(self, list_):
         """Write a list in a row. Data are separated by a delimiter.
@@ -282,7 +280,7 @@ class OutputFile(Output):
         for elem in list:
             self.write(elem)
             self.write(',')
-        self.write(unicode2str(defaults.outputfile_eol))
+        self.write(defaults.outputfile_eol)
         # self.write_line(repr(list_)[1:-1].replace(" ", ""))
 
     def write_comment(self, comment):
@@ -297,7 +295,7 @@ class OutputFile(Output):
 
         """
 
-        self.write(unicode2str(self.comment_char))
+        self.write(self.comment_char)
         self.write_line(comment)
 
     def rename(self, new_filename):
@@ -388,7 +386,7 @@ class DataFile(OutputFile):
                             bool]:
             return repr(data)
         else:
-            message = "Data to be added must to be " + \
+            message = "Data to be added must be " + \
                 "booleans, strings, numerics (i.e. floats or integers) " + \
                 "or None.\n {0} is not allowed.".format(type(data))
             raise TypeError(message)
@@ -425,7 +423,7 @@ class DataFile(OutputFile):
         Parameters
         ----------
         text : str
-            subject infomation to be add to the file header
+            subject information to be added to the file header
 
         Notes
         -----
@@ -435,11 +433,15 @@ class DataFile(OutputFile):
         """
 
         self._subject_info.append("{0}s {1}{2}".format(
-            unicode2str(self.comment_char), unicode2str(text),
-            unicode2str(defaults.outputfile_eol)))
+            self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
         """Adds a text the subject info header.
+
+        Parameters
+        ----------
+        text : str
+            experiment information to be added to the file header
 
         Notes
         -----
@@ -447,21 +449,16 @@ class DataFile(OutputFile):
 
         """
 
-        if isinstance(text, str):
-            text = "{0}".format(unicode2str(text))
-        elif type(text) is not str:
-            text = "{0}".format(text)
         for line in text.splitlines():
             self._experiment_info.append("{0}e {1}{2}".format(
-                unicode2str(self.comment_char), line,
-                unicode2str(defaults.outputfile_eol)))
+                self.comment_char, line, defaults.outputfile_eol))
 
     @property
     def variable_names(self):
         """Getter for variable_names."""
 
         vn = self.delimiter.join(self._variable_names)
-        return u"subject_id,{0}".format(vn)
+        return "subject_id,{0}".format(vn)
 
     def clear_variable_names(self):
         """Remove all variable names from data file.
@@ -667,8 +664,6 @@ class EventFile(OutputFile):
 
         """
 
-        if isinstance(event, str):
-            event = unicode2str(event)
         line = repr(self._clock.time) + self.delimiter + str(event)
         self.write_line(line)
 
