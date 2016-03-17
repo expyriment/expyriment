@@ -61,7 +61,7 @@ def str2unicode(s, fse=False):
     throwing an exception. If fse is False, the first encoding that is tried is
     the encoding according to the locale settings, falling back to utf-8
     encoding if this throws an error. If fse is True, the filesystem encoding
-    is tried, falling back to utf-8. Unicode input objects are return
+    is tried, falling back to utf-8. Unicode input objects are returned
     unmodified.
 
     Parameters
@@ -77,7 +77,10 @@ def str2unicode(s, fse=False):
     A unicode-type string.
     """
 
-    if isinstance(s, str):
+    if sys.version[0] == '3':
+        return s
+
+    if isinstance(s, unicode):
         return s
 
     try:
@@ -108,7 +111,7 @@ def unicode2str(u, fse=False):
     Converts an input str or unicode object to a str object without throwing
     an exception. If fse is False, the str is encoded according to the locale
     (with utf-8 as a fallback), otherwise it is encoded with the
-    filesystemencoding. Str input objects are return unmodified.
+    filesystemencoding. Str input objects are returned unmodified.
 
     Parameters
     ----------
@@ -123,7 +126,7 @@ def unicode2str(u, fse=False):
     A str-type string.
     """
 
-    if isinstance(u, str):
+    if isinstance(u, bytes):
         return u
 
     try:
@@ -146,6 +149,7 @@ def unicode2str(u, fse=False):
         except UnicodeEncodeError:
             s = u.encode(u'utf-8', u'replace')
     return s
+
 
 def numpad_digit_code2ascii(keycode):
     """Convert numpad keycode to the ascii code of that particular number
