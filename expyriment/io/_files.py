@@ -237,7 +237,7 @@ class OutputFile(Output):
 
         start = get_time()
         if self._buffer != []:
-            with open(self._fullpath, 'a') as f:
+            with open(self._fullpath, 'ab') as f:
                 f.write(unicode2str("".join(self._buffer)))
             self._buffer = []
         return int((get_time() - start) * 1000)
@@ -513,7 +513,7 @@ class DataFile(OutputFile):
             # Re-write header and varnames
             tmpfile_name = "{0}{1}{2}".format(self.directory, os.path.sep, uuid.uuid4())
             os.rename(self._fullpath, tmpfile_name)
-            fl = open(self._fullpath, 'w+')
+            fl = open(self._fullpath, 'wb+')
             tmpfl = open(tmpfile_name, 'r')
             section = None
             while True:
@@ -527,12 +527,12 @@ class DataFile(OutputFile):
                 else:
                     if section == "e":  # Previous line was last #e
                         if len(self._experiment_info) > 0:
-                            fl.write("".join(self._experiment_info))
+                            fl.write(unicode2str("".join(self._experiment_info)))
                             self._experiment_info = []
                         section = None
                     elif section == "s":  # Previous line was last #s
                         if len(self._subject_info) > 0:
-                            fl.write("".join(self._subject_info))
+                            fl.write(unicode2str("".join(self._subject_info)))
                             self._subject_info = []
                         section = None
 
