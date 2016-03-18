@@ -4,7 +4,7 @@ File input and output.
 This module contains classes implementing file input and output.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function
 from builtins import str
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -252,8 +252,10 @@ class OutputFile(Output):
 
         """
 
-        if not isinstance(content, str):
-            self._buffer.append(str(content))
+        # NOTE: Do not print here recursion due to std_out logging
+
+        self._buffer.append(str(content))
+
 
     def write_line(self, content):
         """Write a text line to files.

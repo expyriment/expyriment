@@ -42,10 +42,11 @@ class Stimulus(expyriment._Expyriment_object):
         self._id = Stimulus._id_counter
         Stimulus._id_counter += 1
 
-        log_txt = "Stimulus,created,{0},{1}".format(self.id,
+        log_txt = u"Stimulus,created,{0},{1}".format(self.id,
                                                     self.__class__.__name__)
+
         if log_comment is not None:
-            log_txt = u"{0},{1}".format(log_txt, str2unicode(log_comment) )
+            log_txt = u"{0},{1}".format(log_txt, log_comment)
         if self._logging:
             expyriment._active_exp._event_file_log(log_txt, 2)
 
