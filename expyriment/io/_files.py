@@ -252,7 +252,7 @@ class OutputFile(Output):
 
         """
 
-        if not isinstance(content, basestring):
+        if not isinstance(content, str):
             self._buffer.append(str(content))
 
     def write_line(self, content):

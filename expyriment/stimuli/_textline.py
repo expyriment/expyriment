@@ -257,7 +257,7 @@ class TextLine(Visual):
         _font.set_bold(self.text_bold)
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
-        if type(self.text) is not str:
+        if not isinstance(self.text, str):
             # Pygame wants latin-1 encoding here for character strings
             _text = str2unicode(self.text).encode('latin-1')
         else:
