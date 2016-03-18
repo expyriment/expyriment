@@ -16,7 +16,7 @@ import os as _os
 
 import pygame as _pygame
 
-from expyriment.misc import str2unicode as _str2unicode
+from expyriment.misc import byte2unicode as _str2unicode
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE

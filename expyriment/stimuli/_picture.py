@@ -19,7 +19,7 @@ import os
 
 import pygame
 import expyriment
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2byte
 from . import defaults
 from ._visual import Visual
 
@@ -45,7 +45,7 @@ class Picture(Visual):
         self._filename = filename
         if not(os.path.isfile(self._filename)):
             raise IOError("The picture file '{0}' does not exist".format(
-                unicode2str(filename)))
+                unicode2byte(filename)))
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -68,11 +68,11 @@ class Picture(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        surface = pygame.image.load(unicode2str(self._filename,
-                                                fse=True)).convert_alpha()
+        surface = pygame.image.load(unicode2byte(self._filename,
+                                                 fse=True)).convert_alpha()
         if self._logging:
             expyriment._active_exp._event_file_log(
-                "Picture,loaded,{0}".format(unicode2str(self._filename)), 1)
+                "Picture,loaded,{0}".format(unicode2byte(self._filename)), 1)
         return surface
 
 

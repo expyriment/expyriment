@@ -31,7 +31,7 @@ except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
 from . import defaults
-from expyriment.misc import find_font, unicode2str, constants, \
+from expyriment.misc import find_font, unicode2byte, constants, \
                  numpad_digit_code2ascii
 import expyriment
 from ._input_output import Input
@@ -132,7 +132,7 @@ class TextInput(Input):
             self._message_font = find_font(expyriment._active_exp.text_font)
         try:
             _font = pygame.font.Font(
-                unicode2str(self._message_font, fse=True), 10)
+                unicode2byte(self._message_font, fse=True), 10)
         except:
             raise IOError("Font '{0}' not found!".format(message_font))
         if message_bold is not None:
@@ -162,7 +162,7 @@ class TextInput(Input):
             self._user_text_font = find_font(expyriment._active_exp.text_font)
         try:
             _font = pygame.font.Font(
-                unicode2str(self._user_text_font, fse=True), 10)
+                unicode2byte(self._user_text_font, fse=True), 10)
         except:
             raise IOError("Font '{0}' not found!".format(user_text_font))
         if user_text_colour is None:
@@ -446,7 +446,7 @@ class TextInput(Input):
         got = "".join(self._user)
         if self._logging:
             expyriment._active_exp._event_file_log("TextInput,entered,{0}"
-                                                   .format(unicode2str(got)))
+                                                   .format(unicode2byte(got)))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
         return got

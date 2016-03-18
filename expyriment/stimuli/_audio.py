@@ -20,7 +20,7 @@ try:
 except:
     import pygame.mixer as mixer
 import expyriment
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2byte
 from ._stimulus import Stimulus
 
 
@@ -54,7 +54,7 @@ class Audio(Stimulus):
         self._is_preloaded = False
         if not(os.path.isfile(self._filename)):
             raise IOError("The audio file {0} does not exists".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
 
@@ -101,7 +101,7 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            self._file = mixer.Sound(unicode2str(self._filename, fse=True))
+            self._file = mixer.Sound(unicode2byte(self._filename, fse=True))
             self._is_preloaded = True
 
     def unload(self, **kwargs):

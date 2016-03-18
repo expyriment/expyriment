@@ -27,7 +27,7 @@ except:
 from . import defaults
 from . import _visual
 from expyriment.io import Keyboard
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2byte
 import expyriment
 
 
@@ -92,7 +92,7 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
         if not(os.path.isfile(self._filename)):
             raise IOError("The video file {0} does not exists".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
     def __del__(self):
         """Destructor for the video stimulus."""
@@ -192,8 +192,8 @@ class Video(_visual.Stimulus):
         """
 
         if not self._is_preloaded:
-            self._file = pygame.movie.Movie(unicode2str(self._filename,
-                                                        fse=True))
+            self._file = pygame.movie.Movie(unicode2byte(self._filename,
+                                                         fse=True))
             screen_size = expyriment._active_exp.screen.surface.get_size()
             self._pos = [screen_size[0] // 2 - self._file.get_size()[0] // 2 +
                          self._position[0],
@@ -246,7 +246,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
             self.preload()
         if self._logging:
             expyriment._active_exp._event_file_log(
-                "Video,playing,{0}".format(unicode2str(self._filename)))
+                "Video,playing,{0}".format(unicode2byte(self._filename)))
         self._file.play()
 
     def stop(self):

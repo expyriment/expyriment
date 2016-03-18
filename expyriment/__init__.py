@@ -141,7 +141,7 @@ from . import control
 from . import stimuli
 from . import io
 from . import misc
-misc.add_fonts(misc.str2unicode(_os.path.abspath(
+misc.add_fonts(misc.byte2unicode(_os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "_fonts"))))
 

@@ -35,7 +35,7 @@ from expyriment.io import _keyboard, TouchScreenButtonBox
 from expyriment.io._screen import Screen
 from ._miscellaneous import _set_stdout_logging, is_idle_running, \
                 is_interactive_mode
-from expyriment.misc import unicode2str, constants
+from expyriment.misc import unicode2byte, constants
 
 
 def start(experiment=None, auto_create_subject_id=None, subject_id=None,
@@ -179,9 +179,9 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
             experiment.get_permuted_bws_factor_condition(f)
         if isinstance(_permuted_bws_factor_condition, str):
             _permuted_bws_factor_condition = \
-                unicode2str(_permuted_bws_factor_condition)
+                unicode2byte(_permuted_bws_factor_condition)
         experiment.data.add_subject_info("{0} = {1}".format(
-            unicode2str(f), _permuted_bws_factor_condition))
+            unicode2byte(f), _permuted_bws_factor_condition))
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp

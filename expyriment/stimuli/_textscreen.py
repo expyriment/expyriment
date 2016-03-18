@@ -23,7 +23,7 @@ from . import defaults
 from ._visual import Visual
 from ._textline import TextLine
 from ._textbox import TextBox
-from expyriment.misc import find_font, unicode2str
+from expyriment.misc import find_font, unicode2byte
 import expyriment
 
 
@@ -92,7 +92,7 @@ class TextScreen(Visual):
             self._heading_font = find_font(expyriment._active_exp.text_font)
         try:
             _font = pygame.font.Font(
-                unicode2str(self._heading_font, fse=True), 10)
+                unicode2byte(self._heading_font, fse=True), 10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(heading_font))
@@ -130,7 +130,7 @@ class TextScreen(Visual):
         else:
             self._text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
             _font = None
         except:

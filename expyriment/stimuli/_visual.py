@@ -32,7 +32,7 @@ from . import defaults
 import expyriment
 from ._stimulus import Stimulus
 from expyriment.misc import geometry
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2byte
 from expyriment.misc._timer import get_time
 
 random.seed()
@@ -1056,7 +1056,7 @@ class Visual(Stimulus):
         else:
             parts.append("tga")
         filename = ".".join(parts)
-        pygame.image.save(self._get_surface(), unicode2str(filename))
+        pygame.image.save(self._get_surface(), unicode2byte(filename))
 
     def picture(self):
         """Return the stimulus as Picture stimulus.

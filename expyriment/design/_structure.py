@@ -36,7 +36,7 @@ from copy import deepcopy
 
 from . import defaults
 import expyriment
-from expyriment.misc import constants, Clock, unicode2str, str2unicode
+from expyriment.misc import constants, Clock, unicode2byte, byte2unicode
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -212,7 +212,7 @@ class Experiment(object):
         return self._is_initialized
 
     def __str__(self):
-        tmp_str = "Experiment: {0}\n".format(unicode2str(self.name))
+        tmp_str = "Experiment: {0}\n".format(unicode2byte(self.name))
         if len(self.bws_factor_names) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
@@ -223,12 +223,12 @@ class Experiment(object):
                 tmp_str = tmp_str + "latin square)\n"
             for f in self.bws_factor_names:
                 _bws_factor = \
-                    [unicode2str(x) if isinstance(x, str) else
+                    [unicode2byte(x) if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
                 tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    unicode2str(f), ", ".join(_bws_factor))
+                    unicode2byte(f), ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + "{0}\n".format(unicode2str(block.summary))
+            tmp_str = tmp_str + "{0}\n".format(unicode2byte(block.summary))
         return tmp_str
 
     @property
@@ -500,7 +500,7 @@ class Experiment(object):
 
         expyriment._active_exp._event_file_log(
             "Experiment,block added,{0},{1}".format(
-                unicode2str(self.name), self._blocks[-1]._id), 2)
+                unicode2byte(self.name), self._blocks[-1]._id), 2)
 
     def remove_block(self, position):
         """Remove block from experiment.
@@ -517,7 +517,7 @@ class Experiment(object):
         block = self._blocks.pop(position)
 
         expyriment._active_exp._event_file_log(
-            "Experiment,block removed,{0},{1}".format(unicode2str(self.name),
+            "Experiment,block removed,{0},{1}".format(unicode2byte(self.name),
                                                       block.id), 2)
 
     def clear_blocks(self):
@@ -796,7 +796,7 @@ type".format(permutation_type))
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
                 locale_enc)
-            f.write(header + unicode2str(self.design_as_text))
+            f.write(header + unicode2byte(self.design_as_text))
 
     def load_design(self, filename, encoding=None):
         """Load the design from a csv file containing list of trials.
@@ -837,7 +837,7 @@ type".format(permutation_type))
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as fl:
             for ln in fl:
-                ln = str2unicode(ln)
+                ln = byte2unicode(ln)
                 if ln[0] == "#":
                     if ln.startswith("#exp:"):
                         self._name = ln[6:].strip()
@@ -873,7 +873,7 @@ type".format(permutation_type))
                                "id" in list(trial_factors.values())):
                             message = "Can't read design file. " + \
                                 "The file '{0}' ".format(
-                                    unicode2str(filename)) + \
+                                    unicode2byte(filename)) + \
                                 "does not contain an Expyriment trial list."
                             raise IOError(message)
                     else:
@@ -957,13 +957,13 @@ type".format(permutation_type))
 
         if self.is_initialized and self.events is not None:
             self.events.log("design,log,{0}".format(
-                unicode2str(additional_comment)))
+                unicode2byte(additional_comment)))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    "design: {0}".format(unicode2str(ln)).replace(
+                    "design: {0}".format(unicode2byte(ln)).replace(
                         ":#", "-"))
             self.events.log("design,logged,{0}".format(
-                unicode2str(additional_comment)))
+                unicode2byte(additional_comment)))
 
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
@@ -1090,7 +1090,7 @@ class Block(object):
         return self._trials
 
     def __str__(self):
-        return unicode2str(self._get_summary(True))
+        return unicode2byte(self._get_summary(True))
 
     @property
     def summary(self):
@@ -1266,7 +1266,7 @@ class Block(object):
             self._trials[-1]._id = self._trial_id_counter
             self._trial_id_counter += 1
 
-        log_txt = "Block,trial added,{0}, {1}".format(unicode2str(self.name),
+        log_txt = "Block,trial added,{0}, {1}".format(unicode2byte(self.name),
                                                       self._trials[-1]._id)
         if random_position:
             log_txt = log_txt + ", random position"
@@ -1357,11 +1357,11 @@ class Block(object):
                                self._trial_id_variable_name)
         factors = self.trial_factor_names
         for f in factors:
-            rtn = rtn + ",{0}".format(unicode2str(f))
+            rtn = rtn + ",{0}".format(unicode2byte(f))
         for cnt, tr in enumerate(self.trials):
             rtn = rtn + "\n{0},{1}".format(cnt, tr.id)
             for f in factors:
-                rtn = rtn + ",{0}".format(unicode2str(tr.get_factor(f)))
+                rtn = rtn + ",{0}".format(unicode2byte(tr.get_factor(f)))
         return rtn
 
     def save_design(self, filename):
@@ -1382,7 +1382,7 @@ class Block(object):
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
                 locale_enc)
-            f.write(header + unicode2str(self.design_as_text))
+            f.write(header + unicode2byte(self.design_as_text))
 
     def read_design(self, filename):
         """Reads a list of trials from a csv file and clears the old block
@@ -1459,12 +1459,12 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = [str2unicode(x) for x in row]
+                    factor_names = [byte2unicode(x) for x in row]
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
-                        trial.set_factor(str2unicode(factor_names[c_cnt]),
-                                         str2unicode(row[c_cnt]))
+                        trial.set_factor(byte2unicode(factor_names[c_cnt]),
+                                         byte2unicode(row[c_cnt]))
                     self.add_trial(trial)
 
     def order_trials(self, order):
@@ -1733,7 +1733,7 @@ class Trial(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + "{0}={1}, ".format(
-                unicode2str(f), unicode2str(str(self.get_factor(f))))
+                unicode2byte(f), unicode2byte(str(self.get_factor(f))))
         return all_factors
 
     def compare(self, trial):

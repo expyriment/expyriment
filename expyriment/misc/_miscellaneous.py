@@ -6,6 +6,8 @@ This module contains miscellaneous functions for expyriment.
 All classes in this module should be called directly via expyriment.misc.*:
 
 """
+from __future__ import absolute_import, division, print_function
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,27 +15,24 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import sys
+from sys import getfilesystemencoding
 import os
-try:
-    import locale
-except ImportError:
-    locale = None  # Not available on Android
 import glob
 import pygame
 import expyriment
 
-
 try:
-    LOCALE_ENC = locale.getdefaultlocale()[1]
-except:
-    LOCALE_ENC = None
-if LOCALE_ENC is None:
-    LOCALE_ENC = u'utf-8'
+    from locale import getdefaultlocale
+    LOCALE_ENC = getdefaultlocale()[1]
+except ImportError:
+    LOCALE_ENC = None  # Not available on Android
 
-FS_ENC = sys.getfilesystemencoding()
+if LOCALE_ENC is None:
+    LOCALE_ENC = 'utf-8'
+
+FS_ENC = getfilesystemencoding()
 if FS_ENC is None:
-    FS_ENC = u'utf-8'
+    FS_ENC = 'utf-8'
 
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
@@ -67,6 +66,41 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
             return False
 
 
+def byte2unicode(s, fse=False):
+    if (expyriment.PYTHON3 and isinstance(s, str)) or\
+       (not expyriment.PYTHON3 and isinstance(s, unicode)):
+        return s
+
+    if fse:
+        try:
+            u = s.decode(FS_ENC)
+        except UnicodeDecodeError:
+            u = s.decode('utf-8', 'replace')
+    else:
+        try:
+            u = s.decode(LOCALE_ENC)
+        except UnicodeDecodeError:
+            u = s.decode('utf-8', 'replace')
+    return u
+
+
+def unicode2byte(u, fse=False):
+    if isinstance(u, bytes):
+        return u
+
+    if fse:
+        try:
+            s = u.encode(FS_ENC)
+        except UnicodeEncodeError:
+            s = u.encode('utf-8', 'replace')
+    else:
+        try:
+            s = u.encode(LOCALE_ENC)
+        except UnicodeEncodeError:
+            s = u.encode('utf-8', 'replace')
+    return s
+
+
 def str2unicode(s, fse=False):
     """Convert str to unicode.
 
@@ -89,25 +123,7 @@ def str2unicode(s, fse=False):
     -------
     A unicode-type string.
     """
-
-    if sys.version[0] == '3':
-        return s
-
-    if isinstance(s, unicode):
-        return s
-
-    if fse:
-        try:
-            u = s.decode(FS_ENC)
-        except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'replace')
-    else:
-        try:
-            u = s.decode(LOCALE_ENC)
-        except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'replace')
-    return u
-
+    return byte2unicode(s, fse)
 
 def unicode2str(u, fse=False):
     """Convert unicode to str.
@@ -130,21 +146,7 @@ def unicode2str(u, fse=False):
     A str-type string.
     """
 
-    if isinstance(u, bytes):
-        return u
-
-    if fse:
-        try:
-            s = u.encode(FS_ENC)
-        except UnicodeEncodeError:
-            s = u.encode(u'utf-8', u'replace')
-    else:
-        try:
-            s = u.encode(LOCALE_ENC)
-        except UnicodeEncodeError:
-            s = u.encode(u'utf-8', u'replace')
-    return s
-
+    return unicode2byte(u, fse)
 
 def numpad_digit_code2ascii(keycode):
     """Convert numpad keycode to the ascii code of that particular number
@@ -183,7 +185,7 @@ def add_fonts(folder):
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
-            font = str2unicode(font, fse=True)
+            font = byte2unicode(font, fse=True)
             name = os.path.split(font)[1]
             bold = name.find('Bold') >= 0
             italic = name.find('Italic') >= 0
@@ -242,9 +244,9 @@ def find_font(font):
 
     try:
         if os.path.isfile(font):
-            pygame.font.Font(unicode2str(font, fse=True), 10)
+            pygame.font.Font(unicode2byte(font, fse=True), 10)
         else:
-            pygame.font.Font(unicode2str(font), 10)
+            pygame.font.Font(unicode2byte(font), 10)
         return font
     except:
         font_file = pygame.font.match_font(font)

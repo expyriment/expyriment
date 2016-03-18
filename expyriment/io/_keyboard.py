@@ -26,7 +26,7 @@ except ImportError:
 from . import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str
+from expyriment.misc import unicode2byte
 from  ._input_output import Input
 
 quit_key = None
@@ -352,5 +352,5 @@ class Keyboard(Input):
         if self._logging:
             expyriment._active_exp._event_file_log(
                         "Keyboard,received,{0},wait_char".format(
-                        unicode2str(found_char)))
+                        unicode2byte(found_char)))
         return found_char, rt

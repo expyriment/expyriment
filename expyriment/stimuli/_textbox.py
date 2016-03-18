@@ -24,7 +24,7 @@ import re
 import pygame
 
 from . import defaults
-from expyriment.misc import find_font, unicode2str, str2unicode
+from expyriment.misc import find_font, unicode2byte, byte2unicode
 import expyriment
 from ._visual import Visual
 
@@ -107,7 +107,7 @@ class TextBox(Visual):
         else:
             self._text_font = find_font(expyriment._active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
             _font = None
         except:
@@ -313,7 +313,7 @@ class TextBox(Visual):
         rect = pygame.Rect((0, 0), self.size)
 
         if os.path.isfile(self._text_font):
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      self._text_size)
         else:
             _font = pygame.font.Font(self._text_font, self._text_size)
@@ -324,7 +324,7 @@ class TextBox(Visual):
 
         if type(self.text) is not str:
             # Pygame wants latin-1 encoding here for character strings
-            _text = str2unicode(self.text).encode('latin-1')
+            _text = byte2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         surface = self.render_textrect(self.format_block(_text),

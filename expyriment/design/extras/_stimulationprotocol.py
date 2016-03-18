@@ -19,7 +19,7 @@ import locale
 import re
 import codecs
 from expyriment.design.randomize import rand_int
-from expyriment.misc import unicode2str, str2unicode
+from expyriment.misc import unicode2byte, byte2unicode
 
 
 class StimulationProtocol(object):
@@ -140,7 +140,7 @@ class StimulationProtocol(object):
             for condition in self._conditions:
                 for event in condition["events"]:
                     f.write("{0},{1},{2},{3}\n".format(
-                        unicode2str(condition["name"]),
+                        unicode2byte(condition["name"]),
                         event["begin"],
                         event["end"],
                         event["weight"]))
@@ -175,7 +175,7 @@ class StimulationProtocol(object):
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as f:
             for line in f:
-                line = str2unicode(line)
+                line = byte2unicode(line)
                 if line.startswith("#"):
                     if line.startswith("#unit="):
                         self._unit = line[6:].strip('\n')

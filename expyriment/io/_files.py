@@ -33,7 +33,7 @@ from platform import uname
 from . import defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str, str2unicode
+from expyriment.misc import unicode2byte, byte2unicode
 from ._input_output import Input, Output
 
 
@@ -61,7 +61,7 @@ class InputFile(Input):
         self._lines = []
         if not(os.path.isfile(self._filename)):
             raise IOError("The input file '{0}' does not exist.".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
         if encoding is None:
             with open(filename, 'r') as fl:
@@ -78,7 +78,7 @@ class InputFile(Input):
         with codecs.open(self._filename, 'rb', encoding[0],
                          errors='replace') as f:
             for line in f:
-                self._lines.append(str2unicode(line.rstrip('\r\n')))
+                self._lines.append(byte2unicode(line.rstrip('\r\n')))
 
     @property
     def filename(self):
@@ -238,7 +238,7 @@ class OutputFile(Output):
         start = get_time()
         if self._buffer != []:
             with open(self._fullpath, 'ab') as f:
-                f.write(unicode2str("".join(self._buffer)))
+                f.write(unicode2byte("".join(self._buffer)))
             self._buffer = []
         return int((get_time() - start) * 1000)
 
@@ -381,7 +381,7 @@ class DataFile(OutputFile):
         if data is None:
             data = "None"
         if isinstance(data, str):
-            return unicode2str(data)
+            return unicode2byte(data)
         elif isinstance(data, bytes):
             return str(data)
         elif type(data) in [int, int, float,
@@ -527,17 +527,17 @@ class DataFile(OutputFile):
                 else:
                     if section == "e":  # Previous line was last #e
                         if len(self._experiment_info) > 0:
-                            fl.write(unicode2str("".join(self._experiment_info)))
+                            fl.write(unicode2byte("".join(self._experiment_info)))
                             self._experiment_info = []
                         section = None
                     elif section == "s":  # Previous line was last #s
                         if len(self._subject_info) > 0:
-                            fl.write(unicode2str("".join(self._subject_info)))
+                            fl.write(unicode2byte("".join(self._subject_info)))
                             self._subject_info = []
                         section = None
 
                         # Re-write variable names after #s-section
-                        fl.write(unicode2str(
+                        fl.write(unicode2byte(
                             self.variable_names + defaults.outputfile_eol))
                         self._variable_names_changed = False
                         line = ''  # Skip old varnames

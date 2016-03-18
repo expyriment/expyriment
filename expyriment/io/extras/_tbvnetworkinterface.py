@@ -22,7 +22,7 @@ import struct
 from . import _tbvnetworkinterface_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import str2unicode
+from expyriment.misc._miscellaneous import byte2unicode
 from expyriment.io._input_output import Input, Output
 from expyriment.io.extras._tcpclient import TcpClient
 
@@ -291,7 +291,7 @@ class TbvNetworkInterface(Input, Output):
         elif name[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(name[19:-1]))
         else:
-            return str2unicode(name[4:-1]), rt
+            return byte2unicode(name[4:-1]), rt
 
     def get_watch_folder(self):
         """Get the watch folder.
@@ -311,7 +311,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_target_folder(self):
         """Get the target folder.
@@ -331,7 +331,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:]-1))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_feedback_folder(self):
         """Get the feedback folder.
@@ -351,7 +351,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     # Protocol, DM, GLM Queries
     def get_current_protocol_condition(self):

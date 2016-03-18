@@ -31,8 +31,8 @@ try:
     import numpy as _np
 except:
     _np = None
-from expyriment.misc import unicode2str as _unicode2str
-from expyriment.misc import str2unicode as _str2unicode
+from expyriment.misc import unicode2byte as _unicode2str
+from expyriment.misc import byte2unicode as _str2unicode
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,

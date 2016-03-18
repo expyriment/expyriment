@@ -14,7 +14,7 @@ __date__ = ''
 
 
 import os as _os
-from expyriment.misc import str2unicode as _str2unicode
+from expyriment.misc import byte2unicode as _str2unicode
 
 # Experiment
 experiment_name = None  # Set None if experiment default name should be the

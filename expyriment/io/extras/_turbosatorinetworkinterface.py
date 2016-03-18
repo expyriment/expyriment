@@ -22,7 +22,7 @@ import struct
 from . import _turbosatorinetworkinterface_defaults as defaults
 import expyriment
 from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import str2unicode
+from expyriment.misc._miscellaneous import byte2unicode
 from expyriment.io._input_output import Input, Output
 from expyriment.io.extras._tcpclient import TcpClient
 
@@ -269,7 +269,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_images_feedback_folder(self):
         """Get the feedback folder for the images.
@@ -289,7 +289,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_nr_of_selected_channels(self):
         """Get the number of selected channels.

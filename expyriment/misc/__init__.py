@@ -16,7 +16,7 @@ __date__ = ''
 
 from . import defaults
 from ._miscellaneous import compare_codes, add_fonts, list_fonts, find_font
-from ._miscellaneous import unicode2str, str2unicode, numpad_digit_code2ascii
+from ._miscellaneous import unicode2byte, byte2unicode, numpad_digit_code2ascii
 from ._miscellaneous import get_monitor_resolution
 from . import constants
 from ._buffer import  Buffer, ByteBuffer
