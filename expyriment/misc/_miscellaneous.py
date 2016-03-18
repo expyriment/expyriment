@@ -23,6 +23,19 @@ import glob
 import pygame
 import expyriment
 
+
+try:
+    LOCALE_ENC = locale.getdefaultlocale()[1]
+except:
+    LOCALE_ENC = None
+if LOCALE_ENC is None:
+    LOCALE_ENC = u'utf-8'
+
+FS_ENC = sys.getfilesystemencoding()
+if FS_ENC is None:
+    FS_ENC = u'utf-8'
+
+
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -83,23 +96,14 @@ def str2unicode(s, fse=False):
     if isinstance(s, unicode):
         return s
 
-    try:
-        locale_enc = locale.getdefaultlocale()[1]
-    except:
-        locale_enc = None
-    if locale_enc is None:
-        locale_enc = u'utf-8'
-    fs_enc = sys.getfilesystemencoding()
-    if fs_enc is None:
-        fs_enc = u'utf-8'
     if fse:
         try:
-            u = s.decode(fs_enc)
+            u = s.decode(FS_ENC)
         except UnicodeDecodeError:
             u = s.decode(u'utf-8', u'replace')
     else:
         try:
-            u = s.decode(locale_enc)
+            u = s.decode(LOCALE_ENC)
         except UnicodeDecodeError:
             u = s.decode(u'utf-8', u'replace')
     return u
@@ -129,23 +133,14 @@ def unicode2str(u, fse=False):
     if isinstance(u, bytes):
         return u
 
-    try:
-        locale_enc = locale.getdefaultlocale()[1]
-    except:
-        locale_enc = None
-    if locale_enc is None:
-        locale_enc = u'utf-8'
-    fs_enc = sys.getfilesystemencoding()
-    if fs_enc is None:
-        fs_enc = u'utf-8'
     if fse:
         try:
-            s = u.encode(fs_enc)
+            s = u.encode(FS_ENC)
         except UnicodeEncodeError:
             s = u.encode(u'utf-8', u'replace')
     else:
         try:
-            s = u.encode(locale_enc)
+            s = u.encode(LOCALE_ENC)
         except UnicodeEncodeError:
             s = u.encode(u'utf-8', u'replace')
     return s

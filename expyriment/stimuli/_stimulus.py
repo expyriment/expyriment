@@ -15,6 +15,7 @@ __date__ = ''
 from copy import deepcopy
 
 import expyriment
+from expyriment.misc import str2unicode
 
 class Stimulus(expyriment._Expyriment_object):
     """A class implementing a very general experimental stimulus.
@@ -44,7 +45,7 @@ class Stimulus(expyriment._Expyriment_object):
         log_txt = "Stimulus,created,{0},{1}".format(self.id,
                                                     self.__class__.__name__)
         if log_comment is not None:
-            log_txt = u"{0},{1}".format(log_txt, log_comment)
+            log_txt = u"{0},{1}".format(log_txt, str2unicode(log_comment) )
         if self._logging:
             expyriment._active_exp._event_file_log(log_txt, 2)
 
