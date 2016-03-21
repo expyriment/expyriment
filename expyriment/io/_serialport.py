@@ -26,7 +26,7 @@ except:
 from . import defaults
 from ._input_output import Input, Output
 from .. import _globals, control, io, stimuli, misc
-from ..misc import ByteBuffer, Clock
+
 
 
 class SerialPort(Input, Output):

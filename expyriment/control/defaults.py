@@ -180,4 +180,4 @@ audiosystem_channels = 2
 audiosystem_buffer_size = 2048
 
 _mode_settings = None
-_skip_wait_functions = False
+

@@ -14,9 +14,6 @@ __revision__ = ''
 __date__ = ''
 
 
-from .. import misc as _misc
-
-
 def _empty_square(n):
     square = []
     for x in range(0, n):
@@ -54,9 +51,10 @@ def is_permutation_type(type_str):
 
     """
 
-    return (type_str == _misc.constants.P_RANDOM or \
-            type_str == _misc.constants.P_CYCLED_LATIN_SQUARE or \
-            type_str == _misc.constants.P_BALANCED_LATIN_SQUARE)
+    from ..misc import constants
+    return (type_str == constants.P_RANDOM or \
+            type_str == constants.P_CYCLED_LATIN_SQUARE or \
+            type_str == constants.P_BALANCED_LATIN_SQUARE)
 
 
 def _cycle_list(arr):

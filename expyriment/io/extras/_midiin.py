@@ -19,6 +19,8 @@ from ... import _globals, control
 from ...misc._timer import get_time
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input
+from ..defaults import _skip_wait_functions
+
 
 import time
 
@@ -153,7 +155,7 @@ class MidiIn(Input):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
         start = get_time()
         rt = None

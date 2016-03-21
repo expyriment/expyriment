@@ -134,12 +134,13 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-from . import misc
 from . import _globals
-from . import design # todo are this import required?
+from . import design
+_globals.active_exp = design.Experiment("None")
 from . import control
 from . import stimuli
 from . import io
+from . import misc
 misc.add_fonts(misc.byte2unicode(_os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "_fonts"))))

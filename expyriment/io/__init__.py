@@ -17,6 +17,7 @@ __date__ = ''
 
 
 from . import defaults
+from ._input_output import set_skip_wait_functions
 from ._screen import Screen
 from ._keyboard import Keyboard
 from ._mouse import Mouse

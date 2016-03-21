@@ -22,7 +22,7 @@ except:
 
 from ...io._input_output import Input
 from ... import _globals, stimuli, control, misc
-
+from ..defaults import _skip_wait_functions
 
 class CedrusResponseDevice(Input):
     """A class implementing a Cedrus XID response device.
@@ -235,7 +235,7 @@ class CedrusResponseDevice(Input):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
         start = self._buffer.clock.time
         if not no_clear_buffer:

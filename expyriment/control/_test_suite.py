@@ -25,7 +25,8 @@ except:
     ogl = None
 
 from . import defaults
-from .. import stimuli, io, _globals, control, design, get_system_info
+from .. import stimuli, io, _globals, control, design
+import expyriment
 
 from ..misc import constants, statistics, list_fonts
 from ..misc._timer import get_time
@@ -516,7 +517,6 @@ def _write_protocol(exp, results):
     return []  # required for event loop
 
 def _find_self_tests():
-    import expyriment
     classes = []
     method = []
     rtn = []
@@ -525,7 +525,7 @@ def _find_self_tests():
     for module in ["expyriment.io", "expyriment.io.extras"]:
         exec("classes = dir({0})".format(module), namesspace)
         for cl in namesspace['classes']:
-            if not cl.startswith("_"):
+            if not cl.startswith("_") and not cl in ["False", "None", "True"]:
                 exec("method = dir({0}.{1})".format(module, cl), namesspace)
                 if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
@@ -539,6 +539,7 @@ def run_test_suite():
     from ..stimuli import extras as _test2
     from ..io import extras as _test3
     from ..misc import extras as _test4
+    from .. import get_system_info
 
     quit_experiment = False
     if not _globals.active_exp.is_initialized:

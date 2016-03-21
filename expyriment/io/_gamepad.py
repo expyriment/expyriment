@@ -19,7 +19,7 @@ from .. import _globals, control
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input, Output
-
+from .defaults import _skip_wait_functions
 
 pygame.joystick.init()
 
@@ -230,7 +230,7 @@ class GamePad(Input, Output):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
         start = get_time()
         rt = None

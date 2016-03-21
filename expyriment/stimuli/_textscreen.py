@@ -23,7 +23,7 @@ from ._visual import Visual
 from ._textline import TextLine
 from ._textbox import TextBox
 from ..misc import find_font, unicode2byte
-from .. import _globals
+from .. import _globals, stimuli
 
 
 class TextScreen(Visual):
@@ -473,7 +473,7 @@ class TextScreen(Visual):
                           text_bold=self.heading_bold,
                           text_italic=self.heading_italic,
                           text_underline=self.heading_underline)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
         box = TextBox(text=self.text, text_font=self.text_font,
                       text_size=self.text_size, text_bold=self.text_bold,
                       text_italic=self.text_italic,
@@ -482,7 +482,7 @@ class TextScreen(Visual):
                       background_colour=self.background_colour,
                       size=(self.size[0], self.size[1] - self.size[1] // 5),
                       text_justification=self.text_justification)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
         surface.blit(header._get_surface(),
                      (self.size[0] // 2 - header.surface_size[0] // 2,
                       0))

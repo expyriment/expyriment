@@ -19,7 +19,9 @@ from ... import _globals, control
 from ...misc._timer import get_time
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
-from  . import _tcpserver_defaults as defaults
+from . import _tcpserver_defaults as defaults
+from ..defaults import _skip_wait_functions
+
 
 
 class TcpServer(Input, Output):
@@ -153,7 +155,7 @@ class TcpServer(Input, Output):
             The time it took to receive the data in milliseconds.
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
 
         start = get_time()

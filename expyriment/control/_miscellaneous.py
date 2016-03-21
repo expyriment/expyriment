@@ -16,7 +16,7 @@ import sys
 import pygame
 
 from . import defaults
-from .. import io, control, stimuli, design, misc, _globals
+from .. import _globals
 
 
 def start_audiosystem():
@@ -75,7 +75,7 @@ def wait_end_audiosystem(channel=None):
         specific channel to wait for end of playing
 
     """
-
+    from .. import io
     while get_audiosystem_is_playing(channel):
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and \
@@ -111,6 +111,7 @@ def set_develop_mode(onoff, intensive_logging=False):
 
     """
 
+    from .. import io
     if onoff:
         defaults._mode_settings = [defaults.initialize_delay,
                                    defaults.window_mode,
@@ -139,27 +140,7 @@ def set_develop_mode(onoff, intensive_logging=False):
             pass  # Nothing to do
 
     if intensive_logging:
-        control.defaults.event_logging = 2
-
-def set_skip_wait_functions(onoff):
-    """Switch on/off skip wait function.
-    If skip-wait-functions is switch on (True) all wait functions in the
-    experiment (i.e.  all wait function in expyriment.io and the clock) will
-    be omitted.
-
-    Notes
-    -----
-    CAUTION!: This functions is only usefull for experiment test runs. Do not use
-    skip-wait-function while real experiments.
-
-    Parameters
-    ----------
-    onoff : bool
-        set skip-wait-function on (True) or off (False)
-
-    """
-
-    defaults._skip_wait_functions = onoff
+        defaults.event_logging = 2
 
 def _get_module_values(goal_dict, module):
     value = None
@@ -184,8 +165,9 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
+    from .. import design,stimuli, io, control,misc
     from ..io import extras as ioextras
-    from  ..design import extras as designextras
+    from ..design import extras as designextras
     from ..stimuli import extras as stimuliextras
     from ..misc import extras as miscextras
 

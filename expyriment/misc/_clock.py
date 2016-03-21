@@ -16,7 +16,7 @@ import sys
 import time
 import types
 from ._timer import get_time
-from .. import _globals, control
+from .. import _globals
 
 class Clock(object) :
     """Basic timing class.
@@ -31,6 +31,7 @@ class Clock(object) :
         _cpu_time = time.time
 
 
+
     def __init__(self, sync_clock=None):
         """Create a clock.
 
@@ -41,6 +42,9 @@ class Clock(object) :
 
         """
 
+        from ..io.defaults import _skip_wait_functions
+        from ..control import CallbackQuitEvent
+
         if (sync_clock.__class__.__name__ == "Clock"):
             self.__init_time = sync_clock.init_time // 1000
         else:
@@ -48,6 +52,10 @@ class Clock(object) :
 
         self._init_localtime = time.localtime()
         self.__start = get_time()
+
+        self._skip_wait_functions = _skip_wait_functions
+        self.CallbackQuitEvent = CallbackQuitEvent
+
 
     @staticmethod
     def monotonic_time():
@@ -119,7 +127,7 @@ class Clock(object) :
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if self._skip_wait_functions:
             return
         start = self.time
         if type(function) == types.FunctionType or\
@@ -128,7 +136,7 @@ class Clock(object) :
                 if type(function) == types.FunctionType:
                     function()
                 rtn_callback = _globals.active_exp._execute_wait_callback()
-                if isinstance(rtn_callback, control.CallbackQuitEvent):
+                if isinstance(rtn_callback, self.CallbackQuitEvent):
                     return rtn_callback
         else:
             looptime = 200

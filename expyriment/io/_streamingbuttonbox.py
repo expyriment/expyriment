@@ -151,7 +151,7 @@ class StreamingButtonBox(Input, Output):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if defaults._skip_wait_functions:
             return None, None
         start = get_time()
         rt = None

@@ -17,7 +17,7 @@ __date__ = ''
 from .. import _globals, stimuli, io, control
 from ..misc._timer import get_time
 from ._input_output import Input
-
+from .defaults import _skip_wait_functions
 
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
@@ -251,7 +251,7 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
         start = get_time()
         self.clear_event_buffer()

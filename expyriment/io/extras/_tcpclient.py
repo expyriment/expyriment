@@ -21,6 +21,8 @@ from ... import control, _globals
 from ...misc._timer import get_time
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
+from ..defaults import _skip_wait_functions
+
 
 
 class TcpClient(Input, Output):
@@ -178,7 +180,7 @@ class TcpClient(Input, Output):
 
         """
 
-        if control.defaults._skip_wait_functions:
+        if _skip_wait_functions:
             return None, None
 
         start = get_time()

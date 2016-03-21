@@ -19,7 +19,7 @@ from sys import getfilesystemencoding
 import os
 import glob
 import pygame
-from .. import _globals, PYTHON3
+from .. import PYTHON3
 
 try:
     from locale import getdefaultlocale
@@ -265,6 +265,7 @@ def get_monitor_resolution():
 
     """
 
+    from .. import _globals
     if _globals.active_exp.is_initialized:
         return _globals.active_exp.screen.monitor_resolution
     else:
