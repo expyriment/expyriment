@@ -7,8 +7,8 @@ Notes
     `import expyriment.misc.extras`
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,7 +20,7 @@ __date__ = ''
 import os as _os
 
 from . import defaults
-from expyriment import _importer_functions
+from ... import _importer_functions
 
 
 for _plugins in [_importer_functions.import_plugins(__file__),

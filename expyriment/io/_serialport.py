@@ -4,12 +4,8 @@ Input and output serial port.
 This module contains a class implementing serial port input/output.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import chr
-from builtins import map
-from builtins import str
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -28,9 +24,9 @@ except:
     serial = None
 
 from . import defaults
-import expyriment
 from ._input_output import Input, Output
-from expyriment.misc import ByteBuffer, Clock
+from .. import _globals, control, io, stimuli, misc
+from ..misc import ByteBuffer, Clock
 
 
 class SerialPort(Input, Output):
@@ -120,8 +116,8 @@ The Python package 'pySerial' is not installed."""
         if clock is not None:
             self._clock = clock
         else:
-            if expyriment._active_exp.is_initialized:
-                self._clock = expyriment._active_exp.clock
+            if _globals.active_exp.is_initialized:
+                self._clock = _globals.active_exp.clock
             else:
                 self._clock = Clock()
         if input_history is None:
@@ -300,7 +296,7 @@ The Python package 'pySerial' is not installed."""
         else:
             self._serial.flushInput()
         if self._logging:
-            expyriment._active_exp._event_file_log("SerialPort {0},cleared".\
+            _globals.active_exp._event_file_log("SerialPort {0},cleared".\
                            format(repr(self._serial.port)), 2)
 
     def read_input(self):
@@ -329,9 +325,9 @@ The Python package 'pySerial' is not installed."""
                                         self._input_history.name,
                                         read_time - last_time)
                     print("Warning: " + warn_message)
-                    expyriment._active_exp._event_file_warn(warn_message)
+                    _globals.active_exp._event_file_warn(warn_message)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                         "SerialPort {0}, read input, {1} bytes".format(
                         repr(self._serial.port), len(read)), 2)
             return read
@@ -360,9 +356,9 @@ The Python package 'pySerial' is not installed."""
                                             self._input_history.name,
                                             poll_time - last[1])
                         print("Warning: " + warn_message)
-                        expyriment._active_exp._event_file_warn(warn_message)
+                        _globals.active_exp._event_file_warn(warn_message)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                         "SerialPort {0},received,{1},poll".format(
                         repr(self._serial.port), ord(read)), 2)
             return ord(read)
@@ -396,13 +392,13 @@ The Python package 'pySerial' is not installed."""
             timeout_time = self._clock.time + duration
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "SerialPort {0}, read line, start".format(
                     repr(self._serial.port)), 2)
 
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 rtn_string = rtn_callback
                 break
             byte = self.poll()
@@ -417,7 +413,7 @@ The Python package 'pySerial' is not installed."""
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:
-            expyriment._active_exp._event_file_log("SerialPort {0}, read line, end"\
+            _globals.active_exp._event_file_log("SerialPort {0}, read line, end"\
                                 .format(repr(self._serial.port)), 2)
         return rtn_string
 
@@ -491,7 +487,7 @@ The Python package 'pySerial' is not installed."""
 
         self._serial.write(chr(data))
         if self._logging:
-            expyriment._active_exp._event_file_log("SerialPort {0},sent,{1}"\
+            _globals.active_exp._event_file_log("SerialPort {0},sent,{1}"\
                                 .format(repr(self._serial.port), data), 2)
 
 
@@ -508,24 +504,24 @@ The Python package 'pySerial' is not installed."""
         result["testsuite_serial_stopbits"] = ""
         result["testsuite_serial_success"] = "No"
 
-        ports = expyriment.io.SerialPort.get_available_ports()
+        ports = io.SerialPort.get_available_ports()
         if ports is None:
-            expyriment.stimuli.TextScreen(
+            stimuli.TextScreen(
                             "The Python package 'pySerial' is not installed!",
                                "[Press RETURN to continue]").present()
-            exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+            exp.keyboard.wait(misc.constants.K_RETURN)
             return result
 
         elif ports == []:
-            expyriment.stimuli.TextScreen("No serial ports found!",
+            stimuli.TextScreen("No serial ports found!",
                                "[Press RETURN to continue]").present()
-            exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+            exp.keyboard.wait(misc.constants.K_RETURN)
             return result
 
         else:
             import serial
 
-            idx = expyriment.io.TextMenu("Select Serial Port", ports, width=200,
+            idx = io.TextMenu("Select Serial Port", ports, width=200,
                                          justification=1, scroll_menu=5).get()
             comport = ports[idx]
 
@@ -533,33 +529,33 @@ The Python package 'pySerial' is not installed."""
                      4800, 9600, 19200, 38400, 57600, 115200, 230400, 460800,
                      500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000,
                      2500000, 3000000, 3500000, 4000000]
-            idx = expyriment.io.TextMenu("Select Baudrate", [repr(x) for x in rates],
+            idx = io.TextMenu("Select Baudrate", [repr(x) for x in rates],
                                          width=200, justification=1,
                                          scroll_menu=2).get(preselected_item=14)
             baudrate = rates[idx]
 
             parities = ["N", "E", "O"]
-            idx = expyriment.io.TextMenu("Select Parity", parities, width=200,
+            idx = io.TextMenu("Select Parity", parities, width=200,
                                          justification=1, scroll_menu=2).get(
                                              preselected_item=0)
             parity = parities[idx]
 
             stopbits = [0, 1, 1.5, 2]
-            idx = expyriment.io.TextMenu("Select Stopbits", [repr(x) for x in stopbits],
+            idx = io.TextMenu("Select Stopbits", [repr(x) for x in stopbits],
                                          width=200, justification=1,
                                          scroll_menu=2).get(preselected_item=1)
             stopbit = stopbits[idx]
 
-            expyriment.stimuli.TextScreen("Serial Port {0}".format(comport),
+            stimuli.TextScreen("Serial Port {0}".format(comport),
                                                                 "").present()
             try:
-                ser = expyriment.io.SerialPort(port=comport, baudrate=baudrate,
+                ser = io.SerialPort(port=comport, baudrate=baudrate,
                                                parity=parity, stopbits=stopbit,
                                                input_history=True)
             except serial.SerialException:
-                expyriment.stimuli.TextScreen("Could not open {0}!".format(comport),
+                stimuli.TextScreen("Could not open {0}!".format(comport),
                                    "[Press RETURN to continue]").present()
-                exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+                exp.keyboard.wait(misc.constants.K_RETURN)
                 result["testsuite_serial_port"] = comport
                 result["testsuite_serial_baudrate"] = baudrate
                 result["testsuite_serial_parity"] = parity
@@ -573,7 +569,7 @@ The Python package 'pySerial' is not installed."""
                     byte = read[-1]
                     cnt = ser.input_history.get_size()
                     if byte is not None:
-                        expyriment.stimuli.TextScreen("Serial Port {0}".format(comport),
+                        stimuli.TextScreen("Serial Port {0}".format(comport),
                                       "{0}\n {1} - {2}".format(cnt, byte,
                                        int2bin(byte))).present()
                 key = exp.keyboard.check()

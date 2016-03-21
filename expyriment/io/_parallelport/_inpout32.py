@@ -1,6 +1,6 @@
-from __future__ import print_function
-from builtins import range
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 # We deliberately delay importing the inpout32 module until we try
 # to use it - this allows us to import the class on machines
 # which don't have it and then worry about dealing with

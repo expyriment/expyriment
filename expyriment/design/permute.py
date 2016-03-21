@@ -4,7 +4,8 @@ The permute module.
 This module implements permutation of blocks, trials and conditions.
 
 """
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 
-import expyriment.misc as _misc
+from .. import misc as _misc
 
 
 def _empty_square(n):

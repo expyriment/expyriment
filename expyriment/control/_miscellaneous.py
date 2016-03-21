@@ -2,10 +2,8 @@
 The control._miscellaneous module of expyriment.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -18,8 +16,7 @@ import sys
 import pygame
 
 from . import defaults
-import expyriment
-from expyriment.control import defaults as control_defaults
+from .. import io, control, stimuli, design, misc, _globals
 
 
 def start_audiosystem():
@@ -82,13 +79,13 @@ def wait_end_audiosystem(channel=None):
     while get_audiosystem_is_playing(channel):
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and \
-                        (event.key == expyriment.io.Keyboard.get_quit_key() or
-                         event.key == expyriment.io.Keyboard.get_pause_key()):
+                        (event.key == io.Keyboard.get_quit_key() or
+                         event.key == io.Keyboard.get_pause_key()):
                     if channel is None:
                         pygame.mixer.stop()
                     else:
                         channel.stop()
-                    expyriment.io.Keyboard.process_control_keys(event)
+                    io.Keyboard.process_control_keys(event)
 
 
 def set_develop_mode(onoff, intensive_logging=False):
@@ -118,14 +115,14 @@ def set_develop_mode(onoff, intensive_logging=False):
         defaults._mode_settings = [defaults.initialize_delay,
                                    defaults.window_mode,
                                    defaults.fast_quit,
-                                   expyriment.io.defaults.outputfile_time_stamp,
+                                   io.defaults.outputfile_time_stamp,
                                    defaults.auto_create_subject_id]
 
         print("*** DEVELOP MODE ***")
         defaults.initialize_delay = 0
         defaults.window_mode = True
         defaults.fast_quit = True
-        expyriment.io.defaults.outputfile_time_stamp = False
+        io.defaults.outputfile_time_stamp = False
         defaults.auto_create_subject_id = True
     else:
         print("*** NORMAL MODE ***")
@@ -133,7 +130,7 @@ def set_develop_mode(onoff, intensive_logging=False):
             defaults.initialize_delay = defaults._mode_settings[0]
             defaults.window_mode = defaults._mode_settings[1]
             defaults.fast_quit = defaults._mode_settings[2]
-            expyriment.io.defaults.outputfile_time_stamp = \
+            io.defaults.outputfile_time_stamp = \
                 defaults._mode_settings[3]
             defaults.auto_create_subject_id = defaults._mode_settings[4]
             defaults._mode_settings = None
@@ -142,7 +139,7 @@ def set_develop_mode(onoff, intensive_logging=False):
             pass  # Nothing to do
 
     if intensive_logging:
-        expyriment.control.defaults.event_logging = 2
+        control.defaults.event_logging = 2
 
 def set_skip_wait_functions(onoff):
     """Switch on/off skip wait function.
@@ -162,7 +159,7 @@ def set_skip_wait_functions(onoff):
 
     """
 
-    control_defaults._skip_wait_functions = onoff
+    defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
     value = None
@@ -187,21 +184,21 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
-    import expyriment.io.extras
-    import expyriment.design.extras
-    import expyriment.stimuli.extras
-    import expyriment.misc.extras
+    from ..io import extras as ioextras
+    from  ..design import extras as designextras
+    from ..stimuli import extras as stimuliextras
+    from ..misc import extras as miscextras
 
     defaults = {}
-    defaults = _get_module_values(defaults, expyriment.design.defaults)
-    defaults = _get_module_values(defaults, expyriment.control.defaults)
-    defaults = _get_module_values(defaults, expyriment.stimuli.defaults)
-    defaults = _get_module_values(defaults, expyriment.io.defaults)
-    defaults = _get_module_values(defaults, expyriment.misc.defaults)
-    defaults = _get_module_values(defaults, expyriment.design.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.stimuli.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.io.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.misc.extras.defaults)
+    defaults = _get_module_values(defaults, design.defaults)
+    defaults = _get_module_values(defaults, control.defaults)
+    defaults = _get_module_values(defaults, stimuli.defaults)
+    defaults = _get_module_values(defaults, io.defaults)
+    defaults = _get_module_values(defaults, misc.defaults)
+    defaults = _get_module_values(defaults, designextras.defaults)
+    defaults = _get_module_values(defaults, stimuliextras.defaults)
+    defaults = _get_module_values(defaults, ioextras.defaults)
+    defaults = _get_module_values(defaults, miscextras.defaults)
     if len(search_str) >= 0:
         tmp = {}
         for key in list(defaults.keys()):
@@ -267,7 +264,7 @@ def register_wait_callback_function(function, exp=None):
     if exp is not None:
         exp.register_wait_callback_function(function)
     else:
-        expyriment._active_exp.register_wait_callback_function(function)
+        _globals.active_exp.register_wait_callback_function(function)
 
 
 def unregister_wait_callback_function(exp=None):
@@ -288,7 +285,7 @@ def unregister_wait_callback_function(exp=None):
     if exp is not None:
         exp.unregister_wait_callback_function()
     else:
-        expyriment._active_exp.unregister_wait_callback_function()
+        _globals.active_exp.unregister_wait_callback_function()
 
 class CallbackQuitEvent(object):
     """A CallbackQuitEvent

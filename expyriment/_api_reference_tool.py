@@ -7,7 +7,8 @@ This script contains an API reference browser and search GUI interface (TK), as
 well as a function to call this browser or the online documentation.
 
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function, division
+from builtins import *
 from future import standard_library
 standard_library.install_aliases()
 
@@ -20,6 +21,8 @@ __date__ = ''
 
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
+from . import get_version
+
 
 try:
     import tkinter as _tk
@@ -36,9 +39,6 @@ try:
     _root.destroy()
 except:
     _ttk = _tk  # for Python < 2.7
-
-import expyriment
-
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -89,6 +89,7 @@ def show_GUI():
     """Show the GUI."""
 
     import types
+    import expyriment
     import expyriment.io.extras
     import expyriment.design.extras
     import expyriment.stimuli.extras
@@ -502,8 +503,6 @@ def show_documentation(docu_type=None):
 
     """
 
-    from expyriment import get_version
-
     def call_info():
         print("")
         print("Call show_documentation with the following arguments to get further information:")
@@ -530,7 +529,7 @@ def show_documentation(docu_type=None):
     elif docu_type == 1:
         docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
         if os.path.exists(docu):
-            from expyriment.misc import unicode2byte
+            from .misc import unicode2byte
             webbrowser.open(
                 unicode2byte('file://' + docu),
                 new=1)

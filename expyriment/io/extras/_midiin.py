@@ -4,8 +4,8 @@
 This module contains a class implementing a MIDI input device.
 
 """
-from __future__ import absolute_import
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,10 +15,10 @@ __date__ = ''
 
 
 from . import _midiin_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.io._keyboard import Keyboard
-from expyriment.io._input_output import Input
+from ... import _globals, control
+from ...misc._timer import get_time
+from ...io._keyboard import Keyboard
+from ...io._input_output import Input
 
 import time
 
@@ -69,7 +69,7 @@ class MidiIn(Input):
         if type(_midi) is not types.ModuleType:
             raise ImportError("""Sorry, MIDI input is not supported on this computer.""")
 
-        if not expyriment._active_exp.is_initialized:
+        if not _globals.active_exp.is_initialized:
             raise RuntimeError(
                 "Cannot create MidiIn before expyriment.initialize()!")
         _midi.init()
@@ -110,7 +110,7 @@ class MidiIn(Input):
 
         if self.input.poll():
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "MIDI In ({0}),received".format(self.id), 2)
             return self.input.read(num_events)
 
@@ -124,7 +124,7 @@ class MidiIn(Input):
         for _i in range(self._buffer_size):
             self.input.read(1)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                 "MIDI In ({0}),cleared".format(self.id), 2)
 
     def wait(self, events, duration=None):
@@ -153,7 +153,7 @@ class MidiIn(Input):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
@@ -168,8 +168,8 @@ class MidiIn(Input):
             events = [events]
         done = False
         while not done:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 return rtn_callback, int((get_time() - start) * 1000)
             event = self.read(1)
             if event is not None and event[0][0] in events:
@@ -188,6 +188,6 @@ class MidiIn(Input):
             time.sleep(0.0005)
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                 "MIDI In ({0}),received,{1},wait".format(self.id, _event), 2)
         return _event, rt

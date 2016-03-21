@@ -4,7 +4,8 @@ Input and output parallel port.
 This module contains a class implementing parallel port input/output.
 
 """
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,8 +22,8 @@ try:
 except:
     parallel = None
 
-import expyriment
-from  expyriment.io._input_output  import Input, Output
+from ... import _globals
+from  ...io._input_output  import Input, Output
 
 
 class SimpleParallelPort(Input, Output):
@@ -111,7 +112,7 @@ The Python package 'pyParallel' is not installed."""
                                   int(self._parallel.getInSelected()))
         code = int(bits, 2)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "SimpleParallelPort,received,{0},poll".format(code), 2)
         return code
 
@@ -163,5 +164,5 @@ The Python package 'pyParallel' is not installed."""
 
         self.parallel.setData(data)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                                     "SimpleParallelPort,sent,{0}".format(data), 2)

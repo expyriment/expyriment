@@ -4,6 +4,8 @@
 This module contains the base classes for stimuli.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,10 +16,10 @@ __date__ = ''
 
 from copy import deepcopy
 
-import expyriment
-from expyriment.misc import byte2unicode
+from .. import _globals, _Expyriment_object
+from ..misc import byte2unicode
 
-class Stimulus(expyriment._Expyriment_object):
+class Stimulus(_Expyriment_object):
     """A class implementing a very general experimental stimulus.
 
     All other stimulus classes are based on this one.
@@ -38,7 +40,7 @@ class Stimulus(expyriment._Expyriment_object):
 
         """
 
-        expyriment._Expyriment_object.__init__(self)
+        _Expyriment_object.__init__(self)
         self._id = Stimulus._id_counter
         Stimulus._id_counter += 1
 
@@ -48,7 +50,7 @@ class Stimulus(expyriment._Expyriment_object):
         if log_comment is not None:
             log_txt = u"{0},{1}".format(log_txt, byte2unicode(log_comment))
         if self._logging:
-            expyriment._active_exp._event_file_log(log_txt, 2)
+            _globals.active_exp._event_file_log(log_txt, 2)
 
 
     @property
@@ -65,7 +67,7 @@ class Stimulus(expyriment._Expyriment_object):
         Stimulus._id_counter += 1
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "Stimulus,created,{0},{1},copied from {2}".format(
                     copy.id, copy.__class__.__name__, self.id))
         return copy

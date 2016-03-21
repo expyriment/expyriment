@@ -3,6 +3,8 @@
 This module contains a class implementing a TCP network server.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,10 +15,10 @@ __date__ = ''
 
 import socket
 import errno
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.io._keyboard import Keyboard
-from expyriment.io._input_output import Input, Output
+from ... import _globals, control
+from ...misc._timer import get_time
+from ...io._keyboard import Keyboard
+from ...io._input_output import Input, Output
 from  . import _tcpserver_defaults as defaults
 
 
@@ -107,7 +109,7 @@ class TcpServer(Input, Output):
                     "Listening for TCP connection on port {0} failed!".format(
                         self._port))
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "TcpServer,client connected,{0}".format(self._client[1]))
 
     def send(self, data):
@@ -122,7 +124,7 @@ class TcpServer(Input, Output):
 
         self._socket.sendall(data)
         if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "TcpServer,sent,{0}".format(data))
 
     def wait(self, length, package_size=None, duration=None,
@@ -151,7 +153,7 @@ class TcpServer(Input, Output):
             The time it took to receive the data in milliseconds.
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return None, None
 
         start = get_time()
@@ -183,9 +185,9 @@ class TcpServer(Input, Output):
             except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
-                    rtn_callback = expyriment._active_exp._execute_wait_callback()
+                    rtn_callback = _globals.active_exp._execute_wait_callback()
                     if isinstance(rtn_callback,
-                                      expyriment.control.CallbackQuitEvent):
+                                      control.CallbackQuitEvent):
                         return rtn_callback, int((get_time() - start) * 1000)
 
                     if check_control_keys:
@@ -198,7 +200,7 @@ class TcpServer(Input, Output):
                     break
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                             "TcpServer,received,{0},wait".format(data))
 
         return data, rt
@@ -212,7 +214,7 @@ class TcpServer(Input, Output):
         except:
             pass
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                             "TcpServer,cleared,wait", 2)
 
     def close(self):
@@ -223,5 +225,5 @@ class TcpServer(Input, Output):
             self._client = None
             self._is_connected = False
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "TcpServer,closed")

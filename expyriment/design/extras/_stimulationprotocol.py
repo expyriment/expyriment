@@ -6,7 +6,8 @@ A stimulation protocol.
 This module contains a class implementing a stimulation protocol.
 
 """
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,8 +19,8 @@ __date__ = ''
 import locale
 import re
 import codecs
-from expyriment.design.randomize import rand_int
-from expyriment.misc import unicode2byte, byte2unicode
+from ...design.randomize import rand_int
+from ...misc import unicode2byte, byte2unicode
 
 
 class StimulationProtocol(object):

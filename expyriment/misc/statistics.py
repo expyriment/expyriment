@@ -4,8 +4,8 @@ The statistics module.
 This module contains miscellaneous stastistical functions for expyriment.
 
 """
-from __future__ import division
-
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

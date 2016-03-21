@@ -6,10 +6,8 @@ A dotcloud stimulus.
 This module contains a class implementing a dotcloud stimulus.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -19,13 +17,12 @@ __revision__ = ''
 __date__ = ''
 
 
-import types
 import random
 import pygame
 
-import expyriment
-from expyriment.stimuli._visual import Visual
-from expyriment.stimuli._circle import Circle
+from ... import _globals, stimuli
+from ...stimuli._visual import Visual
+from ...stimuli._circle import Circle
 from . import  defaults
 
 
@@ -62,7 +59,7 @@ class DotCloud(Visual):
             if radius is None:
                 try:
                     self._radius = min(
-                        expyriment._active_exp.screen.surface.get_size()) // 2
+                        _globals.active_exp.screen.surface.get_size()) // 2
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:
@@ -75,7 +72,7 @@ class DotCloud(Visual):
         if dot_colour is not None:
             self._dot_colour = dot_colour
         else:
-            self._dot_colour = expyriment._active_exp.foreground_colour
+            self._dot_colour = _globals.active_exp.foreground_colour
         self.create_area()
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
@@ -155,7 +152,7 @@ class DotCloud(Visual):
         self._area = Circle(radius=self._radius,
                          position=(0, 0),
                          colour=self._background_colour)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
         self._area._set_surface(pygame.surface.Surface(
             (self.radius * 2, self.radius * 2),
             pygame.SRCALPHA).convert_alpha())
@@ -233,7 +230,7 @@ class DotCloud(Visual):
                     dot = Circle(radius=dot_radius,
                                 colour=multi_colour[colour_cnt])
 
-                expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+                stimuli._stimulus.Stimulus._id_counter -= 1
                 dot.position = (random.randint(top_left, bottom_right),
                                 random.randint(top_left, bottom_right))
                 reps = reps + 1
@@ -252,7 +249,7 @@ class DotCloud(Visual):
                 message = "Dotcloud make: Cannot find a solution."
                 print(("Warning: ", message))
                 if self._logging:
-                    expyriment._active_exp._event_file_log(message)
+                    _globals.active_exp._event_file_log(message)
                 return False
 
     def shuffel_dot_sequence(self, from_idx=0, to_idx= -1):
@@ -277,9 +274,9 @@ class DotCloud(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     dotcloud = DotCloud()
     dotcloud.make(25, 10)

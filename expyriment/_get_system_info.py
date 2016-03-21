@@ -1,10 +1,10 @@
 """
 Get System Information.
 """
-from __future__ import division
+from __future__ import absolute_import, print_function, division
 from future import standard_library
 standard_library.install_aliases()
-from builtins import str
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -39,14 +39,17 @@ try:
 except:
     _pil = None
 import pygame
-import expyriment
+from . import io,_importer_functions, PYTHON3
 
 
 def _get_registry_value(key, subkey, value):
-    import winreg
+    if PYTHON3:
+        import winreg as _winreg  # TODO check me on Windows
+    else:
+        import _winreg
     key = getattr(_winreg, key)
-    handle = winreg.OpenKey(key, subkey)
-    (value, type) = winreg.QueryValueEx(handle, value)
+    handle = _winreg.OpenKey(key, subkey)
+    (value, type) = _winreg.QueryValueEx(handle, value)
     return value
 
 
@@ -304,7 +307,7 @@ def get_system_info(as_string=False):
     info["os_platform"] = os_platform
     info["os_release"] = platform.release()
     info["os_version"] = os_version
-    info["settings_folder"] = expyriment._importer_functions.get_settings_folder()
+    info["settings_folder"] = _importer_functions.get_settings_folder()
     info["python_expyriment_build_date"] = __date__
     info["python_expyriment_revision"] = __revision__
     info["python_expyriment_version"] = __version__
@@ -353,9 +356,9 @@ def get_system_info(as_string=False):
     info["hardware_memory_total"] = hardware_memory_total
     info["hardware_memory_free"] = hardware_memory_free
     info["hardware_ports_parallel"] = \
-            expyriment.io.ParallelPort.get_available_ports()
+            io.ParallelPort.get_available_ports()
     info["hardware_ports_serial"] = \
-            expyriment.io.SerialPort.get_available_ports()
+            io.SerialPort.get_available_ports()
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:

@@ -4,7 +4,8 @@ Audio playback.
 This module contains a class implementing audio playback.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,8 +20,8 @@ try:
     import android.mixer as mixer
 except:
     import pygame.mixer as mixer
-import expyriment
-from expyriment.misc import unicode2byte
+from .. import _globals
+from ..misc import unicode2byte
 from ._stimulus import Stimulus
 
 
@@ -143,7 +144,7 @@ class Audio(Stimulus):
             else:
                 filename = self._filename
 
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                 "Stimulus,played,{0}".format(filename), 1)
         return rtn
 

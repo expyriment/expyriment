@@ -4,10 +4,8 @@ A TextMenu.
 This module contains a class implementing a TextMenu.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -17,9 +15,9 @@ __revision__ = ''
 __date__ = ''
 
 from . import defaults
-import expyriment
 from ._keyboard import Keyboard
 from ._input_output import Input
+from .. import stimuli, misc
 
 
 class TextMenu(Input):
@@ -120,18 +118,18 @@ class TextMenu(Input):
         self._position = position
         self._bkg_colours = [background_colour, select_background_colour]
         self._text_colours = [text_colour, select_text_colour]
-        self._line_size = (width, expyriment.stimuli.TextLine(
+        self._line_size = (width, stimuli.TextLine(
             menu_items[0], text_size=text_size).surface_size[1] + 2)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
-        self._frame = expyriment.stimuli.Rectangle(
+        stimuli._stimulus.Stimulus._id_counter -= 1
+        self._frame = stimuli.Rectangle(
             line_width=select_frame_line_width,
             size=(self._line_size[0] + 2 * select_frame_line_width,
                   self._line_size[1] + 2 * select_frame_line_width),
             colour=select_frame_colour)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
         if background_stimulus is not None:
             if background_stimulus.__class__.__base__ in \
-                     [expyriment.stimuli._visual.Visual, expyriment.stimuli.Shape]:
+                     [stimuli._visual.Visual, stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
                 raise TypeError("{0} ".format(type(background_stimulus)) +
@@ -145,17 +143,17 @@ class TextMenu(Input):
         else:
             self._mouse = None
 
-        self._canvas = expyriment.stimuli.BlankScreen()
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        self._canvas = stimuli.BlankScreen()
+        stimuli._stimulus.Stimulus._id_counter -= 1
         self._original_items = menu_items
         self._menu_items = []
         for item in menu_items:
-            self._menu_items.append(expyriment.stimuli.TextBox(item,
+            self._menu_items.append(stimuli.TextBox(item,
                 text_size=text_size, text_font=text_font,
                 text_justification=justification,
                 size=self._line_size))
-            expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
-        self._heading = expyriment.stimuli.TextBox(
+            stimuli._stimulus.Stimulus._id_counter -= 1
+        self._heading = stimuli.TextBox(
             heading,
             text_size=text_size,
             text_justification=justification,
@@ -164,7 +162,7 @@ class TextMenu(Input):
             text_bold=True,
             background_colour=self._bkg_colours[0],
             size=self._line_size)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
 
     @property
     def heading(self):
@@ -309,14 +307,14 @@ class TextMenu(Input):
             while True:
                 self._redraw(selected)
                 key = Keyboard().wait()[0]
-                if key == expyriment.misc.constants.K_UP:
+                if key == misc.constants.K_UP:
                     selected -= 1
-                elif key == expyriment.misc.constants.K_DOWN:
+                elif key == misc.constants.K_DOWN:
                     selected += 1
-                elif key in expyriment.misc.constants.K_ALL_DIGITS and\
-                        key > expyriment.misc.constants.K_0:
-                    selected = key - expyriment.misc.constants.K_1
-                elif key == expyriment.misc.constants.K_RETURN:
+                elif key in misc.constants.K_ALL_DIGITS and\
+                        key > misc.constants.K_0:
+                    selected = key - misc.constants.K_1
+                elif key == misc.constants.K_RETURN:
                     break
                 if selected < 0:
                     selected = 0
@@ -350,9 +348,9 @@ class TextMenu(Input):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
 
     menu = TextMenu(heading="Expyriment TextMenu",

@@ -27,9 +27,8 @@ To cite Expyriment in publications, please refer to the following article:
   see http://dx.doi.org/10.3758/s13428-013-0390-6
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -135,12 +134,12 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-from . import design
-_active_exp = design.Experiment("None")
+from . import misc
+from . import _globals
+from . import design # todo are this import required?
 from . import control
 from . import stimuli
 from . import io
-from . import misc
 misc.add_fonts(misc.byte2unicode(_os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "_fonts"))))
@@ -154,3 +153,4 @@ from . import _importer_functions
 from ._secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
 
 exec(_importer_functions.post_import_hook())
+

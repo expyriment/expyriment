@@ -6,9 +6,8 @@ A Gabor patch stimulus.
 This module contains a class implementing a Gabor patch stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,9 +18,8 @@ __date__ = ''
 import os
 import tempfile
 
-import pygame
-import expyriment
-from expyriment.stimuli._picture import Picture
+from ...stimuli._picture import Picture
+from ... import stimuli
 from . import defaults
 
 try:
@@ -91,7 +89,7 @@ The Python package 'Matplotlib' is not installed."""
             phase = defaults.gaborpatch_phase
 
         fid, filename = tempfile.mkstemp(
-                    dir=expyriment.stimuli.defaults.tempdir,
+                    dir=stimuli.defaults.tempdir,
                     suffix=".png")
         os.close(fid)
         Picture.__init__(self, filename, position)
@@ -143,9 +141,9 @@ The Python package 'Matplotlib' is not installed."""
         return self._pixel_array
 
 if __name__ == "__main__":
-    from expyriment import control, design, misc
+    from .. import control, design, misc
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     garbor = GaborPatch(size=200, lambda_=10, theta=15,
                 sigma=20, phase=0.25)
     exp = design.Experiment(background_colour=garbor.background_colour)

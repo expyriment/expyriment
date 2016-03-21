@@ -6,9 +6,8 @@ A thermometer display stimulus.
 This module contains a class implementing a thermometer display stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
@@ -20,8 +19,8 @@ __date__ = ''
 import pygame
 
 from . import defaults
-from expyriment.stimuli import Canvas, Rectangle
-from expyriment.stimuli._visual import Visual
+from ...stimuli import Rectangle
+from ...stimuli._visual import Visual
 
 
 class ThermometerDisplay(Visual):
@@ -356,9 +355,9 @@ class ThermometerDisplay(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from ... import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     thermometer_display = ThermometerDisplay(50, 50)
     thermometer_display.present()

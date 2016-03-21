@@ -6,8 +6,8 @@ A dot stimulus.
 This module contains a class implementing a dot stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -18,7 +18,7 @@ __date__ = ''
 
 
 from . import defaults
-from expyriment.stimuli.extras._polygonellipse import PolygonEllipse
+from ...stimuli.extras._polygonellipse import PolygonEllipse
 
 class PolygonDot(PolygonEllipse):
     """A class implementing a dot as a child of PolygonEllipse."""
@@ -102,9 +102,9 @@ class PolygonDot(PolygonEllipse):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     dot = PolygonDot(radius=100)
     dot.present()

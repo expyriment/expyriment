@@ -3,8 +3,8 @@
 This module contains a class implementing a pygame gamepad.
 
 """
-from __future__ import absolute_import
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,8 +15,8 @@ __date__ = ''
 
 import pygame
 import time
-import expyriment
-from expyriment.misc._timer import get_time
+from .. import _globals, control
+from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input, Output
 
@@ -47,7 +47,7 @@ class GamePad(Input, Output):
 
         """
 
-        if not expyriment._active_exp.is_initialized:
+        if not _globals.active_exp.is_initialized:
             raise RuntimeError(
                 "Cannot create GamePad before expyriment.initialize()!")
         Input.__init__(self)
@@ -203,7 +203,7 @@ class GamePad(Input, Output):
         pygame.event.clear(pygame.JOYBALLMOTION)
         pygame.event.clear(pygame.JOYHATMOTION)
         if self._logging:
-            expyriment._active_exp._event_file_log("GamePad,cleared", 2)
+            _globals.active_exp._event_file_log("GamePad,cleared", 2)
 
     def wait_press(self, buttons=None, duration=None):
         """Wait for gamepad button press.
@@ -230,7 +230,7 @@ class GamePad(Input, Output):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
@@ -244,8 +244,8 @@ class GamePad(Input, Output):
             buttons = [buttons]
         done = False
         while not done:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 _button = rtn_callback
                 rt = int((get_time() - start) * 1000)
                 done = True
@@ -267,6 +267,6 @@ class GamePad(Input, Output):
             time.sleep(0.0005)
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                             "Gamepad,received,{0},wait_press".format(_button))
         return _button, rt

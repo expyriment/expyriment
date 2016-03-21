@@ -4,11 +4,8 @@ This module contains several classes and functions that help
 to handle, preprocessing and aggregate Expyriment data files.
 
 """
-from __future__ import print_function
-from __future__ import division
-from builtins import range
-from builtins import object
-
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -31,8 +28,8 @@ try:
     import numpy as _np
 except:
     _np = None
-from expyriment.misc import unicode2byte as _unicode2str
-from expyriment.misc import byte2unicode as _str2unicode
+from ..misc import unicode2byte as _unicode2str
+from ..misc import byte2unicode as _str2unicode
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,

@@ -5,7 +5,8 @@ This module contains helper function needed for importing plugins (extras) and
 for reading config file while import
 
 """
-from __future__ import print_function
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

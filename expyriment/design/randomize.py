@@ -3,9 +3,8 @@
 This module contains various functions for randomizing data
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'

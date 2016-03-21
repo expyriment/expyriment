@@ -21,8 +21,8 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-from expyriment.misc import find_font, unicode2byte, byte2unicode
-import expyriment
+from ..misc import find_font, unicode2byte, byte2unicode
+from .. import _globals
 
 class TextLine(Visual):
     """A class implementing a single text line."""
@@ -78,13 +78,13 @@ class TextLine(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = expyriment._active_exp.text_size
+            self._text_size = _globals.active_exp.text_size
         if text_font is None:
             text_font = defaults.textline_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(expyriment._active_exp.text_font)
+            self._text_font = find_font(_globals.active_exp.text_font)
         try:
             _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
@@ -108,7 +108,7 @@ class TextLine(Visual):
         if text_colour is not None:
             self._text_colour = text_colour
         else:
-            self._text_colour = expyriment._active_exp.foreground_colour
+            self._text_colour = _globals.active_exp.foreground_colour
         if background_colour is not None:
             self._background_colour = background_colour
         else:
@@ -278,9 +278,9 @@ class TextLine(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     textline = TextLine("abcde fghijk lmnopqrstuvwxyz 12 348 56789",
                         text_font="Helvetica",

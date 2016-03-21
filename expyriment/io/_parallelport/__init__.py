@@ -19,7 +19,8 @@ Each instance of the class can provide access to a different parallel
 port.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -31,8 +32,8 @@ __date__ = ''
 import sys
 import os
 
-import expyriment
-from expyriment.io._input_output import Input, Output
+from ... import stimuli, _globals, misc, io
+from ...io._input_output import Input, Output
 
 if sys.platform.startswith('linux'):
     try:
@@ -197,7 +198,7 @@ class ParallelPort(Input, Output):
 
         data = self._parallel.readData()
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_data".format(data))
         return data
 
@@ -228,7 +229,7 @@ class ParallelPort(Input, Output):
                                         int(self.read_pin(15)))
         data = int(bits, 2)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_status".format(data), 2)
         return data
 
@@ -258,7 +259,7 @@ class ParallelPort(Input, Output):
                                      int(self.read_pin(1)))
         data = int(bits, 2)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_control".format(data), 2)
         return data
 
@@ -293,7 +294,7 @@ class ParallelPort(Input, Output):
                (int('{:08b}'.format(d)[::1], 2) << 5) + \
                s
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                     "ParallelPort,received,{0},poll".format(data), 2)
         return data
 
@@ -334,7 +335,7 @@ class ParallelPort(Input, Output):
 
         self._parallel.setData(data)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                                     "ParallelPort,set_data,{0}".format(data), 2)
 
     def set_control(self, data):
@@ -362,7 +363,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(16, data & 4)
         self._parallel.setPin(17, data & 8)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                                     "ParallelPort,set_control,{0}".format(data), 2)
 
     def send(self, data):
@@ -394,7 +395,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(16, c & 4)
         self._parallel.setPin(17, c & 8)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                                     "ParallelPort,send,{0}".format(data), 2)
 
     def set_pin(self, pin, state):
@@ -457,10 +458,10 @@ class ParallelPort(Input, Output):
             else:
                 _message = "Not available on your computer."
 
-            expyriment.stimuli.TextScreen(
+            stimuli.TextScreen(
                 "ParallelPort can not be initialized!",
                 _message + "\n\n[Press RETURN to continue]").present()
-            exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+            exp.keyboard.wait(misc.constants.K_RETURN)
             return result
 
         else:
@@ -479,55 +480,55 @@ class ParallelPort(Input, Output):
                    "data pin. Reverse mode can be toggled on an of with " \
                    "the 'r' key.\n\n\n\n" \
                    "[Press RETURN to continue]"
-            t = expyriment.stimuli.TextScreen("ParallelPort test", text)
+            t = stimuli.TextScreen("ParallelPort test", text)
             t.present()
-            exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+            exp.keyboard.wait(misc.constants.K_RETURN)
 
-            address = expyriment.io.TextInput("Port address:").get()
+            address = io.TextInput("Port address:").get()
             try:
-                pp = expyriment.io.ParallelPort(address=address)
+                pp = io.ParallelPort(address=address)
             except:
-                expyriment.stimuli.TextScreen(
+                stimuli.TextScreen(
                     "Could not open port address {0}!".format(address),
                     "[Press RETURN to continue]").present()
-                exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+                exp.keyboard.wait(misc.constants.K_RETURN)
                 return result
 
-            pin_canvas = expyriment.stimuli.Canvas((800, 600))
-            poll = expyriment.stimuli.TextLine("Poll",
+            pin_canvas = stimuli.Canvas((800, 600))
+            poll = stimuli.TextLine("Poll",
                                                text_colour=[255, 255, 255],
                                                position=[0, 165])
             poll.plot(pin_canvas)
-            poll_line = expyriment.stimuli.Rectangle((660, 2),
+            poll_line = stimuli.Rectangle((660, 2),
                                                      colour=[255, 255, 255],
                                                      position=[0, 120])
             poll_line.plot(pin_canvas)
-            control = expyriment.stimuli.TextLine("Control",
+            control = stimuli.TextLine("Control",
                                                   text_colour=[100, 100, 100],
                                                   position=[-260, 95])
             control.plot(pin_canvas)
-            control_line = expyriment.stimuli.Rectangle((140, 2),
+            control_line = stimuli.Rectangle((140, 2),
                                                         colour=[100, 100, 100],
                                                         position=[-260, 50])
             control_line.plot(pin_canvas)
-            data = expyriment.stimuli.TextLine(
+            data = stimuli.TextLine(
                 "Data",
-                text_colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
+                text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                 position=[-20, 95])
             data.plot(pin_canvas)
-            data_line = expyriment.stimuli.Rectangle(
+            data_line = stimuli.Rectangle(
                 (300, 2),
-                colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
+                colour=misc.constants.C_EXPYRIMENT_ORANGE,
                 position=[-20, 50])
             data_line.plot(pin_canvas)
-            status = expyriment.stimuli.TextLine(
+            status = stimuli.TextLine(
                 "Status",
-                text_colour=expyriment.misc.constants.C_EXPYRIMENT_PURPLE,
+                text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                 position=[240, 95])
             status.plot(pin_canvas)
-            status_line = expyriment.stimuli.Rectangle(
+            status_line = stimuli.Rectangle(
                 (180, 2),
-                colour=expyriment.misc.constants.C_EXPYRIMENT_PURPLE,
+                colour=misc.constants.C_EXPYRIMENT_PURPLE,
                 position=[240, 50])
             status_line.plot(pin_canvas)
 
@@ -536,62 +537,62 @@ class ParallelPort(Input, Output):
             outputs = {}
             x_pos = -320
             for pin in [17, 16, 14, 1, 9, 8, 7, 6, 5, 4, 3, 2, 11, 10, 12, 13, 15]:
-                inputs[pin] = expyriment.stimuli.Circle(10,
+                inputs[pin] = stimuli.Circle(10,
                                                         anti_aliasing=10,
                                                         position=[x_pos, 30])
                 if 1 < pin < 10:
-                    colour = expyriment.misc.constants.C_EXPYRIMENT_ORANGE
+                    colour = misc.constants.C_EXPYRIMENT_ORANGE
                 elif pin in [10, 11, 12, 13, 15]:
-                    colour = expyriment.misc.constants.C_EXPYRIMENT_PURPLE
+                    colour = misc.constants.C_EXPYRIMENT_PURPLE
                 else:
                     colour = [100, 100, 100]
                 if pin in [11, 1, 14, 17]:
-                    bg = expyriment.stimuli.Rectangle((25, 20), colour=colour,
+                    bg = stimuli.Rectangle((25, 20), colour=colour,
                                                       position=[x_pos, 0])
                     bg.plot(pin_canvas)
-                    colour = expyriment._active_exp._background_colour
-                stim = expyriment.stimuli.TextLine(repr(pin),
+                    colour = _globals.active_exp._background_colour
+                stim = stimuli.TextLine(repr(pin),
                                                    text_font="freemono",
                                                    text_colour=colour,
                                                    position=[x_pos, 0])
                 stim.plot(pin_canvas)
                 pins[pin] = stim
                 if pin < 10 or pin in [14, 16, 17]:
-                    outputs[pin] = expyriment.stimuli.Rectangle(
+                    outputs[pin] = stimuli.Rectangle(
                         (20, 20), position=[x_pos, -30])
                 x_pos += 40
 
-            control2 = expyriment.stimuli.TextLine("Control",
+            control2 = stimuli.TextLine("Control",
                                                    text_colour=[100, 100, 100],
                                                    position=[-260, -95])
             control2.plot(pin_canvas)
-            control2_line = expyriment.stimuli.Rectangle((140, 2),
+            control2_line = stimuli.Rectangle((140, 2),
                                                          colour=[100, 100, 100],
                                                          position=[-260, -50])
             control2_line.plot(pin_canvas)
 
-            data2 = expyriment.stimuli.TextLine(
+            data2 = stimuli.TextLine(
                 "Data",
-                text_colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
+                text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                 position=[-20, -95])
             data2.plot(pin_canvas)
-            data2_line = expyriment.stimuli.Rectangle(
+            data2_line = stimuli.Rectangle(
                 (300, 2),
-                colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
+                colour= misc.constants.C_EXPYRIMENT_ORANGE,
                 position=[-20, -50])
             data2_line.plot(pin_canvas)
 
-            send = expyriment.stimuli.TextLine("Send",
+            send = stimuli.TextLine("Send",
                                                text_colour=[255, 255, 255],
                                                position=[-100, -165])
             send.plot(pin_canvas)
-            send_line = expyriment.stimuli.Rectangle((460, 2),
+            send_line = stimuli.Rectangle((460, 2),
                                                      colour=[255, 255, 255],
                                                      position=[-100, -120])
 
             send_line.plot(pin_canvas)
 
-            end = expyriment.stimuli.TextLine(
+            end = stimuli.TextLine(
                 "[Press RETURN to end the test]",
                 position=[0, -240])
             end.plot(pin_canvas)
@@ -622,35 +623,35 @@ class ParallelPort(Input, Output):
                     outputs[pin].present(clear=False, update=False)
                     outputs[pin].present(clear=False, update=False)
 
-                results_canvas = expyriment.stimuli.Canvas(
+                results_canvas = stimuli.Canvas(
                     (600, 20),
-                    colour=expyriment._active_exp.background_colour,
+                    colour=_globals.active_exp.background_colour,
                     position=[0, 70])
 
-                rc = expyriment.stimuli.TextLine(
+                rc = stimuli.TextLine(
                     "{0}".format(read_control),
                     text_colour=[0, 255, 0],
                     position=[-260, 0])
                 rc.plot(results_canvas)
 
-                rd = expyriment.stimuli.TextLine(
+                rd = stimuli.TextLine(
                     "{0}".format(read_data),
                     text_colour=[0, 255, 0],
                     position=[-20, 0])
                 rd.plot(results_canvas)
 
-                rs = expyriment.stimuli.TextLine(
+                rs = stimuli.TextLine(
                     "{0}".format(read_status),
                     text_colour=[0, 255, 0],
                     position=[240, 0])
                 rs.plot(results_canvas)
 
-                poll_canvas = expyriment.stimuli.Canvas(
+                poll_canvas = stimuli.Canvas(
                     (100, 20),
-                    colour=expyriment._active_exp.background_colour,
+                    colour=_globals.active_exp.background_colour,
                     position=[0, 140])
 
-                pd = expyriment.stimuli.TextLine(
+                pd = stimuli.TextLine(
                     "{0}".format(read_poll),
                     text_colour=[0, 255, 0])
                 pd.plot(poll_canvas)
@@ -663,58 +664,58 @@ class ParallelPort(Input, Output):
                 results_canvas.present(clear=False, update=False)
                 results_canvas.present(clear=False, update=False)
 
-                results_canvas2 = expyriment.stimuli.Canvas(
+                results_canvas2 = stimuli.Canvas(
                     (600, 20),
-                    colour=expyriment._active_exp.background_colour,
+                    colour=_globals.active_exp.background_colour,
                     position=[0, -70])
 
                 if send > 255:
                     c = (send ^ 255) >> 8
                 else:
                     c = 0
-                sc = expyriment.stimuli.TextLine(
+                sc = stimuli.TextLine(
                     "{0}".format(c),
                     text_colour=[255, 0, 0],
                     position=[-260, 0])
                 sc.plot(results_canvas2)
 
-                sd = expyriment.stimuli.TextLine(
+                sd = stimuli.TextLine(
                     "{0}".format(send & 255),
                     text_colour=[255, 0, 0],
                     position=[-20, 0])
                 sd.plot(results_canvas2)
 
-                send_canvas = expyriment.stimuli.Canvas(
+                send_canvas = stimuli.Canvas(
                     (100, 20),
-                    colour=expyriment._active_exp.background_colour,
+                    colour=_globals.active_exp.background_colour,
                     position=[-100, -140])
 
-                ss = expyriment.stimuli.TextLine(
+                ss = stimuli.TextLine(
                     "{0}".format(send),
                     text_colour=[255, 0, 0])
                 ss.plot(send_canvas)
 
                 if pp.reverse is True:
-                    r = expyriment.stimuli.Rectangle(
+                    r = stimuli.Rectangle(
                         (150, 30),
                         line_width=1,
-                        colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
+                        colour=misc.constants.C_EXPYRIMENT_ORANGE,
                         position=[240, -95])
-                    reverse = expyriment.stimuli.TextLine(
+                    reverse = stimuli.TextLine(
                         "Reverse Mode",
-                        text_colour=expyriment.misc.constants.C_EXPYRIMENT_ORANGE,
-                        background_colour=expyriment._active_exp.background_colour)
+                        text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                        background_colour=_globals.active_exp.background_colour)
                     reverse.plot(r)
                 else:
-                    r = expyriment.stimuli.Rectangle(
+                    r = stimuli.Rectangle(
                         (150, 30),
                         line_width=1,
-                        colour=expyriment._active_exp.background_colour,
+                        colour=_globals.active_exp.background_colour,
                         position=[240, -95])
-                    reverse = expyriment.stimuli.TextLine(
+                    reverse = stimuli.TextLine(
                         "Reverse Mode",
-                        text_colour=expyriment._active_exp.background_colour,
-                        background_colour=expyriment._active_exp.background_colour)
+                        text_colour=_globals.active_exp.background_colour,
+                        background_colour=_globals.active_exp.background_colour)
                     reverse.plot(r)
 
                 r.present(clear=False, update=False)
@@ -764,65 +765,65 @@ class ParallelPort(Input, Output):
                         inputs_states[pin] = False
 
                 keys = exp.keyboard.read_out_buffered_keys()
-                if expyriment.misc.constants.K_1 in keys or \
-                                expyriment.misc.constants.K_KP1 in keys:
-                    if expyriment.misc.constants.K_4 in keys or \
-                                expyriment.misc.constants.K_KP4 in keys:
+                if misc.constants.K_1 in keys or \
+                                misc.constants.K_KP1 in keys:
+                    if misc.constants.K_4 in keys or \
+                                misc.constants.K_KP4 in keys:
                         outputs_states[14][0] =  not outputs_states[14][0]
                         pp.set_pin(14, outputs_states[14][0])
-                    elif expyriment.misc.constants.K_6 in keys or \
-                                expyriment.misc.constants.K_KP6 in keys:
+                    elif misc.constants.K_6 in keys or \
+                                misc.constants.K_KP6 in keys:
                         outputs_states[16][0] =  not outputs_states[16][0]
                         pp.set_pin(16, outputs_states[16][0])
-                    elif expyriment.misc.constants.K_7 in keys or \
-                                expyriment.misc.constants.K_KP7 in keys:
+                    elif misc.constants.K_7 in keys or \
+                                misc.constants.K_KP7 in keys:
                         outputs_states[17][0] =  not outputs_states[17][0]
                         pp.set_pin(17, outputs_states[17][0])
                     else:
                         outputs_states[1][0] =  not outputs_states[1][0]
                         pp.set_pin(1, outputs_states[1][0])
-                elif expyriment.misc.constants.K_2 in keys or \
-                                expyriment.misc.constants.K_KP2 in keys:
+                elif misc.constants.K_2 in keys or \
+                                misc.constants.K_KP2 in keys:
                     outputs_states[2][0] =  not outputs_states[2][0]
                     pp.set_pin(2, outputs_states[2][0])
-                elif expyriment.misc.constants.K_3 in keys or \
-                                expyriment.misc.constants.K_KP3 in keys:
+                elif misc.constants.K_3 in keys or \
+                                misc.constants.K_KP3 in keys:
                     outputs_states[3][0] = not outputs_states[3][0]
                     pp.set_pin(3, outputs_states[3][0])
-                elif expyriment.misc.constants.K_4 in keys or \
-                                expyriment.misc.constants.K_KP4 in keys:
+                elif misc.constants.K_4 in keys or \
+                                misc.constants.K_KP4 in keys:
                     outputs_states[4][0] = not outputs_states[4][0]
                     pp.set_pin(4, outputs_states[4][0])
-                elif expyriment.misc.constants.K_5 in keys or \
-                                expyriment.misc.constants.K_KP5 in keys:
+                elif misc.constants.K_5 in keys or \
+                                misc.constants.K_KP5 in keys:
                     outputs_states[5][0] = not outputs_states[5][0]
                     pp.set_pin(5, outputs_states[5][0])
-                elif expyriment.misc.constants.K_6 in keys or \
-                                expyriment.misc.constants.K_KP6 in keys:
+                elif misc.constants.K_6 in keys or \
+                                misc.constants.K_KP6 in keys:
                     outputs_states[6][0] = not outputs_states[6][0]
                     pp.set_pin(6, outputs_states[6][0])
-                elif expyriment.misc.constants.K_7 in keys or \
-                                expyriment.misc.constants.K_KP7 in keys:
+                elif misc.constants.K_7 in keys or \
+                                misc.constants.K_KP7 in keys:
                     outputs_states[7][0] = not outputs_states[7][0]
                     pp.set_pin(7, outputs_states[7][0])
-                elif expyriment.misc.constants.K_8 in keys or \
-                                expyriment.misc.constants.K_KP8 in keys:
+                elif misc.constants.K_8 in keys or \
+                                misc.constants.K_KP8 in keys:
                     outputs_states[8][0] = not outputs_states[8][0]
                     pp.set_pin(8, outputs_states[8][0])
-                elif expyriment.misc.constants.K_9 in keys or \
-                                expyriment.misc.constants.K_KP9 in keys:
+                elif misc.constants.K_9 in keys or \
+                                misc.constants.K_KP9 in keys:
                     outputs_states[9][0] = not outputs_states[9][0]
                     pp.set_pin(9, outputs_states[9][0])
-                elif expyriment.misc.constants.K_r in keys:
+                elif misc.constants.K_r in keys:
                     pp.reverse = not pp.reverse
-                elif expyriment.misc.constants.K_RETURN in keys:
+                elif misc.constants.K_RETURN in keys:
                     result["testsuite_serial_port"] = address
                     return result
                 _update(inputs_states, outputs_states, c, d, s, p)
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()

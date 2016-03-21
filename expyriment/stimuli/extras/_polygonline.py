@@ -6,8 +6,8 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -21,8 +21,8 @@ import math
 from . import defaults
 
 from ._polygonrectangle import PolygonRectangle
-import expyriment
-from expyriment import misc
+from ... import _globals
+from ... import misc
 
 
 class PolygonLine(PolygonRectangle):
@@ -50,7 +50,7 @@ class PolygonLine(PolygonRectangle):
         if colour is None:
             colour = defaults.polygonline_colour
         if colour is None:
-            colour = expyriment._active_exp.foreground_colour
+            colour = _globals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.polygonline_anti_aliasing
 
@@ -65,9 +65,9 @@ class PolygonLine(PolygonRectangle):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     p1 = (-180, 15)
     p2 = (200, 0)

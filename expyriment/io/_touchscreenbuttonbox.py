@@ -4,8 +4,8 @@ A touchscreen button box.
 This module contains a class implementing a touchscreen button box.
 
 """
-from __future__ import absolute_import
-from builtins import map
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,8 +14,8 @@ __revision__ = ''
 __date__ = ''
 
 
-import expyriment
-from expyriment.misc._timer import get_time
+from .. import _globals, stimuli, io, control
+from ..misc._timer import get_time
 from ._input_output import Input
 
 
@@ -58,7 +58,7 @@ class TouchScreenButtonBox(Input):
         except:
             stimuli = [stimuli]
 
-        self._mouse = expyriment._active_exp.mouse
+        self._mouse = _globals.active_exp.mouse
         self._last_touch_position = None
         self._canvas = None
         self._button_fields = []
@@ -76,7 +76,7 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if not isinstance(button_field, expyriment.stimuli._visual.Visual):
+        if not isinstance(button_field, stimuli._visual.Visual):
             raise TypeError("Button field has to be a visual Expyriment stimulus")
         self._button_fields.append(button_field)
         self._canvas = None
@@ -91,7 +91,7 @@ class TouchScreenButtonBox(Input):
         stimulus : visual Expyriment stimulus
 
         """
-        if not isinstance(stimulus, expyriment.stimuli._visual.Visual):
+        if not isinstance(stimulus, stimuli._visual.Visual):
             raise TypeError("Additional stimuli has to be a visual Expyriment stimulus")
         self._stimuli.append(stimulus)
         self._canvas = None
@@ -125,8 +125,8 @@ class TouchScreenButtonBox(Input):
     def background_stimulus(self, stimulus):
         """Setter background stimulus"""
         if stimulus is None:
-            self._background_stimulus = expyriment.stimuli.BlankScreen()
-        elif not isinstance(stimulus, expyriment.stimuli._visual.Visual):
+            self._background_stimulus = stimuli.BlankScreen()
+        elif not isinstance(stimulus, stimuli._visual.Visual):
             raise TypeError("Background stimulus has to be a " +
                             "visual Expyriment stimulus")
         else:
@@ -198,7 +198,7 @@ class TouchScreenButtonBox(Input):
             except:
                 button_fields = [button_fields]
         if check_for_control_keys:
-            expyriment.io.Keyboard.process_control_keys()
+            io.Keyboard.process_control_keys()
 
         pressed_button_field = None
         touch_time = None
@@ -209,7 +209,7 @@ class TouchScreenButtonBox(Input):
                     button_fields)
 
             if self._logging and pressed_button_field is not None:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                                 "{0},received, button press,check".format(
                                     self.__class__.__name__))
         return pressed_button_field, touch_time
@@ -251,13 +251,13 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return None, None
         start = get_time()
         self.clear_event_buffer()
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 return rtn_callback, int((get_time()-start)*1000)
             pressed_button_field, touch_time = self.check(button_fields,
                         check_for_control_keys)

@@ -6,8 +6,8 @@ The Expyriment command line interface provides a collection of convenient
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 """
-from __future__ import print_function
-from builtins import input
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,7 +17,8 @@ __date__ = ''
 
 import sys, os
 from importlib import import_module
-import expyriment
+
+from . import control, io, show_documentation, get_system_info, _secure_hash
 
 short_info = """You must specify an option.
 Try '-h' or '--help' for more information."""
@@ -87,7 +88,7 @@ control.end()
     f.close()
 
 def join_data():
-    from expyriment.misc import data_preprocessing
+    from .misc import data_preprocessing
     print("Joining data")
     sys.stdout.write(" data subfolder [optional, default=data]? ")
     folder = input()
@@ -126,51 +127,51 @@ if __name__ == "__main__":
                     arguments.sort(reverse=True)
                     for arg in arguments:
                         if arg == 'd':
-                            expyriment.control.set_develop_mode(True)
+                            control.set_develop_mode(True)
                         elif arg == 'i':
                             print("* Intensive logging")
-                            expyriment.control.defaults.event_logging = 2
+                            control.defaults.event_logging = 2
                         elif arg == 'f':
                             print("* Fast mode")
-                            expyriment.control.defaults.initialize_delay = 0
-                            expyriment.control.defaults.fast_quit = False
+                            control.defaults.initialize_delay = 0
+                            control.defaults.fast_quit = False
                         elif arg == 'w':
                             print("* Window mode")
-                            expyriment.control.defaults.window_mode = True
+                            control.defaults.window_mode = True
                         elif arg == 'g' or arg == '0':
                             print("* No OpenGL (no vsync / no blocking)")
-                            expyriment.control.defaults.open_gl = False
+                            control.defaults.open_gl = False
                         elif arg == '1':
                             print("* OpenGL (vsync / no blocking)")
-                            expyriment.control.defaults.open_gl = 1
+                            control.defaults.open_gl = 1
                         elif arg == '2':
                             print("* OpenGL (vsync / blocking)")
-                            expyriment.control.defaults.open_gl = 2
+                            control.defaults.open_gl = 2
                         elif arg == '3':
                             print("* OpenGL (vsync / alternative blocking)")
-                            expyriment.control.defaults.open_gl = 3
+                            control.defaults.open_gl = 3
                         elif arg == 't':
                             print("* No time stamps")
-                            expyriment.io.defaults.outputfile_time_stamp =\
+                            io.defaults.outputfile_time_stamp =\
                                     False
                         elif arg == 'a':
                             print("* Auto create subject id")
-                            expyriment.control.defaults.auto_create_subject_id\
+                            control.defaults.auto_create_subject_id\
                                              = True
                         elif arg == "S":
                             print("System Info")
-                            print(expyriment.get_system_info(as_string=True))
+                            print(get_system_info(as_string=True))
                             sys.exit()
                         elif arg == "T":
                             print("Run Test Suite")
-                            expyriment.control.run_test_suite()
+                            control.run_test_suite()
                             sys.exit()
                         elif arg == "B":
-                            expyriment.show_documentation(2)
+                            show_documentation(2)
                             sys.exit()
                         elif arg == "A":
                             print("Start API Reference Tool")
-                            expyriment.show_documentation(3)
+                            show_documentation(3)
                             sys.exit()
                         elif arg == "C":
                             create_template()
@@ -205,11 +206,11 @@ if __name__ == "__main__":
         path, pyfile = os.path.split(script)
         os.chdir(path)
         sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
-        expyriment._secure_hash.main_file = script
-        secure_hashes = {script : expyriment._secure_hash._make_secure_hash(script)}
-        secure_hashes = expyriment._secure_hash.\
+        _secure_hash.main_file = script
+        secure_hashes = {script : _secure_hash._make_secure_hash(script)}
+        secure_hashes = _secure_hash.\
                     _append_hashes_from_imported_modules(secure_hashes, script)
-        expyriment._secure_hash.secure_hashes = secure_hashes
-        expyriment._secure_hash.cout_hashes()
+        _secure_hash.secure_hashes = secure_hashes
+        _secure_hash.cout_hashes()
 
         import_module(os.path.splitext(pyfile)[0])

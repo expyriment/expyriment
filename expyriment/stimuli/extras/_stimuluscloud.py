@@ -6,10 +6,8 @@ A stimulus cloud stimulus.
 This module contains a class implementing a stimulus cloud stimulus.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
@@ -23,8 +21,8 @@ import random
 import pygame
 
 from . import defaults
-import expyriment
-from expyriment.stimuli._visual import Visual
+from ... import _globals
+from ...stimuli._visual import Visual
 
 
 class StimulusCloud(Visual):
@@ -57,7 +55,7 @@ class StimulusCloud(Visual):
             size = defaults.stimuluscloud_size
             if size is None:
                 try:
-                    self._size = expyriment._active_exp.screen.surface.get_size()
+                    self._size = _globals.active_exp.screen.surface.get_size()
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:
@@ -200,10 +198,10 @@ class StimulusCloud(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment.stimuli._textline import TextLine
-    from expyriment import control
+    from ...stimuli._textline import TextLine
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     stimuluscloud = StimulusCloud()
     stims = []

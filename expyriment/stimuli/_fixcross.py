@@ -6,8 +6,8 @@ A fixation cross stimulus.
 This module contains a class implementing a fixation cross stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -19,7 +19,7 @@ __date__ = ''
 
 from . import defaults
 from ._shape import Shape
-import expyriment
+from .. import _globals
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""
@@ -59,7 +59,7 @@ class FixCross(Shape):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.foreground_colour
+            self._colour = _globals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
         Shape.__init__(self, position=position, line_width=0,
@@ -105,9 +105,9 @@ class FixCross(Shape):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     fixcross = FixCross(size=(100, 100))
     fixcross.present()

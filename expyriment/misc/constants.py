@@ -3,7 +3,8 @@
 This module contains expyriment constants.
 
 """
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,7 +17,7 @@ import os as _os
 
 import pygame as _pygame
 
-from expyriment.misc import byte2unicode as _str2unicode
+from ..misc import byte2unicode as _str2unicode
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE

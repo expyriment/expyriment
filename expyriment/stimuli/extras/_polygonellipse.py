@@ -6,9 +6,8 @@ An ellipse stimulus.
 This module contains a class implementing an ellipse stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,8 +18,8 @@ __date__ = ''
 
 import math as _math
 from . import defaults
-from expyriment.stimuli._shape import Shape
-from expyriment.misc import geometry as _geometry
+from ...stimuli._shape import Shape
+from ...misc import geometry as _geometry
 
 
 class PolygonEllipse(Shape):
@@ -115,9 +114,9 @@ class PolygonEllipse(Shape):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     stim = PolygonEllipse(size=(100, 100), line_width=5)
     stim.present()

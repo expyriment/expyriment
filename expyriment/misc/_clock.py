@@ -3,9 +3,8 @@
 This module contains an experimental clock.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,8 +16,7 @@ import sys
 import time
 import types
 from ._timer import get_time
-
-import expyriment
+from .. import _globals, control
 
 class Clock(object) :
     """Basic timing class.
@@ -121,16 +119,16 @@ class Clock(object) :
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return
         start = self.time
         if type(function) == types.FunctionType or\
-                                 expyriment._active_exp.is_callback_registered:
+                                 _globals.active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
-                rtn_callback = expyriment._active_exp._execute_wait_callback()
-                if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                rtn_callback = _globals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, control.CallbackQuitEvent):
                     return rtn_callback
         else:
             looptime = 200

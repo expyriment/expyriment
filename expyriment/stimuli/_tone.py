@@ -6,11 +6,8 @@ The tone stimulus module.
 This module contains a class implementing a tone stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import map
-from builtins import zip
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -209,9 +206,9 @@ class Tone(Audio):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     control.start_audiosystem()
     exp = control.initialize()
     sine = Tone(duration=1000)

@@ -1,6 +1,3 @@
-from __future__ import print_function
-from builtins import range
-from builtins import object
 # This code is heavily based upon winioport.py
 # Provides hardware port access for Python under Windows 95/98/NT/2000
 #
@@ -35,6 +32,9 @@ from builtins import object
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 class PParallelDLPortIO(object):
     """

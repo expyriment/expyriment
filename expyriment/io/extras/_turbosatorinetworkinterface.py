@@ -4,10 +4,8 @@ This module contains a class implementing a network interface for Turbo-Satori
 (see www.brainvoyager.com/products/turbosatori.html).
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import chr
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -20,11 +18,10 @@ __date__ = ''
 import struct
 
 from . import _turbosatorinetworkinterface_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import byte2unicode
-from expyriment.io._input_output import Input, Output
-from expyriment.io.extras._tcpclient import TcpClient
+from ...misc._timer import get_time
+from ...misc._miscellaneous import byte2unicode
+from ...io._input_output import Input, Output
+from ...io.extras._tcpclient import TcpClient
 
 
 class TurbosatoriNetworkInterface(Input, Output):
@@ -146,7 +143,7 @@ class TurbosatoriNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "TurbosatoriNetworkInterface,connected,{0}:{1}".format(
                         self._host, self._port))
 

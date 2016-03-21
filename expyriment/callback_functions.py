@@ -4,8 +4,10 @@
 """
 Example of the usage of callback_functions in Expyriment
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
-from expyriment import control, design, misc, io, stimuli
+from . import control, design, misc, io, stimuli
 
 control.set_develop_mode(True)
 

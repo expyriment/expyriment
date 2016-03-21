@@ -6,12 +6,8 @@ A random dot kinematogram (stimulus-like).
 This module contains a class implementing a random dot kinematogram.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-from builtins import map
-from builtins import range
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -26,10 +22,10 @@ import random
 
 from . import defaults
 
-from expyriment.io import Keyboard
-from expyriment.stimuli import Canvas, Circle
-from expyriment.stimuli._stimulus import Stimulus
-from expyriment.misc import Clock
+from ...io import Keyboard
+from ...stimuli import Canvas, Circle
+from ...stimuli._stimulus import Stimulus
+from ...misc import Clock
 
 
 
@@ -269,10 +265,10 @@ class RandomDotKinematogram(Stimulus):
             (e.g. io.StreamingButtonBox)
 
         """
-        from expyriment import _active_exp
+        from ... import _globals
         RT = Clock()
         if button_box is None:
-            button_box = _active_exp.keyboard
+            button_box = _globals.active_exp.keyboard
         button_box.clear()
         self.reset_all_ages(randomize_ages=True)
         last_change_time = RT.stopwatch_time
@@ -287,7 +283,7 @@ class RandomDotKinematogram(Stimulus):
             if isinstance(button_box, Keyboard):
                 key = button_box.check(keys=check_keys)
             else:
-                _active_exp.keyboard.process_control_keys()
+                _globals.active_exp.keyboard.process_control_keys()
                 key = button_box.check(codes=check_keys)
 
             if key is not None:
@@ -408,7 +404,7 @@ class MovingPosition(object):
 
 
 if __name__ == "__main__":
-    from expyriment import control, design
+    from .. import control, design
     control.set_develop_mode(True)
     exp = control.initialize()
     direction = design.randomize.rand_int(0, 360)

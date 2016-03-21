@@ -4,7 +4,7 @@ This Package contains a variety of classes implementing experimental stimuli.
 See also expyriment.stimuli.extras for more stimuli.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, division
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

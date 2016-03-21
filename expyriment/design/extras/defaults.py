@@ -5,6 +5,9 @@ This module contains default values for all optional arguments in the init
 function of all classes in this package.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +16,7 @@ __revision__ = ''
 __date__ = ''
 
 
-from expyriment import _importer_functions
+from ... import _importer_functions
 
 
 for _plugins in [_importer_functions.import_plugin_defaults(__file__),

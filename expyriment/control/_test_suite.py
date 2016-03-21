@@ -5,11 +5,8 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
-from __future__ import absolute_import
-from __future__ import division
-from builtins import zip
-from builtins import str
-from builtins import range
+from __future__ import absolute_import, print_function, division
+from builtins import *
 from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -28,12 +25,11 @@ except:
     ogl = None
 
 from . import defaults
+from .. import stimuli, io, _globals, control, design, get_system_info
 
-import expyriment
-from expyriment import stimuli, io
-from expyriment.misc import constants, statistics
-from expyriment.misc._timer import get_time
-from expyriment.design import randomize
+from ..misc import constants, statistics, list_fonts
+from ..misc._timer import get_time
+from ..design import randomize
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -141,7 +137,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             exp.clock.wait(x)
             s2.present(clear=False)
             actual_time.append((get_time() - start) * 1000)
-            exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
+            exp.clock.wait(randomize.rand_int(30, 60))
 
         # determine refresh_rate
         tmp = []
@@ -383,7 +379,7 @@ def _audio_playback(exp):
     return response
 
 def _font_viewer(exp):
-    all_fonts = list(expyriment.misc.list_fonts().keys())
+    all_fonts = list(list_fonts().keys())
 
     def info_screen():
         stimuli.TextScreen(heading="Expyriment Font Viewer",
@@ -520,6 +516,7 @@ def _write_protocol(exp, results):
     return []  # required for event loop
 
 def _find_self_tests():
+    import expyriment
     classes = []
     method = []
     rtn = []
@@ -537,21 +534,22 @@ def _find_self_tests():
 def run_test_suite():
     """Run the Expyriment test suite."""
 
-    import expyriment.design.extras
-    import expyriment.stimuli.extras
-    import expyriment.io.extras
-    import expyriment.misc.extras
+    # test imports
+    from ..design import extras as _test1
+    from ..stimuli import extras as _test2
+    from ..io import extras as _test3
+    from ..misc import extras as _test4
 
     quit_experiment = False
-    if not expyriment._active_exp.is_initialized:
+    if not _globals.active_exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
-        exp = expyriment.design.Experiment()
+        exp = design.Experiment()
         exp.testsuite = True
-        expyriment.control.initialize(exp)
+        control.initialize(exp)
         quit_experiment = True
     else:
-        exp = expyriment._active_exp
+        exp = _globals.active_exp
 
     # make menu and code for test functions
     test_functions = ['', '', '']
@@ -572,11 +570,11 @@ def run_test_suite():
     pict.scale(0.5)
     pict.plot(background)
 
-    results = expyriment.get_system_info()
+    results = get_system_info()
 
     try:
         import android
-        mouse = expyriment.io.Mouse(show_cursor=False)
+        mouse = io.Mouse(show_cursor=False)
     except ImportError:
         android = None
         mouse = None
@@ -584,7 +582,7 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = expyriment.io.TextMenu(
+        select = io.TextMenu(
             "Test suite", menu, width=350, justification=0,
             background_stimulus=background, mouse=mouse).get(preselected_item)
 
@@ -643,4 +641,4 @@ def run_test_suite():
             namesspace = None
 
     if quit_experiment:
-        expyriment.control.end(goodbye_delay=0, goodbye_text="Quitting test suite")
+        control.end(goodbye_delay=0, goodbye_text="Quitting test suite")

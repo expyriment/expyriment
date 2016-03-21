@@ -4,9 +4,8 @@ HSV Colour
 This module contains a class implementing HSV colours [hue, saturation, value]
 
 """
-from __future__ import print_function
-from __future__ import division
-from builtins import object
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

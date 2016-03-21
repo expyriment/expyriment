@@ -4,9 +4,8 @@ Video playback.
 This module contains a class implementing video playback.
 
 """
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -26,9 +25,9 @@ except:
 
 from . import defaults
 from . import _visual
-from expyriment.io import Keyboard
-from expyriment.misc import unicode2byte
-import expyriment
+from ..io import Keyboard
+from ..misc import unicode2byte
+from .. import _globals, control
 
 
 class Video(_visual.Stimulus):
@@ -194,7 +193,7 @@ class Video(_visual.Stimulus):
         if not self._is_preloaded:
             self._file = pygame.movie.Movie(unicode2byte(self._filename,
                                                          fse=True))
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _globals.active_exp.screen.surface.get_size()
             self._pos = [screen_size[0] // 2 - self._file.get_size()[0] // 2 +
                          self._position[0],
                          screen_size[1] // 2 - self._file.get_size()[1] // 2 -
@@ -239,13 +238,13 @@ class Video(_visual.Stimulus):
 expyriment.control.stop_audiosystem() before preloading the video."
             print("Warning: ", message)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "Video,warning," + message)
 
         if not self._is_preloaded:
             self.preload()
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                 "Video,playing,{0}".format(unicode2byte(self._filename)))
         self._file.play()
 
@@ -319,14 +318,14 @@ expyriment.control.stop_audiosystem() before preloading the video."
             frame = self._file.get_frame()
             if frame > self._frame:
                 self._frame = frame
-                if expyriment._active_exp._screen.open_gl:
+                if _globals.active_exp._screen.open_gl:
                     ogl_screen = _visual._LaminaPanelSurface(
                         self._surface, position=self._position)
                     ogl_screen.display()
                 else:
-                    expyriment._active_exp._screen.surface.blit(self._surface,
+                    _globals.active_exp._screen.surface.blit(self._surface,
                                                                 self._pos)
-                expyriment._active_exp._screen.update()
+                _globals.active_exp._screen.update()
 
     def _wait(self, frame=None):
         """Wait until frame was shown or end of movie and update screen.
@@ -343,8 +342,8 @@ expyriment.control.stop_audiosystem() before preloading the video."
         """
 
         while self.is_playing:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 return rtn_callback
 
             old_frame = self._frame
@@ -357,7 +356,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
             if diff > 1:
                 warn_message = repr(diff - 1) + " video frames dropped!"
                 print(warn_message)
-                expyriment._active_exp._event_file_warn(
+                _globals.active_exp._event_file_warn(
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and (

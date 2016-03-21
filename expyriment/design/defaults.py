@@ -5,6 +5,8 @@ This module contains default values for all optional arguments in the init
 function of all classes in this package.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,9 +14,6 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
-import os as _os
-from expyriment.misc import byte2unicode as _str2unicode
 
 # Experiment
 experiment_name = None  # Set None if experiment default name should be the

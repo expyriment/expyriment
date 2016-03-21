@@ -6,7 +6,7 @@ This module contains miscellaneous functions for expyriment.
 All classes in this module should be called directly via expyriment.misc.*:
 
 """
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, print_function, division
 from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -19,7 +19,7 @@ from sys import getfilesystemencoding
 import os
 import glob
 import pygame
-import expyriment
+from .. import _globals, PYTHON3
 
 try:
     from locale import getdefaultlocale
@@ -67,8 +67,8 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
 
 def byte2unicode(s, fse=False):
-    if (expyriment.PYTHON3 and isinstance(s, str)) or\
-       (not expyriment.PYTHON3 and isinstance(s, unicode)):
+    if (PYTHON3 and isinstance(s, str)) or\
+       (not PYTHON3 and isinstance(s, unicode)):
         return s
 
     if fse:
@@ -160,7 +160,7 @@ def numpad_digit_code2ascii(keycode):
 
     """
 
-    from expyriment.misc import constants
+    from ..misc import constants
     if keycode in constants.K_ALL_KEYPAD_DIGITS:
         return keycode - (constants.K_KP1 - constants.K_1)
     else:
@@ -265,8 +265,8 @@ def get_monitor_resolution():
 
     """
 
-    if expyriment._active_exp.is_initialized:
-        return expyriment._active_exp.screen.monitor_resolution
+    if _globals.active_exp.is_initialized:
+        return _globals.active_exp.screen.monitor_resolution
     else:
         pygame.display.init()
         return (pygame.display.Info().current_w,

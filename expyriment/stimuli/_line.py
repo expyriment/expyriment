@@ -6,8 +6,8 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
-from __future__ import absolute_import
-from __future__ import division
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -23,9 +23,9 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-import expyriment
-from expyriment import misc
-from expyriment.misc._timer import get_time
+from .. import _globals
+from .. import misc
+from ..misc._timer import get_time
 
 
 class Line(Visual):
@@ -57,7 +57,7 @@ class Line(Visual):
         if colour is None:
             colour = defaults.line_colour
             if colour is None:
-                colour = expyriment._active_exp.foreground_colour
+                colour = _globals.active_exp.foreground_colour
         self._colour = colour
         if anti_aliasing is not None:
             self._anti_aliasing = anti_aliasing
@@ -205,9 +205,9 @@ class Line(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     p1 = (-180, 15)
     p2 = (200, 0)

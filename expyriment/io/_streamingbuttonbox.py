@@ -4,7 +4,8 @@ A streaming button box.
 This module contains a class implementing a streaming button box.
 
 """
-from __future__ import absolute_import
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,9 +14,9 @@ __revision__ = ''
 __date__ = ''
 
 from . import defaults
-import expyriment
-from expyriment.misc import compare_codes
-from expyriment.misc._timer import get_time
+from .. import _globals, control
+from ..misc import compare_codes
+from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from ._input_output import Input, Output
 
@@ -63,7 +64,7 @@ class StreamingButtonBox(Input, Output):
 
         self._interface.clear()
         if self._logging:
-            expyriment._active_exp._event_file_log("{0},cleared".format(
+            _globals.active_exp._event_file_log("{0},cleared".format(
             self.__class__.__name__), 2)
 
     def check(self, codes=None, bitwise_comparison=False):
@@ -93,14 +94,14 @@ class StreamingButtonBox(Input, Output):
             if read is not None:
                 if codes is None and read != self._baseline:
                     if self._logging:
-                        expyriment._active_exp._event_file_log(
+                        _globals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read), 2)
                     return read
                 elif compare_codes(read, codes, bitwise_comparison):
                     if self._logging:
-                        expyriment._active_exp._event_file_log(
+                        _globals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read))
@@ -150,15 +151,15 @@ class StreamingButtonBox(Input, Output):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if control.defaults._skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _globals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, control.CallbackQuitEvent):
                 found = rtn_callback
                 rt = int((get_time() - start) * 1000)
                 break
@@ -173,7 +174,7 @@ class StreamingButtonBox(Input, Output):
                 if Keyboard.process_control_keys():
                     break
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _globals.active_exp._event_file_log(
                                 "{0},received,{1},wait".format(
                                                 self.__class__.__name__,
                                                 found))
