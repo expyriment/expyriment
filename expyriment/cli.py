@@ -18,7 +18,8 @@ __date__ = ''
 import sys, os
 from importlib import import_module
 
-from . import control, io, show_documentation, get_system_info, _secure_hash
+from . import control, io, show_documentation, get_system_info
+from .misc import _secure_hash
 
 short_info = """You must specify an option.
 Try '-h' or '--help' for more information."""

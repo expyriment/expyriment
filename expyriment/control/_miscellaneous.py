@@ -16,7 +16,8 @@ import sys
 import pygame
 
 from . import defaults
-from .. import _globals
+from .. import _active
+from ..misc import is_idle_running, is_ipython_running
 
 
 def start_audiosystem():
@@ -246,7 +247,7 @@ def register_wait_callback_function(function, exp=None):
     if exp is not None:
         exp.register_wait_callback_function(function)
     else:
-        _globals.active_exp.register_wait_callback_function(function)
+        _active.exp.register_wait_callback_function(function)
 
 
 def unregister_wait_callback_function(exp=None):
@@ -267,70 +268,7 @@ def unregister_wait_callback_function(exp=None):
     if exp is not None:
         exp.unregister_wait_callback_function()
     else:
-        _globals.active_exp.unregister_wait_callback_function()
-
-class CallbackQuitEvent(object):
-    """A CallbackQuitEvent
-
-    If a callback function returns a CallbackQuitEvent object the currently processed
-    the wait or event loop function will be quited.
-    """
-
-    def __init__(self, data=None):
-        """Init CallbackQuitEvent
-
-        Parameter
-        ---------
-        data: any data type, optional
-            You might use this variable to return data or values from your callback
-            function to your main function, since the quited wait or event loop function
-            will return this CallbackQuitEvent.
-
-        See Also
-        --------
-        experiment.register_wait_callback_function()
-
-        """
-
-        self.data = data
-
-    def __str__(self):
-        return "CallbackQuitEvent: data={0}".format(self.data)
-
-def is_ipython_running():
-    """Return True if IPython is running."""
-
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False
-
-def is_idle_running():
-    """Return True if IDLE is running."""
-
-    return "idlelib.run" in sys.modules
-
-def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDLE or
-    IPthon)
-
-    Returns
-    -------
-        interactive_mode : boolean
-    """
-
-    # ps2 is only defined in interactive mode
-    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
-
-def is_android_running():
-    """Return True if Exypriment runs on Android."""
-
-    try:
-        import android
-    except ImportError:
-        return False
-    return True
+        _active.exp.unregister_wait_callback_function()
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.

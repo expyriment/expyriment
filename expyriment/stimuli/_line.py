@@ -23,7 +23,7 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-from .. import _globals
+from .. import _active
 from .. import misc
 from ..misc._timer import get_time
 
@@ -57,7 +57,7 @@ class Line(Visual):
         if colour is None:
             colour = defaults.line_colour
             if colour is None:
-                colour = _globals.active_exp.foreground_colour
+                colour = _active.exp.foreground_colour
         self._colour = colour
         if anti_aliasing is not None:
             self._anti_aliasing = anti_aliasing

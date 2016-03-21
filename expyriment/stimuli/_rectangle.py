@@ -20,7 +20,7 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-from .. import _globals
+from .. import _active
 
 class Rectangle(Visual):
     """A class implementing a rectangle stimulus."""
@@ -58,7 +58,7 @@ class Rectangle(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _globals.active_exp.foreground_colour
+            self._colour = _active.exp.foreground_colour
         if line_width is None:
             line_width = defaults.rectangle_line_width
         elif line_width < 0 or line_width >= min(self._size):

@@ -25,10 +25,8 @@ except ImportError:
     import pygame.mixer as mixer
 
 from . import defaults
-from ._miscellaneous import _set_stdout_logging, is_idle_running, \
-                is_interactive_mode
-from .. import control, design, stimuli, misc, get_version, \
-                    _secure_hash, _globals
+from ._miscellaneous import _set_stdout_logging
+from .. import design, stimuli, misc, get_version, _active
 from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
                 _keyboard, TouchScreenButtonBox
 from ..io._screen import Screen
@@ -70,8 +68,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     """
 
     if experiment is None:
-        experiment = _globals.active_exp
-    if experiment != _globals.active_exp:
+        experiment = _active.exp
+    if experiment != _active.exp:
         raise Exception("Experiment is not the currently initialized " +
                         "experiment!")
     if experiment.is_started:
@@ -235,9 +233,9 @@ def pause():
 
     """
 
-    if not _globals.active_exp.is_initialized:
+    if not _active.exp.is_initialized:
         raise Exception("Experiment is not initialized!")
-    experiment = _globals.active_exp
+    experiment = _active.exp
     experiment._event_file_log("Experiment,paused")
     screen_colour = experiment.screen.colour
     experiment._screen.colour = [0, 0, 0]
@@ -286,12 +284,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     """
 
-    if not _globals.active_exp.is_initialized:
+    if not _active.exp.is_initialized:
         pygame.quit()
         if system_exit:
             sys.exit()
         return True
-    experiment = _globals.active_exp
+    experiment = _active.exp
     if confirmation:
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
@@ -336,7 +334,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
-    _globals.active_exp = design.Experiment("None")
+    _active.exp = design.Experiment("None")
     pygame.quit()
     return True
 
@@ -379,7 +377,7 @@ def initialize(experiment=None):
     if experiment.log_level is None:
         experiment.set_log_level(defaults.event_logging)
 
-    if is_interactive_mode() and not control.defaults.window_mode \
+    if misc.is_interactive_mode() and not defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
         print("""
 Python is running in an interactive shell but Expyriment wants to initialize a
@@ -388,10 +386,10 @@ fullscreen.""")
         ans = input(quest + " (Y/n) ").strip().lower()
         if ans=="" or ans=="y" or ans=="yes":
             print("Switched to windows mode")
-            control.defaults.window_mode = True
+            defaults.window_mode = True
 
     stdout_logging = defaults.stdout_logging
-    _globals.active_exp = experiment
+    _active.exp = experiment
     old_logging = experiment.log_level
     experiment.set_log_level(0)  # switch off for the first screens
 
@@ -415,7 +413,7 @@ fullscreen.""")
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
-    if is_idle_running() and sys.argv[0] != "":
+    if misc.is_idle_running() and sys.argv[0] != "":
         try:
             import idlelib.run
 
@@ -455,12 +453,12 @@ fullscreen.""")
     canvas2 = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
-    hash_ = _secure_hash.get_experiment_secure_hash()
+    hash_ = misc.get_experiment_secure_hash()
     if hash_ is not None:
         txt = "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_)
-        if len(_secure_hash.module_hashes_as_string())>0:
+        if len(misc.module_hashes_as_string())>0:
             txt += ", {0}".format(
-                        _secure_hash.module_hashes_as_string())
+                        misc.module_hashes_as_string())
         text2 = stimuli.TextLine(txt,
             text_size=14,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,

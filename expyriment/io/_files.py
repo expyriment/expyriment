@@ -30,9 +30,9 @@ from time import strftime
 from platform import uname
 
 from . import defaults
-from .. import _globals, _secure_hash, get_version
+from .. import _active, get_version
 from ..misc._timer import get_time
-from ..misc import unicode2byte, byte2unicode
+from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
 from ._input_output import Input, Output
 
 
@@ -185,10 +185,10 @@ class OutputFile(Output):
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
             get_version(), self._suffix,
             locale_enc))
-        if _globals.active_exp.is_initialized:
+        if _active.exp.is_initialized:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
-                               _globals.active_exp.clock.init_localtime)))
+                               _active.exp.clock.init_localtime)))
 
     @property
     def fullpath(self):
@@ -224,11 +224,11 @@ class OutputFile(Output):
         """
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
-        if _globals.active_exp.is_started:
-            rtn = rtn + '_' + repr(_globals.active_exp.subject).zfill(2)
+        if _active.exp.is_started:
+            rtn = rtn + '_' + repr(_active.exp.subject).zfill(2)
         if self._time_stamp:
             rtn = rtn + '_' + strftime(
-                "%Y%m%d%H%M", _globals.active_exp.clock.init_localtime)
+                "%Y%m%d%H%M", _active.exp.clock.init_localtime)
         return rtn + self.suffix
 
     def save(self):
@@ -333,8 +333,8 @@ class DataFile(OutputFile):
 
         """
 
-        if _globals.active_exp.is_initialized:
-            self._subject = _globals.active_exp.subject
+        if _active.exp.is_initialized:
+            self._subject = _active.exp.subject
         else:
             self._subject = None
         if directory is None:
@@ -360,9 +360,9 @@ class DataFile(OutputFile):
                                                     sys.argv[0])[1]))
 
         self.write_comment("e sha1: {0}".format(
-                                    _secure_hash.get_experiment_secure_hash()))
+                                    get_experiment_secure_hash()))
         self.write_comment("e modules: {0}".format(
-                            _secure_hash.module_hashes_as_string()))
+                            module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
         self.write_line(self.variable_names)
@@ -551,7 +551,7 @@ class DataFile(OutputFile):
         if self._buffer != []:
             OutputFile.save(self)
             if self._logging:
-                _globals.active_exp._event_file_log("Data,saved")
+                _active.exp._event_file_log("Data,saved")
 
         return int((get_time() - start) * 1000)
 
@@ -620,24 +620,24 @@ class EventFile(OutputFile):
         if clock is not None:
             self._clock = clock
         else:
-            if not _globals.active_exp.is_initialized:
+            if not _active.exp.is_initialized:
                 raise RuntimeError(
                     "Cannot find a clock. Initialize Expyriment!")
-            self._clock = _globals.active_exp.clock
+            self._clock = _active.exp.clock
 
         try:
-            display = repr(_globals.active_exp.screen.window_size)
-            window_mode = repr(_globals.active_exp.screen.window_mode)
-            open_gl = repr(_globals.active_exp.screen.open_gl)
+            display = repr(_active.exp.screen.window_size)
+            window_mode = repr(_active.exp.screen.window_mode)
+            open_gl = repr(_active.exp.screen.open_gl)
         except:
             display = "unknown"
             window_mode = "unknown"
             open_gl = "unknown"
 
         self.write_comment("sha1: {0}".format(
-                                    _secure_hash.get_experiment_secure_hash()))
+                                    get_experiment_secure_hash()))
         self.write_comment("modules: {0}".format(
-                            _secure_hash.module_hashes_as_string()))
+                            module_hashes_as_string()))
         self.write_comment("display: size={0}, window_mode={1}, open_gl={2}".format(
             display, window_mode, open_gl))
         self.write_comment("os: {0}".format(uname()))

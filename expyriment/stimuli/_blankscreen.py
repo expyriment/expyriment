@@ -17,7 +17,7 @@ __date__ = ''
 
 
 from ._canvas import Canvas
-from .. import _globals
+from .. import _active
 
 class BlankScreen(Canvas):
     """A class implementing a blank screen."""
@@ -34,9 +34,9 @@ class BlankScreen(Canvas):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _globals.active_exp.background_colour
+            self._colour = _active.exp.background_colour
         try:
-            size = _globals.active_exp.screen.surface.get_size()
+            size = _active.exp.screen.surface.get_size()
         except:
             raise RuntimeError("Could not get size of screen!")
         Canvas.__init__(self, size, colour=self._colour)

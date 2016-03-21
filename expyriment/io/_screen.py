@@ -18,7 +18,7 @@ try:
 except ImportError:
     ogl = None
 
-from .. import _globals
+from .. import _active
 from ._input_output import Output
 
 
@@ -72,13 +72,13 @@ class Screen(Output):
             warn_message = "PyOpenGL is not installed. \
 OpenGL will be deactivated!"
             print("Warning: " + warn_message)
-            _globals.active_exp._event_file_warn("Screen,warning," + warn_message)
+            _active.exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
 
         pygame.display.init()
-        if _globals.active_exp.is_initialized:
+        if _active.exp.is_initialized:
             self._monitor_resolution = \
-                        _globals.active_exp.screen.monitor_resolution
+                        _active.exp.screen.monitor_resolution
         else:
             self._monitor_resolution = (pygame.display.Info().current_w,
                                         pygame.display.Info().current_h)
@@ -177,7 +177,7 @@ machine!")
                 ogl.glEnd()
             ogl.glFinish()
         if self._logging:
-            _globals.active_exp._event_file_log("Screen,updated", 2)
+            _active.exp._event_file_log("Screen,updated", 2)
 
     def update_stimuli(self, stimuli):
         """Update only some stimuli on the screen.
@@ -209,7 +209,7 @@ machine!")
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
             pygame.display.update(rectangles)
             if self._logging:
-                _globals.active_exp._event_file_log("Screen,stimuli updated,{0}"\
+                _active.exp._event_file_log("Screen,stimuli updated,{0}"\
                                 .format([stim.id for stim in stimuli]), 2)
             pygame.event.pump()
 
@@ -267,7 +267,7 @@ machine!")
         else:
             self._surface.fill(self._colour)
         if self._logging:
-            _globals.active_exp._event_file_log("Screen,cleared", 2)
+            _active.exp._event_file_log("Screen,cleared", 2)
 
     def save(self, filename):
         """Save the content of the screen as a picture.

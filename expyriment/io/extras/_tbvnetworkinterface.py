@@ -18,7 +18,7 @@ import struct
 
 from . import _tbvnetworkinterface_defaults as defaults
 
-from ... import _globals
+from ... import _active
 from ...misc._timer import get_time
 from ...misc._miscellaneous import byte2unicode
 from ...io._input_output import Input, Output
@@ -143,7 +143,7 @@ class TbvNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TbvNetworkInterface,connected,{0}:{1}".format(self._host,
                                                                    self._port))
 

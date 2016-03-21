@@ -19,7 +19,7 @@ __date__ = ''
 
 from . import defaults
 from ._shape import Shape
-from .. import _globals
+from .. import _active
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""
@@ -59,7 +59,7 @@ class FixCross(Shape):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _globals.active_exp.foreground_colour
+            self._colour = _active.exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
         Shape.__init__(self, position=position, line_width=0,

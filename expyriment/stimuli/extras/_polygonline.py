@@ -21,7 +21,7 @@ import math
 from . import defaults
 
 from ._polygonrectangle import PolygonRectangle
-from ... import _globals
+from ... import _active
 from ... import misc
 
 
@@ -50,7 +50,7 @@ class PolygonLine(PolygonRectangle):
         if colour is None:
             colour = defaults.polygonline_colour
         if colour is None:
-            colour = _globals.active_exp.foreground_colour
+            colour = _active.exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.polygonline_anti_aliasing
 

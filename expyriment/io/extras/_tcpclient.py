@@ -17,8 +17,9 @@ import socket
 import errno
 
 from . import _tcpclient_defaults as defaults
-from ... import control, _globals
+from ... import _active
 from ...misc._timer import get_time
+from ...misc import CallbackQuitEvent
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
 from ..defaults import _skip_wait_functions
@@ -130,7 +131,7 @@ class TcpClient(Input, Output):
                     "TCP connection to {0}:{1} failed!".format(self._host,
                                                                self._port))
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TcpClient,connected,{0}:{1}".format(self._host,
                                                          self._port))
 
@@ -146,7 +147,7 @@ class TcpClient(Input, Output):
 
         self._socket.sendall(data)
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                 "TcpClient,sent,{0}".format(data))
 
     def wait(self, length=None, package_size=None, duration=None,
@@ -212,9 +213,8 @@ class TcpClient(Input, Output):
             except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
-                    rtn_callback = _globals.active_exp._execute_wait_callback()
-                    if isinstance(rtn_callback,
-                                      control.CallbackQuitEvent):
+                    rtn_callback = _active.exp._execute_wait_callback()
+                    if isinstance(rtn_callback, CallbackQuitEvent):
                         return rtn_callback, int((get_time() - start) * 1000)
 
                     if check_control_keys:
@@ -227,7 +227,7 @@ class TcpClient(Input, Output):
                     break
 
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                             "TcpClient,received,{0},wait".format(data))
         return data, rt
 
@@ -241,7 +241,7 @@ class TcpClient(Input, Output):
             pass
 
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                             "TcpClient,cleared,wait", 2)
 
     def close(self):
@@ -252,5 +252,5 @@ class TcpClient(Input, Output):
             self._socket = None
             self._is_connected = False
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TcpClient,closed")

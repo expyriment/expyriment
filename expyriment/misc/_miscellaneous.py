@@ -15,8 +15,8 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-from sys import getfilesystemencoding
 import os
+import sys
 import glob
 import pygame
 from .. import PYTHON3
@@ -30,7 +30,7 @@ except ImportError:
 if LOCALE_ENC is None:
     LOCALE_ENC = 'utf-8'
 
-FS_ENC = getfilesystemencoding()
+FS_ENC = sys.getfilesystemencoding()
 if FS_ENC is None:
     FS_ENC = 'utf-8'
 
@@ -265,10 +265,73 @@ def get_monitor_resolution():
 
     """
 
-    from .. import _globals
-    if _globals.active_exp.is_initialized:
-        return _globals.active_exp.screen.monitor_resolution
+    from .. import _active
+    if _active.exp.is_initialized:
+        return _active.exp.screen.monitor_resolution
     else:
         pygame.display.init()
         return (pygame.display.Info().current_w,
                 pygame.display.Info().current_h)
+
+def is_ipython_running():
+    """Return True if IPython is running."""
+
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False
+
+def is_idle_running():
+    """Return True if IDLE is running."""
+
+    return "idlelib.run" in sys.modules
+
+def is_interactive_mode():
+    """Returns if Python is running in interactive mode (such as IDLE or
+    IPthon)
+
+    Returns
+    -------
+        interactive_mode : boolean
+    """
+
+    # ps2 is only defined in interactive mode
+    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
+
+def is_android_running():
+    """Return True if Exypriment runs on Android."""
+
+    try:
+        import android
+    except ImportError:
+        return False
+    return True
+
+class CallbackQuitEvent(object): # TODO check Docu (also import at old place in expyriment.control)
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
+    def __init__(self, data=None):
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
+        self.data = data
+
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)

@@ -30,8 +30,8 @@ except ImportError:
 from copy import deepcopy
 
 from . import defaults
-from .. import _globals
-from ..misc import constants, Clock, unicode2byte, byte2unicode
+from .. import _active
+from ..misc import constants, Clock, unicode2byte, byte2unicode ## TODO Why not design as unicode?
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -493,7 +493,7 @@ class Experiment(object):
             self._blocks[-1]._id = self._block_id_counter
             self._block_id_counter += 1
 
-        _globals.active_exp._event_file_log(
+        _active.exp._event_file_log(
             "Experiment,block added,{0},{1}".format(
                 unicode2byte(self.name), self._blocks[-1]._id), 2)
 
@@ -511,7 +511,7 @@ class Experiment(object):
 
         block = self._blocks.pop(position)
 
-        _globals.active_exp._event_file_log(
+        _active.exp._event_file_log(
             "Experiment,block removed,{0},{1}".format(unicode2byte(self.name),
                                                       block.id), 2)
 
@@ -521,7 +521,7 @@ class Experiment(object):
         self._blocks = []
         self._block_id_counter = 0
 
-        _globals.active_exp._event_file_log("Experiment,blocks cleared", 2)
+        _active.exp._event_file_log("Experiment,blocks cleared", 2)
 
     def order_blocks(self, order):
         """Order the blocks.
@@ -1265,7 +1265,7 @@ class Block(object):
                                                       self._trials[-1]._id)
         if random_position:
             log_txt = log_txt + ", random position"
-        _globals.active_exp._event_file_log(log_txt, 2)
+        _active.exp._event_file_log(log_txt, 2)
 
     def remove_trial(self, position):
         """Remove a trial.
@@ -1279,7 +1279,7 @@ class Block(object):
 
         trial = self._trials.pop(position)
 
-        _globals.active_exp._event_file_log(
+        _active.exp._event_file_log(
             "Block,trial removed,{0},{1}".format(self.id, trial.id), 2)
 
     def clear_trials(self):
@@ -1288,7 +1288,7 @@ class Block(object):
         self._trials = []
         self._trial_id_counter = 0
 
-        _globals.active_exp._event_file_log("Block,trials cleared", 2)
+        _active.exp._event_file_log("Block,trials cleared", 2)
 
     @property
     def n_trials(self):
@@ -1764,7 +1764,7 @@ class Trial(object):
 
         self._stimuli.append(stimulus)
 
-        _globals.active_exp._event_file_log(
+        _active.exp._event_file_log(
             "Trial,stimulus added,{0},{1}".format(self.id, stimulus.id), 2)
 
     def remove_stimulus(self, position):
@@ -1779,7 +1779,7 @@ class Trial(object):
 
         stimulus = self._stimuli.pop(position)
 
-        _globals.active_exp._event_file_log(
+        _active.exp._event_file_log(
             "Trial,stimulus removed,{0},{1}".format(self.id, stimulus.id), 2)
 
     def order_stimuli(self, order):
@@ -1803,7 +1803,7 @@ class Trial(object):
         """Clear the stimuli."""
 
         self._stimuli = []
-        _globals.active_exp._event_file_log("Trial,stimuli cleared", 2)
+        _active.exp._event_file_log("Trial,stimuli cleared", 2)
 
     def swap_stimuli(self, position1, position2):
         """Swap two stimuli.

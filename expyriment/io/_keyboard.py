@@ -27,9 +27,9 @@ except ImportError:
 from . import defaults
 
 from ..misc._timer import get_time
-from ..misc import unicode2byte
+from ..misc import unicode2byte, CallbackQuitEvent
 from  ._input_output import Input
-from .. import _globals, control
+from .. import  _active
 
 quit_key = None
 pause_key = None
@@ -78,8 +78,8 @@ class Keyboard(Input):
                     pause_function()
                     return True
                 elif key_event.key == refresh_key:
-                    if _globals.active_exp is not None:
-                        _globals.active_exp.screen.update() # todo: How often? double/triple buffering?
+                    if _active.exp is not None:
+                        _active.exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
@@ -149,7 +149,7 @@ class Keyboard(Input):
         pygame.event.clear(pygame.KEYUP)
 
         if self._logging:
-            _globals.active_exp._event_file_log("Keyboard,cleared", 2)
+            _active.exp._event_file_log("Keyboard,cleared", 2)
 
     def read_out_buffered_keys(self):
         """Reads out all keydown events and clears queue."""
@@ -195,12 +195,12 @@ class Keyboard(Input):
             if keys:
                 if event.key in keys:
                     if self._logging:
-                        _globals.active_exp._event_file_log(
+                        _active.exp._event_file_log(
                             "Keyboard,received,{0},check".format(event.key))
                     return event.key
             else:
                 if self._logging:
-                    _globals.active_exp._event_file_log(
+                    _active.exp._event_file_log(
                         "Keyboard,received,{0},check".format(event.key), 2)
                 return event.key
         return None
@@ -263,8 +263,8 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            rtn_callback = _globals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, control.CallbackQuitEvent):
+            rtn_callback = _active.exp._execute_wait_callback()
+            if isinstance(rtn_callback, CallbackQuitEvent):
                 done = True
                 found_key = rtn_callback
                 rt = int((get_time() - start) * 1000)
@@ -285,7 +285,7 @@ class Keyboard(Input):
                 done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
-            _globals.active_exp._event_file_log("Keyboard,received,{0},wait"\
+            _active.exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
@@ -334,8 +334,8 @@ class Keyboard(Input):
         done = False
 
         while not done:
-            rtn_callback = _globals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, control.CallbackQuitEvent):
+            rtn_callback = _active.exp._execute_wait_callback()
+            if isinstance(rtn_callback, CallbackQuitEvent):
                     done = True
                     rt = int((get_time() - start) * 1000)
                     found_char = rtn_callback
@@ -352,7 +352,7 @@ class Keyboard(Input):
                 done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                         "Keyboard,received,{0},wait_char".format(
                         unicode2byte(found_char)))
         return found_char, rt

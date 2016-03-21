@@ -265,10 +265,10 @@ class RandomDotKinematogram(Stimulus):
             (e.g. io.StreamingButtonBox)
 
         """
-        from ... import _globals
+        from ... import _active
         RT = Clock()
         if button_box is None:
-            button_box = _globals.active_exp.keyboard
+            button_box = _active.exp.keyboard
         button_box.clear()
         self.reset_all_ages(randomize_ages=True)
         last_change_time = RT.stopwatch_time
@@ -283,7 +283,7 @@ class RandomDotKinematogram(Stimulus):
             if isinstance(button_box, Keyboard):
                 key = button_box.check(keys=check_keys)
             else:
-                _globals.active_exp.keyboard.process_control_keys()
+                _active.exp.keyboard.process_control_keys()
                 key = button_box.check(codes=check_keys)
 
             if key is not None:

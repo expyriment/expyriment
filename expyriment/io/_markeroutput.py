@@ -17,7 +17,7 @@ __date__ = ''
 from . import defaults
 from  ._input_output  import Output
 from ..misc._timer import get_time
-from .. import _globals
+from .. import _active
 
 class MarkerOutput(Output):
     """A class implementing a marker output."""
@@ -117,5 +117,5 @@ class MarkerOutput(Output):
                 pass
         self._interface.send(0)
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                                         "MarkerOutput,sent,{0}".format(code))

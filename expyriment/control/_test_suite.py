@@ -24,8 +24,8 @@ try:
 except:
     ogl = None
 
-from . import defaults
-from .. import stimuli, io, _globals, control, design
+from . import defaults, initialize, end
+from .. import stimuli, io, _active, design
 import expyriment
 
 from ..misc import constants, statistics, list_fonts
@@ -542,15 +542,15 @@ def run_test_suite():
     from .. import get_system_info
 
     quit_experiment = False
-    if not _globals.active_exp.is_initialized:
+    if not _active.exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
         exp = design.Experiment()
         exp.testsuite = True
-        control.initialize(exp)
+        initialize(exp)
         quit_experiment = True
     else:
-        exp = _globals.active_exp
+        exp = _active.exp
 
     # make menu and code for test functions
     test_functions = ['', '', '']
@@ -642,4 +642,4 @@ def run_test_suite():
             namesspace = None
 
     if quit_experiment:
-        control.end(goodbye_delay=0, goodbye_text="Quitting test suite")
+        end(goodbye_delay=0, goodbye_text="Quitting test suite")

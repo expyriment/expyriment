@@ -27,8 +27,8 @@ To cite Expyriment in publications, please refer to the following article:
   see http://dx.doi.org/10.3758/s13428-013-0390-6
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
+from __future__ import absolute_import
+from builtins import object as _object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -42,7 +42,7 @@ import os as _os
 
 PYTHON3 = (_sys.version_info[0] == 3)
 
-class _Expyriment_object(object):
+class _Expyriment_object(_object):
     """A class implementing a general Expyriment object.
        Parent of all stimuli and IO objects
 
@@ -134,12 +134,11 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-from . import _globals
+from . import _active
 from . import design
-_globals.active_exp = design.Experiment("None")
-from . import control
+_active.exp = design.Experiment("None")
 from . import stimuli
-from . import io
+from . import control # required to ensure correct sequence of import
 from . import misc
 misc.add_fonts(misc.byte2unicode(_os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
@@ -151,7 +150,5 @@ except ImportError:
     from ._api_reference_tool import show_documentation
 from ._get_system_info import get_system_info
 from . import _importer_functions
-from ._secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
-
 exec(_importer_functions.post_import_hook())
 

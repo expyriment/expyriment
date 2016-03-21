@@ -14,7 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 import math as _math
-from .. import _globals
+from .. import _active
 
 
 def coordinates2position(coordinate):
@@ -31,7 +31,7 @@ def coordinates2position(coordinate):
 
     """
 
-    screen_size = _globals.active_exp.screen.surface.get_size()
+    screen_size = _active.exp.screen.surface.get_size()
     return (coordinate[0] - screen_size[0] // 2,
             - coordinate[1] + screen_size[1] // 2)
 
@@ -49,7 +49,7 @@ def position2coordinate(position):
 
     """
 
-    screen_size = _globals.active_exp.screen.surface.get_size()
+    screen_size = _active.exp.screen.surface.get_size()
     return (position[0] + screen_size[0] // 2,
             - position[1] + screen_size[1] // 2)
 
@@ -73,7 +73,7 @@ def position2visual_angle(position, viewing_distance, monitor_size):
 
     """
 
-    screen_size = _globals.active_exp.screen.surface.get_size()
+    screen_size = _active.exp.screen.surface.get_size()
     cm = (position[0] * monitor_size[0] / float(screen_size[0]),
           position[1] * monitor_size[1] / float(screen_size[1]))
 
@@ -102,7 +102,7 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
 
     """
 
-    screen_size = _globals.active_exp.screen.surface.get_size()
+    screen_size = _active.exp.screen.surface.get_size()
     angle = (visual_angle[0] * _math.pi / 360,
              visual_angle[1] * _math.pi / 360) # angle / 180 / 2
     cm = (_math.tan(angle[0]) * viewing_distance * 2,

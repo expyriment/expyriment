@@ -25,7 +25,8 @@ except:
 
 from . import defaults
 from ._input_output import Input, Output
-from .. import _globals, control, io, stimuli, misc
+from .. import _active, misc
+
 
 
 
@@ -116,14 +117,14 @@ The Python package 'pySerial' is not installed."""
         if clock is not None:
             self._clock = clock
         else:
-            if _globals.active_exp.is_initialized:
-                self._clock = _globals.active_exp.clock
+            if _active.exp.is_initialized:
+                self._clock = _active.exp.clock
             else:
-                self._clock = Clock()
+                self._clock = misc.Clock()
         if input_history is None:
             input_history = defaults.serialport_input_history
         if input_history is True:
-            self._input_history = ByteBuffer(
+            self._input_history = misc.ByteBuffer(
                 name="SerialPortBuffer (Port {0})".format(repr(port)),
                 clock=self._clock)
         else:
@@ -270,7 +271,7 @@ The Python package 'pySerial' is not installed."""
     def has_input_history(self):
         """Returns if a input_history exists or not (True / False)."""
 
-        return (type(self._input_history) == ByteBuffer)
+        return (type(self._input_history) == misc.ByteBuffer)
 
     def clear(self, skip_input_history=False):
         """Clear the serial port.
@@ -296,7 +297,7 @@ The Python package 'pySerial' is not installed."""
         else:
             self._serial.flushInput()
         if self._logging:
-            _globals.active_exp._event_file_log("SerialPort {0},cleared".\
+            _active.exp._event_file_log("SerialPort {0},cleared".\
                            format(repr(self._serial.port)), 2)
 
     def read_input(self):
@@ -325,9 +326,9 @@ The Python package 'pySerial' is not installed."""
                                         self._input_history.name,
                                         read_time - last_time)
                     print("Warning: " + warn_message)
-                    _globals.active_exp._event_file_warn(warn_message)
+                    _active.exp._event_file_warn(warn_message)
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                         "SerialPort {0}, read input, {1} bytes".format(
                         repr(self._serial.port), len(read)), 2)
             return read
@@ -356,9 +357,9 @@ The Python package 'pySerial' is not installed."""
                                             self._input_history.name,
                                             poll_time - last[1])
                         print("Warning: " + warn_message)
-                        _globals.active_exp._event_file_warn(warn_message)
+                        _active.exp._event_file_warn(warn_message)
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                         "SerialPort {0},received,{1},poll".format(
                         repr(self._serial.port), ord(read)), 2)
             return ord(read)
@@ -392,13 +393,13 @@ The Python package 'pySerial' is not installed."""
             timeout_time = self._clock.time + duration
 
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                     "SerialPort {0}, read line, start".format(
                     repr(self._serial.port)), 2)
 
         while True:
-            rtn_callback = _globals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, control.CallbackQuitEvent):
+            rtn_callback = _active.exp._execute_wait_callback()
+            if isinstance(rtn_callback, misc.CallbackQuitEvent):
                 rtn_string = rtn_callback
                 break
             byte = self.poll()
@@ -413,7 +414,7 @@ The Python package 'pySerial' is not installed."""
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:
-            _globals.active_exp._event_file_log("SerialPort {0}, read line, end"\
+            _active.exp._event_file_log("SerialPort {0}, read line, end"\
                                 .format(repr(self._serial.port)), 2)
         return rtn_string
 
@@ -487,13 +488,15 @@ The Python package 'pySerial' is not installed."""
 
         self._serial.write(chr(data))
         if self._logging:
-            _globals.active_exp._event_file_log("SerialPort {0},sent,{1}"\
+            _active.exp._event_file_log("SerialPort {0},sent,{1}"\
                                 .format(repr(self._serial.port), data), 2)
 
 
     @staticmethod
     def _self_test(exp):
         """Test the serial port"""
+
+        from .. import io, stimuli
         def int2bin(n, count=8):
             return "".join([str((n >> y) & 1) for y in range(count - 1, -1, -1)])
 

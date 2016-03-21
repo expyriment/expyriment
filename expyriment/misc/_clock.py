@@ -16,7 +16,8 @@ import sys
 import time
 import types
 from ._timer import get_time
-from .. import _globals
+from ._miscellaneous import CallbackQuitEvent
+from .. import _active
 
 class Clock(object) :
     """Basic timing class.
@@ -43,8 +44,6 @@ class Clock(object) :
         """
 
         from ..io.defaults import _skip_wait_functions
-        from ..control import CallbackQuitEvent
-
         if (sync_clock.__class__.__name__ == "Clock"):
             self.__init_time = sync_clock.init_time // 1000
         else:
@@ -54,7 +53,6 @@ class Clock(object) :
         self.__start = get_time()
 
         self._skip_wait_functions = _skip_wait_functions
-        self.CallbackQuitEvent = CallbackQuitEvent
 
 
     @staticmethod
@@ -131,12 +129,12 @@ class Clock(object) :
             return
         start = self.time
         if type(function) == types.FunctionType or\
-                                 _globals.active_exp.is_callback_registered:
+                                 _active.exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
-                rtn_callback = _globals.active_exp._execute_wait_callback()
-                if isinstance(rtn_callback, self.CallbackQuitEvent):
+                rtn_callback = _active.exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback
         else:
             looptime = 200

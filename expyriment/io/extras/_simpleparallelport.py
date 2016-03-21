@@ -22,7 +22,7 @@ try:
 except:
     parallel = None
 
-from ... import _globals
+from ... import _active
 from  ...io._input_output  import Input, Output
 
 
@@ -112,7 +112,7 @@ The Python package 'pyParallel' is not installed."""
                                   int(self._parallel.getInSelected()))
         code = int(bits, 2)
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                     "SimpleParallelPort,received,{0},poll".format(code), 2)
         return code
 
@@ -164,5 +164,5 @@ The Python package 'pyParallel' is not installed."""
 
         self.parallel.setData(data)
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                                     "SimpleParallelPort,sent,{0}".format(data), 2)

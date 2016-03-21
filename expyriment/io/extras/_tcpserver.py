@@ -15,8 +15,9 @@ __date__ = ''
 
 import socket
 import errno
-from ... import _globals, control
+from ... import _active
 from ...misc._timer import get_time
+from ...misc import CallbackQuitEvent
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
 from . import _tcpserver_defaults as defaults
@@ -111,7 +112,7 @@ class TcpServer(Input, Output):
                     "Listening for TCP connection on port {0} failed!".format(
                         self._port))
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TcpServer,client connected,{0}".format(self._client[1]))
 
     def send(self, data):
@@ -126,7 +127,7 @@ class TcpServer(Input, Output):
 
         self._socket.sendall(data)
         if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TcpServer,sent,{0}".format(data))
 
     def wait(self, length, package_size=None, duration=None,
@@ -187,9 +188,8 @@ class TcpServer(Input, Output):
             except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
-                    rtn_callback = _globals.active_exp._execute_wait_callback()
-                    if isinstance(rtn_callback,
-                                      control.CallbackQuitEvent):
+                    rtn_callback = _active.exp._execute_wait_callback()
+                    if isinstance(rtn_callback, CallbackQuitEvent):
                         return rtn_callback, int((get_time() - start) * 1000)
 
                     if check_control_keys:
@@ -202,7 +202,7 @@ class TcpServer(Input, Output):
                     break
 
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                             "TcpServer,received,{0},wait".format(data))
 
         return data, rt
@@ -216,7 +216,7 @@ class TcpServer(Input, Output):
         except:
             pass
         if self._logging:
-            _globals.active_exp._event_file_log(
+            _active.exp._event_file_log(
                             "TcpServer,cleared,wait", 2)
 
     def close(self):
@@ -227,5 +227,5 @@ class TcpServer(Input, Output):
             self._client = None
             self._is_connected = False
             if self._logging:
-                _globals.active_exp._event_file_log(
+                _active.exp._event_file_log(
                     "TcpServer,closed")

@@ -18,7 +18,7 @@ __date__ = ''
 
 from . import defaults
 from ...stimuli._shape import Shape
-from ... import _globals
+from ... import _active
 
 class PolygonRectangle(Shape):
     """A class implementing a rectangle stimulus."""
@@ -44,7 +44,7 @@ class PolygonRectangle(Shape):
         if colour is None:
             colour = defaults.polygonrectangle_colour
         if colour is None:
-            colour = _globals.active_exp.foreground_colour
+            colour = _active.exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.polygonrectangle_anti_aliasing
 
