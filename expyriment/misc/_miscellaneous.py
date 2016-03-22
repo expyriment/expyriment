@@ -51,7 +51,7 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
     """
 
-    if type(standard_codes) is list:
+    if isinstance(standard_codes, (list, tuple)):
         for code in standard_codes:
             if compare_codes(input_code, code, bitwise_comparison):
                 return True

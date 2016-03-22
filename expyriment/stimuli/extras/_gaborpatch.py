@@ -17,6 +17,7 @@ __date__ = ''
 
 import os
 import tempfile
+from types import ModuleType
 
 from ...stimuli._picture import Picture
 from ... import stimuli
@@ -64,13 +65,12 @@ class GaborPatch(Picture):
 
         # Parts of the code has be ported from http://www.icn.ucl.ac.uk/courses/MATLAB-Tutorials/Elliot_Freeman/html/gabor_tutorial.html
 
-        import types
-        if type(np) is not types.ModuleType:
+        if not isinstance(np, ModuleType):
             message = """GaborPatch can not be initialized.
 The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
-        if type(pyplot) is not types.ModuleType:
+        if not isinstance(pyplot, ModuleType):
             message = """GaborPatch can not be initialized.
 The Python package 'Matplotlib' is not installed."""
             raise ImportError(message)

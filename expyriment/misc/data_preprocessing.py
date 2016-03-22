@@ -19,7 +19,7 @@ try:
 except ImportError:
     _locale = None  # Does not exist on Android
 import sys as _sys
-import types as _types
+from types import ModuleType
 from tempfile import mkstemp as _mkstemp
 from copy import copy as _copy
 import codecs as _codecs
@@ -292,7 +292,7 @@ class Aggregator(object):
 
         """
 
-        if type(_np) is not _types.ModuleType:
+        if not isinstance(_np, ModuleType):
             message = """Aggregator can not be initialized.
 The Python package 'Numpy' is not installed."""
             raise ImportError(message)
@@ -958,7 +958,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             variables = [variables]
 
         cols = []
@@ -997,7 +997,7 @@ The Python package 'Numpy' is not installed."""
         if len(data_shape) < 2:
             d = _np.transpose([d])
             data_shape = (data_shape[0], 1)
-        if type(variable_names) != _types.ListType:
+        if not isinstance(variable_names, (list, tuple)):
             variable_names = [variable_names]
 
         if len(variable_names) != data_shape[1]:
@@ -1082,7 +1082,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             self._iv_txt = [variables]
         else:
             self._iv_txt = variables
@@ -1112,7 +1112,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(dv_syntax) != _types.ListType:
+        if not isinstance(dv_syntax, (list, tuple)):
             self._dv_txt = [dv_syntax]
         else:
             self._dv_txt = dv_syntax
@@ -1154,7 +1154,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(rule_syntax) != _types.ListType:
+        if not isinstance(rule_syntax, (tuple, list)):
             self._exclusions_txt = [rule_syntax]
         else:
             self._exclusions_txt = rule_syntax
@@ -1187,7 +1187,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(recoding_syntax) != _types.ListType:
+        if not issubclass(recoding_syntax (list, tuple)):
             self._recode_txt = [recoding_syntax]
         else:
             self._recode_txt = recoding_syntax
@@ -1212,7 +1212,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             self._subject_variables = [variables]
         else:
             self._subject_variables = variables
@@ -1245,7 +1245,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(compute_syntax) != _types.ListType:
+        if not issubclass(compute_syntax, (list, tuple)):
             self._computes_txt = [compute_syntax]
         else:
             self._computes_txt = compute_syntax

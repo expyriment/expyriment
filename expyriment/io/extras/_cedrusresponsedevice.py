@@ -13,8 +13,7 @@ __revision__ = ''
 __date__ = ''
 
 
-import types
-
+from types import ModuleType
 try:
     import pyxid as _pyxid
 except:
@@ -68,7 +67,7 @@ class CedrusResponseDevice(Input):
         """
 
         Input.__init__(self)
-        if type(_pyxid) is not types.ModuleType:
+        if not isinstance(_pyxid, ModuleType):
             message = """CedrusDevice can not be initialized, because the Python package
             'pyxid' is not installed. See Expyriment online documentation."""
             raise ImportError(message)
@@ -189,7 +188,7 @@ class CedrusResponseDevice(Input):
             if codes is None:
                 return self._buffer.memory[0]
             else:
-                if type(codes) is not list:
+                if isinstance(codes, (tuple, list)):
                     codes = [codes]
                 for elem in self._buffer.memory:
                     if elem[0] in codes:
@@ -260,7 +259,7 @@ class CedrusResponseDevice(Input):
                                                                         found))
         return found
 
-    if type(_pyxid) is types.ModuleType:
+    if isinstance(_pyxid, ModuleType):
         @staticmethod
         def _self_test(experiment):
             result = {}

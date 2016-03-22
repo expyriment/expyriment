@@ -1149,7 +1149,7 @@ class Visual(Stimulus):
                 "scale()"))
         self.unload(keep_surface=True)
         flip = [False, False]
-        if type(factors) in [int, float]:
+        if isinstance(factors, (int, float)):
             factors = [factors, factors]
         else:
             factors = list(factors)
@@ -1297,7 +1297,7 @@ class Visual(Stimulus):
         """
 
         start = get_time()
-        if type(grain_size) is int:
+        if isinstance(grain_size, int):
             grain_size = [grain_size, grain_size]
         # Make Rect list
         if not self._set_surface(self._get_surface()):

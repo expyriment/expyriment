@@ -19,6 +19,7 @@ __date__ = ''
 from random import shuffle
 import tempfile
 import os
+from types import ModuleType
 
 try:
     from PIL import Image, ImageDraw, ImageFilter #import PIL
@@ -56,8 +57,7 @@ class VisualMask(Picture):
 
         """
 
-        import types
-        if type(Image) is not types.ModuleType:
+        if not isinstance(Image, ModuleType):
             message = """VisualMask can not be initialized.
 The Python package 'Python Imaging Library (PIL)' is not installed."""
             raise ImportError(message)

@@ -383,8 +383,7 @@ class DataFile(OutputFile):
             return unicode2byte(data)
         elif isinstance(data, bytes):
             return str(data)
-        elif type(data) in [int, int, float,
-                            bool]:
+        elif isinstance(data(int, int, float,bool)):
             return repr(data)
         else:
             message = "Data to be added must be " + \
@@ -403,7 +402,7 @@ class DataFile(OutputFile):
         """
 
         self.write(str(self._subject) + self.delimiter)
-        if type(data) is list or type(data) is tuple:
+        if isinstance(data, (list, tuple)):
             line = ""
             for counter, elem in enumerate(data):
                 if counter > 0:

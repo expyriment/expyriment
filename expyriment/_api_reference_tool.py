@@ -21,6 +21,8 @@ __date__ = ''
 
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
+from types import ModuleType, MethodType, FunctionType
+
 from ._internals import get_version
 
 
@@ -88,14 +90,14 @@ def _get_members(item_str):
 def show_GUI():
     """Show the GUI."""
 
-    import types
+    from types import ModuleType
     import expyriment
     import expyriment.io.extras
     import expyriment.design.extras
     import expyriment.stimuli.extras
     import expyriment.misc.extras
 
-    if type(_tk) is not types.ModuleType:
+    if not isinstance(_tk, ModuleType):
         raise ImportError("""API Reference Tool could not be started.
 The Python package 'Tkinter' is not installed""")
 
@@ -172,13 +174,13 @@ The Python package 'Tkinter' is not installed""")
         else:
             items = _search_doc(value, doc_dict)
         for index, item in enumerate(items):
-            if type(eval(item)) == types.ModuleType:
+            if isinstance(eval(item), ModuleType):
                 items[index] = "# " + item
-            elif type(eval(item)) == type:
+            elif isinstance(eval(item), type): ##
                 items[index] = "+ " + item
-            elif type(eval(item)) == types.MethodType:
+            elif isinstance(eval(item), MethodType):
                 items[index] = "- " + item
-            elif type(eval(item)) == types.FunctionType:
+            elif isinstance(eval(item), FunctionType):
                 items[index] = "= " + item
             else:
                 items[index] = "@ " + item
@@ -190,8 +192,7 @@ The Python package 'Tkinter' is not installed""")
             last_sel = None
         for index, item in enumerate(items):
             listbox.insert(_tk.END, item)
-            if type(eval(item[2:])) == types.ModuleType or \
-               type(eval(item[2:])) == type:
+            if isinstance(eval(item[2:]), (type, ModuleType)):
                 listbox.itemconfig(index, fg="blue", selectforeground="blue")
         listbox.selection_set(_tk.ACTIVE)
         return True
@@ -221,7 +222,7 @@ The Python package 'Tkinter' is not installed""")
                     text.tag_config("heading", font=("Courier", 12, "bold"))
                     text.insert(_tk.END, item, "heading")
                     text.insert(_tk.END, "\n\n")
-                    if type(eval(item)) == type:
+                    if isinstance(eval(item), type):
                         text.insert(_tk.END, doc_dict[item])
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
@@ -244,7 +245,7 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, _getdoc(
                             eval(item + "." + "__init__")))
-                    elif type(eval(item)) == types.FunctionType:
+                    elif isinstance(eval(item), FunctionType):
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
@@ -260,7 +261,7 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, doc_dict[item])
-                    elif type(eval(item)) == types.MethodType:
+                    elif isinstance(eval(item), MethodType):
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
@@ -280,14 +281,11 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, doc_dict[item])
-                    elif type(eval(item)) in (int, bytes,
-                                              bool,
-                                              list,
-                                              tuple,
-                                              dict):
+                    elif isinstance(eval(item), (int, bytes,bool, list,
+                                              tuple, dict)):
                         pass
                     else:
-                        if type(eval(item)) == property:
+                        if isinstance(eval(item), property):
                             if eval(item).fset is None:
                                 text.insert(_tk.END, "Read-only!")
                         else:
@@ -325,8 +323,7 @@ The Python package 'Tkinter' is not installed""")
                 if item == "":
                     update_search(None)
                 else:
-                    if type(eval(item)) == types.ModuleType or \
-                       type(eval(item)) == type:
+                    if isinstance(eval(item), (type, ModuleType)):
                         s = tmp.split(".")
                         if len(s) >= 1:
                             last_item = ".".join(s[0:-1])
@@ -338,13 +335,13 @@ The Python package 'Tkinter' is not installed""")
                         listbox.delete(0, _tk.END)
                         for index, item in enumerate(items):
                             if item != "..":
-                                if type(eval(item)) == types.ModuleType:
+                                if isinstance(eval(item), ModuleType):
                                     items[index] = "# " + item
-                                elif type(eval(item)) == type:
+                                elif isinstance(eval(item), type):
                                     items[index] = "+ " + item
-                                elif type(eval(item)) == types.MethodType:
+                                elif isinstance(eval(item), MethodType):
                                     items[index] = "- " + item
-                                elif type(eval(item)) == types.FunctionType:
+                                elif isinstance(eval(item), FunctionType):
                                     items[index] = "= " + item
                                 else:
                                     items[index] = "@ " + item
@@ -355,8 +352,7 @@ The Python package 'Tkinter' is not installed""")
                         for index, item in enumerate(items):
                             listbox.insert(_tk.END, item)
                             if item == ".." or \
-                               type(eval(item[2:])) == types.ModuleType or \
-                               type(eval(item[2:])) == type:
+                                    isinstance(eval(item[2:]), (type, ModuleType)):
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)

@@ -75,7 +75,7 @@ def balanced_latin_square(elements):
 
     """
 
-    if type(elements) is list:
+    if isinstance(elements, (tuple, list)):
         idx = balanced_latin_square(len(elements))
         square = _square_of_elements(elements, idx)
     else:
@@ -115,7 +115,7 @@ def cycled_latin_square(elements):
 
     """
 
-    if type(elements) is list:
+    if isinstance(elements, (tuple, list)):
         idx = cycled_latin_square(len(elements))
         square = _square_of_elements(elements, idx)
     else:

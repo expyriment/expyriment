@@ -14,7 +14,7 @@ __date__ = ''
 
 import sys
 import time
-import types
+from types import FunctionType
 from ._timer import get_time
 from .. import _internals
 
@@ -127,10 +127,10 @@ class Clock(object) :
         if self._skip_wait_functions:
             return
         start = self.time
-        if type(function) == types.FunctionType or\
-                                 _internals.active_exp.is_callback_registered:
+        if isinstance(function, FunctionType) or\
+                            _internals.active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
-                if type(function) == types.FunctionType:
+                if isinstance(function, FunctionType):
                     function()
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):

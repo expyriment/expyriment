@@ -109,9 +109,9 @@ class StimulationProtocol(object):
 
         """
 
-        if type(condition) == int:
+        if isinstance(condition, int):
             pos = condition
-        elif type(condition) == str or str:
+        elif isinstance(condition, str):
             pos = self._find_condition_by_name(condition)
             if pos is None:
                 raise ValueError("No condition with name '{0}' found!".format(

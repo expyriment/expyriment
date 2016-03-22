@@ -315,10 +315,10 @@ class Shape(Visual):
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
                 "add_vertices"))
-        if type(vertex_list) is not list:
+        if not isinstance(vertex_list, (list, tuple)):
             raise TypeError(type_error_message)
         for xy in vertex_list:
-            if type(xy) is not tuple and type(xy) is not list:
+            if not isinstance(xy, (list, tuple)):
                 raise TypeError(type_error_message)
             if len(xy) != 2:
                 raise TypeError(type_error_message)
@@ -469,7 +469,7 @@ class Shape(Visual):
 
         """
 
-        if type(factors) is not list and type(factors) is not tuple:
+        if not isinstance(factors, (list, tuple)):
             factors = [factors, factors]
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(

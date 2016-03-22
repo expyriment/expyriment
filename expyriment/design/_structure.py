@@ -20,7 +20,7 @@ try:
 except ImportError:
     locale = None  # Does not exist on Android
 import sys
-import types
+from types import FunctionType
 import codecs
 import re
 try:
@@ -1003,7 +1003,7 @@ type".format(permutation_type))
 
         """
 
-        if type(function) == types.FunctionType:
+        if isinstance(function, FunctionType):
             self._wait_callback_function = function
         else:
             raise AttributeError("register_wait_callback_function requires " +
@@ -1113,7 +1113,7 @@ class Block(object):
                 if tf not in val:
                     val.append(tf)
             val.sort()
-            val = [repr(x) if type(x) not in [str, str]
+            val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(
                 f, ", ".join(val))
@@ -1150,8 +1150,7 @@ class Block(object):
 
         """
 
-        if type(value) in [bytes, str, int,
-                           float]:
+        if isinstance(value, (bytes, str, int, float)):
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \
@@ -1671,8 +1670,7 @@ class Trial(object):
 
         """
 
-        if type(value) in [bytes, str, int,
-                           int, float]:
+        if isinstance(value, (bytes, str, int, float)):
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \

@@ -114,8 +114,7 @@ class ParallelPort(Input, Output):
 
         """
 
-        import types
-        if type(_ParallelPort) is type(None):
+        if _ParallelPort is None:
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
 "drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
@@ -448,8 +447,7 @@ class ParallelPort(Input, Output):
         result["testsuite_parallel_port"] = ""
         result["testsuite_parallel_success"] = "No"
 
-        import types
-        if type(_ParallelPort) is type(None):
+        if _ParallelPort is None:
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
 "drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \

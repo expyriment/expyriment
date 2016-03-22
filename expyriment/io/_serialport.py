@@ -17,6 +17,7 @@ __date__ = ''
 import atexit
 from sys import platform
 from os import listdir
+from types import ModuleType
 
 try:
     import serial
@@ -82,8 +83,7 @@ class SerialPort(Input, Output):
 
         """
 
-        import types
-        if type(serial) is not types.ModuleType:
+        if not isinstance(serial, ModuleType):
             message = """SerialPort can not be initialized.
 The Python package 'pySerial' is not installed."""
             raise ImportError(message)
@@ -271,7 +271,7 @@ The Python package 'pySerial' is not installed."""
     def has_input_history(self):
         """Returns if a input_history exists or not (True / False)."""
 
-        return (type(self._input_history) == misc.ByteBuffer)
+        return isinstance(self._input_history, misc.ByteBuffer)
 
     def clear(self, skip_input_history=False):
         """Clear the serial port.
@@ -433,8 +433,7 @@ The Python package 'pySerial' is not installed."""
 
         """
 
-        import types
-        if type(serial) is not types.ModuleType:
+        if not isinstance(serial, ModuleType):
             return None
         ports = []
         if platform.startswith("linux"): #for operation systems

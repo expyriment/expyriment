@@ -13,7 +13,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
+from types import ModuleType
 from . import _midiin_defaults as defaults
 from ... import _internals
 from ...misc._timer import get_time
@@ -67,8 +67,7 @@ class MidiIn(Input):
 
         """
 
-        import types
-        if type(_midi) is not types.ModuleType:
+        if not isinstance(_midi, ModuleType):
             raise ImportError("""Sorry, MIDI input is not supported on this computer.""")
 
         if not _internals.active_exp.is_initialized:
@@ -161,12 +160,12 @@ class MidiIn(Input):
         rt = None
         _event = None
         self.clear()
-        if type(events) is list and \
+        if isinstance(events, (list, tuple)) and \
            len(events) == 4 and \
-           type(events[0]) is int and \
-           type(events[1]) is int and \
-           type(events[2]) is int and \
-           type(events[3]) is int:
+           isinstance(events[0], int) and \
+           isinstance(events[1], int) and \
+           isinstance(events[2], int) and \
+           isinstance(events[3], int):
             events = [events]
         done = False
         while not done:

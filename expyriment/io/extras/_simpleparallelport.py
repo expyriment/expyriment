@@ -14,6 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 
+from types import ModuleType
 from sys import platform
 from os import listdir
 
@@ -46,8 +47,7 @@ class SimpleParallelPort(Input, Output):
 
         """
 
-        import types
-        if type(parallel) is not types.ModuleType:
+        if not isinstance(parallel, ModuleType):
             message = """SimpleParallelPort can not be initialized.
 The Python package 'pyParallel' is not installed."""
             raise ImportError(message)
@@ -129,9 +129,7 @@ The Python package 'pyParallel' is not installed."""
 
         """
 
-        import types
-
-        if type(parallel) is not types.ModuleType:
+        if not isinstance(parallel, ModuleType):
             return None
         ports = []
         if platform.startswith("linux"): #for Linux operation systems
