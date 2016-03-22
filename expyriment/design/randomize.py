@@ -170,6 +170,11 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
 
     """
 
+    if n_segments is None:
+        n_segments = 0
+    if max_repetitions is None:
+        max_repetitions = -1
+
     if n_segments > 1:
         l = 1 + (len(list_) - 1) // int(n_segments)
         for x in range(n_segments):
