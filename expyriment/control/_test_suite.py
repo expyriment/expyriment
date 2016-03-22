@@ -25,7 +25,7 @@ except:
     ogl = None
 
 from . import defaults, initialize, end
-from .. import stimuli, io, _active, design
+from .. import stimuli, io, _internals, design
 import expyriment
 
 from ..misc import constants, statistics, list_fonts
@@ -540,10 +540,10 @@ def run_test_suite():
     from ..io import extras as _test3
     from ..misc import extras as _test4
     from ..misc import get_system_info
-    from .. import get_version
+    from .._internals import get_version
 
     quit_experiment = False
-    if not _active.exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
         exp = design.Experiment()
@@ -551,7 +551,7 @@ def run_test_suite():
         initialize(exp)
         quit_experiment = True
     else:
-        exp = _active.exp
+        exp = _internals.active_exp
 
     # make menu and code for test functions
     test_functions = ['', '', '']

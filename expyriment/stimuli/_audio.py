@@ -20,7 +20,7 @@ try:
     import android.mixer as mixer
 except:
     import pygame.mixer as mixer
-from .. import _active
+from .. import _internals
 from ..misc import unicode2byte
 from ._stimulus import Stimulus
 
@@ -144,7 +144,7 @@ class Audio(Stimulus):
             else:
                 filename = self._filename
 
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,played,{0}".format(filename), 1)
         return rtn
 

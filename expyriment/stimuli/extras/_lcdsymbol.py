@@ -23,7 +23,7 @@ import copy
 import pygame
 
 from . import defaults
-from ... import _active, stimuli
+from ... import _internals, stimuli
 from ...stimuli._visual import Visual
 from ...stimuli.extras._polygondot import PolygonDot
 
@@ -108,7 +108,7 @@ class LcdSymbol(Visual):
             size = defaults.lcdsymbol_size
             if size is None:
                 try:
-                    size = _active.exp.screen.surface.get_size()
+                    size = _internals.active_exp.screen.surface.get_size()
                 except:
                     raise RuntimeError("Could not get size of screen!")
             self._width = size[0]
@@ -118,7 +118,7 @@ class LcdSymbol(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _active.exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if inactive_colour is not None:
             self._inactive_colour = inactive_colour
         else:

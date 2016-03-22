@@ -21,7 +21,7 @@ __date__ = ''
 
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
-from . import get_version
+from ._internals import get_version
 
 
 try:

@@ -14,9 +14,9 @@ __revision__ = ''
 __date__ = ''
 
 from . import defaults
-from .. import _active
+from .. import _internals
 from ..misc import compare_codes
-from .._expyriment_types import CallbackQuitEvent
+from .._internals import CallbackQuitEvent
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from ._input_output import Input, Output
@@ -65,7 +65,7 @@ class StreamingButtonBox(Input, Output):
 
         self._interface.clear()
         if self._logging:
-            _active.exp._event_file_log("{0},cleared".format(
+            _internals.active_exp._event_file_log("{0},cleared".format(
             self.__class__.__name__), 2)
 
     def check(self, codes=None, bitwise_comparison=False):
@@ -95,14 +95,14 @@ class StreamingButtonBox(Input, Output):
             if read is not None:
                 if codes is None and read != self._baseline:
                     if self._logging:
-                        _active.exp._event_file_log(
+                        _internals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read), 2)
                     return read
                 elif compare_codes(read, codes, bitwise_comparison):
                     if self._logging:
-                        _active.exp._event_file_log(
+                        _internals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read))
@@ -159,7 +159,7 @@ class StreamingButtonBox(Input, Output):
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
+            rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 found = rtn_callback
                 rt = int((get_time() - start) * 1000)
@@ -175,7 +175,7 @@ class StreamingButtonBox(Input, Output):
                 if Keyboard.process_control_keys():
                     break
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                 "{0},received,{1},wait".format(
                                                 self.__class__.__name__,
                                                 found))

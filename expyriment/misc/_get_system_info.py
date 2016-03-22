@@ -40,7 +40,7 @@ except:
     _pil = None
 import pygame
 
-from .. import PYTHON3
+from .._internals import PYTHON3
 
 def _get_registry_value(key, subkey, value):
     if PYTHON3:
@@ -64,7 +64,7 @@ def get_system_info(as_string=False):
     """
 
     from ..io import SerialPort, ParallelPort
-    from .._importer_functions import get_settings_folder
+    from .._internals import get_settings_folder
 
     info = {}
 

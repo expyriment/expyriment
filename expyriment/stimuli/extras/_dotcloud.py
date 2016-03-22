@@ -20,7 +20,7 @@ __date__ = ''
 import random
 import pygame
 
-from ... import _active, stimuli
+from ... import _internals, stimuli
 from ...stimuli._visual import Visual
 from ...stimuli._circle import Circle
 from . import  defaults
@@ -59,7 +59,7 @@ class DotCloud(Visual):
             if radius is None:
                 try:
                     self._radius = min(
-                        _active.exp.screen.surface.get_size()) // 2
+                        _internals.active_exp.screen.surface.get_size()) // 2
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:
@@ -72,7 +72,7 @@ class DotCloud(Visual):
         if dot_colour is not None:
             self._dot_colour = dot_colour
         else:
-            self._dot_colour = _active.exp.foreground_colour
+            self._dot_colour = _internals.active_exp.foreground_colour
         self.create_area()
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
@@ -249,7 +249,7 @@ class DotCloud(Visual):
                 message = "Dotcloud make: Cannot find a solution."
                 print(("Warning: ", message))
                 if self._logging:
-                    _active.exp._event_file_log(message)
+                    _internals.active_exp._event_file_log(message)
                 return False
 
     def shuffel_dot_sequence(self, from_idx=0, to_idx= -1):

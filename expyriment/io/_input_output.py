@@ -15,7 +15,7 @@ __revision__ = ''
 __date__ = ''
 
 from . import defaults
-from .._expyriment_types import Expyriment_object
+from .._internals import Expyriment_object
 
 class Input(Expyriment_object):
     """A class implementing a general input."""

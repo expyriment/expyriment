@@ -14,10 +14,10 @@ __revision__ = ''
 __date__ = ''
 
 
-from .. import _active, stimuli
+from .. import _internals, stimuli
 from ._keyboard import Keyboard
 from ..misc._timer import get_time
-from .._expyriment_types import CallbackQuitEvent
+from .._internals import CallbackQuitEvent
 from ._input_output import Input
 from .defaults import _skip_wait_functions
 
@@ -60,7 +60,7 @@ class TouchScreenButtonBox(Input):
         except:
             stimuli = [stimuli]
 
-        self._mouse = _active.exp.mouse
+        self._mouse = _internals.active_exp.mouse
         self._last_touch_position = None
         self._canvas = None
         self._button_fields = []
@@ -211,7 +211,7 @@ class TouchScreenButtonBox(Input):
                     button_fields)
 
             if self._logging and pressed_button_field is not None:
-                _active.exp._event_file_log(
+                _internals.active_exp._event_file_log(
                                 "{0},received, button press,check".format(
                                     self.__class__.__name__))
         return pressed_button_field, touch_time
@@ -258,7 +258,7 @@ class TouchScreenButtonBox(Input):
         start = get_time()
         self.clear_event_buffer()
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
+            rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback, int((get_time()-start)*1000)
             pressed_button_field, touch_time = self.check(button_fields,

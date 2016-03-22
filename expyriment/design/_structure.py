@@ -30,8 +30,8 @@ except ImportError:
 from copy import deepcopy
 
 from . import defaults
-from .. import _active
-from ..misc import constants, Clock, unicode2byte, byte2unicode ## TODO Why not design as unicode?
+from .. import _internals
+from ..misc import constants, Clock, unicode2byte, byte2unicode
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -207,7 +207,7 @@ class Experiment(object):
         return self._is_initialized
 
     def __str__(self):
-        tmp_str = "Experiment: {0}\n".format(unicode2byte(self.name))
+        tmp_str = "Experiment: {0}\n".format(self.name)
         if len(self.bws_factor_names) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
@@ -218,12 +218,12 @@ class Experiment(object):
                 tmp_str = tmp_str + "latin square)\n"
             for f in self.bws_factor_names:
                 _bws_factor = \
-                    [unicode2byte(x) if isinstance(x, str) else
+                    [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
                 tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    unicode2byte(f), ", ".join(_bws_factor))
+                    f, ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + "{0}\n".format(unicode2byte(block.summary))
+            tmp_str = tmp_str + "{0}\n".format(block.summary)
         return tmp_str
 
     @property
@@ -493,9 +493,9 @@ class Experiment(object):
             self._blocks[-1]._id = self._block_id_counter
             self._block_id_counter += 1
 
-        _active.exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Experiment,block added,{0},{1}".format(
-                unicode2byte(self.name), self._blocks[-1]._id), 2)
+                self.name, self._blocks[-1]._id), 2)
 
     def remove_block(self, position):
         """Remove block from experiment.
@@ -511,8 +511,8 @@ class Experiment(object):
 
         block = self._blocks.pop(position)
 
-        _active.exp._event_file_log(
-            "Experiment,block removed,{0},{1}".format(unicode2byte(self.name),
+        _internals.active_exp._event_file_log(
+            "Experiment,block removed,{0},{1}".format(self.name,
                                                       block.id), 2)
 
     def clear_blocks(self):
@@ -521,7 +521,7 @@ class Experiment(object):
         self._blocks = []
         self._block_id_counter = 0
 
-        _active.exp._event_file_log("Experiment,blocks cleared", 2)
+        _internals.active_exp._event_file_log("Experiment,blocks cleared", 2)
 
     def order_blocks(self, order):
         """Order the blocks.
@@ -784,13 +784,13 @@ type".format(permutation_type))
 
         """
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
-                locale_enc)
+                unicode2byte(locale_enc))
             f.write(header + unicode2byte(self.design_as_text))
 
     def load_design(self, filename, encoding=None):
@@ -867,8 +867,7 @@ type".format(permutation_type))
                                "cnt" in list(trial_factors.values()) and
                                "id" in list(trial_factors.values())):
                             message = "Can't read design file. " + \
-                                "The file '{0}' ".format(
-                                    unicode2byte(filename)) + \
+                                "The file '{0}' ".format(filename) + \
                                 "does not contain an Expyriment trial list."
                             raise IOError(message)
                     else:
@@ -951,14 +950,12 @@ type".format(permutation_type))
         """
 
         if self.is_initialized and self.events is not None:
-            self.events.log("design,log,{0}".format(
-                unicode2byte(additional_comment)))
+            self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    "design: {0}".format(unicode2byte(ln)).replace(
-                        ":#", "-"))
+                    "design: {0}".format(ln).replace(":#", "-"))
             self.events.log("design,logged,{0}".format(
-                unicode2byte(additional_comment)))
+                additional_comment))
 
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
@@ -1085,7 +1082,7 @@ class Block(object):
         return self._trials
 
     def __str__(self):
-        return unicode2byte(self._get_summary(True))
+        return self._get_summary(True)
 
     @property
     def summary(self):
@@ -1261,11 +1258,11 @@ class Block(object):
             self._trials[-1]._id = self._trial_id_counter
             self._trial_id_counter += 1
 
-        log_txt = "Block,trial added,{0}, {1}".format(unicode2byte(self.name),
+        log_txt = "Block,trial added,{0}, {1}".format(self.name,
                                                       self._trials[-1]._id)
         if random_position:
             log_txt = log_txt + ", random position"
-        _active.exp._event_file_log(log_txt, 2)
+        _internals.active_exp._event_file_log(log_txt, 2)
 
     def remove_trial(self, position):
         """Remove a trial.
@@ -1279,7 +1276,7 @@ class Block(object):
 
         trial = self._trials.pop(position)
 
-        _active.exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Block,trial removed,{0},{1}".format(self.id, trial.id), 2)
 
     def clear_trials(self):
@@ -1288,7 +1285,7 @@ class Block(object):
         self._trials = []
         self._trial_id_counter = 0
 
-        _active.exp._event_file_log("Block,trials cleared", 2)
+        _internals.active_exp._event_file_log("Block,trials cleared", 2)
 
     @property
     def n_trials(self):
@@ -1352,11 +1349,11 @@ class Block(object):
                                self._trial_id_variable_name)
         factors = self.trial_factor_names
         for f in factors:
-            rtn = rtn + ",{0}".format(unicode2byte(f))
+            rtn = rtn + ",{0}".format(f)
         for cnt, tr in enumerate(self.trials):
             rtn = rtn + "\n{0},{1}".format(cnt, tr.id)
             for f in factors:
-                rtn = rtn + ",{0}".format(unicode2byte(tr.get_factor(f)))
+                rtn = rtn + ",{0}".format(tr.get_factor(f))
         return rtn
 
     def save_design(self, filename):
@@ -1370,13 +1367,13 @@ class Block(object):
 
         """
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(
-                locale_enc)
+                unicode2byte(locale_enc))
             f.write(header + unicode2byte(self.design_as_text))
 
     def read_design(self, filename):
@@ -1764,7 +1761,7 @@ class Trial(object):
 
         self._stimuli.append(stimulus)
 
-        _active.exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Trial,stimulus added,{0},{1}".format(self.id, stimulus.id), 2)
 
     def remove_stimulus(self, position):
@@ -1779,7 +1776,7 @@ class Trial(object):
 
         stimulus = self._stimuli.pop(position)
 
-        _active.exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Trial,stimulus removed,{0},{1}".format(self.id, stimulus.id), 2)
 
     def order_stimuli(self, order):
@@ -1803,7 +1800,7 @@ class Trial(object):
         """Clear the stimuli."""
 
         self._stimuli = []
-        _active.exp._event_file_log("Trial,stimuli cleared", 2)
+        _internals.active_exp._event_file_log("Trial,stimuli cleared", 2)
 
     def swap_stimuli(self, position1, position2):
         """Swap two stimuli.

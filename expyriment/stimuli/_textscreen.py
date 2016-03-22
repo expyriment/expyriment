@@ -24,7 +24,7 @@ from ._visual import Visual
 from ._textline import TextLine
 from ._textbox import TextBox
 from ..misc import find_font, unicode2byte
-from .. import _active
+from .. import _internals
 
 
 class TextScreen(Visual):
@@ -89,7 +89,7 @@ class TextScreen(Visual):
         if heading_font is not None:
             self._heading_font = find_font(heading_font)
         else:
-            self._heading_font = find_font(_active.exp.text_font)
+            self._heading_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(
                 unicode2byte(self._heading_font, fse=True), 10)
@@ -101,7 +101,7 @@ class TextScreen(Visual):
         if heading_size:
             self._heading_size = heading_size
         else:
-            self._heading_size = int(_active.exp.text_size
+            self._heading_size = int(_internals.active_exp.text_size
                                      * 1.2)
         if heading_bold is not None:
             self._heading_bold = heading_bold
@@ -122,13 +122,13 @@ class TextScreen(Visual):
         if heading_colour is not None:
             self._heading_colour = heading_colour
         else:
-            self._heading_colour = _active.exp.foreground_colour
+            self._heading_colour = _internals.active_exp.foreground_colour
         if text_font is None:
             text_font = defaults.textscreen_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(_active.exp.text_font)
+            self._text_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
@@ -140,7 +140,7 @@ class TextScreen(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = _active.exp.text_size
+            self._text_size = _internals.active_exp.text_size
         if text_bold is not None:
             self._text_bold = text_bold
         else:
@@ -158,7 +158,7 @@ class TextScreen(Visual):
         if text_colour is not None:
             self._text_colour = text_colour
         else:
-            self._text_colour = _active.exp.foreground_colour
+            self._text_colour = _internals.active_exp.foreground_colour
         if text_justification is not None:
             self._text_justification = text_justification
         else:
@@ -171,11 +171,11 @@ class TextScreen(Visual):
             if size is None:
                 try:
                     self._size = (
-                        _active.exp.screen.surface.get_size()[0] -
-                        _active.exp.screen.surface.get_size()[0]
+                        _internals.active_exp.screen.surface.get_size()[0] -
+                        _internals.active_exp.screen.surface.get_size()[0]
                         // 5,
-                        _active.exp.screen.surface.get_size()[1] -
-                        _active.exp.screen.surface.get_size()[1]
+                        _internals.active_exp.screen.surface.get_size()[1] -
+                        _internals.active_exp.screen.surface.get_size()[1]
                         // 5)
                 except:
                     raise RuntimeError("Cannot get size of screen!")

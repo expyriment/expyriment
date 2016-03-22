@@ -1,29 +1,119 @@
+"""Expyriment internal function and variables
+
+This module also contains the currently active experiment:
+            active_exp
 """
-Importer functions.
+from builtins import object
 
-This module contains helper function needed for importing plugins (extras) and
-for reading config file while import
-
-"""
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
-__author__ = 'Florian Krause <florian@expyriment.org>, \
+__author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
-import os
 import sys
+import os
 try:
     import android
 except ImportError:
     android = None
 
-from . import PYTHON3
+PYTHON3 = (sys.version_info[0] == 3)
 
+###
+active_exp = None # expyriment.design.__init__ sets active_exp to design.Experiment("None")
+### Provides the access to the currently active experiment
+### import ._internals to read and write _active.exp
+
+
+def get_version():
+    """
+    Return version information about Expyriment and Python.
+
+    Returns
+    -------
+    version_info : str
+
+    Notes
+    -----
+    For more detailed information see expyriment.misc.get_system_info().
+
+    """
+
+    pv = "{0}.{1}.{2}".format(sys.version_info[0],
+                              sys.version_info[1],
+                              sys.version_info[2])
+            #no use of .major, .minor to ensure MacOS compatibility
+    return "{0} (Python {1})".format(__version__, pv)
+
+
+class Expyriment_object(object):
+    """A class implementing a general Expyriment object.
+       Parent of all stimuli and IO objects
+
+    """
+
+    def __init__(self):
+        """Create an Expyriment object."""
+        self._logging = True
+
+    def set_logging(self, onoff):
+        """Set logging of this object on or off
+
+        Parameters
+        ----------
+        onoff : bool
+            set logging on (True) or off (False)
+
+        Notes
+        -----
+        See also design.experiment.set_log_level fur further information about
+        event logging.
+
+    """
+
+        self._logging = onoff
+
+    @property
+    def logging(self):
+        """Getter for logging."""
+
+        return self._logging
+
+
+
+class CallbackQuitEvent(object):
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
+    def __init__(self, data=None):
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
+        self.data = data
+
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)
+
+
+
+
+###   importer functions
 def import_command(path):
     # helper function to generate import command for extras that is Python2/3 compatible
     if PYTHON3:

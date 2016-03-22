@@ -28,10 +28,10 @@ except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
 from . import defaults
-from .. import _active, stimuli
+from .. import _internals, stimuli
 from ..misc import find_font, unicode2byte, constants, \
                  numpad_digit_code2ascii
-from .._expyriment_types import CallbackQuitEvent
+from .._internals import CallbackQuitEvent
 from ._input_output import Input
 
 class TextInput(Input):
@@ -92,7 +92,7 @@ class TextInput(Input):
 
         """
 
-        if not _active.exp.is_initialized:
+        if not _internals.active_exp.is_initialized:
             raise RuntimeError(
                 "Cannot create TextInput before expyriment.initialize()!")
         Input.__init__(self)
@@ -114,19 +114,19 @@ class TextInput(Input):
         if message_text_size is not None:
             self._message_text_size = message_text_size
         else:
-            self._message_text_size = _active.exp.text_size
+            self._message_text_size = _internals.active_exp.text_size
         if message_colour is None:
             message_colour = defaults.textinput_message_colour
         if message_colour is not None:
             self._message_colour = message_colour
         else:
-            self._message_colour = _active.exp.foreground_colour
+            self._message_colour = _internals.active_exp.foreground_colour
         if message_font is None:
             message_font = defaults.textinput_message_font
         if message_font is not None:
             self._message_font = find_font(message_font)
         else:
-            self._message_font = find_font(_active.exp.text_font)
+            self._message_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(
                 unicode2byte(self._message_font, fse=True), 10)
@@ -145,7 +145,7 @@ class TextInput(Input):
         if user_text_size is not None:
             self._user_text_size = user_text_size
         else:
-            self._user_text_size = _active.exp.text_size
+            self._user_text_size = _internals.active_exp.text_size
 
         if user_text_bold is not None:
             self._user_text_bold = user_text_bold
@@ -156,7 +156,7 @@ class TextInput(Input):
         if user_text_font is not None:
             self._user_text_font = find_font(user_text_font)
         else:
-            self._user_text_font = find_font(_active.exp.text_font)
+            self._user_text_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(
                 unicode2byte(self._user_text_font, fse=True), 10)
@@ -167,7 +167,7 @@ class TextInput(Input):
         if user_text_colour is not None:
             self._user_text_colour = user_text_colour
         else:
-            self._user_text_colour = _active.exp.foreground_colour
+            self._user_text_colour = _internals.active_exp.foreground_colour
         if background_colour is None:
             background_colour = \
                 defaults.textinput_background_colour
@@ -175,13 +175,13 @@ class TextInput(Input):
             self._background_colour = background_colour
         else:
             self._background_colour = \
-                _active.exp.background_colour
+                _internals.active_exp.background_colour
         if frame_colour is None:
             frame_colour = defaults.textinput_frame_colour
         if frame_colour is not None:
             self._frame_colour = frame_colour
         else:
-            self._frame_colour = _active.exp.foreground_colour
+            self._frame_colour = _internals.active_exp.foreground_colour
         if gap is not None:
             self._gap = gap
         else:
@@ -189,7 +189,7 @@ class TextInput(Input):
         if screen is not None:
             self._screen = screen
         else:
-            self._screen = _active.exp.screen
+            self._screen = _internals.active_exp.screen
         if background_stimulus is not None:
             # FIXME child of child of visual does not work as background stimulus, e.g. BlankScreen
             if background_stimulus.__class__.__base__ in \
@@ -308,7 +308,7 @@ class TextInput(Input):
         """Get a key press."""
 
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
+            rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback
 
@@ -442,7 +442,7 @@ class TextInput(Input):
             self._update()
         got = "".join(self._user)
         if self._logging:
-            _active.exp._event_file_log("TextInput,entered,{0}"
+            _internals.active_exp._event_file_log("TextInput,entered,{0}"
                                                    .format(unicode2byte(got)))
         if android_hide_keyboard is not None:
             android_hide_keyboard()

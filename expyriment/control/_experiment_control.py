@@ -16,17 +16,14 @@ import sys
 import os
 import pygame
 try:
-    import android
-except ImportError:
-    android = None
-try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
 
 from . import defaults
 from ._miscellaneous import _set_stdout_logging
-from .. import design, stimuli, misc, get_version, _active
+from .._internals import get_version, android
+from .. import design, stimuli, misc, _internals
 from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
                 _keyboard, TouchScreenButtonBox
 from ..io._screen import Screen
@@ -68,8 +65,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     """
 
     if experiment is None:
-        experiment = _active.exp
-    if experiment != _active.exp:
+        experiment = _internals.active_exp
+    if experiment != _internals.active_exp:
         raise Exception("Experiment is not the currently initialized " +
                         "experiment!")
     if experiment.is_started:
@@ -233,9 +230,9 @@ def pause():
 
     """
 
-    if not _active.exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
         raise Exception("Experiment is not initialized!")
-    experiment = _active.exp
+    experiment = _internals.active_exp
     experiment._event_file_log("Experiment,paused")
     screen_colour = experiment.screen.colour
     experiment._screen.colour = [0, 0, 0]
@@ -284,12 +281,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     """
 
-    if not _active.exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
         pygame.quit()
         if system_exit:
             sys.exit()
         return True
-    experiment = _active.exp
+    experiment = _internals.active_exp
     if confirmation:
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
@@ -334,7 +331,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
-    _active.exp = design.Experiment("None")
+    _internals.active_exp = design.Experiment("None")
     pygame.quit()
     return True
 
@@ -389,7 +386,7 @@ fullscreen.""")
             defaults.window_mode = True
 
     stdout_logging = defaults.stdout_logging
-    _active.exp = experiment
+    _internals.active_exp = experiment
     old_logging = experiment.log_level
     experiment.set_log_level(0)  # switch off for the first screens
 

@@ -22,7 +22,7 @@ import re
 import pygame
 
 from . import defaults
-from .. import _active
+from .. import _internals
 from ..misc import find_font, unicode2byte, byte2unicode
 from ._visual import Visual
 
@@ -96,14 +96,14 @@ class TextBox(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = _active.exp.text_size
+            self._text_size = _internals.active_exp.text_size
 
         if text_font is None:
             text_font = defaults.textbox_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(_active.exp.text_font)
+            self._text_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
@@ -132,7 +132,7 @@ class TextBox(Visual):
             if defaults.textbox_text_colour is not None:
                 self._text_colour = defaults.textbox_text_colour
             else:
-                self._text_colour = _active.exp.foreground_colour
+                self._text_colour = _internals.active_exp.foreground_colour
         if background_colour is not None:
             self._background_colour = background_colour
         else:

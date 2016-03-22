@@ -20,10 +20,9 @@ import pygame
 from . import defaults
 from ..misc._timer import get_time
 from ..misc import is_android_running
-from .._expyriment_types import CallbackQuitEvent
 from ._keyboard import Keyboard
 from ._input_output  import Input
-from .. import _active, misc
+from .. import _internals, misc
 
 class Mouse(Input):
     """A class implementing a mouse input.
@@ -138,14 +137,14 @@ class Mouse(Input):
         """
 
         if Mouse.quit_rect_location not in [0,1,2,3] or \
-            _active.exp is None:
+            _internals.active_exp is None:
             return False
 
         if click_position is None:
             # check Pygame queu
             pos = None
             pygame.event.pump()
-            screen_size = _active.exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
                 if event.button > 0:
                     pos = pygame.mouse.get_pos()
@@ -159,16 +158,16 @@ class Mouse(Input):
 
         # determine threshold x & y
         if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
-            threshold_x = -_active.exp.screen.center_x + \
+            threshold_x = -_internals.active_exp.screen.center_x + \
                     Mouse.quit_click_rect_size[0]
         else:# right
-            threshold_x = _active.exp.screen.center_x - \
+            threshold_x = _internals.active_exp.screen.center_x - \
                     Mouse.quit_click_rect_size[0]
         if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 1: # upper
-            threshold_y = _active.exp.screen.center_y - \
+            threshold_y = _internals.active_exp.screen.center_y - \
                     Mouse.quit_click_rect_size[1]
         else:# lower
-            threshold_y = -_active.exp.screen.center_y + \
+            threshold_y = -_internals.active_exp.screen.center_y + \
                     Mouse.quit_click_rect_size[1]
         # check
         if (Mouse.quit_rect_location == 0 and \
@@ -357,7 +356,7 @@ class Mouse(Input):
         """Getter of mouse position."""
 
         pygame.event.pump()
-        screen_size = _active.exp.screen.surface.get_size()
+        screen_size = _internals.active_exp.screen.surface.get_size()
         pos = pygame.mouse.get_pos()
         return (pos[0] - screen_size[0] // 2, -pos[1] + screen_size[1] // 2)
 
@@ -365,7 +364,7 @@ class Mouse(Input):
     def position(self, position):
         """Setter for mouse position."""
 
-        screen_size = _active.exp.screen.surface.get_size()
+        screen_size = _internals.active_exp.screen.surface.get_size()
         pos = (position[0] + screen_size[0] // 2,
                - position[1] + screen_size[1] // 2)
         pygame.mouse.set_pos(pos)
@@ -400,7 +399,7 @@ class Mouse(Input):
         pygame.event.clear(pygame.MOUSEBUTTONUP)
         pygame.event.clear(pygame.MOUSEMOTION)
         if self._logging:
-            _active.exp._event_file_log("Mouse,cleared", 2)
+            _internals.active_exp._event_file_log("Mouse,cleared", 2)
 
 
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
@@ -462,8 +461,8 @@ class Mouse(Input):
             except:
                 buttons = [buttons]
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                 btn_id = rtn_callback
                 rt = int((get_time() - start) * 1000)
                 break
@@ -487,7 +486,7 @@ class Mouse(Input):
         position_in_expy_coordinates = self.position
 
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
             "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occured))
         return btn_id, motion_occured, position_in_expy_coordinates, rt
 
@@ -550,7 +549,7 @@ class Mouse(Input):
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                         duration=duration, wait_for_buttonup=False)
 
-        if isinstance(rtn[0], CallbackQuitEvent):
+        if isinstance(rtn[0], _internals.CallbackQuitEvent):
             return rtn[0], rtn[3]
         else:
             return rtn[2], rtn[3]

@@ -19,7 +19,7 @@ import os
 import sys
 import glob
 import pygame
-from .. import PYTHON3
+from .._internals import PYTHON3, android
 
 try:
     from locale import getdefaultlocale
@@ -265,9 +265,9 @@ def get_monitor_resolution():
 
     """
 
-    from .. import _active
-    if _active.exp.is_initialized:
-        return _active.exp.screen.monitor_resolution
+    from .. import _internals
+    if _internals.active_exp.is_initialized:
+        return _internals.active_exp.screen.monitor_resolution
     else:
         pygame.display.init()
         return (pygame.display.Info().current_w,
@@ -302,8 +302,4 @@ def is_interactive_mode():
 def is_android_running():
     """Return True if Exypriment runs on Android."""
 
-    try:
-        import android
-    except ImportError:
-        return False
-    return True
+    return android is not None

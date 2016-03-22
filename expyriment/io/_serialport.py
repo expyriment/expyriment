@@ -25,8 +25,7 @@ except:
 
 from . import defaults
 from ._input_output import Input, Output
-from .._expyriment_types import CallbackQuitEvent
-from .. import _active, misc
+from .. import _internals, misc
 
 
 
@@ -118,8 +117,8 @@ The Python package 'pySerial' is not installed."""
         if clock is not None:
             self._clock = clock
         else:
-            if _active.exp.is_initialized:
-                self._clock = _active.exp.clock
+            if _internals.active_exp.is_initialized:
+                self._clock = _internals.active_exp.clock
             else:
                 self._clock = misc.Clock()
         if input_history is None:
@@ -298,7 +297,7 @@ The Python package 'pySerial' is not installed."""
         else:
             self._serial.flushInput()
         if self._logging:
-            _active.exp._event_file_log("SerialPort {0},cleared".\
+            _internals.active_exp._event_file_log("SerialPort {0},cleared".\
                            format(repr(self._serial.port)), 2)
 
     def read_input(self):
@@ -327,9 +326,9 @@ The Python package 'pySerial' is not installed."""
                                         self._input_history.name,
                                         read_time - last_time)
                     print("Warning: " + warn_message)
-                    _active.exp._event_file_warn(warn_message)
+                    _internals.active_exp._event_file_warn(warn_message)
             if self._logging:
-                _active.exp._event_file_log(
+                _internals.active_exp._event_file_log(
                         "SerialPort {0}, read input, {1} bytes".format(
                         repr(self._serial.port), len(read)), 2)
             return read
@@ -358,9 +357,9 @@ The Python package 'pySerial' is not installed."""
                                             self._input_history.name,
                                             poll_time - last[1])
                         print("Warning: " + warn_message)
-                        _active.exp._event_file_warn(warn_message)
+                        _internals.active_exp._event_file_warn(warn_message)
             if self._logging:
-                _active.exp._event_file_log(
+                _internals.active_exp._event_file_log(
                         "SerialPort {0},received,{1},poll".format(
                         repr(self._serial.port), ord(read)), 2)
             return ord(read)
@@ -394,13 +393,13 @@ The Python package 'pySerial' is not installed."""
             timeout_time = self._clock.time + duration
 
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "SerialPort {0}, read line, start".format(
                     repr(self._serial.port)), 2)
 
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                 rtn_string = rtn_callback
                 break
             byte = self.poll()
@@ -415,7 +414,7 @@ The Python package 'pySerial' is not installed."""
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:
-            _active.exp._event_file_log("SerialPort {0}, read line, end"\
+            _internals.active_exp._event_file_log("SerialPort {0}, read line, end"\
                                 .format(repr(self._serial.port)), 2)
         return rtn_string
 
@@ -489,7 +488,7 @@ The Python package 'pySerial' is not installed."""
 
         self._serial.write(chr(data))
         if self._logging:
-            _active.exp._event_file_log("SerialPort {0},sent,{1}"\
+            _internals.active_exp._event_file_log("SerialPort {0},sent,{1}"\
                                 .format(repr(self._serial.port), data), 2)
 
 

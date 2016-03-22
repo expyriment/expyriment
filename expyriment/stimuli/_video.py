@@ -26,8 +26,8 @@ except:
 from . import defaults
 from . import _visual
 from ..misc import unicode2byte
-from .._expyriment_types import CallbackQuitEvent
-from .. import _active
+from .._internals import CallbackQuitEvent
+from .. import _internals
 
 
 class Video(_visual.Stimulus):
@@ -196,7 +196,7 @@ class Video(_visual.Stimulus):
         if not self._is_preloaded:
             self._file = pygame.movie.Movie(unicode2byte(self._filename,
                                                          fse=True))
-            screen_size = _active.exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             self._pos = [screen_size[0] // 2 - self._file.get_size()[0] // 2 +
                          self._position[0],
                          screen_size[1] // 2 - self._file.get_size()[1] // 2 -
@@ -241,13 +241,13 @@ class Video(_visual.Stimulus):
 expyriment.control.stop_audiosystem() before preloading the video."
             print("Warning: ", message)
             if self._logging:
-                _active.exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "Video,warning," + message)
 
         if not self._is_preloaded:
             self.preload()
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Video,playing,{0}".format(unicode2byte(self._filename)))
         self._file.play()
 
@@ -321,14 +321,14 @@ expyriment.control.stop_audiosystem() before preloading the video."
             frame = self._file.get_frame()
             if frame > self._frame:
                 self._frame = frame
-                if _active.exp._screen.open_gl:
+                if _internals.active_exp._screen.open_gl:
                     ogl_screen = _visual._LaminaPanelSurface(
                         self._surface, position=self._position)
                     ogl_screen.display()
                 else:
-                    _active.exp._screen.surface.blit(self._surface,
+                    _internals.active_exp._screen.surface.blit(self._surface,
                                                                 self._pos)
-                _active.exp._screen.update()
+                _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
         """Wait until frame was shown or end of movie and update screen.
@@ -345,7 +345,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
         """
 
         while self.is_playing:
-            rtn_callback = _active.exp._execute_wait_callback()
+            rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback
 
@@ -359,7 +359,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
             if diff > 1:
                 warn_message = repr(diff - 1) + " video frames dropped!"
                 print(warn_message)
-                _active.exp._event_file_warn(
+                _internals.active_exp._event_file_warn(
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and (

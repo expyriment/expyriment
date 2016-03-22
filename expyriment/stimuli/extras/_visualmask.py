@@ -25,7 +25,7 @@ try:
 except:
     Image = None
 
-from ... import _active, stimuli
+from ... import _internals, stimuli
 from ...misc._timer import get_time
 from ...stimuli._picture import Picture
 from . import defaults
@@ -78,13 +78,13 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
         if background_colour is not None:
             self.background_colour = background_colour
         else:
-            self.background_colour = _active.exp.background_colour
+            self.background_colour = _internals.active_exp.background_colour
         if dot_colour is None:
             self.dot_colour = defaults.visualmask_dot_colour
         if dot_colour is not None:
             self.dot_colour = dot_colour
         else:
-            self.dot_colour = _active.exp.foreground_colour
+            self.dot_colour = _internals.active_exp.foreground_colour
         if dot_percentage is not None:
             self.dot_percentage = dot_percentage
         else:

@@ -23,7 +23,7 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-from .. import _active
+from .. import _internals
 from ..misc._timer import get_time
 from ..misc.geometry import XYPoint, lines_intersect
 
@@ -79,7 +79,7 @@ class Shape(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _active.exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if line_width is not None:
             self._line_width = line_width
         else:

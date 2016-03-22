@@ -21,7 +21,7 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
-from .. import _active
+from .. import _internals
 
 class Ellipse(Visual):
     """A class implementing a basic 2D ellipse."""
@@ -56,7 +56,7 @@ class Ellipse(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = _active.exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if line_width is None:
             line_width = defaults.ellipse_line_width
         elif line_width < 0 or line_width >= min(self._size):

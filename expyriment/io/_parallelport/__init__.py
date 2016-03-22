@@ -32,7 +32,7 @@ __date__ = ''
 import sys
 import os
 
-from ... import _active, misc
+from ... import _internals, misc
 from ...io._input_output import Input, Output
 
 if sys.platform.startswith('linux'):
@@ -198,7 +198,7 @@ class ParallelPort(Input, Output):
 
         data = self._parallel.readData()
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_data".format(data))
         return data
 
@@ -229,7 +229,7 @@ class ParallelPort(Input, Output):
                                         int(self.read_pin(15)))
         data = int(bits, 2)
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_status".format(data), 2)
         return data
 
@@ -259,7 +259,7 @@ class ParallelPort(Input, Output):
                                      int(self.read_pin(1)))
         data = int(bits, 2)
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "ParallelPort,received,{0},read_control".format(data), 2)
         return data
 
@@ -294,7 +294,7 @@ class ParallelPort(Input, Output):
                (int('{:08b}'.format(d)[::1], 2) << 5) + \
                s
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "ParallelPort,received,{0},poll".format(data), 2)
         return data
 
@@ -335,7 +335,7 @@ class ParallelPort(Input, Output):
 
         self._parallel.setData(data)
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                     "ParallelPort,set_data,{0}".format(data), 2)
 
     def set_control(self, data):
@@ -363,7 +363,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(16, data & 4)
         self._parallel.setPin(17, data & 8)
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                     "ParallelPort,set_control,{0}".format(data), 2)
 
     def send(self, data):
@@ -395,7 +395,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(16, c & 4)
         self._parallel.setPin(17, c & 8)
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                     "ParallelPort,send,{0}".format(data), 2)
 
     def set_pin(self, pin, state):
@@ -551,7 +551,7 @@ class ParallelPort(Input, Output):
                     bg = stimuli.Rectangle((25, 20), colour=colour,
                                                       position=[x_pos, 0])
                     bg.plot(pin_canvas)
-                    colour = _active.exp._background_colour
+                    colour = _internals.active_exp._background_colour
                 stim = stimuli.TextLine(repr(pin),
                                                    text_font="freemono",
                                                    text_colour=colour,
@@ -626,7 +626,7 @@ class ParallelPort(Input, Output):
 
                 results_canvas = stimuli.Canvas(
                     (600, 20),
-                    colour=_active.exp.background_colour,
+                    colour=_internals.active_exp.background_colour,
                     position=[0, 70])
 
                 rc = stimuli.TextLine(
@@ -649,7 +649,7 @@ class ParallelPort(Input, Output):
 
                 poll_canvas = stimuli.Canvas(
                     (100, 20),
-                    colour=_active.exp.background_colour,
+                    colour=_internals.active_exp.background_colour,
                     position=[0, 140])
 
                 pd = stimuli.TextLine(
@@ -667,7 +667,7 @@ class ParallelPort(Input, Output):
 
                 results_canvas2 = stimuli.Canvas(
                     (600, 20),
-                    colour=_active.exp.background_colour,
+                    colour=_internals.active_exp.background_colour,
                     position=[0, -70])
 
                 if send > 255:
@@ -688,7 +688,7 @@ class ParallelPort(Input, Output):
 
                 send_canvas = stimuli.Canvas(
                     (100, 20),
-                    colour=_active.exp.background_colour,
+                    colour=_internals.active_exp.background_colour,
                     position=[-100, -140])
 
                 ss = stimuli.TextLine(
@@ -705,18 +705,18 @@ class ParallelPort(Input, Output):
                     reverse = stimuli.TextLine(
                         "Reverse Mode",
                         text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                        background_colour=_active.exp.background_colour)
+                        background_colour=_internals.active_exp.background_colour)
                     reverse.plot(r)
                 else:
                     r = stimuli.Rectangle(
                         (150, 30),
                         line_width=1,
-                        colour=_active.exp.background_colour,
+                        colour=_internals.active_exp.background_colour,
                         position=[240, -95])
                     reverse = stimuli.TextLine(
                         "Reverse Mode",
-                        text_colour=_active.exp.background_colour,
-                        background_colour=_active.exp.background_colour)
+                        text_colour=_internals.active_exp.background_colour,
+                        background_colour=_internals.active_exp.background_colour)
                     reverse.plot(r)
 
                 r.present(clear=False, update=False)

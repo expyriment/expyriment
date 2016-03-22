@@ -16,7 +16,7 @@ import sys
 import pygame
 
 from . import defaults
-from .. import _active
+from .. import _internals
 from ..misc import is_idle_running, is_ipython_running
 
 
@@ -247,7 +247,7 @@ def register_wait_callback_function(function, exp=None):
     if exp is not None:
         exp.register_wait_callback_function(function)
     else:
-        _active.exp.register_wait_callback_function(function)
+        _internals.active_exp.register_wait_callback_function(function)
 
 
 def unregister_wait_callback_function(exp=None):
@@ -268,7 +268,7 @@ def unregister_wait_callback_function(exp=None):
     if exp is not None:
         exp.unregister_wait_callback_function()
     else:
-        _active.exp.unregister_wait_callback_function()
+        _internals.active_exp.unregister_wait_callback_function()
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.

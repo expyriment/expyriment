@@ -22,11 +22,11 @@ __date__ = ''
 import os as _os
 
 from . import defaults
-from ... import _importer_functions
+from ... import _internals
 
 
-for _plugins in [_importer_functions.import_plugins(__file__),
-                _importer_functions.import_plugins_from_settings_folder(__file__)]:
+for _plugins in [_internals.import_plugins(__file__),
+                _internals.import_plugins_from_settings_folder(__file__)]:
     for _plugin in _plugins:
         try:
             exec(_plugins[_plugin])

@@ -21,8 +21,7 @@ except:
     _pyxid = None
 
 from ...io._input_output import Input
-from ..._expyriment_types import CallbackQuitEvent
-from ... import _active, stimuli, misc
+from ... import _internals, stimuli, misc
 from ..defaults import _skip_wait_functions
 
 
@@ -86,12 +85,12 @@ class CedrusResponseDevice(Input):
                 else:
                     self._xid = devices[device_ID]
                     break
-            if error_screen and _active.exp.is_initialized:
+            if error_screen and _internals.active_exp.is_initialized:
                 stimuli.TextScreen("Error", message +
                         " Press a key to reconnect to the device.").present()
-                _active.exp.keyboard.wait()
+                _internals.active_exp.keyboard.wait()
                 stimuli.BlankScreen().present()
-                _active.exp.clock.wait(300)
+                _internals.active_exp.clock.wait(300)
             else:
                 raise IOError(message)
 
@@ -146,7 +145,7 @@ class CedrusResponseDevice(Input):
                 response['key'] = 1000 + response['key']
             self._buffer.add_event(response['key'])
             if self._logging:
-                _active.exp._event_file_log(
+                _internals.active_exp._event_file_log(
                         "CedrusResponseDevice {0},received,{1},poll".format(
                         self._device_ID, response['key']), 2)
             self._xid.poll_for_response()
@@ -162,7 +161,7 @@ class CedrusResponseDevice(Input):
             self._xid.poll_for_response()
         self._buffer.clear()
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                         "CedrusResponseDevice,cleared", 2)
 
     def check(self, codes=None):
@@ -243,8 +242,8 @@ class CedrusResponseDevice(Input):
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                 return rtn_callback
             if duration is not None:
                 if int(self._buffer.clock.time - start) > duration:
@@ -254,9 +253,9 @@ class CedrusResponseDevice(Input):
                 found = (found[0], found[1] - start)
                 break
             if check_for_control_keys:
-                if _active.exp.keyboard.process_control_keys():
+                if _internals.active_exp.keyboard.process_control_keys():
                     break
-        _active.exp._event_file_log(
+        _internals.active_exp._event_file_log(
                             "CedrusResponseDevice,received,{0},wait".format(
                                                                         found))
         return found

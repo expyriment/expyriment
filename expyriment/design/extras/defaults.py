@@ -16,10 +16,10 @@ __revision__ = ''
 __date__ = ''
 
 
-from ... import _importer_functions
+from ... import _internals
 
 
-for _plugins in [_importer_functions.import_plugin_defaults(__file__),
-                _importer_functions.import_plugin_defaults_from_home(__file__)]:
+for _plugins in [_internals.import_plugin_defaults(__file__),
+                _internals.import_plugin_defaults_from_home(__file__)]:
     for _defaults in _plugins:
         exec(_defaults)

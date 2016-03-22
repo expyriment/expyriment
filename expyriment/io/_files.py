@@ -30,7 +30,7 @@ from time import strftime
 from platform import uname
 
 from . import defaults
-from .. import _active, get_version
+from .. import _internals
 from ..misc._timer import get_time
 from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
 from ._input_output import Input, Output
@@ -183,12 +183,12 @@ class OutputFile(Output):
         except:
             locale_enc = "UTF-8"
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
-            get_version(), self._suffix,
+            _internals.get_version(), self._suffix,
             locale_enc))
-        if _active.exp.is_initialized:
+        if _internals.active_exp.is_initialized:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
-                               _active.exp.clock.init_localtime)))
+                               _internals.active_exp.clock.init_localtime)))
 
     @property
     def fullpath(self):
@@ -224,11 +224,11 @@ class OutputFile(Output):
         """
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
-        if _active.exp.is_started:
-            rtn = rtn + '_' + repr(_active.exp.subject).zfill(2)
+        if _internals.active_exp.is_started:
+            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(2)
         if self._time_stamp:
             rtn = rtn + '_' + strftime(
-                "%Y%m%d%H%M", _active.exp.clock.init_localtime)
+                "%Y%m%d%H%M", _internals.active_exp.clock.init_localtime)
         return rtn + self.suffix
 
     def save(self):
@@ -333,8 +333,8 @@ class DataFile(OutputFile):
 
         """
 
-        if _active.exp.is_initialized:
-            self._subject = _active.exp.subject
+        if _internals.active_exp.is_initialized:
+            self._subject = _internals.active_exp.subject
         else:
             self._subject = None
         if directory is None:
@@ -551,7 +551,7 @@ class DataFile(OutputFile):
         if self._buffer != []:
             OutputFile.save(self)
             if self._logging:
-                _active.exp._event_file_log("Data,saved")
+                _internals.active_exp._event_file_log("Data,saved")
 
         return int((get_time() - start) * 1000)
 
@@ -620,15 +620,15 @@ class EventFile(OutputFile):
         if clock is not None:
             self._clock = clock
         else:
-            if not _active.exp.is_initialized:
+            if not _internals.active_exp.is_initialized:
                 raise RuntimeError(
                     "Cannot find a clock. Initialize Expyriment!")
-            self._clock = _active.exp.clock
+            self._clock = _internals.active_exp.clock
 
         try:
-            display = repr(_active.exp.screen.window_size)
-            window_mode = repr(_active.exp.screen.window_mode)
-            open_gl = repr(_active.exp.screen.open_gl)
+            display = repr(_internals.active_exp.screen.window_size)
+            window_mode = repr(_internals.active_exp.screen.window_mode)
+            open_gl = repr(_internals.active_exp.screen.open_gl)
         except:
             display = "unknown"
             window_mode = "unknown"

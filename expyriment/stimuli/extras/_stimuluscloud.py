@@ -21,7 +21,7 @@ import random
 import pygame
 
 from . import defaults
-from ... import _active
+from ... import _internals
 from ...stimuli._visual import Visual
 
 
@@ -55,7 +55,7 @@ class StimulusCloud(Visual):
             size = defaults.stimuluscloud_size
             if size is None:
                 try:
-                    self._size = _active.exp.screen.surface.get_size()
+                    self._size = _internals.active_exp.screen.surface.get_size()
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:

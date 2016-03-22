@@ -19,7 +19,7 @@ __date__ = ''
 import os
 
 import pygame
-from .. import _active
+from .. import _internals
 from ..misc import unicode2byte
 from . import defaults
 from ._visual import Visual
@@ -72,7 +72,7 @@ class Picture(Visual):
         surface = pygame.image.load(unicode2byte(self._filename,
                                                  fse=True)).convert_alpha()
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Picture,loaded,{0}".format(unicode2byte(self._filename)), 1)
         return surface
 

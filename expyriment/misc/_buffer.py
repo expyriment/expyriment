@@ -15,7 +15,7 @@ __date__ = ''
 
 
 from ._clock import Clock
-from .. import _active
+from .. import _internals
 
 
 class Buffer(object):
@@ -37,8 +37,8 @@ class Buffer(object):
         if clock is not None:
             self._clock = clock
         else:
-            if _active.exp.is_initialized:
-                self._clock = _active.exp.clock
+            if _internals.active_exp.is_initialized:
+                self._clock = _internals.active_exp.clock
             else:
                 self._clock = Clock()
         self._memory = []

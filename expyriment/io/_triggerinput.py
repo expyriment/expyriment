@@ -15,9 +15,9 @@ __date__ = ''
 
 
 from . import defaults
-from .. import _active
+from .. import _internals
 from ..misc import compare_codes
-from .._expyriment_types import CallbackQuitEvent
+from .._internals import CallbackQuitEvent
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input
@@ -86,7 +86,7 @@ class TriggerInput(Input):
             code = self._default_code
         self.interface.clear()
         while True:
-            rtn_callback = _active.exp._execute_wait_callback()
+            rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback, int((get_time() - start) * 1000)
             read = self.interface.poll()
@@ -102,7 +102,7 @@ class TriggerInput(Input):
             if Keyboard.process_control_keys():
                     break
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                             "TriggerInput,received,{0},wait".format(found))
         return found, rt
 

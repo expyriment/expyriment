@@ -37,30 +37,9 @@ __date__ = ''
 
 
 import sys as _sys
+from ._internals import PYTHON3, get_version
 
-PYTHON3 = (_sys.version_info[0] == 3)
-
-def get_version():
-    """
-    Return version information about Expyriment and Python.
-
-    Returns
-    -------
-    version_info : str
-
-    Notes
-    -----
-    For more detailed information see expyriment.misc.get_system_info().
-
-    """
-
-    pv = "{0}.{1}.{2}".format(_sys.version_info[0],
-                              _sys.version_info[1],
-                              _sys.version_info[2])
-            #no use of .major, .minor to ensure MacOS compatibility
-    return "{0} (Python {1})".format(__version__, pv)
-
-
+version = get_version()
 
 if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
         (PYTHON3 and _sys.version_info[1] >= 3) ):
@@ -99,16 +78,15 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-from . import _active
+from . import _internals
 from . import design
 from . import misc
 from . import stimuli
 from . import io
 from . import control
-try:
-    import android
-except ImportError:
+
+if not misc.is_android_running():
     from ._api_reference_tool import show_documentation
-from . import _importer_functions
-exec(_importer_functions.post_import_hook())
+
+exec(_internals.post_import_hook())
 

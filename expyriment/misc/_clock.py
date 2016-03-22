@@ -16,8 +16,7 @@ import sys
 import time
 import types
 from ._timer import get_time
-from .._expyriment_types import CallbackQuitEvent
-from .. import _active
+from .. import _internals
 
 class Clock(object) :
     """Basic timing class.
@@ -129,12 +128,12 @@ class Clock(object) :
             return
         start = self.time
         if type(function) == types.FunctionType or\
-                                 _active.exp.is_callback_registered:
+                                 _internals.active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if type(function) == types.FunctionType:
                     function()
-                rtn_callback = _active.exp._execute_wait_callback()
-                if isinstance(rtn_callback, CallbackQuitEvent):
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     return rtn_callback
         else:
             looptime = 200

@@ -16,8 +16,8 @@ __date__ = ''
 
 from copy import deepcopy
 
-from .._expyriment_types import Expyriment_object
-from .. import _active
+from .._internals import Expyriment_object
+from .. import _internals
 from ..misc import byte2unicode
 
 class Stimulus(Expyriment_object):
@@ -51,7 +51,7 @@ class Stimulus(Expyriment_object):
         if log_comment is not None:
             log_txt = u"{0},{1}".format(log_txt, byte2unicode(log_comment))
         if self._logging:
-            _active.exp._event_file_log(log_txt, 2)
+            _internals.active_exp._event_file_log(log_txt, 2)
 
 
     @property
@@ -68,7 +68,7 @@ class Stimulus(Expyriment_object):
         Stimulus._id_counter += 1
 
         if self._logging:
-            _active.exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "Stimulus,created,{0},{1},copied from {2}".format(
                     copy.id, copy.__class__.__name__, self.id))
         return copy
