@@ -1,5 +1,5 @@
 """
-handler to the currently active experiment
+Provides the access to the currently active experiment
 
 import ._active to read and write _active.exp
 
@@ -11,4 +11,4 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-exp = None  # __init__ set active_exp to design.Experiment("None")
+exp = None  # expyriment.__init__ sets active_exp to design.Experiment("None")
