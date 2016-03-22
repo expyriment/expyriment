@@ -27,7 +27,8 @@ except ImportError:
 from . import defaults
 
 from ..misc._timer import get_time
-from ..misc import unicode2byte, CallbackQuitEvent
+from ..misc import unicode2byte
+from .._expyriment_types import CallbackQuitEvent
 from  ._input_output import Input
 from .. import  _active
 

@@ -30,7 +30,8 @@ except ImportError:
 from . import defaults
 from .. import _active, stimuli
 from ..misc import find_font, unicode2byte, constants, \
-                 numpad_digit_code2ascii, CallbackQuitEvent
+                 numpad_digit_code2ascii
+from .._expyriment_types import CallbackQuitEvent
 from ._input_output import Input
 
 class TextInput(Input):

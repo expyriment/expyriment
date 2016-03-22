@@ -8,7 +8,7 @@ from __future__ import absolute_import, print_function, division
 from builtins import *
 
 from . import control, stimuli
-from .misc import CallbackQuitEvent
+from ._expyriment_types import CallbackQuitEvent
 
 control.set_develop_mode(True)
 

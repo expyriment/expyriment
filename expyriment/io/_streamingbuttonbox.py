@@ -15,7 +15,8 @@ __date__ = ''
 
 from . import defaults
 from .. import _active
-from ..misc import compare_codes, CallbackQuitEvent
+from ..misc import compare_codes
+from .._expyriment_types import CallbackQuitEvent
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from ._input_output import Input, Output

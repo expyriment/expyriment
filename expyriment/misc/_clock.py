@@ -16,7 +16,7 @@ import sys
 import time
 import types
 from ._timer import get_time
-from ._miscellaneous import CallbackQuitEvent
+from .._expyriment_types import CallbackQuitEvent
 from .. import _active
 
 class Clock(object) :

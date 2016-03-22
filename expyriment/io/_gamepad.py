@@ -17,7 +17,7 @@ import pygame
 import time
 from .. import _active
 from ..misc._timer import get_time
-from ..misc import CallbackQuitEvent
+from .._expyriment_types import CallbackQuitEvent
 from ._keyboard import Keyboard
 from  ._input_output import Input, Output
 from .defaults import _skip_wait_functions

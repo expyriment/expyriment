@@ -21,9 +21,9 @@ except:
     _pyxid = None
 
 from ...io._input_output import Input
+from ..._expyriment_types import CallbackQuitEvent
 from ... import _active, stimuli, misc
 from ..defaults import _skip_wait_functions
-from ...misc import CallbackQuitEvent
 
 
 class CedrusResponseDevice(Input):

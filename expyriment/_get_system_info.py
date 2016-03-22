@@ -40,8 +40,31 @@ except:
     _pil = None
 import pygame
 
-from . import PYTHON3
-from ._importer_functions import get_settings_folder
+_python_version_info = sys.version_info
+PYTHON3 = (_python_version_info[0] == 3)
+
+
+def get_version():
+    """
+    Return version information about Expyriment and Python.
+
+    Returns
+    -------
+    version_info : str
+
+    Notes
+    -----
+    For more detailed information see expyriment.get_system_info().
+
+    """
+    #TODO check if this function appear in docu
+
+    pv = "{0}.{1}.{2}".format(sys.version_info[0],
+                              sys.version_info[1],
+                              sys.version_info[2])
+            #no use of .major, .minor to ensure MacOS compatibility
+    return "{0} (Python {1})".format(__version__, pv)
+
 
 def _get_registry_value(key, subkey, value):
     if PYTHON3:
@@ -65,6 +88,8 @@ def get_system_info(as_string=False):
     """
 
     from .io import SerialPort, ParallelPort
+    from ._importer_functions import get_settings_folder
+
     info = {}
 
     # Get platform specific info for Linux

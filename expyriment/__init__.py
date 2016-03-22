@@ -37,71 +37,15 @@ __revision__ = ''
 __date__ = ''
 
 
-import sys as _sys
+from ._get_system_info import get_system_info, get_version, PYTHON3, \
+                                _python_version_info
 
-PYTHON3 = (_sys.version_info[0] == 3)
-
-class _Expyriment_object(_object):
-    """A class implementing a general Expyriment object.
-       Parent of all stimuli and IO objects
-
-    """
-
-    def __init__(self):
-        """Create an Expyriment object."""
-        self._logging = True
-
-    def set_logging(self, onoff):
-        """Set logging of this object on or off
-
-        Parameters
-        ----------
-        onoff : bool
-            set logging on (True) or off (False)
-
-        Notes
-        -----
-        See also design.experiment.set_log_level fur further information about
-        event logging.
-
-    """
-
-        self._logging = onoff
-
-    @property
-    def logging(self):
-        """Getter for logging."""
-
-        return self._logging
-
-
-def get_version():
-    """
-    Return version information about Expyriment and Python.
-
-    Returns
-    -------
-    version_info : str
-
-    Notes
-    -----
-    For more detailed information see expyriment.get_system_info().
-
-    """
-
-    pv = "{0}.{1}.{2}".format(_sys.version_info[0],
-                              _sys.version_info[1],
-                              _sys.version_info[2])
-            #no use of .major, .minor to ensure MacOS compatibility
-    return "{0} (Python {1})".format(__version__, pv)
-
-
-if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
-        (PYTHON3 and _sys.version_info[1] >= 3) ):
+if not( (_python_version_info[0] == 2 and _python_version_info[1] >= 6) or
+        (PYTHON3 and _python_version_info[1] >= 3) ):
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
-                                                    _sys.version_info[0],
-                                                    _sys.version_info[1]) +
+                                                    _python_version_info[0],
+                                                    _python_version_info[1]) +
                       "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))
@@ -143,7 +87,6 @@ try:
     import android
 except ImportError:
     from ._api_reference_tool import show_documentation
-from ._get_system_info import get_system_info
 from . import _importer_functions
 exec(_importer_functions.post_import_hook())
 

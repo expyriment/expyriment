@@ -19,7 +19,8 @@ import pygame
 
 from . import defaults
 from ..misc._timer import get_time
-from ..misc import is_android_running, CallbackQuitEvent
+from ..misc import is_android_running
+from .._expyriment_types import CallbackQuitEvent
 from ._keyboard import Keyboard
 from ._input_output  import Input
 from .. import _active, misc

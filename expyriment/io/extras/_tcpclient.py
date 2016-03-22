@@ -19,7 +19,7 @@ import errno
 from . import _tcpclient_defaults as defaults
 from ... import _active
 from ...misc._timer import get_time
-from ...misc import CallbackQuitEvent
+from ..._expyriment_types import CallbackQuitEvent
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
 from ..defaults import _skip_wait_functions

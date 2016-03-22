@@ -15,22 +15,22 @@ __revision__ = ''
 __date__ = ''
 
 from . import defaults
-from .. import _Expyriment_object
+from .._expyriment_types import Expyriment_object
 
-class Input(_Expyriment_object):
+class Input(Expyriment_object):
     """A class implementing a general input."""
 
     def __init__(self):
         """Create an input."""
-        _Expyriment_object.__init__(self)
+        Expyriment_object.__init__(self)
 
 
-class Output(_Expyriment_object):
+class Output(Expyriment_object):
     """A class implementing a general output."""
 
     def __init__(self):
         """Create an output."""
-        _Expyriment_object.__init__(self)
+        Expyriment_object.__init__(self)
 
 
 def set_skip_wait_functions(onoff):

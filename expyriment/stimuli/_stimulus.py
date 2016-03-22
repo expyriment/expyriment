@@ -16,10 +16,11 @@ __date__ = ''
 
 from copy import deepcopy
 
-from .. import _active, _Expyriment_object
+from .._expyriment_types import Expyriment_object
+from .. import _active
 from ..misc import byte2unicode
 
-class Stimulus(_Expyriment_object):
+class Stimulus(Expyriment_object):
     """A class implementing a very general experimental stimulus.
 
     All other stimulus classes are based on this one.
@@ -40,7 +41,7 @@ class Stimulus(_Expyriment_object):
 
         """
 
-        _Expyriment_object.__init__(self)
+        Expyriment_object.__init__(self)
         self._id = Stimulus._id_counter
         Stimulus._id_counter += 1
 

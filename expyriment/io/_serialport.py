@@ -25,6 +25,7 @@ except:
 
 from . import defaults
 from ._input_output import Input, Output
+from .._expyriment_types import CallbackQuitEvent
 from .. import _active, misc
 
 
@@ -399,7 +400,7 @@ The Python package 'pySerial' is not installed."""
 
         while True:
             rtn_callback = _active.exp._execute_wait_callback()
-            if isinstance(rtn_callback, misc.CallbackQuitEvent):
+            if isinstance(rtn_callback, CallbackQuitEvent):
                 rtn_string = rtn_callback
                 break
             byte = self.poll()

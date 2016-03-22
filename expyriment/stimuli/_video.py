@@ -25,7 +25,8 @@ except:
 
 from . import defaults
 from . import _visual
-from ..misc import unicode2byte, CallbackQuitEvent
+from ..misc import unicode2byte
+from .._expyriment_types import CallbackQuitEvent
 from .. import _active
 
 
