@@ -28,7 +28,7 @@ from . import defaults, initialize, end
 from .. import stimuli, io, _internals, design
 import expyriment
 
-from ..misc import constants, statistics, list_fonts
+from ..misc import constants, statistics, list_fonts, unicode2byte
 from ..misc._timer import get_time
 from ..design import randomize
 
@@ -507,8 +507,8 @@ def _write_protocol(exp, results):
             rtn += key + ":" + tabs + repr(results[key]) + "\n"
 
     filename = os.path.join(os.getcwd(), "test_suite_protocol.xpp")
-    with open(filename, 'w') as f:
-        f.write(rtn)
+    with open(filename, 'wb') as f:
+        f.write(unicode2byte(rtn))
     text = stimuli.TextScreen(
         "Saved as",
         '"' + filename + '"' + "\n\n[Press RETURN to continue]")

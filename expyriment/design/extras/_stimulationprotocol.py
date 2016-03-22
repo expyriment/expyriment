@@ -130,21 +130,21 @@ class StimulationProtocol(object):
             
         """
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            f.write("# -*- coding: {0} -*-\n".format(locale_enc))
-            f.write( "#unit={0}\n".format(self._unit))
-            f.write("condition,begin,end,weight\n")
+            f.write(unicode2byte("# -*- coding: {0} -*-\n".format(locale_enc)))
+            f.write(unicode2byte("#unit={0}\n".format(self._unit)))
+            f.write(unicode2byte("condition,begin,end,weight\n"))
             for condition in self._conditions:
                 for event in condition["events"]:
-                    f.write("{0},{1},{2},{3}\n".format(
+                    f.write(unicode2byte("{0},{1},{2},{3}\n".format(
                         unicode2byte(condition["name"]),
                         event["begin"],
                         event["end"],
-                        event["weight"]))
+                        event["weight"])))
 
     def load(self, filename, encoding=None):
         """Load a stimulation protocol from a csv file.
@@ -204,41 +204,41 @@ class StimulationProtocol(object):
         if not filename.endswith(".prt"):
             filename = filename + ".prt"
 
-        with open(filename, 'w') as f:
-            f.write("\n")
-            f.write("FileVersion:        3\n")
-            f.write("\n")
+        with open(filename, 'wb') as f:
+            f.write(unicode2byte("\n"))
+            f.write(unicode2byte("FileVersion:        3\n"))
+            f.write(unicode2byte("\n"))
             if self._unit == 'time':
-                f.write("ResolutionOfTime:   msec\n")
+                f.write(unicode2byte("ResolutionOfTime:   msec\n"))
             elif self._unit == 'volume':
-                f.write("ResolutionOfTime:   Volume\n")
-            f.write("\n")
-            f.write("Experiment:         {0}\n".format(exp_name))
-            f.write("\n")
-            f.write("BackgroundColor:    0 0 0\n")
-            f.write("TextColor:          255 255 255\n")
-            f.write("TimeCourseColor:    255 255 255\n")
-            f.write("TimeCourseThick:    4\n")
-            f.write("ReferenceFuncColor: 0 0 80\n")
-            f.write("ReferenceFuncThick: 3\n")
-            f.write("\n")
-            f.write("ParametricWeights:  1\n")
-            f.write("\n")
-            f.write("NrOfConditions:     {0}\n".format(len(self._conditions)))
+                f.write(unicode2byte("ResolutionOfTime:   Volume\n"))
+            f.write(unicode2byte("\n"))
+            f.write(unicode2byte("Experiment:         {0}\n".format(exp_name)))
+            f.write(unicode2byte("\n"))
+            f.write(unicode2byte("BackgroundColor:    0 0 0\n"))
+            f.write(unicode2byte("TextColor:          255 255 255\n"))
+            f.write(unicode2byte("TimeCourseColor:    255 255 255\n"))
+            f.write(unicode2byte("TimeCourseThick:    4\n"))
+            f.write(unicode2byte("ReferenceFuncColor: 0 0 80\n"))
+            f.write(unicode2byte("ReferenceFuncThick: 3\n"))
+            f.write(unicode2byte("\n"))
+            f.write(unicode2byte("ParametricWeights:  1\n"))
+            f.write(unicode2byte("\n"))
+            f.write(unicode2byte("NrOfConditions:     {0}\n".format(len(self._conditions))))
             if self._unit == "time":
                 rjust = 8
             elif self._unit == "volume":
                 rjust = 4
             for condition in self._conditions:
-                f.write("\n")
-                f.write(condition["name"] + "\n")
-                f.write(repr(len(condition["events"])) + "\n")
+                f.write(unicode2byte("\n"))
+                f.write(unicode2byte(condition["name"] + "\n"))
+                f.write(unicode2byte(repr(len(condition["events"])) + "\n"))
                 for event in condition["events"]:
-                    f.write("{0} {1} {2}\n".format(
+                    f.write(unicode2byte("{0} {1} {2}\n".format(
                         repr(event["begin"]).rjust(rjust),
                         repr(event["end"]).rjust(rjust),
-                        repr(event["weight"]).rjust(2)))
-                f.write("Color: {0} {1} {2}\n".format(rand_int(0,255),
+                        repr(event["weight"]).rjust(2))))
+                f.write(unicode2byte("Color: {0} {1} {2}\n".format(rand_int(0,255),
                                                       rand_int(0,255),
-                                                      rand_int(0,255)))
+                                                      rand_int(0,255))))
 

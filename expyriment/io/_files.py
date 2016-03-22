@@ -375,7 +375,7 @@ class DataFile(OutputFile):
         return self._delimiter
 
     @staticmethod
-    def _typecheck_and_cast2str(data):
+    def _typecheck_and_cast2str(data): # TODO is that function still needed?
         """Check if data are string or numeric and cast to string"""
         if data is None:
             data = "None"
@@ -408,10 +408,10 @@ class DataFile(OutputFile):
             for counter, elem in enumerate(data):
                 if counter > 0:
                     line = line + self.delimiter
-                line = line + DataFile._typecheck_and_cast2str(elem)
+                line = line + str(elem)
             self.write_line(line)
         else:
-            self.write_line(DataFile._typecheck_and_cast2str(data))
+            self.write_line(str(data))
 
     def add_subject_info(self, text):
         """Adds a text the subject info header.
@@ -540,7 +540,7 @@ class DataFile(OutputFile):
                             self.variable_names + defaults.outputfile_eol))
                         self._variable_names_changed = False
                         line = ''  # Skip old varnames
-                fl.write(line)
+                fl.write(unicode2byte(line))
             tmpfl.close()
             fl.close()
 

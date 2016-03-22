@@ -142,26 +142,23 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
         _locale_enc = _locale.getdefaultlocale()[1]
     except:
         _locale_enc = "UTF-8"
-    with open(filename, 'w') as f:
-        header = "# -*- coding: {0} -*-\n".format(
-            _locale_enc)
-        f.write(header)
+    with open(filename, 'wb') as f:
+        header = "# -*- coding: {0} -*-\n".format(_locale_enc)
+        f.write(_unicode2str(header))
         if varnames is not None:
             for c, v in enumerate(varnames):
                 if c > 0:
-                    f.write(delimiter)
+                    f.write(_unicode2str(delimiter))
                 f.write(_unicode2str(v))
-            f.write("\n")
+            f.write(_unicode2str("\n"))
         cnt = 0
         for row in data:
             for c, v in enumerate(row):
                 if c > 0:
-                    f.write(delimiter)
-                if isinstance(v, str):
-                    _unicode2str(v)
-                f.write(v)
+                    f.write(_unicode2str(delimiter))
+                f.write(_unicode2str(v))
                 cnt += 1
-            f.write("\n")
+            f.write(_unicode2str("\n"))
 
     print(" ({0} cells in {1} rows)".format(cnt, len(data)))
 

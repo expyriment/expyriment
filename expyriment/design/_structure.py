@@ -789,9 +789,8 @@ type".format(permutation_type))
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {0} -*-\n".format(
-                unicode2byte(locale_enc))
-            f.write(header + unicode2byte(self.design_as_text))
+            header = "# -*- coding: {0} -*-\n".format(locale_enc)
+            f.write(unicode2byte(header + self.design_as_text))
 
     def load_design(self, filename, encoding=None):
         """Load the design from a csv file containing list of trials.
@@ -1372,9 +1371,8 @@ class Block(object):
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {0} -*-\n".format(
-                unicode2byte(locale_enc))
-            f.write(header + unicode2byte(self.design_as_text))
+            header = "# -*- coding: {0} -*-\n".format(locale_enc)
+            f.write(unicode2byte(header + self.design_as_text))
 
     def read_design(self, filename):
         """Reads a list of trials from a csv file and clears the old block
