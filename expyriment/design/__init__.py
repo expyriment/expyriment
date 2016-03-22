@@ -18,3 +18,7 @@ from . import defaults
 from . import permute
 from . import randomize
 from ._structure import Experiment, Block, Trial
+
+from .. import _active
+_active.exp = Experiment("None")
+

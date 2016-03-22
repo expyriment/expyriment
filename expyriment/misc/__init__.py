@@ -27,3 +27,7 @@ from ._hsv_colour import HSVColour
 from . import geometry
 from . import data_preprocessing
 from . import statistics
+
+from os import path as _path
+add_fonts(byte2unicode(_path.abspath(_path.join(_path.dirname(__file__),
+                  "_fonts"))))

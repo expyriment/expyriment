@@ -11,4 +11,4 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-exp = None  # expyriment.__init__ sets active_exp to design.Experiment("None")
+exp = None  # expyriment.design.__init__ sets active_exp to design.Experiment("None")

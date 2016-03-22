@@ -39,8 +39,9 @@ try:
 except:
     _pil = None
 import pygame
-from . import io,_importer_functions, PYTHON3
 
+from . import PYTHON3
+from ._importer_functions import get_settings_folder
 
 def _get_registry_value(key, subkey, value):
     if PYTHON3:
@@ -63,6 +64,7 @@ def get_system_info(as_string=False):
 
     """
 
+    from .io import SerialPort, ParallelPort
     info = {}
 
     # Get platform specific info for Linux
@@ -307,7 +309,7 @@ def get_system_info(as_string=False):
     info["os_platform"] = os_platform
     info["os_release"] = platform.release()
     info["os_version"] = os_version
-    info["settings_folder"] = _importer_functions.get_settings_folder()
+    info["settings_folder"] = get_settings_folder()
     info["python_expyriment_build_date"] = __date__
     info["python_expyriment_revision"] = __revision__
     info["python_expyriment_version"] = __version__
@@ -356,9 +358,9 @@ def get_system_info(as_string=False):
     info["hardware_memory_total"] = hardware_memory_total
     info["hardware_memory_free"] = hardware_memory_free
     info["hardware_ports_parallel"] = \
-            io.ParallelPort.get_available_ports()
+            ParallelPort.get_available_ports()
     info["hardware_ports_serial"] = \
-            io.SerialPort.get_available_ports()
+            SerialPort.get_available_ports()
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:

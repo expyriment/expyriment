@@ -38,7 +38,6 @@ __date__ = ''
 
 
 import sys as _sys
-import os as _os
 
 PYTHON3 = (_sys.version_info[0] == 3)
 
@@ -136,14 +135,10 @@ except ImportError:
 
 from . import _active
 from . import design
-_active.exp = design.Experiment("None")
-from . import stimuli
-from . import control # required to ensure correct sequence of import
 from . import misc
-misc.add_fonts(misc.byte2unicode(_os.path.abspath(
-    _os.path.join(_os.path.dirname(__file__),
-                  "_fonts"))))
-
+from . import stimuli
+from . import io
+from . import control
 try:
     import android
 except ImportError:
