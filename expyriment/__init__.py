@@ -28,7 +28,6 @@ To cite Expyriment in publications, please refer to the following article:
 
 """
 from __future__ import absolute_import
-from builtins import object as _object
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -37,15 +36,38 @@ __revision__ = ''
 __date__ = ''
 
 
-from ._get_system_info import get_system_info, get_version, PYTHON3, \
-                                _python_version_info
+import sys as _sys
 
-if not( (_python_version_info[0] == 2 and _python_version_info[1] >= 6) or
-        (PYTHON3 and _python_version_info[1] >= 3) ):
+PYTHON3 = (_sys.version_info[0] == 3)
+
+def get_version():
+    """
+    Return version information about Expyriment and Python.
+
+    Returns
+    -------
+    version_info : str
+
+    Notes
+    -----
+    For more detailed information see expyriment.misc.get_system_info().
+
+    """
+
+    pv = "{0}.{1}.{2}".format(_sys.version_info[0],
+                              _sys.version_info[1],
+                              _sys.version_info[2])
+            #no use of .major, .minor to ensure MacOS compatibility
+    return "{0} (Python {1})".format(__version__, pv)
+
+
+
+if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
+        (PYTHON3 and _sys.version_info[1] >= 3) ):
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
-                                                    _python_version_info[0],
-                                                    _python_version_info[1]) +
+                                                    _sys.version_info[0],
+                                                    _sys.version_info[1]) +
                       "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))

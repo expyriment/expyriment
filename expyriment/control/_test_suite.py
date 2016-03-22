@@ -539,7 +539,7 @@ def run_test_suite():
     from ..stimuli import extras as _test2
     from ..io import extras as _test3
     from ..misc import extras as _test4
-    from .. import get_system_info
+    from ..misc import get_system_info
 
     quit_experiment = False
     if not _active.exp.is_initialized:

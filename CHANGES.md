@@ -18,10 +18,11 @@ Changed:
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
 - move set_skip_wait_functions from misc to io
-- move is_idle_running, is_interactive_mode, is_android_running,
-  CallbackQuitEvent from control to misc
+- move is_idle_running, is_interactive_mode, is_android_running
+  from control to misc
 - move get_module_hash_dictionary, get_experiment_secure_hash,
-  module_hashes_as_string from expyriment to misc
+  module_hashes_as_string and get_system_info from expyriment to misc
+- move CallbackQuitEvent expyriment to new module _expyriment_types
 
 Fixed:
 - bug fix in unicode2str

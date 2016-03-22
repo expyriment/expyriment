@@ -24,7 +24,6 @@ except ImportError:
 
 from . import PYTHON3
 
-
 def import_command(path):
     # helper function to generate import command for extras that is Python2/3 compatible
     if PYTHON3:
