@@ -540,6 +540,7 @@ def run_test_suite():
     from ..io import extras as _test3
     from ..misc import extras as _test4
     from ..misc import get_system_info
+    from .. import get_version
 
     quit_experiment = False
     if not _active.exp.is_initialized:
@@ -571,6 +572,10 @@ def run_test_suite():
     pict.scale(0.5)
     pict.plot(background)
 
+    v = stimuli.TextLine(get_version(), text_size=14)
+    v.move((0, 150))
+    v.plot(background)
+
     results = get_system_info()
 
     try:
@@ -583,8 +588,8 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = io.TextMenu(
-            "Test suite", menu, width=350, justification=0,
+        select = io.TextMenu("Test suite",
+            menu, width=350, justification=0, text_size=18,
             background_stimulus=background, mouse=mouse).get(preselected_item)
 
         if select == 0:

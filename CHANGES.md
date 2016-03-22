@@ -22,7 +22,9 @@ Changed:
   from control to misc
 - move get_module_hash_dictionary, get_experiment_secure_hash,
   module_hashes_as_string and get_system_info from expyriment to misc
-- move CallbackQuitEvent expyriment to new module _expyriment_types
+- move CallbackQuitEvent from control to new module _expyriment_types
+- Move _ExpyrimentObject from expyriment to new module _expyriment_types and
+  rename to ExpyrimentObject
 
 Fixed:
 - bug fix in unicode2str
