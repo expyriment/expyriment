@@ -8,7 +8,13 @@ Importantly, it follows the actual namespace hierarchy and ignores everything
 that starts with _.
 
 """
+
+
 from __future__ import print_function
+
+import __future__
+import builtins
+
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,6 +28,8 @@ import types
 import imp
 
 
+exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType']
+
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
     modules = []
@@ -30,7 +38,8 @@ def inspect_members(item):
     functions = []
     attributes = []
     for member in members:
-        if member[0][0:1] != '_':
+        if member[0][0:1] != '_' and member[0] not in exclude:
+            #print(member)
             if inspect.ismodule(member[1]):
                 modules.append(member)
             elif inspect.isclass(member[1]):
@@ -84,6 +93,7 @@ def create_classes_section(classes, item):
 def create_classes_details_section(classes, item):
     section = ""
     for c in classes:
+        print(c)
         definition = "".join(inspect.getsourcelines(c[1])[0])
         start = definition.find("def __init__(self") + 17
         end = definition.find(")", start)
