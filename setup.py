@@ -2,7 +2,11 @@
 """
 Setup file for Expyriment
 """
+
+
 from __future__ import print_function
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -112,8 +116,8 @@ class Build(build_py):
             if f.endswith('.py'):
                 # Create temp file
                 fh, abs_path = mkstemp()
-                new_file = open(abs_path, 'w')
-                old_file = open(f, 'rU')
+                new_file = open(abs_path, 'wb')
+                old_file = open(f, 'rUb')
                 for line in old_file:
                     if line[0:11] == '__version__':
                         new_file.write("__version__ = '" + version_nr + "'" +
@@ -142,7 +146,7 @@ def get_version_from_git():
     proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
 
-    return version_nr.format(proc.stdout.read().lstrip("v").strip())
+    return version_nr.format(proc.stdout.read().lstrip(b"v").strip())
 
 def get_revision_from_git():
         proc = Popen(['git', 'log', '--format=%H', '-1'], \
@@ -232,7 +236,7 @@ if __name__=="__main__":
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
-            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
+            if not b'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
                                                             initial_revision:
                 raise Exception
             version_nr = get_version_from_git()
