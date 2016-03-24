@@ -188,7 +188,7 @@ class CedrusResponseDevice(Input):
             if codes is None:
                 return self._buffer.memory[0]
             else:
-                if isinstance(codes, (tuple, list)):
+                if not isinstance(codes, (tuple, list)):
                     codes = [codes]
                 for elem in self._buffer.memory:
                     if elem[0] in codes:
