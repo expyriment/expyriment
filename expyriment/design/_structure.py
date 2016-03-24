@@ -497,6 +497,41 @@ class Experiment(object):
             "Experiment,block added,{0},{1}".format(
                 self.name, self._blocks[-1]._id), 2)
 
+    def add_blocks_full_factorial(self, design_dict, copies=1):
+        """Add blocks of all combinations of a full factorial design.
+
+        Factors will be defined according the design_dict parameter.
+        The design is specified by a dictionary. The keys of the dictionary
+        indicate the factor names. Each value of the dictionary has to be
+        a list of the factor levels.
+
+        Parameters
+        ----------
+        design_dict : dictionary
+            keys: factor names, values: lists of factor levels
+        copies : int, optional
+            number of copies to add (default = 1)
+
+        See Also
+        --------
+        Block.add_trials_full_factorial for an example
+
+        """
+
+        keys = design_dict.keys()
+        levels = list(map(lambda x: len(design_dict[x]), keys))
+        cnt = [0]*len(design_dict)
+
+        while cnt is not None:
+            bl = Block()
+            for i,k in enumerate(keys):
+                bl.set_factor(k, design_dict[ k ][ cnt[i] ])
+            self.add_block(bl, copies=copies)
+
+            cnt = _get_next_permutation(values=cnt, levels=levels)
+
+
+
     def remove_block(self, position):
         """Remove block from experiment.
 
@@ -1456,6 +1491,46 @@ class Block(object):
                                          byte2unicode(row[c_cnt]))
                     self.add_trial(trial)
 
+
+    def add_trials_full_factorial(self, design_dict, copies=1):
+        """Add trials of all combinations of a full factorial design.
+
+         Factors will be defined according the design_dict parameter.
+         The design is specified by a dictionary. The keys of the dictionary
+         indicate the factor names. Each value of the dictionary has to be
+         a list of the factor levels.
+
+         Example
+         -------
+
+            bl = design.Block()
+            design = {
+                "target": ["left", "center", "right"],
+                "cue": [-300, 300],
+                "letter": ["H", "F"]}
+            bl.add_trials_full_factorial(design, copies=10)
+
+        Parameters
+        ----------
+        design_dict : dictionary
+            keys: factor names, values: lists of factor levels
+        copies : int, optional
+            number of copies to add (default = 1)
+
+        """
+
+        keys = design_dict.keys()
+        levels = list(map(lambda x: len(design_dict[x]), keys))
+        cnt = [0]*len(design_dict)
+
+        while cnt is not None:
+            tr = Trial()
+            for i,k in enumerate(keys):
+                tr.set_factor(k, design_dict[ k ][ cnt[i] ])
+            self.add_trial(tr, copies=copies)
+            cnt = _get_next_permutation(values=cnt, levels=levels)
+
+
     def order_trials(self, order):
         """Order the trials.
 
@@ -1919,3 +1994,27 @@ class Trial(object):
         for stim in self._stimuli:
             stim.unload(keep_surface=keep_surface)
         return int((Clock._cpu_time() - start) * 1000)
+
+
+def _get_next_permutation(values, levels):
+    """helper function
+    count the array of values up,
+    levels define the max levels per unit.
+
+    Returns None is end reached
+    """
+
+    if values is None:
+        return [0]*len(levels)
+    p = 0
+    while True:
+        values[p] += 1
+        if values[p]>=levels[p]:
+            values[p] = 0
+            p  += 1
+            if p>=len(values):
+                return None
+        else:
+            return values
+
+
