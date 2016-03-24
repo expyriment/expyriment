@@ -8,37 +8,28 @@ Importantly, it follows the actual namespace hierarchy and ignores everything
 that starts with _.
 
 """
-
-
 from __future__ import print_function
-
-import __future__
-import builtins
 
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = '21-11-2011'
+__version__ = ''
 
 
 import os
 import sys
 import inspect
-import types
-import imp
 
-
-exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
-                                             'True', 'False']
-
-def inspect_members(item):
-    members = inspect.getmembers(eval(item))
+def inspect_expyriment_members(item):
+    import __future__
+    import builtins
+    exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType']
     modules = []
     classes = []
     methods = []
     functions = []
     attributes = []
-    for member in members:
+    for member in inspect.getmembers(eval(item)):
         if member[0][0:1] != '_' and member[0] not in exclude:
             #print(member)
             if inspect.ismodule(member[1]):
@@ -80,15 +71,18 @@ def create_module_section(modules, item):
         section = section + "<span class='separator'>[</span><span class='module_name'><a href='" +\
         item + "." + m[0] + ".html'>" + m[0] + "</a></span><span class='separator'>] </span>"
     if section != "":
-        section = "</pre><code><span class='section_heading'>Modules</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
+        section = "</pre><code><span class='section_heading'>Modules</span><br /><br />" +\
+                  section + "<br /><br /><br /><br /></code><pre>"
     return section
 
 def create_classes_section(classes, item):
     section = ""
     for c in classes:
-        section = section + "<span class='separator'>[</span><span class='class_name'><a href='#" + c[0] + "'>" + c[0] + "</a></span><span class='separator'>] </span>"
+        section = section + "<span class='separator'>[</span><span class='class_name'><a href='#" +\
+                  c[0] + "'>" + c[0] + "</a></span><span class='separator'>] </span>"
     if section != "":
-        section = "</pre><code><span class='section_heading'>Classes</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
+        section = "</pre><code><span class='section_heading'>Classes</span><br /><br />" + \
+                  section + "<br /><br /><br /><br /></code><pre>"
     return section
 
 def create_classes_details_section(classes, item):
@@ -109,7 +103,9 @@ def create_classes_details_section(classes, item):
         if doc is None:
             doc = ""
         doc = format_doc(doc)
-        section = section + "<span class='class_name'><a name='" + c[0] + "'></a><a href='" + item + "." + c[0] + ".html'>" + c[0] + "</a></span>" + call + "<span class='definition'><br /><br />" + doc + "</span><br />"
+        section = section + "<span class='class_name'><a name='" + c[0] + "'></a><a href='" + \
+                  item + "." + c[0] + ".html'>" + c[0] + "</a></span>" + \
+                  call + "<span class='definition'><br /><br />" + doc + "</span><br />"
     if section != "":
         section = "<span class='section_heading'>Details (Classes)</span><br /><br />" + section + "<br />"
     return section
@@ -117,9 +113,11 @@ def create_classes_details_section(classes, item):
 def create_methods_section(methods):
     section = ""
     for m in methods:
-        section = section + "<span class='separator'>[</span><span class='method_name'><a href='#" + m[0] + "'>" + m[0] + "</a></span><span class='separator'>] </span>"
+        section = section + "<span class='separator'>[</span><span class='method_name'><a href='#" + \
+                  m[0] + "'>" + m[0] + "</a></span><span class='separator'>] </span>"
     if section != "":
-        section = "</pre><code><span class='section_heading'>Methods</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
+        section = "</pre><code><span class='section_heading'>Methods</span><br /><br />" + \
+                  section + "<br /><br /><br /><br /></code><pre>"
     return section
 
 def create_methods_details_section(methods):
@@ -138,7 +136,9 @@ def create_methods_details_section(methods):
         if doc is None:
             doc = ""
         doc = format_doc(doc)
-        section = section + "<span class='method_name'><a name='" + m[0] + "'></a>" + m[0] + "</span><span class='method_call'>" + call + "</span><br /><br />" + "<span class='definition'>" + doc + "</span><br />"
+        section = section + "<span class='method_name'><a name='" + m[0] + "'></a>" + \
+                  m[0] + "</span><span class='method_call'>" + call + \
+                  "</span><br /><br />" + "<span class='definition'>" + doc + "</span><br />"
     if section != "":
         section = "<span class='section_heading'>Details (Methods)</span><br /><br />" + section + "<br />"
     return section
@@ -146,9 +146,11 @@ def create_methods_details_section(methods):
 def create_functions_section(functions):
     section = ""
     for f in functions:
-        section = section + "<span class='separator'>[</span><span class='function_name'><a href='#" + f[0] + "'>" + f[0] + "</a></span><span class='separator'>] <span/>"
+        section = section + "<span class='separator'>[</span><span class='function_name'><a href='#" + \
+                  f[0] + "'>" + f[0] + "</a></span><span class='separator'>] <span/>"
     if section != "":
-        section = "</pre><code><span class='section_heading'>Functions</span><br /><br />" + section + "<br /> <br /><br /><br /></code><pre>"
+        section = "</pre><code><span class='section_heading'>Functions</span><br /><br />" + \
+                  section + "<br /> <br /><br /><br /></code><pre>"
     return section
 
 def create_functions_details_section(functions):
@@ -184,7 +186,8 @@ def create_attributes_section(attributes):
     return section
 
 def create_page(item):
-    modules, classes, methods, functions, attributes = inspect_members(item)
+    modules, classes, methods, functions, attributes = \
+                                inspect_expyriment_members(item)
     trace = ""
     parts = item.split(".")
     if len(parts) > 1:
