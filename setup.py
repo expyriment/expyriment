@@ -14,6 +14,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import stat
 import os
+import sys
 from subprocess import Popen, PIPE, call
 try:
     from setuptools import setup
@@ -59,9 +60,7 @@ data_files = [('share/expyriment/examples',
               ('share/expyriment/documentation/sphinx',
                glob('documentation/sphinx/*.*')),
               ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/Makefile')),
-              ('share/expyriment/documentation/sphinx/numpydoc',
-               glob('documentation/sphinx/numpydoc/*.*'))]
+               glob('documentation/sphinx/Makefile'))]
 
 install_requires = ["pyopengl>=3.0", "future"]
 
@@ -205,7 +204,7 @@ if __name__=="__main__":
         try:
             copytree('expyriment', 'documentation/sphinx/expyriment')
             os.chdir('documentation/sphinx/')
-            call(["python", "./create_rst_api_reference.py"])
+            call([sys.executable, "./create_rst_api_reference.py"])
             call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
             os.chdir(cwd)
             data_files.append(('share/expyriment/documentation/html',
@@ -261,7 +260,7 @@ if __name__=="__main__":
 
             print("")
             print("Expyriment Version: [{0}] (from repository)".format(
-                version_nr)) # version_nr should be easy to parse
+                version_nr))  # version_nr should be easy to parse
         except:
             raise RuntimeError("Building from repository failed!")
 

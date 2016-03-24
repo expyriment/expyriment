@@ -28,7 +28,8 @@ import types
 import imp
 
 
-exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType']
+exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
+                                             'True', 'False']
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))

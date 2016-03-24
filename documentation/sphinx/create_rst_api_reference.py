@@ -15,7 +15,11 @@ import expyriment.design.extras
 import expyriment.stimuli.extras
 import expyriment.misc.extras
 
+import __future__
+import builtins
 
+exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
+                                             'True', 'False']
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
@@ -66,34 +70,38 @@ def create_module_rst(mod_name, no_members=False):
             fl.write(heading("\nAttributes", "-"))
 
             for att in attributes:
-                att = mod_name + "." + att[0]
-                fl.write(".. py:data:: " + att + "\n\n")
-                #t = eval("type(" + att + ")")
-                if att.find("EXPYRIMENT_LOGO_FILE") == -1:
-                    # do not write default for EXPYRIMENT_LOGO_FILE
-                    v = eval("repr(" + att + ")")
-                    fl.write("   default value: {0}\n\n".format(v))
+                if att[0] not in exclude:
+                    att = mod_name + "." + att[0]
+                    fl.write(".. py:data:: " + att + "\n\n")
+                    #t = eval("type(" + att + ")")
+                    if att.find("EXPYRIMENT_LOGO_FILE") == -1:
+                        # do not write default for EXPYRIMENT_LOGO_FILE
+                        v = eval("repr(" + att + ")")
+                        fl.write("   default value: {0}\n\n".format(v))
 
         if len(modules)>0:
             fl.write(heading("\n\nModules", "-"))
             fl.write(".. toctree::\n   :maxdepth: 1\n   :titlesonly:\n")
 
             for m in modules:
-                fl.write("\n   " + mod_name + "." + m[0])
-                create_module_rst(mod_name + "." + m[0])
+                if m[0] not in exclude:
+                    fl.write("\n   " + mod_name + "." + m[0])
+                    create_module_rst(mod_name + "." + m[0])
 
         if len(classes)>0:
             fl.write(heading("\n\nClasses", "-"))
             fl.write(".. toctree::\n   :titlesonly:\n")
 
             for cl in classes:
-                fl.write("\n   " + mod_name + "." + cl[0])
-                create_class_rst(mod_name + "." + cl[0])
+                if cl[0] not in exclude:
+                    fl.write("\n   " + mod_name + "." + cl[0])
+                    create_class_rst(mod_name + "." + cl[0])
 
         if len(functions)>0:
             fl.write(heading("\n\nFunctions", "-"))
             for func in functions:
-                fl.write(".. autofunction:: " + mod_name + "." + func[0] + "\n")
+                if func[0] not in exclude:
+                    fl.write(".. autofunction:: " + mod_name + "." + func[0] + "\n")
 
         fl.write("\n\n")
         #fl.write("\n\n.. "+repr(modules) + "\n")
