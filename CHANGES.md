@@ -7,6 +7,8 @@ upcoming
 New Features:
 - new global boolean constant expyriment.PYTHON3 indicates Python version
 - new io device: io.extras.TcpServer
+- new method to add full factorial designs:
+  Block.add_trials_full_factorial & Experiment.add_blocks_full_factorial
 - Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
