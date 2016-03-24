@@ -1,31 +1,28 @@
 #!/usr/bin/env python
-
 """Make rst files for the expyriment API reference"""
+from __future__ import absolute_import, print_function, division
+
+
+__author__ = 'Florian Krause <florian@expyriment.org> \
+Oliver Lindemann <oliver@expyriment.org>'
+__version__ = ''
 
 
 import inspect
 import os
 import sys
-p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
-sys.path.insert(0, p)
 
-import expyriment
-import expyriment.io.extras
-import expyriment.design.extras
-import expyriment.stimuli.extras
-import expyriment.misc.extras
-
-
-
-def inspect_members(item):
-    members = inspect.getmembers(eval(item))
+def inspect_expyriment_members(item):
+    import __future__
+    import builtins
+    exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType']
     modules = []
     classes = []
     methods = []
     functions = []
     attributes = []
-    for member in members:
-        if member[0][0:1] != '_':
+    for member in inspect.getmembers(eval(item)):
+        if member[0][0:1] != '_' and member[0] not in exclude:
             if inspect.ismodule(member[1]):
                 modules.append(member)
             elif inspect.isclass(member[1]):
@@ -61,7 +58,7 @@ def create_module_rst(mod_name, no_members=False):
         #fl.write("   :show-inheritance:\n")
         #fl.write("   :inherited-members:\n")
 
-        modules, classes, methods, functions, attributes = inspect_members(mod_name)
+        modules, classes, methods, functions, attributes = inspect_expyriment_members(mod_name)
         if len(attributes)>0:
             fl.write(heading("\nAttributes", "-"))
 
@@ -152,9 +149,7 @@ Usage
          fl.write("\n    " + s)
 
 
-# main module
-with open("expyriment.rst", 'w') as fl:
-    fl.write("""
+MAIN_RST = """
 expyriment
 ==========
 
@@ -178,18 +173,29 @@ Functions
 ---------
 .. autofunction:: expyriment.get_version
 .. autofunction:: expyriment.show_documentation
-.. autofunction:: expyriment.get_system_info
-.. autofunction:: expyriment.get_experiment_secure_hash
+"""
 
-""")
 
-sub_modules = ["expyriment.io", "expyriment.design", "expyriment.stimuli",
-               "expyriment.control", "expyriment.misc"]
+if __name__ == "__main__":
+    import expyriment
+    import expyriment.io.extras
+    import expyriment.design.extras
+    import expyriment.stimuli.extras
+    import expyriment.misc.extras
 
-#sub_modules
-for mod_name in sub_modules:
-    create_module_rst(mod_name)
+    p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
+    sys.path.insert(0, p)
 
-create_change_log_rst()
-make_cli_rst()
+    # main module
+    with open("expyriment.rst", 'w') as fl:
+        fl.write(MAIN_RST)
 
+    sub_modules = ["expyriment.io", "expyriment.design", "expyriment.stimuli",
+                   "expyriment.control", "expyriment.misc"]
+
+    #sub_modules
+    for mod_name in sub_modules:
+        create_module_rst(mod_name)
+
+    create_change_log_rst()
+    make_cli_rst()
