@@ -55,7 +55,7 @@ documentation/api_ref_html/
 documentation/sphinx/expyriment*.rst
 documentation/sphinx/expyriment
 documentation/sphinx/Changelog.rst
-documentation/sphinx/CommandLineInterface.rs
+documentation/sphinx/CommandLineInterface.rst
 
 # test script
 test_expyriment.py

@@ -23,8 +23,9 @@ install:
 	python setup.py install
 
 documentation/html:
-	make --directory=documentation/sphinx rst html
+	make --directory=documentation/sphinx rst html sitemap
 	mv documentation/sphinx/_build/html documentation/html
+	mv documentation/sphinx/sitemap.yml documentation/html/
 
 documentation/Expyriment.pdf:
 	make --directory=documentation/sphinx rst latexpdf
