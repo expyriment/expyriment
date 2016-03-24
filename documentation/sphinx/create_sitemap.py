@@ -15,7 +15,14 @@ HOME = "Official Webpage: /"
 DOC = " /docs/{0}/"
 FULLDOC = "Full Documentation:" + DOC
 SUPPORT = """Community/Support:
-  Twitter: /twitter.html
+  Newsletter: /newsletter
+  Forum: /forum
+  Mailinglist: /mailinglist
+  Twitter: /twitter
+  Facebook: /facebook
+  IRC/Matrix chat: /chat
+  Reddit: /reddit
+  Google+: /googleplus
 """
 
 def get_version():
