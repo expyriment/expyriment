@@ -185,8 +185,8 @@ class Tone(Audio):
                      'not compressed'))
         max_amplitude = float(int((2 ** (self._bitdepth)) / 2) - 1)
         for chunk in self._grouper(2048, samples):
-            frames = ''.join(''.join(struct.pack(
-                'h', int(max_amplitude * sample)) for sample in channels) \
+            frames = b''.join(b''.join(struct.pack(
+                b'h', int(max_amplitude * sample)) for sample in channels) \
                 for channels in chunk if channels is not None)
             w.writeframesraw(frames)
         w.close()
