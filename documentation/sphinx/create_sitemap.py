@@ -46,7 +46,7 @@ def api_ref_structure(version):
     rtn.append("API Reference:")
     rtn.append(T + "base:" + doc + "expyriment.html")
 
-    for submodule  in ["control", "design", "io", "stimuli"]:
+    for submodule  in ["control", "design", "io", "misc", "stimuli"]:
         rtn.append(T + submodule + ":")
         rtn.append(2*T + "base:" + doc + \
                     "expyriment.{0}.html".format(submodule))
