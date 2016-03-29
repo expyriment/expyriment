@@ -30,7 +30,7 @@ for _plugins in [_internals.import_plugins(__file__),
     for _plugin in _plugins:
         try:
             exec(_plugins[_plugin])
-        except ImportError as err:
+        except Exception as err:
             print("Warning: Could not import {0}".format(
                 _os.path.dirname(__file__) + _os.sep + _plugin))
             print(" ", err)

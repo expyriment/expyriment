@@ -35,47 +35,46 @@ import os
 from ... import _internals, misc
 from ...io._input_output import Input, Output
 
-if sys.platform.startswith('linux'):
-    try:
+try:
+    if sys.platform.startswith('linux'):
         from ._linux import PParallelLinux
         _ParallelPort = PParallelLinux
-    except ImportError:
+    elif sys.platform == 'win32':
+        from ctypes import windll
+        if hasattr(windll, 'inpout32'):
+            from ._inpout32 import PParallelInpOut32
+            _ParallelPort = PParallelInpOut32
+        elif hasattr(windll, 'dlportio'):
+            from ._dlportio import PParallelDLPortIO
+            _ParallelPort = PParallelDLPortIO
+        else:
+            _ParallelPort = None
+    else: # MAC
         _ParallelPort = None
-elif sys.platform == 'win32':
-    from ctypes import windll
-    if hasattr(windll, 'inpout32'):
-        from ._inpout32 import PParallelInpOut32
-        _ParallelPort = PParallelInpOut32
-    elif hasattr(windll, 'dlportio'):
-        from ._dlportio import PParallelDLPortIO
-        _ParallelPort = PParallelDLPortIO
-    else:
-        _ParallelPort = None
-
-else:
+        # class PP(object):
+        #     def __init__(self, address):
+        #         self.address = address
+        #     def read_data(self):
+        #         return 255
+        #     def read_status(self):
+        #         return 32
+        #     def read_control(self):
+        #         return 16
+        #     def set_control(self):
+        #         pass
+        #     def poll(self):
+        #         return 8192
+        #     def setData(self, data):
+        #         pass
+        #     def readData(self):
+        #         return 100
+        #     def readPin(self, pin):
+        #         return False
+        #     def setPin(self, pin, state):
+        #         pass
+        # _ParallelPort = PP
+except:
     _ParallelPort = None
-    # class PP(object):
-    #     def __init__(self, address):
-    #         self.address = address
-    #     def read_data(self):
-    #         return 255
-    #     def read_status(self):
-    #         return 32
-    #     def read_control(self):
-    #         return 16
-    #     def set_control(self):
-    #         pass
-    #     def poll(self):
-    #         return 8192
-    #     def setData(self, data):
-    #         pass
-    #     def readData(self):
-    #         return 100
-    #     def readPin(self, pin):
-    #         return False
-    #     def setPin(self, pin, state):
-    #         pass
-    # _ParallelPort = PP
 
 
 class ParallelPort(Input, Output):
