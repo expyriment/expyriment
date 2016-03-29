@@ -15,6 +15,7 @@ from os.path import sep
 from re import split
 from hashlib import sha1
 from copy import copy
+from ._miscellaneous import is_interactive_mode
 
 def _make_secure_hash(filename):
     """returns secure hash from file or None, if not possile"""
@@ -119,10 +120,11 @@ def cout_hashes():
             print("Modules: " + module_hashes_as_string())
 
 # print hash information when imported
-if not hasattr(sys, "ps2"): # ps2 is only defined in interactive mode
+if not is_interactive_mode():
     main_file = sys.argv[0]
 else:
     main_file = ""
 secure_hashes = {main_file : _make_secure_hash(main_file)}
 secure_hashes = _append_hashes_from_imported_modules(secure_hashes, main_file)
 cout_hashes()
+print(main_file)

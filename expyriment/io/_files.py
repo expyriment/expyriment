@@ -365,8 +365,8 @@ class DataFile(OutputFile):
                             module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
-        self.write_line(self.variable_names)
-        self._variable_names_changed = False
+        self.write_comment("#")
+        self._variable_names_changed = True
         self.save()
 
     @property
@@ -505,6 +505,8 @@ class DataFile(OutputFile):
 
         """
 
+
+        print(self._variable_names_changed)
         start = get_time()
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                 or self._variable_names_changed:
