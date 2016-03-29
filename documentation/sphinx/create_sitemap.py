@@ -51,27 +51,29 @@ def api_ref_structure(version):
     doc = DOC.format(version)
     rtn = []
     rtn.append("API Reference:")
-    rtn.append(T + "base:" + doc + "expyriment.html")
+    rtn.append(T + "expyriment:" + doc + "expyriment.html")
 
     for submodule  in ["control", "design", "io", "misc", "stimuli"]:
-        rtn.append(T + submodule + ":")
-        rtn.append(2*T + "base:" + doc + \
+        rtn.append(T + "expyriment." + submodule + ":")
+        rtn.append(2*T + submodule + ":" + doc + \
                     "expyriment.{0}.html".format(submodule))
         # non extras
         for f in get_rst_files(submodule):
             if f.find("extras") <0:
-                rtn.append(2*T + f + ":" + doc + \
+                rtn.append(2*T + submodule + "." + f + ":" + doc + \
                     "expyriment.{0}.{1}.html".format(submodule, f))
         # extras
-        rtn.append(2*T + "extras:")
-        for f in get_rst_files(submodule):
-            if f.find("extras") >=0:
-                try:
-                    tmp = f.split(".")
-                    rtn.append(3*T + tmp[1] + ":" + doc + \
-                        "expyriment.{0}.extras.{1}.html".format(submodule, tmp[1]))
-                except:
-                    pass
+        if submodule in ["design", "io", "stimuli"]:
+            rtn.append(2*T + submodule + "." + "extras:")
+            for f in get_rst_files(submodule):
+                if f.find("extras") >=0:
+                    try:
+                        tmp = f.split(".")
+                        rtn.append(3*T + "extras." + tmp[1] + ":" + doc + \
+                            "expyriment.{0}.extras.{1}.html".format(
+                                                    submodule, tmp[1]))
+                    except:
+                        pass
 
     return "\n".join(rtn)
 
