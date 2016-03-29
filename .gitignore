@@ -56,6 +56,7 @@ documentation/sphinx/expyriment*.rst
 documentation/sphinx/expyriment
 documentation/sphinx/Changelog.rst
 documentation/sphinx/CommandLineInterface.rst
+documentation/sphinx/sitemap.yml
 
 # test script
 test_expyriment.py
