@@ -73,7 +73,7 @@ try:
         #     def setPin(self, pin, state):
         #         pass
         # _ParallelPort = PP
-except:
+except ImportError:
     _ParallelPort = None
 
 
