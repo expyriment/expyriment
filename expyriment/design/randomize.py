@@ -144,8 +144,8 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
 
     Parameters
     ----------
-    list_ : int
-        list to shuffle
+    list_ : list to shuffle
+        function raises a TypeError, if list_ is not a list.
     max_repetitions : int, optional
         maximum number of allowed repetitions of one identical items; if no
         solution can be found (i.e., Python's recursion limit is reached), the
@@ -171,7 +171,9 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
 
     """
 
-    list_ = list(list_)
+    if not isinstance(list_, list):
+        raise TypeError("The parameter 'list_' is a {0}, but has to be list. ".format(type(list_).__name__))
+
     if n_segments is None:
         n_segments = 0
     if max_repetitions is None:
