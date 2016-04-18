@@ -46,8 +46,10 @@ expyriment.rst:
 	./create_rst_api_reference.py
 	rm -f expyriment
 
-sitemap: expyriment.rst
+sitemap:
+	ln -fs ../../expyriment/ ./
 	./create_sitemap.py
+	rm -f expyriment
 
 html:
 	@make expyriment.rst

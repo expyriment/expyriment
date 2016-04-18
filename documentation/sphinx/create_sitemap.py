@@ -10,6 +10,8 @@ __version__ = ''
 import os
 import sys
 
+from create_rst_api_reference import inspect_members, exclude
+
 T = "  "
 HOME = "Official Webpage: /"
 DOC = " /docs/{0}/"
@@ -35,45 +37,46 @@ def get_version():
             if line.startswith("Version"):
                 return line.split(" ")[1]
 
-def get_rst_files(submodule):
-    files = []
-    for x in os.listdir("."):
-        if x.endswith(".rst") and \
-            x.startswith("expyriment." + submodule):
-            tmp = x[:-4].replace("expyriment." + submodule, "")
-            if len(tmp) >1:
-                files.append(tmp[1:])
-    files.sort()
-    return files
+
+def parse_module(mod_name, tab, doc_path):
+    modules, classes, methods, functions, attributes = inspect_members(mod_name)
+    rtn  = []
+    if len(modules)>0:
+        for m in modules:
+            if m[0] not in exclude:
+                if m[0]=="constants":
+                    rtn.append(tab + m[0] + ":" + doc_path +  mod_name + "." + m[0] + ".html")
+                elif m[0] != "defaults":
+                    rtn.append(tab + m[0] + ":")
+                    rtn.extend(parse_module(mod_name=mod_name + "." + m[0], tab=tab+T, doc_path=doc_path))
+
+    if len(classes)>0:
+        for cl in classes:
+            if cl[0] not in exclude:
+                rtn.append(tab + cl[0] + ":")
+                rtn.append(tab + T + "__init__:" + doc_path + mod_name + ".html#" + mod_name + "." + cl[0])
+
+                rtn.extend(parse_module(mod_name=mod_name + "." + cl[0], tab=tab+ T, doc_path=doc_path))
+
+    if len(methods)>0:
+        for m in methods:
+            if m[0] not in exclude:
+                rtn.append(tab + m[0] + ":" + doc_path + mod_name + ".html#" + mod_name + "." + m[0])
+
+    if len(functions)>0:
+        for func in functions:
+            if func[0] not in exclude:
+                rtn.append(tab + func[0] + ":" + doc_path + mod_name + ".html#" + mod_name + "."+ func[0])
+    return rtn
+
 
 def api_ref_structure(version):
     """uses rst file to determine api reference structure"""
-    doc = DOC.format(version)
     rtn = []
     rtn.append("API Reference:")
-    rtn.append(T + "expyriment:" + doc + "expyriment.html")
-
-    for submodule  in ["control", "design", "io", "misc", "stimuli"]:
-        rtn.append(T + "expyriment." + submodule + ":")
-        rtn.append(2*T + submodule + ":" + doc + \
-                    "expyriment.{0}.html".format(submodule))
-        # non extras
-        for f in get_rst_files(submodule):
-            if f.find("extras") <0:
-                rtn.append(2*T + submodule + "." + f + ":" + doc + \
-                    "expyriment.{0}.{1}.html".format(submodule, f))
-        # extras
-        if submodule in ["design", "io", "stimuli"]:
-            rtn.append(2*T + submodule + "." + "extras:")
-            for f in get_rst_files(submodule):
-                if f.find("extras") >=0:
-                    try:
-                        tmp = f.split(".")
-                        rtn.append(3*T + "extras." + tmp[1] + ":" + doc + \
-                            "expyriment.{0}.extras.{1}.html".format(
-                                                    submodule, tmp[1]))
-                    except:
-                        pass
+    rtn.append(T + "expyriment:" + DOC.format(version) + "expyriment.html")
+    rtn.extend(parse_module(mod_name="expyriment", tab=T,
+                            doc_path = DOC.format(version)))
 
     return "\n".join(rtn)
 

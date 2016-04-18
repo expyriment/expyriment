@@ -1,11 +1,13 @@
 #!/usr/bin/env python
-
 """Make rst files for the expyriment API reference"""
+from __future__ import absolute_import, print_function
+import __future__
+import builtins
 
-
-import inspect
 import os
 import sys
+import inspect
+
 p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
 sys.path.insert(0, p)
 
@@ -14,9 +16,6 @@ import expyriment.io.extras
 import expyriment.design.extras
 import expyriment.stimuli.extras
 import expyriment.misc.extras
-
-import __future__
-import builtins
 
 exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
                                              'True', 'False']
@@ -42,7 +41,6 @@ def inspect_members(item):
                 attributes.append(member)
 
     return modules, classes, methods, functions, attributes
-
 
 def heading(txt, t="="):
     return txt + "\n" + len(txt)*t + "\n"
@@ -161,8 +159,10 @@ Usage
 
 
 # main module
-with open("expyriment.rst", 'w') as fl:
-    fl.write("""
+if __name__ == '__main__':
+
+    with open("expyriment.rst", 'w') as fl:
+        fl.write("""
 expyriment
 ==========
 
@@ -191,13 +191,12 @@ Functions
 
 """)
 
-sub_modules = ["expyriment.io", "expyriment.design", "expyriment.stimuli",
+    sub_modules = ["expyriment.io", "expyriment.design", "expyriment.stimuli",
                "expyriment.control", "expyriment.misc"]
 
-#sub_modules
-for mod_name in sub_modules:
-    create_module_rst(mod_name)
+    #sub_modules
+    for mod_name in sub_modules:
+        create_module_rst(mod_name)
 
-create_change_log_rst()
-make_cli_rst()
-
+    create_change_log_rst()
+    make_cli_rst()

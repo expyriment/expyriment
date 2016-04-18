@@ -23,7 +23,7 @@ __version__ = '21-11-2011'
 
 import os
 import sys
-import inspect
+import inspect  
 import types
 import imp
 
