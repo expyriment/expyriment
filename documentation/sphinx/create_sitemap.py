@@ -13,16 +13,16 @@ import sys
 from create_rst_api_reference import inspect_members, exclude, expyriment
 
 T = "  "
-HOME = "Official Webpage: /"
+HOME = "Official Website: /"
 DOC = " /docs/{0}/"
 FULLDOC = "Full Documentation:" + DOC
 SUPPORT = """Community/Support:
   Newsletter: /newsletter
   Forum: /forum
   Mailinglist: /mailinglist
-  Twitter: /twitter
-  Facebook: /facebook
   IRC/Matrix chat: /chat
+  Facebook: /facebook
+  Twitter: /twitter
   Reddit: /reddit
   Google+: /googleplus
 """
