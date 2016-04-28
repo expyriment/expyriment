@@ -90,7 +90,8 @@ class SerialPort(Input, Output):
 The Python package 'pySerial' is not installed."""
             raise ImportError(message)
 
-        if float(serial.VERSION) < 2.5:
+        serial_version = tuple(map(lambda x: int(x), serial.VERSION.split(".")))
+        if serial_version < (2, 5):
             raise ImportError("Expyriment {0} ".format(__version__) +
                     "is not compatible with PySerial {0}.".format(
                         serial.VERSION) +
