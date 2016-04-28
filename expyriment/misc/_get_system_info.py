@@ -24,6 +24,7 @@ except ImportError:
     _ogl = None
 try:
     import serial as _serial
+    from serial.tools.list_ports import comports as _list_com_ports
 except ImportError:
     _serial = None
 try:
@@ -361,7 +362,7 @@ def get_system_info(as_string=False):
     info["hardware_ports_parallel"] = \
             ParallelPort.get_available_ports()
     info["hardware_ports_serial"] = \
-            SerialPort.get_available_ports()
+            _list_com_ports()
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:

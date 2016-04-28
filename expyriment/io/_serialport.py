@@ -21,8 +21,10 @@ from types import ModuleType
 
 try:
     import serial
+    from serial.tools.list_ports import comports as list_com_ports
 except:
     serial = None
+    list_com_ports = None
 
 from . import defaults
 from ._input_output import Input, Output
@@ -88,7 +90,8 @@ class SerialPort(Input, Output):
 The Python package 'pySerial' is not installed."""
             raise ImportError(message)
 
-        if float(serial.VERSION) < 2.5:
+        serial_version = tuple(map(lambda x: int(x), serial.VERSION.split(".")))
+        if serial_version < (2, 5):
             raise ImportError("Expyriment {0} ".format(__version__) +
                     "is not compatible with PySerial {0}.".format(
                         serial.VERSION) +
@@ -420,7 +423,7 @@ The Python package 'pySerial' is not installed."""
 
     @staticmethod
     def get_available_ports():
-        """Return an list of strings representing the available serial ports.
+        """Return a list of strings representing the available serial ports.
 
         Notes
         -----
@@ -435,44 +438,7 @@ The Python package 'pySerial' is not installed."""
 
         if not isinstance(serial, ModuleType):
             return None
-        ports = []
-        if platform.startswith("linux"): #for operation systems
-            dev = sorted(listdir('/dev'))
-            max_length = 0
-            for d in dev:
-                if d.startswith("tty") and len(d) > max_length:
-                    max_length = len(d)
-            for length in range(7, max_length + 1):
-                for p in dev:
-                    if p.startswith("ttyUSB") and len(p) == length:
-                        ports.append("/dev/" + p)
-            for length in range(5, max_length + 1):
-                for p in dev:
-                    if p.startswith("ttyS") and len(p) == length:
-                        ports.append("/dev/" + p)
-        elif platform == "darwin": #for MacOS
-            dev = sorted(listdir('/dev'))
-            max_length = 0
-            for d in dev:
-                if d.startswith("cu") and len(d) > max_length:
-                    max_length = len(d)
-            for length in range(13, max_length + 1):
-                for p in dev:
-                    if p.startswith("cu.usbserial") and len(p) == length:
-                        ports.append("/dev/" + p)
-            for length in range(5, max_length + 1):
-                for p in dev:
-                    if p.startswith("cuad") and len(p) == length:
-                        ports.append("/dev/" + p)
-        else: #for windows, os2
-            for p in range(256):
-                try:
-                    s = serial.Serial(p)
-                    if s.isOpen():
-                        ports.append(s.portstr)
-                        s.close()
-                except serial.SerialException:
-                    pass
+        ports = sorted([x[0] for x in list_com_ports()])
         return ports
 
     def send(self, data):

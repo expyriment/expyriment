@@ -33,6 +33,7 @@ Fixed:
 - minor bug fixes in _secure_hash.py, _files.py
 - Cli: -0 option was not recognized
 - Correct anti-aliasing for Circle/Ellipse (now works on every background)
+- compatibility with pyserial version 3.0
 
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
