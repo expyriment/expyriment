@@ -144,8 +144,8 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
 
     Parameters
     ----------
-    list_ : list to shuffle
-        function raises a TypeError, if list_ is not a list.
+    list_ : list
+        the list to shuffle; if not a list, TypeError is raised
     max_repetitions : int, optional
         maximum number of allowed repetitions of one identical items; if no
         solution can be found (i.e., Python's recursion limit is reached), the
