@@ -201,7 +201,7 @@ After the test, you will be asked to indicate which (if any) of those two square
                     constants.K_0:0, constants.K_1:1, constants.K_2:2}
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
-            "[Press 0 (or f1), 1 (or f2), 2 (or f3)]")
+            "[Press 0 (or F1), 1 (or F2), 2 (or F3)]")
         text.present()
         key, _rt = exp.keyboard.wait(respkeys)
         response = respkeys[key]

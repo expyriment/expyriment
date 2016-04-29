@@ -25,7 +25,12 @@ SOA = 20 * (1000 * 1/60.) - 5 # a bit less than 10 frames at 1/60Hz
 NCYCLES = 10 
 
 frame = expyriment.stimuli.Canvas((600, 600))
-msg = expyriment.stimuli.TextScreen("", "Display two white squares for in alternance \n and play sounds simultanously, \n to check timing with external equipment \n (oscilloscope, Blackbox toolkit, etc.)", position=(0,-100))
+msg = expyriment.stimuli.TextScreen("",
+                "Display two white squares for in alternance \n" +
+                " and play sounds simultanously, \n"+
+                " to check timing with external equipment \n" +
+                " (oscilloscope, Blackbox toolkit, etc.)",
+                position=(0,-100))
 msg.plot(frame)
 square_top.plot(frame)
 square_bottom.plot(frame)
@@ -39,11 +44,11 @@ frame.present()
 exp.keyboard.wait()
 
 
-clok = expyriment.misc.Clock()
+clock = expyriment.misc.Clock()
 
 for i in range(NCYCLES * 3):
 
-    while (clok.time < (SOA * i)):
+    while (clock.time < (SOA * i)):
         pass
 
     if (i % 3) == 0:
@@ -56,9 +61,9 @@ for i in range(NCYCLES * 3):
         tone2.play()
         t = square_bottom.present()
  
-    clok.wait(SOA - t)
+    clock.wait(SOA - t)
 
-    exp.data.add([clok.time])
+    exp.data.add([clock.time])
     exp.keyboard.process_control_keys()
 
 
