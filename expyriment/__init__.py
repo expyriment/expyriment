@@ -36,12 +36,12 @@ __date__ = ''
 
 
 import sys as _sys
-from ._internals import PYTHON3, get_version
-
+from ._internals import get_version
+from ._internals import PYTHON3 as _PYTHON3
 version = get_version()
 
 if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
-        (PYTHON3 and _sys.version_info[1] >= 3) ):
+        (_PYTHON3 and _sys.version_info[1] >= 3) ):
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
