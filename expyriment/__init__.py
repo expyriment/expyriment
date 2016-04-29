@@ -27,7 +27,6 @@ To cite Expyriment in publications, please refer to the following article:
   see http://dx.doi.org/10.3758/s13428-013-0390-6
 
 """
-from __future__ import absolute_import
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

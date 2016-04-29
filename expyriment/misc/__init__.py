@@ -5,7 +5,6 @@ This package contains miscellaneous classes, modules and functions.
 See also expyriment.misc.extras for more misc.
 
 """
-from __future__ import absolute_import, print_function, division
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
               Oliver Lindemann <oliver@expyriment.org>'
