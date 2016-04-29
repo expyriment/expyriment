@@ -197,19 +197,14 @@ After the test, you will be asked to indicate which (if any) of those two square
         inaccuracy = int(round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
         delayed = round(100 * delayed_presentations/180.0, 2)
 
+        respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
+                    constants.K_0:0, constants.K_1:1, constants.K_2:2}
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
-            "[Press 0, 1 or 2]")
+            "[Press 0 (or f1), 1 (or f2), 2 (or f3)]")
         text.present()
-        key, _rt = exp.keyboard.wait([constants.K_0,
-                                      constants.K_1,
-                                      constants.K_2])
-        if key == constants.K_0:
-            response = 0
-        elif key == constants.K_1:
-            response = 1
-        elif key == constants.K_2:
-            response = 2
+        key, _rt = exp.keyboard.wait(respkeys)
+        response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
         results1 = stimuli.TextScreen("",
