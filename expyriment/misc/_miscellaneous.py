@@ -18,7 +18,11 @@ __date__ = ''
 import os
 import sys
 import glob
+import random
+import colorsys
+
 import pygame
+
 from .._internals import PYTHON3, android
 
 try:
@@ -293,7 +297,8 @@ def is_interactive_mode():
 
     Returns
     -------
-        interactive_mode : boolean
+    interactive_mode : boolean
+    
     """
 
     # ps2 is only defined in interactive mode
@@ -303,3 +308,27 @@ def is_android_running():
     """Return True if Exypriment runs on Android."""
 
     return android is not None
+    
+
+def create_colours(amount):
+    """Create different and equally spaced RGB colours.
+    
+    Parameters
+    ----------
+    amount : int
+        the number of colours to create
+        
+    Returns
+    -------
+    colours : list
+        a list of colours, each in the form [r, g, b]
+        
+    """
+    
+    colours = []
+    for i in range(0, 360, 360/amount):
+        h = i / 360.0
+        l = (50 + random.random() * 10) / 100
+        s = (90 + random.random() * 10) / 100
+        colours.append([int(x * 255) for x in colorsys.hls_to_rgb(h, l, s)])
+    return colours
