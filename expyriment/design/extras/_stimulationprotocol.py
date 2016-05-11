@@ -20,7 +20,7 @@ import locale
 import re
 import codecs
 from ...design.randomize import rand_int
-from ...misc import unicode2byte, byte2unicode
+from ...misc import unicode2byte, byte2unicode, create_colours
 
 
 class StimulationProtocol(object):
@@ -229,7 +229,8 @@ class StimulationProtocol(object):
                 rjust = 8
             elif self._unit == "volume":
                 rjust = 4
-            for condition in self._conditions:
+            colours = create_colours(len(self._conditions))
+            for c, condition in enumerate(self._conditions):
                 f.write(unicode2byte("\n"))
                 f.write(unicode2byte(condition["name"] + "\n"))
                 f.write(unicode2byte(repr(len(condition["events"])) + "\n"))
@@ -238,7 +239,6 @@ class StimulationProtocol(object):
                         repr(event["begin"]).rjust(rjust),
                         repr(event["end"]).rjust(rjust),
                         repr(event["weight"]).rjust(2))))
-                f.write(unicode2byte("Color: {0} {1} {2}\n".format(rand_int(0,255),
-                                                      rand_int(0,255),
-                                                      rand_int(0,255))))
-
+                f.write(unicode2byte("Color: {0} {1} {2}\n".format(colours[c][0],
+                                                                   colours[c][1],
+                                                                   colours[c][2])))
