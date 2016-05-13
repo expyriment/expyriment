@@ -143,10 +143,10 @@ class Mouse(Input):
         if click_position is None:
             # check Pygame queu
             pos = None
-            pygame.event.pump()
-            screen_size = _internals.active_exp.screen.surface.get_size()
+            # pygame.event.pump() # TODO: not sure if it is required!
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
                 if event.button > 0:
+                    screen_size = _internals.active_exp.screen.surface.get_size()
                     pos = pygame.mouse.get_pos()
                     pos = (pos[0] - screen_size[0] // 2,
                           -pos[1] + screen_size[1] // 2)
