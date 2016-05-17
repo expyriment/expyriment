@@ -65,7 +65,7 @@ class _LaminaPanelSurface(object):
     def __del__(self):
         """Call glDeleteTextures when deconstruction the object."""
 
-        if self._txtr is not None:
+        if getattr(self, '_txtr', None) is not None:
             try:
                 ogl.glDeleteTextures([self._txtr])
             except:
