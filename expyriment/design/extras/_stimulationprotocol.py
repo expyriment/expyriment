@@ -242,3 +242,49 @@ class StimulationProtocol(object):
                 f.write(unicode2byte("Color: {0} {1} {2}\n".format(colours[c][0],
                                                                    colours[c][1],
                                                                    colours[c][2])))
+
+    def import_from_brainvoyager(self, prt_file):
+        """Import prt file as stimulation protocol.
+
+        ATTENTION: This will overwrite all data in the current protocol!
+
+        Parameters
+        ----------
+        prt_file : str
+            the prt file to import
+
+        """
+
+        data = []
+        with open(prt_file) as f:
+            for line in f:
+                data.append(byte2unicode(line.rstrip('\r\n')))
+        in_body = False
+        in_condition = False
+        for idx, line in enumerate(data):
+            print(idx, line)
+            if line.startswith(u"ResolutionOfTime:"):
+                if line.endswith(u"msec"):
+                    if self._conditions != [] and self._timing != u"msec":
+                        raise RuntimeError("Protocol contains data in other unit!")
+                    self._timing = "time"
+                else:
+                    if self._conditions !=[] and self._timing != u"volume":
+                        raise RuntimeError("Protocol contains data in other unit!")
+                    self._timing = u"volume"
+            if line.startswith(u"NrOfConditions:"):
+                in_body = True
+                continue
+            if in_body:
+                if line == u"":
+                    current_condition = data[idx + 1]
+                    self.add_condition(current_condition)
+                    start = idx + 3
+                    end = start + int(data[idx + 2])
+                    for x in range(start, end):
+                        event = [i for i in data[x].split(" ") if i != u""]
+                        if len(event) == 2:
+                            event.append(1)
+                        self.add_event(current_condition, int(event[0]), int(event[1]), int(event[2]))
+                if idx in range(start, end + 1):
+                        continue
