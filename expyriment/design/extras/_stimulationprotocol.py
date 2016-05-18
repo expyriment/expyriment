@@ -20,6 +20,7 @@ import locale
 import re
 import codecs
 from ...design.randomize import rand_int
+from ...design import Block, Trial
 from ...misc import unicode2byte, byte2unicode, create_colours
 
 
@@ -288,3 +289,47 @@ class StimulationProtocol(object):
                         self.add_event(current_condition, int(event[0]), int(event[1]), int(event[2]))
                 if idx in range(start, end + 1):
                         continue
+
+    def get_as_experimental_block(self, name=None):
+        """Create an experimental block from a stimulation protocol.
+
+        Each stimulation becomes a trial in the block. Trials are ordered
+        according to the stimulation onset time.
+
+        The following will be added as trial factors:
+
+            "condition" - the name of the condition
+            "begin"     - the stimulation onset in milliseconds
+            "end"       - the stimulation offset in milliseconds
+            "weight"    - the parametric weight
+
+        Parameters
+        ----------
+        name : str, optional
+            the name of the block
+
+        Returns
+        -------
+        block : expyriment.design.Block
+            the experimental block
+
+        """
+
+        block = Block(name=name)
+        onsets = []
+        for condition in self._conditions:
+            onsets.extend([event['begin'] for event in condition['events']])
+        onsets = list(set(onsets))
+        onsets.sort()
+        for onset in onsets:
+            for condition in self._conditions:
+                for event in condition['events']:
+                    if event['begin'] == onset:
+                        t = Trial()
+                        t.set_factor("condition", condition['name'])
+                        t.set_factor("begin", event['begin'])
+                        t.set_factor("end", event['end'])
+                        t.set_factor("weight", event['weight'])
+                        block.add_trial(t)
+
+        return block
