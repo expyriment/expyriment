@@ -58,7 +58,7 @@ class StimulationProtocol(object):
         return rtn
 
     def _find_condition_by_name(self, name):
-        """Find a condition in by its name."""
+        """Find a condition by its name."""
 
         for c,x in enumerate(self._conditions):
             if x["name"] == name:
@@ -324,28 +324,30 @@ class StimulationProtocol(object):
 
         """
 
-        if block is None:
-            b = Block(name=name)
-        else:
-            b = block.copy()
-            c1 = [t.get_factor("Condition") in self.conditions for t in b.trials]
-            c2 = [t.get_factor("condition") in self.conditions for t in b.trials]
-            if False in c1 and False in c2:
-                raise RuntimeError("All trials need matching conditions!")
-            if len(set(b.trials) != len(b.trials)):
-                raise RuntimeError("Trials have to be unique!")
-            if len(b.trials) != len(onsets):
-                raise RuntimeError("Amount of trials needs to match amount of events!")
-            if name is not None:
-                b._name = name
-            trial_indices = range(0, len(b.trials))
-            cnt = 0
-
         onsets = []
         for condition in self._conditions:
             onsets.extend([event['begin'] for event in condition['events']])
         onsets = list(set(onsets))
         onsets.sort()
+
+        if block is None:
+            b = Block(name=name)
+        else:
+            b = block.copy()
+            conditions = [x["name"] for x in self.conditions]
+            c1 = [t.get_factor("Condition") in conditions for t in b.trials]
+            c2 = [t.get_factor("condition") in conditions for t in b.trials]
+            if False in c1 and False in c2:
+                raise RuntimeError("All trials need matching conditions!")
+            if len(set(b.trials)) != len(b.trials):
+                raise RuntimeError("Trials have to be unique!")
+            print(len(onsets), len(b.trials))
+            if len(b.trials) != len(onsets):
+                raise RuntimeError("Amount of trials needs to match amount of events!")
+            if name is not None:
+                b._name = name
+            trial_indices = list(range(0, len(b.trials)))
+            cnt = 0
 
         for onset in onsets:
             for condition in self._conditions:
@@ -360,16 +362,16 @@ class StimulationProtocol(object):
                                 if t.get_factor("Condition") == condition['name'] or \
                                     t.get_factor("condition") == condition['name']:
                                     b.swap_trials(cnt, idx)
-                                    trial_indices.pop(idx)
+                                    trial_indices.pop(trial_indices.index(cnt))
                                     cnt += 1
                                     break
 
+                        t.set_factor("condition", condition['name'])
                         t.set_factor("begin", event['begin'])
                         t.set_factor("end", event['end'])
                         t.set_factor("weight", event['weight'])
 
                         if block is None:
-                            t.set_factor("condition", condition['name'])
                             b.add_trial(t)
 
         return b
