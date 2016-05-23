@@ -373,5 +373,4 @@ class StimulationProtocol(object):
 
                         if block is None:
                             b.add_trial(t)
-
         return b
