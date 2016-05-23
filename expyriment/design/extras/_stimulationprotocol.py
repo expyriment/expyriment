@@ -19,7 +19,7 @@ __date__ = ''
 import locale
 import re
 import codecs
-from ...design.randomize import rand_int
+from ...design.randomize import rand_int, rand_element
 from ...design import Block, Trial
 from ...misc import unicode2byte, byte2unicode, create_colours
 
@@ -290,13 +290,21 @@ class StimulationProtocol(object):
                 if idx in range(start, end + 1):
                         continue
 
-    def get_as_experimental_block(self, name=None):
+    def get_as_experimental_block(self, name=None, block=None):
         """Create an experimental block from a stimulation protocol.
 
         Each stimulation becomes a trial in the block. Trials are ordered
         according to the stimulation onset time.
 
-        The following will be added as trial factors:
+        If 'block' is an experimental block with the same amount of unique
+        trials as the stimulation protocol, and has a factor called
+        "condition" or "Condition", with the the factor level names
+        corresponding to the condition names of the protocol, then the
+        returned block will be a copy of the experimental block, with the
+        order of trials randomized, but in line with the order of conditions
+        specified in the protocol.
+
+        The resulting block will have the following trial factors:
 
             "condition" - the name of the condition
             "begin"     - the stimulation onset in milliseconds
@@ -307,29 +315,61 @@ class StimulationProtocol(object):
         ----------
         name : str, optional
             the name of the block
+        block : expyriment.design.Block object, optional
 
         Returns
         -------
-        block : expyriment.design.Block
+        block : expyriment.design.Block object
             the experimental block
 
         """
 
-        block = Block(name=name)
+        if block is None:
+            b = Block(name=name)
+        else:
+            b = block.copy()
+            c1 = [t.get_factor("Condition") in self.conditions for t in b.trials]
+            c2 = [t.get_factor("condition") in self.conditions for t in b.trials]
+            if False in c1 and False in c2:
+                raise RuntimeError("All trials need matching conditions!")
+            if len(set(b.trials) != len(b.trials)):
+                raise RuntimeError("Trials have to be unique!")
+            if len(b.trials) != len(onsets):
+                raise RuntimeError("Amount of trials needs to match amount of events!")
+            if name is not None:
+                b._name = name
+            trial_indices = range(0, len(b.trials))
+            cnt = 0
+
         onsets = []
         for condition in self._conditions:
             onsets.extend([event['begin'] for event in condition['events']])
         onsets = list(set(onsets))
         onsets.sort()
+
         for onset in onsets:
             for condition in self._conditions:
                 for event in condition['events']:
                     if event['begin'] == onset:
-                        t = Trial()
-                        t.set_factor("condition", condition['name'])
+                        if block is None:
+                            t = Trial()
+                        else:
+                            while True:
+                                idx = rand_element(trial_indices)
+                                t = b.trials[idx]
+                                if t.get_factor("Condition") == condition['name'] or \
+                                    t.get_factor("condition") == condition['name']:
+                                    b.swap_trials(cnt, idx)
+                                    trial_indices.pop(idx)
+                                    cnt += 1
+                                    break
+
                         t.set_factor("begin", event['begin'])
                         t.set_factor("end", event['end'])
                         t.set_factor("weight", event['weight'])
-                        block.add_trial(t)
 
-        return block
+                        if block is None:
+                            t.set_factor("condition", condition['name'])
+                            b.add_trial(t)
+
+        return b
