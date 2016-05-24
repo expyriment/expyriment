@@ -19,7 +19,8 @@ __date__ = ''
 import locale
 import re
 import codecs
-from ...design.randomize import rand_int
+from ...design.randomize import rand_int, rand_element
+from ...design import Block, Trial
 from ...misc import unicode2byte, byte2unicode, create_colours
 
 
@@ -57,7 +58,7 @@ class StimulationProtocol(object):
         return rtn
 
     def _find_condition_by_name(self, name):
-        """Find a condition in by its name."""
+        """Find a condition by its name."""
 
         for c,x in enumerate(self._conditions):
             if x["name"] == name:
@@ -242,3 +243,134 @@ class StimulationProtocol(object):
                 f.write(unicode2byte("Color: {0} {1} {2}\n".format(colours[c][0],
                                                                    colours[c][1],
                                                                    colours[c][2])))
+
+    def import_from_brainvoyager(self, prt_file):
+        """Import prt file as stimulation protocol.
+
+        ATTENTION: This will overwrite all data in the current protocol!
+
+        Parameters
+        ----------
+        prt_file : str
+            the prt file to import
+
+        """
+
+        data = []
+        with open(prt_file) as f:
+            for line in f:
+                data.append(byte2unicode(line.rstrip('\r\n')))
+        in_body = False
+        in_condition = False
+        for idx, line in enumerate(data):
+            print(idx, line)
+            if line.startswith(u"ResolutionOfTime:"):
+                if line.endswith(u"msec"):
+                    if self._conditions != [] and self._timing != u"msec":
+                        raise RuntimeError("Protocol contains data in other unit!")
+                    self._timing = "time"
+                else:
+                    if self._conditions !=[] and self._timing != u"volume":
+                        raise RuntimeError("Protocol contains data in other unit!")
+                    self._timing = u"volume"
+            if line.startswith(u"NrOfConditions:"):
+                in_body = True
+                continue
+            if in_body:
+                if line == u"":
+                    current_condition = data[idx + 1]
+                    self.add_condition(current_condition)
+                    start = idx + 3
+                    end = start + int(data[idx + 2])
+                    for x in range(start, end):
+                        event = [i for i in data[x].split(" ") if i != u""]
+                        if len(event) == 2:
+                            event.append(1)
+                        self.add_event(current_condition, int(event[0]), int(event[1]), int(event[2]))
+                if idx in range(start, end + 1):
+                        continue
+
+    def get_as_experimental_block(self, name=None, block=None):
+        """Create an experimental block from a stimulation protocol.
+
+        Each stimulation becomes a trial in the block. Trials are ordered
+        according to the stimulation onset time.
+
+        If 'block' is an experimental block with the same amount of unique
+        trials as the stimulation protocol, and has a factor called
+        "condition" or "Condition", with the the factor level names
+        corresponding to the condition names of the protocol, then the
+        returned block will be a copy of the experimental block, with the
+        order of trials randomized, but in line with the order of conditions
+        specified in the protocol.
+
+        The resulting block will have the following trial factors:
+
+            "condition" - the name of the condition
+            "begin"     - the stimulation onset in milliseconds
+            "end"       - the stimulation offset in milliseconds
+            "weight"    - the parametric weight
+
+        Parameters
+        ----------
+        name : str, optional
+            the name of the block
+        block : expyriment.design.Block object, optional
+
+        Returns
+        -------
+        block : expyriment.design.Block object
+            the experimental block
+
+        """
+
+        onsets = []
+        for condition in self._conditions:
+            onsets.extend([event['begin'] for event in condition['events']])
+        onsets = list(set(onsets))
+        onsets.sort()
+
+        if block is None:
+            b = Block(name=name)
+        else:
+            b = block.copy()
+            conditions = [x["name"] for x in self.conditions]
+            c1 = [t.get_factor("Condition") in conditions for t in b.trials]
+            c2 = [t.get_factor("condition") in conditions for t in b.trials]
+            if False in c1 and False in c2:
+                raise RuntimeError("All trials need matching conditions!")
+            if len(set(b.trials)) != len(b.trials):
+                raise RuntimeError("Trials have to be unique!")
+            print(len(onsets), len(b.trials))
+            if len(b.trials) != len(onsets):
+                raise RuntimeError("Amount of trials needs to match amount of events!")
+            if name is not None:
+                b._name = name
+            trial_indices = list(range(0, len(b.trials)))
+            cnt = 0
+
+        for onset in onsets:
+            for condition in self._conditions:
+                for event in condition['events']:
+                    if event['begin'] == onset:
+                        if block is None:
+                            t = Trial()
+                        else:
+                            while True:
+                                idx = rand_element(trial_indices)
+                                t = b.trials[idx]
+                                if t.get_factor("Condition") == condition['name'] or \
+                                    t.get_factor("condition") == condition['name']:
+                                    b.swap_trials(cnt, idx)
+                                    trial_indices.pop(trial_indices.index(cnt))
+                                    cnt += 1
+                                    break
+
+                        t.set_factor("condition", condition['name'])
+                        t.set_factor("begin", event['begin'])
+                        t.set_factor("end", event['end'])
+                        t.set_factor("weight", event['weight'])
+
+                        if block is None:
+                            b.add_trial(t)
+        return b
