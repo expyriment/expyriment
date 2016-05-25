@@ -506,7 +506,6 @@ class DataFile(OutputFile):
         """
 
 
-        print(self._variable_names_changed)
         start = get_time()
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                 or self._variable_names_changed:
