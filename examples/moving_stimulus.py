@@ -28,10 +28,10 @@ while exp.clock.stopwatch_time < 10000:
         movement[1] = -1 * movement[1]
 
     erase.present(clear=False, update=False) # present but do not refesh screen
-    dot.present(clear=False, update=True)    # present but do not refesh screen
+    dot.present(clear=False, update=False)   # present but do not refesh screen
     exp.screen.update_stimuli([dot, erase])  # refesh screen
     exp.keyboard.check()    # ensure that keyboard input is proccesed
                             # to quit experiment with ESC
-    exp.clock.wait(1)
+    exp.clock.wait(5)
 
 control.end()
