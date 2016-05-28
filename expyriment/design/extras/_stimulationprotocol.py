@@ -19,6 +19,8 @@ __date__ = ''
 import locale
 import re
 import codecs
+
+from ..._internals import is_base_string
 from ...design.randomize import rand_int, rand_element
 from ...design import Block, Trial
 from ...misc import unicode2byte, byte2unicode, create_colours
@@ -29,13 +31,13 @@ class StimulationProtocol(object):
 
     def __init__(self, unit):
         """Create a stimulation protocol.
-        
+
         Parameters
         ----------
-        
+
         unit : str
             The unit of the stimulation protocol ('time' or 'volume')
-                    
+
         """
 
         if unit in ["time", "volume"]:
@@ -77,13 +79,13 @@ class StimulationProtocol(object):
 
     def add_condition(self, name):
         """Add a condition to the stimulation protocol.
-        
+
         Parameters
         ----------
-        
+
         name : str
             The name of the condition to add
-            
+
         """
 
         if self._find_condition_by_name(name) is None:
@@ -95,10 +97,10 @@ class StimulationProtocol(object):
 
     def add_event(self, condition, begin, end, weight=1):
         """Add an event to a condition.
-        
+
         Parameters
         ----------
-        
+
         condition : str or int
             The name or index of the condition to add the event to
         begin : int
@@ -112,7 +114,7 @@ class StimulationProtocol(object):
 
         if isinstance(condition, int):
             pos = condition
-        elif isinstance(condition, str):
+        elif is_base_string(condition):
             pos = self._find_condition_by_name(condition)
             if pos is None:
                 raise ValueError("No condition with name '{0}' found!".format(
@@ -122,13 +124,13 @@ class StimulationProtocol(object):
 
     def save(self, filename):
         """Save the stimulation protocol to a csv file.
-        
+
         Parameters
         ----------
-        
+
         filename : str
             The name of the file to save the protocol to
-            
+
         """
 
         with open(filename, 'wb') as f:
@@ -152,12 +154,12 @@ class StimulationProtocol(object):
 
         Parameters
         ----------
-        
+
         filename : str
             The filename to read the protocol from
         encoding : str, optional
             The encoding to be used when reading from the file
-            
+
         """
 
         self._conditions = []
@@ -192,14 +194,14 @@ class StimulationProtocol(object):
 
     def export2brainvoyager(self, exp_name, filename):
         """Convert the stimulation protocol to BrainVoyager '.prt' format.
-        
+
         Parameters
         ----------
         exp_name : str
             The name of the Experiment
         filename : str
              The name of the file to write
-             
+
         """
 
         if not filename.endswith(".prt"):
@@ -263,7 +265,6 @@ class StimulationProtocol(object):
         in_body = False
         in_condition = False
         for idx, line in enumerate(data):
-            print(idx, line)
             if line.startswith(u"ResolutionOfTime:"):
                 if line.endswith(u"msec"):
                     if self._conditions != [] and self._timing != u"msec":
@@ -341,7 +342,6 @@ class StimulationProtocol(object):
                 raise RuntimeError("All trials need matching conditions!")
             if len(set(b.trials)) != len(b.trials):
                 raise RuntimeError("Trials have to be unique!")
-            print(len(onsets), len(b.trials))
             if len(b.trials) != len(onsets):
                 raise RuntimeError("Amount of trials needs to match amount of events!")
             if name is not None:

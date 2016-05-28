@@ -271,3 +271,21 @@ def post_import_hook():
         return import_command(filename)
     else:
         return ""
+
+def is_base_string(s):
+    if PYTHON3:
+        return isinstance(s, (str, bytes))
+    else:
+        return isinstance(s, (unicode, str))
+
+def is_unicode_string(s):
+    if PYTHON3:
+        return isinstance(s, str)
+    else:
+        return isinstance(s, unicode)
+
+def is_byte_string(s):
+    if PYTHON3:
+        return isinstance(s, bytes)
+    else:
+        return isinstance(s, str)
