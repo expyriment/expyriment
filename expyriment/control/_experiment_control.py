@@ -257,7 +257,7 @@ def pause():
 
 
 def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
-        fast_quit=None, system_exit=False):
+        fast_quit=None, system_exit=False, pre_quit_function=None):
     """End expyriment.
 
     Parameters
@@ -273,6 +273,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         (default = None)
     system_exit : bool, optional
         call Python's sys.exit() method when ending expyriment (default = False)
+    pre_quit_function : function, optional
+        function to be called before quitting Pygame
 
     Returns
     -------
@@ -282,6 +284,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     """
 
     if not _internals.active_exp.is_initialized:
+        if pre_quit_function is not None:
+            pre_quit_function()
         pygame.quit()
         if system_exit:
             sys.exit()
@@ -328,10 +332,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         stimuli._stimulus.Stimulus._id_counter -= 1
     except:
         pass
-    
+
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
     _internals.active_exp = design.Experiment("None")
+    if pre_quit_function is not None:
+        pre_quit_function()
     pygame.quit()
     return True
 

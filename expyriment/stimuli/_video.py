@@ -464,7 +464,7 @@ class Video(_visual.Stimulus):
                 event.key == self.Keyboard.get_quit_key() or
                 event.key == self.Keyboard.get_pause_key()):
                     self.pause()
-                    self.Keyboard.process_control_keys(event)
+                    self.Keyboard.process_control_keys(event, self.stop)
                     self.play()
             time.sleep(0.005)
 
