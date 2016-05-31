@@ -76,7 +76,7 @@ class Video(_visual.Stimulus):
         Note
         ----
         When ``default.video_soundsystem`` is set to ``"pygame"``, only MPEG-1
-        movies with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org)
+        videos with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org)
         to convert from other formats:
 
             ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
@@ -146,7 +146,7 @@ class Video(_visual.Stimulus):
 
     @property
     def is_playing(self):
-        """Property to check if movie is playing."""
+        """Property to check if video is playing."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
@@ -156,7 +156,7 @@ class Video(_visual.Stimulus):
 
     @property
     def is_paused(self):
-        """Property to check if movie is paused."""
+        """Property to check if video is paused."""
 
         if self._is_preloaded:
             return self._is_paused
@@ -173,7 +173,7 @@ class Video(_visual.Stimulus):
 
     @property
     def size(self):
-        """Property to get the resolution of the movie."""
+        """Property to get the resolution of the video."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
@@ -192,7 +192,7 @@ class Video(_visual.Stimulus):
 
     @property
     def length(self):
-        """Property to get the length of the movie."""
+        """Property to get the length of the video."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
@@ -202,7 +202,7 @@ class Video(_visual.Stimulus):
 
     @property
     def has_video(self):
-        """Property to check if movie has video."""
+        """Property to check if video fifle has video information."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
@@ -212,7 +212,7 @@ class Video(_visual.Stimulus):
 
     @property
     def has_audio(self):
-        """Property to check if movie has audio."""
+        """Property to check if video file has audio information."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
@@ -479,9 +479,9 @@ class Video(_visual.Stimulus):
         If keybaord events should not be cleared, a loop has to be created
         manually like::
 
-            movie.present()
-            while movie.is_playing:
-                movie.update()
+            video.present()
+            while video.is_playing:
+                video.update()
                 key = exp.keyboard.check()
                 if key == ...
 
@@ -505,9 +505,9 @@ class Video(_visual.Stimulus):
         If keybaord events should not be cleared, a loop has to be created
         manually like::
 
-            movie.present()
-            while movie.is_playing:
-                movie.update()
+            video.present()
+            while video.is_playing:
+                video.update()
                 key = exp.keyboard.check()
                 if key == ...
 
