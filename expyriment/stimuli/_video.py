@@ -39,7 +39,7 @@ class Video(_visual.Stimulus):
     Note
     ----
     When ``default.video_audiosystem`` is set to ``"pygame"``, only MPEG-1
-    movies with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org) to
+    videos with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org) to
     convert from other formats:
 
         ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
