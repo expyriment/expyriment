@@ -95,6 +95,8 @@ class Video(_visual.Stimulus):
         self._filename = filename
         self._is_preloaded = False
         self._frame = 0
+	self._new_frame_available = False
+	self._texture_locked = False
         if backend:
             self._backend = backend
         else:
@@ -192,10 +194,15 @@ class Video(_visual.Stimulus):
                 return self._file.current_frame_no
 
     @property
-    def previous_frame(self):
-        """Property to get the previously shown video frame."""
+    def new_frame_available(self):
+        """Property to check if new  video frame is available to render."""
 
-        return self._frame
+	if self._is_preloaded:
+	    if self._backend == "pygame":
+    	        return self.frame > self._frame
+	    elif self._backend == "mediadecoder":
+        	time.sleep(0.0001)  # Needed for performance for some reason
+                return self._new_frame_available
 
     @property
     def length(self):
@@ -248,7 +255,8 @@ class Video(_visual.Stimulus):
             elif self._backend == "mediadecoder":
                 from mediadecoder.states import PLAYING
                 from mediadecoder.decoder import Decoder
-                self._file = Decoder(mediafile=unicode2byte(self._filename))
+                self._file = Decoder(mediafile=unicode2byte(self._filename),
+                                     videorenderfunc=self._update_surface)
                 if _internals.active_exp._screen.open_gl:
                     import moviepy.video.fx.all as vfx
                     self._file.clip = vfx.mirror_y(self._file.clip)
@@ -266,8 +274,8 @@ class Video(_visual.Stimulus):
                     self._file.set_audiorenderer(self._audio)
                 size = self._file.clip.size
             else:
-                raise RuntimeError("Unknown audio renderer '{0}'!".format(
-                    self._audio_renderer))
+                raise RuntimeError("Unknown backend '{0}'!".format(
+                    self._backend))
             screen_size = _internals.active_exp.screen.surface.get_size()
 
             self._pos = [screen_size[0] // 2 - size[0] // 2 +
@@ -382,6 +390,17 @@ class Video(_visual.Stimulus):
             self._file.rewind()
             self._frame = 0
 
+    def _update_surface(self, frame):
+        """Update surface with newly available video frame."""
+
+	if self._texture_locked:
+	    return
+        elif self._backend == "pygame":
+            return
+        elif self._backend == "mediadecoder":
+            self._surface = frame
+	    self._new_frame_available = True
+
     def present(self):
         """Present current frame.
 
@@ -407,7 +426,7 @@ class Video(_visual.Stimulus):
         start = Clock.monotonic_time()
         if not self.is_playing:
             self.play()
-        while not self.frame > self._frame:
+        while not self.new_frame_available:
             pass
         diff = self.frame - self._frame
         if diff > 1:
@@ -422,25 +441,22 @@ class Video(_visual.Stimulus):
     def update(self):
         """Update the screen."""
 
-        if self._backend == "pygame":
-            surface = self._surface
-        elif self._backend == "mediadecoder":
-            if not _internals.active_exp._screen.open_gl:
-                surface = pygame.surfarray.make_surface(
-                    self._file.current_videoframe.swapaxes(0,1))
-            else:
-                surface = self._file.current_videoframe
-        else:
-            raise RuntimeError("Unknown backend '{0}'!".format(
-                self._backend))
+	start = Clock.monotonic_time()
+       	self._surface_locked = True
         if not _internals.active_exp._screen.open_gl:
-            _internals.active_exp._screen.surface.blit(surface,
-                                                       self._pos)
+            _internals.active_exp._screen.surface.blit(
+			    pygame.surfarray.make_surface(
+				    self._surface.swapaxes(0,1)),
+			    self._pos)
+	    self._surface_locked = False
+	    self._new_frame_available = False
         else:
             ogl_screen = _visual._LaminaPanelSurface(
-                surface, quadDims=(1,1,1,1), position=self._position)
+                self._surface, quadDims=(1,1,1,1), position=self._position)
+	    self._surface_locked = False
+	    self._new_frame_available = False
             ogl_screen.display()
-            _internals.active_exp._screen.update()
+        _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
         """Wait until frame was shown or end of video and update screen.
@@ -487,7 +503,7 @@ class Video(_visual.Stimulus):
 
             video.present()
             while video.is_playing:
-                while not video.frame > video.previous_frame:
+                while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
                 video.update()
@@ -515,7 +531,7 @@ class Video(_visual.Stimulus):
 
             video.present()
             while video.is_playing:
-                while not video.frame > video.previous_frame:
+                while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
                 video.update()
@@ -524,3 +540,4 @@ class Video(_visual.Stimulus):
         """
 
         self._wait()
+
