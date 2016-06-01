@@ -26,7 +26,7 @@ except:
 
 from . import defaults
 from . import _visual
-from ..misc import unicode2byte
+from ..misc import unicode2byte, Clock
 from .._internals import CallbackQuitEvent
 from .. import _internals
 
@@ -38,9 +38,9 @@ class Video(_visual.Stimulus):
 
     Note
     ----
-    When ``default.video_audiosystem`` is set to ``"pygame"``, only MPEG-1
-    videos with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org) to
-    convert from other formats:
+    When the backend is set to ``"pygame"``, only MPEG-1 videos with MP3 audio
+    are supported. You can use ffmpeg (www.ffmpeg.org) to convert from other
+    formats:
 
         ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
 
@@ -75,9 +75,9 @@ class Video(_visual.Stimulus):
 
         Note
         ----
-        When ``default.video_soundsystem`` is set to ``"pygame"``, only MPEG-1
-        videos with MP3 audio are supported. You can use ffmpeg (www.ffmpeg.org)
-        to convert from other formats:
+        When the backend is set to ``"pygame"``, only MPEG-1 videos with MP3
+        audio are supported. You can use ffmpeg (www.ffmpeg.org) to convert from
+        other formats:
 
             ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
 
@@ -183,12 +183,19 @@ class Video(_visual.Stimulus):
 
     @property
     def frame(self):
-        """Property to get the current frame."""
+        """Property to get the current available video frame."""
+
         if self._is_preloaded:
             if self._backend == "pygame":
                 return self._file.get_frame()
             elif self._backend == "mediadecoder":
                 return self._file.current_frame_no
+
+    @property
+    def previous_frame(self):
+        """Property to get the previously shown video frame."""
+
+        return self._frame
 
     @property
     def length(self):
@@ -226,10 +233,10 @@ class Video(_visual.Stimulus):
         Note
         ----
         When the audio from the video should be played as well, the audiosystem
-        has to be stopped (by calling expyriment.control.stop_audiosystem() )
-        BEFORE the video stimulus is preloaded! After the stimulus has been played
-        the audiosystem can be started again (by calling
-        expyriment.control.start_audiosystem() ).
+        has to be stopped (by calling ``expyriment.control.stop_audiosystem()``)
+        BEFORE the video stimulus is preloaded! After the stimulus has been
+        played the audiosystem can be started again (by calling
+        ``expyriment.control.start_audiosystem()``).
 
         """
 
@@ -252,15 +259,15 @@ class Video(_visual.Stimulus):
                             self._file.audioformat)
                         self._audio_renderer = "sounddevice"
                     except ImportError:
-                        from mediadecoder.soundrenderers.sounddevicerenderer import SoundrendererPygame
+                        from mediadecoder.soundrenderers import SoundrendererPygame
                         self._audio = SoundrendererPygame(
                             self._file.audioformat)
                         self._audio_renderer = "pygame"
                     self._file.set_audiorenderer(self._audio)
                 size = self._file.clip.size
             else:
-                raise RuntimeError("Unknown backend '{0}'!".format(
-                    self._backend))
+                raise RuntimeError("Unknown audio renderer '{0}'!".format(
+                    self._audio_renderer))
             screen_size = _internals.active_exp.screen.surface.get_size()
 
             self._pos = [screen_size[0] // 2 - size[0] // 2 +
@@ -293,8 +300,8 @@ class Video(_visual.Stimulus):
         ----
         When the audio from the video should be played as well, the audiosystem
         has to be stopped (by calling expyriment.control.stop_audiosystem() )
-        BEFORE the video stimulus is preloaded! After the stimulus has been played
-        the audiosystem can be started again (by calling
+        BEFORE the video stimulus is preloaded! After the stimulus has been
+        played the audiosystem can be started again (by calling
         expyriment.control.start_audiosystem() ).
 
         When showing videos in large dimensions, and your computer is not fast
@@ -347,9 +354,9 @@ class Video(_visual.Stimulus):
 
         Note
         ----
-        When ``defaults.video_audiosystem is set to ``"pygame"``, this will not
-        forward immediately, but play a short period of the beginning of the
-        file! This is a Pygame issue which we cannot fix right now.
+        When the backend is set to ``"pygame"``, this will not forward
+        immediately, but play a short period of the beginning of the file! This
+        is a Pygame issue which we cannot fix right now.
 
         Parameters
         ----------
@@ -359,12 +366,13 @@ class Video(_visual.Stimulus):
         """
 
         if self._is_preloaded:
-            if defaults.video_audiosystem == "pygame":
+            if self._backend == "pygame":
                 self._file.skip(float(seconds))
-                new_frame = sefl._file.get_frame()
+                new_frame = self._file.get_frame()
             else:
-                new_frame = self._file.current_playtime + seconds
-                self._file.seek(new_frame)
+                pos = self._file.current_playtime + seconds
+                self._file.seek(pos)
+                new_frame = int(pos * self._file.fps)
             self._frame = new_frame
 
     def rewind(self):
@@ -375,11 +383,12 @@ class Video(_visual.Stimulus):
             self._frame = 0
 
     def present(self):
-        """Play the video and present current frame.
+        """Present current frame.
 
-        This method starts video playback and presents a single frame (the
-        current one). When using OpenGL, the method blocks until this frame is
-        actually being written to the screen.
+        This method starts video playback (if video is not playing already),
+        waits for the next frame and presents it on the screen. When using
+        OpenGL, the method blocks until this frame is actually being written
+        to the screen.
 
         Note
         ----
@@ -395,37 +404,43 @@ class Video(_visual.Stimulus):
 
         """
 
-        self.play()
+        start = Clock.monotonic_time()
+        if not self.is_playing:
+            self.play()
         while not self.frame > self._frame:
             pass
+        diff = self.frame - self._frame
+        if diff > 1:
+            warn_message = repr(diff - 1) + " video frame(s) dropped!"
+            print(warn_message)
+            _internals.active_exp._event_file_warn(
+                "Video,warning," + warn_message)
+        self._frame = self.frame
         self.update()
+        return (Clock.monotonic_time() - start) * 1000
 
     def update(self):
-        """Update the screen on each new frame."""
+        """Update the screen."""
 
-        if self._is_preloaded:
-            if self.frame > self._frame:
-                self._frame = self.frame
-                if self._backend == "pygame":
-                    surface = self._surface
-                elif self._backend == "mediadecoder":
-                    if not _internals.active_exp._screen.open_gl:
-                        surface = pygame.surfarray.make_surface(
-                            self._file.current_videoframe.swapaxes(0,1))
-                    else:
-                        surface = self._file.current_videoframe
-                else:
-                    raise RuntimeError("Unknown backend '{0}'!".format(
-                        self._backend))
-                if not _internals.active_exp._screen.open_gl:
-                    _internals.active_exp._screen.surface.blit(surface,
-                                                                self._pos)
-                else:
-                    ogl_screen = _visual._LaminaPanelSurface(
-                        surface, quadDims=(1,1,1,1), position=self._position)
-                    ogl_screen.display()
-                _internals.active_exp._screen.update()
-                pygame.event.pump()
+        if self._backend == "pygame":
+            surface = self._surface
+        elif self._backend == "mediadecoder":
+            if not _internals.active_exp._screen.open_gl:
+                surface = pygame.surfarray.make_surface(
+                    self._file.current_videoframe.swapaxes(0,1))
+            else:
+                surface = self._file.current_videoframe
+        else:
+            raise RuntimeError("Unknown backend '{0}'!".format(
+                self._backend))
+        if not _internals.active_exp._screen.open_gl:
+            _internals.active_exp._screen.surface.blit(surface,
+                                                       self._pos)
+        else:
+            ogl_screen = _visual._LaminaPanelSurface(
+                surface, quadDims=(1,1,1,1), position=self._position)
+            ogl_screen.display()
+            _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
         """Wait until frame was shown or end of video and update screen.
@@ -442,18 +457,10 @@ class Video(_visual.Stimulus):
         """
 
         while self.is_playing:
-            if self.frame > self._frame:
-                old_frame = self._frame
-                new_frame = self.frame
-                if frame is not None and new_frame > frame:
-                    break
-                diff = new_frame - old_frame
-                if diff > 1:
-                    warn_message = repr(diff - 1) + " video frames dropped!"
-                    print(warn_message)
-                    _internals.active_exp._event_file_warn(
-                        "Video,warning," + warn_message)
-                self.update()
+            if frame is not None and self.frame > frame:
+                break
+
+            self.present()
 
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
@@ -466,7 +473,6 @@ class Video(_visual.Stimulus):
                     self.pause()
                     self.Keyboard.process_control_keys(event, self.stop)
                     self.play()
-            time.sleep(0.005)
 
     def wait_frame(self, frame):
         """Wait until certain frame was shown and constantly update screen.
@@ -481,9 +487,11 @@ class Video(_visual.Stimulus):
 
             video.present()
             while video.is_playing:
+                while not video.frame > video.previous_frame:
+                    key = exp.keyboard.check()
+                    if key == ...
                 video.update()
-                key = exp.keyboard.check()
-                if key == ...
+            video.stop()
 
         Parameters
         ----------
@@ -507,9 +515,11 @@ class Video(_visual.Stimulus):
 
             video.present()
             while video.is_playing:
+                while not video.frame > video.previous_frame:
+                    key = exp.keyboard.check()
+                    if key == ...
                 video.update()
-                key = exp.keyboard.check()
-                if key == ...
+            video.stop()
 
         """
 
