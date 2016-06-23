@@ -412,10 +412,9 @@ class Video(_visual.Stimulus):
     def present(self):
         """Present current frame.
 
-        This method starts video playback (if video is not playing already),
-        waits for the next frame and presents it on the screen. When using
-        OpenGL, the method blocks until this frame is actually being written
-        to the screen.
+        This method waits for the next frame and presents it on the screen.
+        When using OpenGL, the method blocks until this frame is actually being
+        written to the screen.
 
         Note
         ----
@@ -431,20 +430,19 @@ class Video(_visual.Stimulus):
 
         """
 
-        start = Clock.monotonic_time()
-        if not self.is_playing:
-            self.play()
-        while not self.new_frame_available:
-            pass
-        diff = self.frame - self._frame
-        if diff > 1:
-            warn_message = repr(diff - 1) + " video frame(s) dropped!"
-            print(warn_message)
-            _internals.active_exp._event_file_warn(
-                "Video,warning," + warn_message)
-        self._frame = self.frame
-        self.update()
-        return (Clock.monotonic_time() - start) * 1000
+        if self.is_playing:
+            start = Clock.monotonic_time()
+            while not self.new_frame_available:
+                pass
+            diff = self.frame - self._frame
+            if diff > 1:
+                warn_message = repr(diff - 1) + " video frame(s) dropped!"
+                print(warn_message)
+                _internals.active_exp._event_file_warn(
+                    "Video,warning," + warn_message)
+            self._frame = self.frame
+            self.update()
+            return (Clock.monotonic_time() - start) * 1000
 
     def update(self):
         """Update the screen."""
@@ -548,8 +546,9 @@ class Video(_visual.Stimulus):
 
         """
 
-        if self.is_playing:
-	    if self._backend == "mediadecoder":
-	        self._wait(int(self._file.clip.fps * self._file.clip.duration))
-	    else:
-                self._wait()
+        self._wait()
+        #if self.is_playing:
+	    #if self._backend == "mediadecoder":
+	    #    self._wait(int(self._file.clip.fps * self._file.clip.duration))
+	    #else:
+                #self._wait()
