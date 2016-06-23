@@ -479,7 +479,7 @@ class Video(_visual.Stimulus):
         design.experiment.register_wait_callback_function
 
         """
-
+            
         while self.is_playing:
             if frame is not None and self.frame > frame:
                 break
@@ -523,8 +523,9 @@ class Video(_visual.Stimulus):
             number of the frame to stop after
 
         """
-
-        self._wait(frame)
+        
+        if self.is_playing:
+            self._wait(frame)
 
     def wait_end(self):
         """Wait until video has ended and constantly update screen.
@@ -547,5 +548,9 @@ class Video(_visual.Stimulus):
 
         """
 
-        self._wait()
+        if self.is_playing:
+	    if self._backend == "mediadecoder":
+	        self._wait(self._file.clip.fps * self._file.clip.duration)
+	    else:
+                self._wait()
 
