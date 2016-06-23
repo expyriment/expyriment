@@ -302,9 +302,15 @@ class Video(_visual.Stimulus):
             self._surface = None
             self._is_preloaded = False
 
-    def play(self):
+    def play(self, loop=False):
         """Play the video stimulus from the current position.
 
+        Parameters
+        ----------
+        
+        loop : bool, optional
+            loop video playback
+            
         Note
         ----
         When the audio from the video should be played as well, the audiosystem
@@ -319,6 +325,8 @@ class Video(_visual.Stimulus):
 
         """
 
+        self._file.loop = loop
+        
         if self._is_paused:
             self.pause()
         else:
