@@ -309,7 +309,7 @@ class Video(_visual.Stimulus):
         ----------
         
         loop : bool, optional
-            loop video playback
+            loop video playback (will be ignored when using play to unpause!)
             
         Note
         ----
@@ -324,8 +324,6 @@ class Video(_visual.Stimulus):
         Video.wait_end(), dropped video frames will be reported and logged.
 
         """
-
-        self._file.loop = loop
         
         if self._is_paused:
             self.pause()
@@ -345,6 +343,7 @@ class Video(_visual.Stimulus):
                     "Video,playing,{0}".format(unicode2byte(self._filename)))
             if self._backend == "mediadecoder" and self._file.audioformat:
                 self._audio.start()
+            self._file.loop = loop
             self._file.play()
 
     def stop(self):
