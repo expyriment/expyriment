@@ -94,6 +94,7 @@ class Video(_visual.Stimulus):
         self.Keyboard = Keyboard()
         self._filename = filename
         self._is_preloaded = False
+        self._is_paused = False
         self._frame = 0
 	self._new_frame_available = False
 	self._texture_locked = False
