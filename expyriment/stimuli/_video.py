@@ -483,7 +483,9 @@ class Video(_visual.Stimulus):
         while self.is_playing:
 
             self.present()
-
+            if frame is not None and self.frame >= frame:
+                break
+                
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback
@@ -495,8 +497,6 @@ class Video(_visual.Stimulus):
                     self.pause()
                     self.Keyboard.process_control_keys(event, self.stop)
                     self.play()
-            if frame is not None and self.frame >= frame:
-                break
 
     def wait_frame(self, frame):
         """Wait until certain frame was shown and constantly update screen.
@@ -550,6 +550,6 @@ class Video(_visual.Stimulus):
 
         if self.is_playing:
 	    if self._backend == "mediadecoder":
-	        self._wait(int(self._file.clip.fps * self._file.clip.duration - 1))
+	        self._wait(int(self._file.clip.fps * self._file.clip.duration))
 	    else:
                 self._wait()
