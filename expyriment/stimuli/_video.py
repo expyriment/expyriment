@@ -547,8 +547,3 @@ class Video(_visual.Stimulus):
         """
 
         self._wait()
-        #if self.is_playing:
-	    #if self._backend == "mediadecoder":
-	    #    self._wait(int(self._file.clip.fps * self._file.clip.duration))
-	    #else:
-                #self._wait()
