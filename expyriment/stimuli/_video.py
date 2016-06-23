@@ -430,19 +430,19 @@ class Video(_visual.Stimulus):
 
         """
 
-        if self.is_playing:
-            start = Clock.monotonic_time()
-            while not self.new_frame_available:
-                pass
-            diff = self.frame - self._frame
-            if diff > 1:
-                warn_message = repr(diff - 1) + " video frame(s) dropped!"
-                print(warn_message)
-                _internals.active_exp._event_file_warn(
-                    "Video,warning," + warn_message)
-            self._frame = self.frame
-            self.update()
-            return (Clock.monotonic_time() - start) * 1000
+        start = Clock.monotonic_time()
+        while not self.new_frame_available:
+            if not self.is_playing:
+            	return
+        diff = self.frame - self._frame
+        if diff > 1:
+            warn_message = repr(diff - 1) + " video frame(s) dropped!"
+            print(warn_message)
+            _internals.active_exp._event_file_warn(
+                "Video,warning," + warn_message)
+        self._frame = self.frame
+        self.update()
+        return (Clock.monotonic_time() - start) * 1000
 
     def update(self):
         """Update the screen."""
