@@ -67,8 +67,11 @@ class Picture(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        surface = pygame.image.load(unicode2str(self._filename,
-                                                fse=True)).convert_alpha()
+        # Due to a bug in handling of filenames in PyGame 1.9.2, we pass a file
+        # handle to PyGame. See also:
+        # - https://github.com/expyriment/expyriment/issues/81
+        with open(self._filename, "rb") as fd:
+            surface = pygame.image.load(fd).convert_alpha()
         if self._logging:
             expyriment._active_exp._event_file_log(
                 "Picture,loaded,{0}".format(unicode2str(self._filename)), 1)
