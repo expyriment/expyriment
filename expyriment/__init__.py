@@ -30,7 +30,7 @@ To cite Expyriment in publications, please refer to the following article:
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = '0.8.1.opensesame1'
+__version__ = '0.8.1.opensesame2'
 __revision__ = ''
 __date__ = ''
 
