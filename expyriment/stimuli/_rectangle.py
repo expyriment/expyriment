@@ -276,11 +276,12 @@ class Rectangle(Visual):
 
         raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    rect = Rectangle((20, 200), colour=(255, 0, 255))
-    rect.present()
-    exp.clock.wait(1000)
+    @staticmethod
+    def test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        exp = control.initialize()
+        rect = Rectangle((20, 200), colour=(255, 0, 255))
+        rect.present()
+        exp.clock.wait(1000)
