@@ -207,11 +207,17 @@ After the test, you will be asked to indicate which (if any) of those two square
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
+         if int(round(refresh_rate))  < 50 or int(round(refresh_rate)) > 120:
+            results1_colour = [255, 0, 0]
+        elif int(round(refresh_rate)) != 60:
+            results1_colour = [255, 255, 0]
+        else:
+            results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
                         int(round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
                     text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, position=(0, 40))
+                    text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
                     "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
                     text_font="freemono", text_size = 16, text_bold=True,
