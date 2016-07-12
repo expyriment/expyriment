@@ -663,10 +663,16 @@ class EventFile(OutputFile):
         event : anything
             the event to be logged (anything, will be casted to str)
 
+        Returns
+        -------
+        log_time : int
+            the time of logging
+
         """
 
-        line = repr(self._clock.time) + self.delimiter + str(event)
-        self.write_line(line)
+        log_time = self._clock.time
+        self.write_line(repr(log_time) + self.delimiter + str(event))
+        return log_time
 
     def warn(self, message):
         """Log a warning message.
