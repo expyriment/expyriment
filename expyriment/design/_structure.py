@@ -948,14 +948,14 @@ type".format(permutation_type))
                                     self.blocks[block_cnt].trials[trial_cnt].\
                                         set_factor(trial_factors[col], val)
 
-    def _event_file_log(self, log_text, log_level=1):
+    def _event_file_log(self, log_text, log_level=1, log_event_tag=None):
         # log_level 1 = default, 2 = extensive, 0 or False = off
         """ Helper function to log event in the global experiment event file"""
         if self.is_initialized and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
-            self.events.log(log_text)
+            self.events.log(event=log_text, log_event_tag=log_event_tag)
 
     def _event_file_warn(self, warning, log_level=1):
         """ Helper function to log event in the global experiment event file"""

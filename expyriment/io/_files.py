@@ -28,11 +28,13 @@ import uuid
 import time
 from time import strftime
 from platform import uname
+from itertools import combinations
 
 from . import defaults
 from .. import _internals
 from ..misc._timer import get_time
 from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
+from ..misc import statistics
 from ._input_output import Input, Output
 
 
@@ -645,6 +647,9 @@ class EventFile(OutputFile):
         self.write_line("Time,Type,Event,Value,Detail,Detail2")
         self.save()
 
+        self._inter_event_intervall_log = _InterEventIntervallLog()
+        atexit.register(self._write_inter_event_intervall_summary)
+
     @property
     def clock(self):
         """Getter for clock"""
@@ -655,13 +660,16 @@ class EventFile(OutputFile):
         """Getter for delimiter"""
         return self._delimiter
 
-    def log(self, event):
+    def log(self, event, log_event_tag=None):
         """Log an event.
 
         Parameters
         ----------
         event : anything
             the event to be logged (anything, will be casted to str)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined, event file logs the inter-event-intervalls
+            and adds a summary of the intervalls at the end of the file
 
         Returns
         -------
@@ -672,6 +680,8 @@ class EventFile(OutputFile):
 
         log_time = self._clock.time
         self.write_line(repr(log_time) + self.delimiter + str(event))
+        if log_event_tag is not None:
+            self._inter_event_intervall_log.add_event(log_event_tag, log_time)
         return log_time
 
     def warn(self, message):
@@ -686,3 +696,81 @@ class EventFile(OutputFile):
 
         line = "WARNING: " + message
         self.write_line(line)
+
+    def _write_inter_event_intervall_summary(self):
+        """appending the inter event intervall summary to event file, if log_event_tag have been set while presentation
+        this function will be called at exit"""
+
+        for l in self._inter_event_intervall_log.summary():
+            self.write_comment(l)
+
+
+
+class _InterEventIntervallLog():
+    """This class is used to log the intervalls of tagged events to get a
+    summary of the timing at the end of the event file
+    """
+
+    def __init__(self):
+        self.clear()
+
+
+    def clear(self):
+        """clear logging queue"""
+        self.log_dict = {}
+
+
+    def add_event(self, event_tag, time):
+        """add event for logging"""
+
+        try:
+            self.log_dict[event_tag].append(time)
+        except:
+            self.log_dict[event_tag] = [time]
+
+
+    def _get_iei_intervalls(self, from_tag, to_tag):
+        """helper function: get the intervalls between two events"""
+
+        rtn = []
+        try:
+            time_from = sorted(self.log_dict[from_tag])
+            time_to = sorted(self.log_dict[to_tag])
+        except:
+            return rtn
+
+        for f in time_from:
+            # find first larger to time and add different to list
+            for t in time_to:
+                if t>=f:
+                    rtn.append(t-f)
+                    break
+        return rtn
+
+
+    def summary(self):
+        """The summary as string array
+
+        Returns
+        -------
+        txt : string array
+
+        """
+
+        rtn = []
+        for a, b in combinations(self.log_dict.keys(), 2):
+            for reverse in [False, True]:
+                if reverse:
+                    tmp = b
+                    b = a
+                    a = tmp
+                iei = self._get_iei_intervalls(a, b)
+                txt = "{0} --> {1}: n={2}".format(a,b, len(iei))
+                if len(iei)>0:
+                    txt += ", mean={0}, median={1}, std={2}".format(
+                                round(statistics.mean(iei),2),
+                                round(statistics.median(iei),2),
+                                round(statistics.std(iei),2),
+                                )
+                rtn.append(txt)
+        return rtn

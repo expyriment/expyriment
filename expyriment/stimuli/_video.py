@@ -219,9 +219,16 @@ class Video(_visual.Stimulus):
             self._surface = None
             self._is_preloaded = False
 
-    def play(self):
+    def play(self, log_event_tag=None):
         """Play the video stimulus from the current position.
         
+        Parameters
+        ----------
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
+
         Notes
         -----
         When the audio from the video should be played as well, the audiosystem
@@ -248,7 +255,8 @@ expyriment.control.stop_audiosystem() before preloading the video."
             self.preload()
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Video,playing,{0}".format(unicode2byte(self._filename)))
+                "Video,playing,{0}".format(unicode2byte(self._filename)), 1,
+                log_event_tag=log_event_tag)
         self._file.play()
 
     def stop(self):
@@ -288,12 +296,19 @@ expyriment.control.stop_audiosystem() before preloading the video."
             self._file.rewind()
             self._frame = 0
 
-    def present(self):
+    def present(self, log_event_tag=None):
         """Play the video and present current frame.
 
         This method starts video playback and presents a single frame (the
         current one). When using OpenGL, the method blocks until this frame is
         actually being written to the screen.
+
+        Parameters
+        ----------
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
 
         Notes
         -----
@@ -309,7 +324,7 @@ expyriment.control.stop_audiosystem() before preloading the video."
         
         """
 
-        self.play()
+        self.play(log_event_tag=log_event_tag)
         while not self._file.get_frame() > self._frame:
             pass
         self.update()
