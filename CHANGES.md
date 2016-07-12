@@ -15,6 +15,12 @@ New Features:
 - rotate() method of stimuli applies filtering on the content now
 - randomize.coin_flip() with bias parameter ("unfair coins")
 - randomize.rand_norm() normally distributed random numbers
+- statistics module: std & variance
+- Eventfile.log has an optional log_event_tag for the logging of
+  inter-event-intervalls. If this is defined a summary of the intervalls
+  will be added to the event file.
+- All present methods have an optional log_event_tag that will be passed
+  to Eventfile.log (see above)
 
 Changed:
 - rename method: stimulus.replace --> stimulus.reposition

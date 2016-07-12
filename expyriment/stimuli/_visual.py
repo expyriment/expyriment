@@ -974,7 +974,7 @@ class Visual(Stimulus):
 
         return self._is_preloaded
 
-    def present(self, clear=True, update=True):
+    def present(self, clear=True, update=True, log_event_tag=None):
         """Present the stimulus on the screen.
 
         This clears and updates the screen automatically.
@@ -989,6 +989,10 @@ class Visual(Stimulus):
         update : bool, optional
             if False the screen will be not be updated automatically
             (default = True)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
 
         Returns
         -------
@@ -1022,7 +1026,8 @@ class Visual(Stimulus):
             screen.blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
-                                   .format(self.id), 1)
+                                   .format(self.id), 1,
+                                 log_event_tag=log_event_tag)
         if update:
             _internals.active_exp.screen.update()
         if preloading_required:
