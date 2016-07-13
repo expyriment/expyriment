@@ -91,9 +91,8 @@ class TextScreen(Visual):
         else:
             self._heading_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(
-                unicode2byte(self._heading_font, fse=True), 10)
-            _font = None
+            with open(self._heading_font, 'rb') as f:
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(heading_font))
         if heading_size is None:
@@ -130,9 +129,8 @@ class TextScreen(Visual):
         else:
             self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
-                                     10)
-            _font = None
+            with open(self._text_font, 'rb') as f:
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
         if text_size is None:
