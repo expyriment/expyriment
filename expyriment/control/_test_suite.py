@@ -207,7 +207,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
-         if int(round(refresh_rate))  < 50 or int(round(refresh_rate)) > 120:
+        if int(round(refresh_rate))  < 50 or int(round(refresh_rate)) > 120:
             results1_colour = [255, 0, 0]
         elif int(round(refresh_rate)) != 60:
             results1_colour = [255, 255, 0]
