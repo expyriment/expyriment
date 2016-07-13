@@ -27,6 +27,8 @@ Changed:
 
 
 Fixed:
+- unicode bug on Windows for font files
+- unicode bug on Windows for Audio and Picture
 - bug fix in unicode2str
 - bug fix Experiment.add_experiment_info
 - bug: issue #65, tempfolder at multiuser systems
