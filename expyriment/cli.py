@@ -21,40 +21,6 @@ from importlib import import_module
 from . import control, io, show_documentation
 from .misc import _secure_hash, get_system_info
 
-short_info = """You must specify an option.
-Try '-h' or '--help' for more information."""
-
-info = """
-Usage: python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
-
-The Expyriment command line interface provides a collection of convenient
-methods helpful for the development and testing of experiments as well as
-functions to join the data output.
-
-    OPTIONS:
-      -g | -0         No OpenGL (no vsync / no blocking)
-      -1              OpenGL (vsync / no blocking)
-      -2              OpenGL (vsync / blocking)
-      -3              OpenGL (vsync / alternative blocking)
-      -t              No time stamps for output files
-      -w              Window mode
-      -f              Fast mode (no initialize delay and fast quitting)
-      -a              Auto create subject ID
-      -i              Intensive logging (log level 2)
-      -d              Develop mode (equivalent to -wfat)
-      -b              Alternative blocking mode (blocking mode 2)
-
-      -C              Create Expyriment template
-      -J              Join data files to one single csv file
-      -R              Join data files and create R data frame (in RDS file)
-      -S              Print system information
-      -T              Run the Expyriment Test Suite
-      -A              Start the Expyrimnent API Reference Tool
-      -B              Open browser with API reference
-      -h              Show this help
-"""
-
-unknown_option = "Unknown option '{0}' (use --help for information)"
 
 def create_template():
     template_file = '''#!/usr/bin/env python
@@ -101,109 +67,144 @@ def join_data():
 
 
 if __name__ == "__main__":
+    import argparse
+    parser = argparse.ArgumentParser(description="""The Expyriment command line interface provides a collection of convenient
+methods helpful for the development and testing of experiments as well as
+functions to join the data output.""",
+            epilog="(c) F. Krause & O. Lindemann")
 
-    if len(sys.argv) <= 1:
-        print(short_info)
+    parser.add_argument("SCRIPT", action='store_const', const=None,
+                    help="The expyriment script to be executed")
+
+    parser.add_argument("-g", "-0", action="store_true",
+                    help="No OpenGL (no vsync / no blocking)")
+
+    parser.add_argument("-1", action="store_true",
+                    help="OpenGL (vsync / no blocking)")
+
+    parser.add_argument("-2", action="store_true",
+                    help="OpenGL (vsync / blocking)")
+
+    parser.add_argument("-3", action="store_true",
+                    help="OpenGL (vsync / alternative blocking)")
+
+    parser.add_argument("-t", action="store_true",
+                    help="No time stamps for output files")
+
+    parser.add_argument("-w", action="store_true",
+                    help="Window mode")
+
+    parser.add_argument("-f", action="store_true",
+                    help="Fast mode (no initialize delay and fast quitting)")
+
+    parser.add_argument("-a", action="store_true",
+                    help="Auto create subject ID")
+
+    parser.add_argument("-i", action="store_true",
+                    help="Intensive logging (log level 2)")
+
+    parser.add_argument("-d", action="store_true",
+                    help="Develop mode (equivalent to -wfat)")
+
+    parser.add_argument("-b", action="store_true",
+                    help="Alternative blocking mode (blocking mode 2)")
+
+    parser.add_argument("-C", action="store_true",
+                    help="Create Expyriment template")
+
+    parser.add_argument("-J", action="store_true",
+                    help="Join data files to one single csv file")
+
+    parser.add_argument("-R", action="store_true",
+                    help="Join data files and create R data frame (in RDS file)")
+
+    parser.add_argument("-S", action="store_true",
+                    help="Print system information")
+
+    parser.add_argument("-T", action="store_true",
+                    help="Run the Expyriment Test Suite")
+
+    parser.add_argument("-A", action="store_true",
+                    help="Start the Expyrimnent API Reference Tool")
+
+    parser.add_argument("-B", action="store_true",
+                    help="Open browser with API reference")
+
+    parser.add_argument("--version", action="store_true",
+                    help="Print version")
+
+    #parse
+    args = vars(parser.parse_args())
+
+    if args['d']:
+        control.set_develop_mode(True)
+    elif args['i']:
+        print("* Intensive logging")
+        control.defaults.event_logging = 2
+    elif args['f']:
+        print("* Fast mode")
+        control.defaults.initialize_delay = 0
+        control.defaults.fast_quit = False
+    elif args['w']:
+        print("* Window mode")
+        control.defaults.window_mode = True
+    elif args['g']:
+        print("* No OpenGL (no vsync / no blocking)")
+        control.defaults.open_gl = False
+    elif args['1']:
+        print("* OpenGL (vsync / no blocking)")
+        control.defaults.open_gl = 1
+    elif args['2']:
+        print("* OpenGL (vsync / blocking)")
+        control.defaults.open_gl = 2
+    elif args['3']:
+        print("* OpenGL (vsync / alternative blocking)")
+        control.defaults.open_gl = 3
+    elif args['t']:
+        print("* No time stamps")
+        io.defaults.outputfile_time_stamp = False
+    elif args['a']:
+        print("* Auto create subject id")
+        control.defaults.auto_create_subject_id = True
+    elif args["S"]:
+        print("System Info")
+        print(get_system_info(as_string=True))
+        sys.exit()
+    elif args["T"]:
+        print("Run Test Suite")
+        control.run_test_suite()
+        sys.exit()
+    elif args["B"]:
+        show_documentation(2)
+        sys.exit()
+    elif args["A"]:
+        print("Start API Reference Tool")
+        show_documentation(3)
+        sys.exit()
+    elif args["C"]:
+        create_template()
+        sys.exit()
+    elif args["J"]:
+        d = join_data()
+        output =""
+        while len(output) <= 1:
+            output = input(" name of output csv file? ")
+        d.write_concatenated_data(output)
+        sys.exit()
+    elif args["R"]:
+        d = join_data()
+        output =""
+        while len(output) <= 1:
+            output = input(" name of RDS file? ")
+        d.write_concatenated_data_to_R_data_frame(output)
         sys.exit()
 
-    script = None
-    if len(sys.argv) > 1:
-        for args in sys.argv[1:]:
-            if args.startswith("-"):
-
-                # long options
-                if args.startswith("--"):
-                     if args == "--help":
-                        print(info)
-                        sys.exit()
-                     elif args == "--version":
-                        pass
-                     else:
-                        print(unknown_option.format(args))
-
-                #short options
-                else:
-                    #sort args (capital letters last)
-                    arguments = list(args[1:])
-                    arguments.sort(reverse=True)
-                    for arg in arguments:
-                        if arg == 'd':
-                            control.set_develop_mode(True)
-                        elif arg == 'i':
-                            print("* Intensive logging")
-                            control.defaults.event_logging = 2
-                        elif arg == 'f':
-                            print("* Fast mode")
-                            control.defaults.initialize_delay = 0
-                            control.defaults.fast_quit = False
-                        elif arg == 'w':
-                            print("* Window mode")
-                            control.defaults.window_mode = True
-                        elif arg == 'g' or arg == '0':
-                            print("* No OpenGL (no vsync / no blocking)")
-                            control.defaults.open_gl = False
-                        elif arg == '1':
-                            print("* OpenGL (vsync / no blocking)")
-                            control.defaults.open_gl = 1
-                        elif arg == '2':
-                            print("* OpenGL (vsync / blocking)")
-                            control.defaults.open_gl = 2
-                        elif arg == '3':
-                            print("* OpenGL (vsync / alternative blocking)")
-                            control.defaults.open_gl = 3
-                        elif arg == 't':
-                            print("* No time stamps")
-                            io.defaults.outputfile_time_stamp =\
-                                    False
-                        elif arg == 'a':
-                            print("* Auto create subject id")
-                            control.defaults.auto_create_subject_id\
-                                             = True
-                        elif arg == "S":
-                            print("System Info")
-                            print(get_system_info(as_string=True))
-                            sys.exit()
-                        elif arg == "T":
-                            print("Run Test Suite")
-                            control.run_test_suite()
-                            sys.exit()
-                        elif arg == "B":
-                            show_documentation(2)
-                            sys.exit()
-                        elif arg == "A":
-                            print("Start API Reference Tool")
-                            show_documentation(3)
-                            sys.exit()
-                        elif arg == "C":
-                            create_template()
-                            sys.exit()
-                        elif arg == "J":
-                            d = join_data()
-                            output =""
-                            while len(output) <= 1:
-                                output = input(" name of output csv file? ")
-                            d.write_concatenated_data(output)
-                            sys.exit()
-                        elif arg == "R":
-                            d = join_data()
-                            output =""
-                            while len(output) <= 1:
-                                output = input(" name of RDS file? ")
-                            d.write_concatenated_data_to_R_data_frame(output)
-                            sys.exit()
-                        elif arg == 'h':
-                            print(info)
-                            sys.exit()
-                        else:
-                            print(unknown_option.format(arg))
-                            sys.exit()
-
-            #args starts not with "-"
-            elif args.endswith(".py"):
-                script = args
-
-    if script is not None:
-        script = os.path.abspath(script)
+    # run script
+    if args["SCRIPT"] is not None:
+        script = os.path.abspath(args["SCRIPT"])
+        if not os.path.isfile(script):
+            print("Can't find {0}!".format(args["SCRIPT"]))
+            exit()
         path, pyfile = os.path.split(script)
         os.chdir(path)
         sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
