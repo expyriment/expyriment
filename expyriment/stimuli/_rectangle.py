@@ -277,7 +277,7 @@ class Rectangle(Visual):
         raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
     @staticmethod
-    def self_test():
+    def _test():
         from .. import control
         control.set_develop_mode(True)
         control.defaults.event_logging = 0
@@ -288,4 +288,4 @@ class Rectangle(Visual):
 
 
 if __name__ == "__main__":
-    Rectangle.self_test()
+    Rectangle._test()

@@ -205,12 +205,17 @@ class Tone(Audio):
         shutil.copy(self._filename, filename)
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        control.start_audiosystem()
+        exp = control.initialize()
+        sine = Tone(duration=1000)
+        sine.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    control.start_audiosystem()
-    exp = control.initialize()
-    sine = Tone(duration=1000)
-    sine.present()
-    exp.clock.wait(1000)
+    Tone._test()
