@@ -42,11 +42,16 @@ class BlankScreen(Canvas):
         Canvas.__init__(self, size, colour=self._colour)
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging.event_logging = 0
+        exp = control.initialize()
+        blankscreen = BlankScreen()
+        blankscreen.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging.event_logging = 0
-    exp = control.initialize()
-    blankscreen = BlankScreen()
-    blankscreen.present()
-    exp.clock.wait(1000)
+    BlankScreen._test()

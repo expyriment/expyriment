@@ -639,14 +639,19 @@ class Shape(Visual):
         return surface
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        exp = control.initialize()
+        sh = Shape(position=(20, 200), colour=(255, 0, 255))
+        sh.add_vertex((0, 0))
+        sh.add_vertex((50, 50))
+        sh.add_vertex((0, 50))
+        sh.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    sh = Shape(position=(20, 200), colour=(255, 0, 255))
-    sh.add_vertex((0, 0))
-    sh.add_vertex((50, 50))
-    sh.add_vertex((0, 50))
-    sh.present()
-    exp.clock.wait(1000)
+    Shape._test()

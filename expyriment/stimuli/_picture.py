@@ -80,13 +80,18 @@ class Picture(Visual):
         return surface
 
 
+    @staticmethod
+    def _test():
+        from .. import __file__
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        exp = control.initialize()
+        directory = os.path.dirname(__file__)
+        picture = Picture(os.path.join(directory, "expyriment_logo.png"))
+        picture.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from .. import __file__
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    directory = os.path.dirname(__file__)
-    picture = Picture(os.path.join(directory, "expyriment_logo.png"))
-    picture.present()
-    exp.clock.wait(1000)
+    Picture._test()
