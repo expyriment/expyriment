@@ -128,8 +128,8 @@ class TextInput(Input):
         else:
             self._message_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(
-                unicode2byte(self._message_font, fse=True), 10)
+            with open(self._message_font, 'rb'):
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(message_font))
         if message_bold is not None:
@@ -158,8 +158,8 @@ class TextInput(Input):
         else:
             self._user_text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(
-                unicode2byte(self._user_text_font, fse=True), 10)
+            with open(self._user_text_font, 'rb'):
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(user_text_font))
         if user_text_colour is None:
@@ -320,9 +320,9 @@ class TextInput(Input):
         """Create the input box."""
 
         tmp = stimuli.TextLine(text=self._length * "X",
-                                          text_font=self.user_text_font,
-                                          text_size=self.user_text_size,
-                                          text_bold=self.user_text_bold)
+                               text_font=self.user_text_font,
+                               text_size=self.user_text_size,
+                               text_bold=self.user_text_bold)
         stimuli._stimulus.Stimulus._id_counter -= 1
         self._max_size = tmp.surface_size
         message_text = stimuli.TextLine(

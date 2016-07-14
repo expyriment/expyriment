@@ -34,8 +34,8 @@ class Audio(Stimulus):
 
         - expyriment.control.start_audiosystem
         - expyriment.control.stop_audiosystem
-        - expyriment.control.audiosystem_is_busy
-        - expyriment.control.audiosystem_wait_end
+        - expyriment.control.is_busy_audiosystem
+        - expyriment.control.wait_end_audiosystem
 
     """
 
@@ -102,7 +102,11 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            self._file = mixer.Sound(unicode2byte(self._filename, fse=True))
+        # Due to a bug in handling file names in PyGame 1.9.2, we pass a file
+        # handle to PyGame. See also:
+        # https://github.com/expyriment/expyriment/issues/81
+            with open(self._filename, 'rb') as f:
+                self._file = mixer.Sound(f)
             self._is_preloaded = True
 
     def unload(self, **kwargs):
@@ -117,7 +121,7 @@ class Audio(Stimulus):
             self._file = None
             self._is_preloaded = False
 
-    def play(self, loops=0, maxtime=0, fade_ms=0):
+    def play(self, loops=0, maxtime=0, fade_ms=0, log_event_tag=None):
         """Play the audio stimulus.
 
         The function returns immediately after the sound started to play.
@@ -131,6 +135,10 @@ class Audio(Stimulus):
             stop after given amount of milliseconds (default = 0)
         fade_ms : int, optional
             fade in time in milliseconds (default = 0)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
 
         """
 
@@ -145,7 +153,8 @@ class Audio(Stimulus):
                 filename = self._filename
 
             _internals.active_exp._event_file_log(
-                "Stimulus,played,{0}".format(filename), 1)
+                "Stimulus,played,{0}".format(filename), 1,
+                                 log_event_tag=log_event_tag)
         return rtn
 
     def stop(self):
@@ -154,7 +163,7 @@ class Audio(Stimulus):
         if self._is_preloaded:
             self._file.stop()
 
-    def present(self):
+    def present(self, log_event_tag=None):
         """Presents the sound.
 
         The function is identical to Audio.play(loops=0, maxtime=0, fade_ms=0)
@@ -166,4 +175,4 @@ class Audio(Stimulus):
 
         """
 
-        self.play()
+        self.play(log_event_tag=log_event_tag)

@@ -246,18 +246,13 @@ def find_font(font):
 
     pygame.font.init()
 
-    try:
-        if os.path.isfile(font):
-            pygame.font.Font(unicode2byte(font, fse=True), 10)
-        else:
-            pygame.font.Font(unicode2byte(font), 10)
+    if os.path.isfile(font):
         return font
-    except:
-        font_file = pygame.font.match_font(font)
-        if font_file is not None:
-            return font_file
-        else:
-            return ""
+    font_file = pygame.font.match_font(font)
+    if font_file is not None:
+        return font_file
+    else:
+        return ""
 
 def get_monitor_resolution():
     """Returns the monitor resolution

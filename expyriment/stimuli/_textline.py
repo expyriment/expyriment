@@ -24,6 +24,12 @@ from ._visual import Visual
 from ..misc import find_font, unicode2byte, byte2unicode
 from .. import _internals
 
+
+# Keep track of open file handles and previously loaded font objects
+open_filehandles = []
+fonts = {}
+
+
 class TextLine(Visual):
     """A class implementing a single text line."""
 
@@ -86,9 +92,8 @@ class TextLine(Visual):
         else:
             self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
-                                     10)
-            _font = None
+            with open(self._text_font, 'rb') as f:
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
         if text_bold is not None:
@@ -248,9 +253,19 @@ class TextLine(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
+        # Due to a bug in handling file names in PyGame 1.9.2, we pass a file
+        # handle to PyGame. See also:
+        # https://github.com/expyriment/expyriment/issues/81
         if os.path.isfile(self._text_font):
-            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
-                                     self._text_size)
+            # We preserve previously created fonts, so that we don't open the
+            # same font over and over again.
+            if (self._text_font, self._text_size) in fonts:
+                _font = fonts[(self._text_font, self._text_size)]
+            else:
+                f = open(self._text_font, 'rb')
+                open_filehandles.append(f)
+                _font = pygame.font.Font(f, self._text_size)
+                fonts[(self._text_font, self._text_size)] = _font
         else:
             _font = pygame.font.Font(self._text_font, self._text_size)
 

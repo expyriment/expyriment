@@ -13,6 +13,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+import math
 
 def sum(data):
     """Returns the sum of data.
@@ -153,3 +154,47 @@ def frequence_table(data):
         freq[x] = freq.get(x, 0) + 1
     return freq
 
+def variance(data):
+    """Returns the variance of data.
+
+    Notes
+    -----
+    The function ignores all non-numerical elements in the data and returns
+    None if no numerical element has been found. In contrast to standard math
+    and numpy functions, this function is robust against type violations.
+
+    Parameters
+    ----------
+    data : list
+        list of numerical data
+
+    Returns
+    -------
+    out : float or None
+
+    """
+
+    data_squared = map(lambda x:x**2, data)
+    return mean(data_squared) - mean(data)**2
+
+def std(data):
+    """Returns the standard deviation of data.
+
+    Notes
+    -----
+    The function ignores all non-numerical elements in the data and returns
+    None if no numerical element has been found. In contrast to standard math
+    and numpy functions, this function is robust against type violations.
+
+    Parameters
+    ----------
+    data : list
+        list of numerical data
+
+    Returns
+    -------
+    out : float or None
+
+    """
+
+    return math.sqrt(variance(data))

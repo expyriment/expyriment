@@ -27,6 +27,11 @@ from ..misc import find_font, unicode2byte, byte2unicode
 from ._visual import Visual
 
 
+# Keep track of open file handles and previously loaded font objects
+open_filehandles = []
+fonts = {}
+
+
 class TextBox(Visual):
     """A class implementing a text box with wrapped text.
 
@@ -105,9 +110,8 @@ class TextBox(Visual):
         else:
             self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
-                                     10)
-            _font = None
+            with open(self_text_font, 'rb') as f:
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
         if text_bold is not None:
@@ -311,8 +315,15 @@ class TextBox(Visual):
         rect = pygame.Rect((0, 0), self.size)
 
         if os.path.isfile(self._text_font):
-            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
-                                     self._text_size)
+            # We preserve previously created fonts, so that we don't open the
+            # same font over and over again.
+            if (self._text_font, self._text_size) in fonts:
+                _font = fonts[(self._text_font, self._text_size)]
+            else:
+                f = open(self._text_font, 'rb')
+                open_filehandles.append(f)
+                _font = pygame.font.Font(f, self._text_size)
+                fonts[(self._text_font, self._text_size)] = _font
         else:
             _font = pygame.font.Font(self._text_font, self._text_size)
 
@@ -320,7 +331,7 @@ class TextBox(Visual):
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
 
-        if not isinstance(self.text, str):
+        if not _internals.is_unicode_string(self.text, str):
             # Pygame wants latin-1 encoding here for character strings
             _text = byte2unicode(self.text).encode('latin-1')
         else:
