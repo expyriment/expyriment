@@ -128,7 +128,7 @@ class TextInput(Input):
         else:
             self._message_font = find_font(_internals.active_exp.text_font)
         try:
-            with open(self._message_font, 'rb'):
+            with open(self._message_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(message_font))
