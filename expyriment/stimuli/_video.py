@@ -302,14 +302,17 @@ class Video(_visual.Stimulus):
             self._surface = None
             self._is_preloaded = False
 
-    def play(self, loop=False):
+    def play(self, loop=False, log_event_tag=None):
         """Play the video stimulus from the current position.
 
         Parameters
         ----------
-        
         loop : bool, optional
             loop video playback (will be ignored when using play to unpause!)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
             
         Note
         ----
@@ -340,7 +343,8 @@ class Video(_visual.Stimulus):
                 self.preload()
             if self._logging:
                 _internals.active_exp._event_file_log(
-                    "Video,playing,{0}".format(unicode2byte(self._filename)))
+                    "Video,playing,{0}".format(unicode2byte(self._filename)),
+                    log_level=1, log_event_tag=log_event_tag)
             if self._backend == "mediadecoder" and self._file.audioformat:
                 self._audio.start()
             self._file.loop = loop
