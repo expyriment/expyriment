@@ -54,7 +54,10 @@ class _LaminaPanelSurface(object):
         """
 
         self._txtr = Visual._load_texture(surface)
-        self._winsize = surface.get_size()
+        if isinstance(surface, pygame.Surface):
+            self._winsize = surface.get_size()
+        else:
+            self._winsize = (len(surface[0]), len(surface))
         self._position = position
         left, top, width, height = quadDims
         right, bottom = left + width, top - height
@@ -170,18 +173,27 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        surf : pygame.Surface object
+        surf : pygame.Surface or numpy.array object
             surface to make texture from
 
         """
 
         txtr = ogl.glGenTextures(1)
-        textureData = pygame.image.tostring(surf, "RGBA", 1)
+        if isinstance(surf, pygame.Surface):
+            textureData = pygame.image.tostring(surf, "RGBA", 1)
+            colours = ogl.GL_RGBA
+            width, height = surf.get_size()
+        else:
+            textureData = surf
+            if textureData.shape[2] == 3:
+                colours = ogl.GL_RGB
+            elif textureData.shape[2] == 4:
+                colours = ogl.GL_RGBA
+            width, height = len(surf[0]), len(surf)
         ogl.glEnable(ogl.GL_TEXTURE_2D)
         ogl.glBindTexture(ogl.GL_TEXTURE_2D, txtr)
-        width, height = surf.get_size()
-        ogl.glTexImage2D(ogl.GL_TEXTURE_2D, 0, ogl.GL_RGBA, width, height, 0,
-          ogl.GL_RGBA, ogl.GL_UNSIGNED_BYTE, textureData)
+        ogl.glTexImage2D(ogl.GL_TEXTURE_2D, 0, colours, width, height, 0,
+          colours, ogl.GL_UNSIGNED_BYTE, textureData)
         ogl.glTexParameterf(ogl.GL_TEXTURE_2D,
                             ogl.GL_TEXTURE_MAG_FILTER,
                             ogl.GL_NEAREST)

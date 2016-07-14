@@ -172,7 +172,7 @@ machine!")
         if self._open_gl >= 2:
             if self._open_gl == 3:
                 ogl.glBegin(ogl.GL_POINTS)
-                ogl.glColor4f(0, 0, 0, 0)
+                ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!
                 ogl.glVertex2i(0, 0)
                 ogl.glEnd()
             ogl.glFinish()

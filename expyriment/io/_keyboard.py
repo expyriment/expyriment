@@ -46,7 +46,7 @@ class Keyboard(Input):
     """
 
     @staticmethod
-    def process_control_keys(key_event=None):
+    def process_control_keys(key_event=None, quit_confirmed_function=None):
         """Check if quit_key or pause_key has been pressed.
 
         Reads pygame event cue if no key_event is specified.
@@ -56,6 +56,8 @@ class Keyboard(Input):
         key_event : int, optional
             key event to check. If not defined, the Pygame event queue will be
             checked for key down events.
+        quit_confirmed_function : function, optional
+            function to be called if quitting has been confirmed.
 
         Returns
         -------
@@ -69,7 +71,9 @@ class Keyboard(Input):
             if key_event.type == pygame.KEYDOWN:
                 if key_event.key == quit_key and \
                    end_function is not None:
-                    confirm = end_function(confirmation=True)
+                    confirm = end_function(
+                        confirmation=True,
+                        pre_quit_function=quit_confirmed_function)
                     if confirm:
                         sys.exit()
                     return True

@@ -107,6 +107,7 @@ picture_position = (0, 0)
 
 # Video
 video_position = [0, 0]
+video_backend = "mediadecoder"  # 'mediadecoder' or 'pygame'
 
 # Tone
 tone_frequency = 440
