@@ -79,7 +79,7 @@ class InputFile(Input):
         with codecs.open(self._filename, 'rb', encoding[0],
                          errors='replace') as f:
             for line in f:
-                self._lines.append(byte2unicode(line.rstrip('\r\n')))
+                self._lines.append(byte2unicode(line).rstrip('\r\n'))
 
     @property
     def filename(self):
