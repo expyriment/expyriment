@@ -8,15 +8,15 @@ The latest release of Expyriment can be found at the `release page`_. Note, that
 Expyriment depends on the following software packages that have to be installed 
 on your system:
 
-* `Python 2`_ (>=2.6)
+* `Python`_ (2.7 or 3.5)
 * Pygame_ (>=1.9)
 * PyOpenGL_ (>=3.0)
+* Numpy_ (>=1.6)
 
 Additional packages, which are optional and only required for some features of 
 Expyriment are:
 
-* Numpy_ (>=1.6) (to use data preprocessing)
-* PySerial_ (>=2.5) (to use serial port communication)
+* PySerial_ (>=3.0) (to use serial port communication)
 * PyParallel_ (>=0.2) (to use parallel port communication on Linux)
 * Inpout32_ or dlportio_ (to use parallel port communication on Windows)
 
@@ -35,7 +35,7 @@ Expyriment here:
    Android <Installation.Android>
 
 
-.. _`Python 2`: http://www.python.org/
+.. _`Python`: http://www.python.org/
 .. _Pygame: http://www.pygame.org/
 .. _PyOpenGl: http://www.pyopengl.sourceforge.net
    
