@@ -9,7 +9,7 @@ method 2.
 1) Using PyPi (recommended)
 ---------------------------
 
-1. Install `Python 2.7.10`_ (during installation, also select "Add python.exe to Path"!)
+1. Install `Python 2.7.11`_ (during installation, also select "Add python.exe to Path"!)
 2. Install Pygame_
 3. In a command prompt, run ::
 
@@ -18,12 +18,11 @@ method 2.
 
 For the additional packages (optional):
 
-4. Install NumPy_
-5. In a command prompt, run ::
+4. In a command prompt, run ::
 
       python -m pip install pyserial
 
-6. Install Inpout32_ or dlportio_
+5. Install Inpout32_ or dlportio_
 
 
 2) Manually (alternative)
@@ -64,7 +63,7 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
-.. _`Python 2.7.10`: https://www.python.org/ftp/python/2.7.10/python-2.7.10.msi
+.. _`Python 2.7.11`: https://www.python.org/ftp/python/2.7.11/python-2.7.11.msi
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
