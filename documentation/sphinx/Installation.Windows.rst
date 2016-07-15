@@ -19,11 +19,11 @@ method 2.
 
 For the additional packages (optional):
 
-a. In a command prompt, run::
+4. In a command prompt, run::
 
       python -m pip install --upgrade 'pyserial>=3,<4'
 
-b. Install Inpout32_ or dlportio_
+5. Install Inpout32_ or dlportio_
 
 
 2) Manually (alternative)
@@ -42,17 +42,17 @@ On an PC with internet connection (same OS, architecture and Python version!)
 
     python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment
     
+5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+    
 For the additional packages (optional):
 
-a. Download Inpout32_ or dlportio_ to ``Expyriment_Installation``
+6. Download Inpout32_ or dlportio_ to ``Expyriment_Installation``
 
-b. In a command prompt, run::
+7. In a command prompt, run::
 
     python -m pip download -d %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
 
-In any case:
-
-5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+8. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 On the target PC
