@@ -31,11 +31,11 @@ b. Install Inpout32_ or dlportio_
 
 On an PC with internet connection (same OS, architecture and Python version!):
 
-1. On the Desktop, create a directory called `Expyriment_Installation`
+1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.11`_ to `Expyriment_Installation`
+2. Download `Python 2.7.11`_ to ``Expyriment_Installation``
 
-3. Download Pygame_ to `Expyriment_Installation`
+3. Download Pygame_ to ``Expyriment_Installation``
 
 4. In a command prompt, run::
 
@@ -43,7 +43,7 @@ On an PC with internet connection (same OS, architecture and Python version!):
     
 For the additional packages (optional):
 
-a. Download Inpout32_ or dlportio_ to `Expyriment_Installation`
+a. Download Inpout32_ or dlportio_ to ``Expyriment_Installation``
 
 b. In a command prompt, run::
 
@@ -51,16 +51,16 @@ b. In a command prompt, run::
 
 In any case:
 
-5. Copy the directory `Expyriment_Installation` from the Desktop to a portable storage device
+5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 On the target PC:
 
-1. Copy the directory `Expyriment_Installation` from the portable storage device to the Desktop
+1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install `Expyriment_Installation\python-2.7.11.msi`
+2. Install ``Expyriment_Installation\python-2.7.11.msi``
 
-3. Install `Expyriment_Installation\pygame-1.9.1.win32-py2.7.msi`
+3. Install ``Expyriment_Installation\pygame-1.9.1.win32-py2.7.msi``
 
 4. In a command prompt, run::
 
