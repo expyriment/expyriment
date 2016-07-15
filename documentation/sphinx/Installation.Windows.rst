@@ -6,42 +6,73 @@ Expyriment on a computer that has no network connection (like lab PCs), please u
 method 2. 
 
 
-1) Using PyPi (recommended)
+1) Using PYPI (recommended)
 ---------------------------
 
 1. Install `Python 2.7.11`_ (during installation, also select "Add python.exe to Path"!)
-2. Install Pygame_
-3. In a command prompt, run ::
 
-    python -m pip install --upgrade pip
+2. Install Pygame_
+
+3. In a command prompt, run::
+
     python -m pip install --upgrade expyriment
 
 For the additional packages (optional):
 
-4. In a command prompt, run ::
+a. In a command prompt, run::
 
-      python -m pip install pyserial
+      python -m pip install --upgrade 'pyserial>=3,<4'
 
-5. Install Inpout32_ or dlportio_
+b. Install Inpout32_ or dlportio_
 
 
 2) Manually (alternative)
 --------------------------
 
-1. Install `Python 2.7.10`_
-2. Install Pygame_
-3. Install PyOpenGL_
-4. Download |expyriment-wheel-code| from the `release page`_ and install it in a command prompt with
+On an PC with internet connection (same OS, architecture and Python version!):
 
-   .. parsed-literal::
+1. On the Desktop, create a directory called `Expyriment_Installation`
 
-       python -m pip install |expyriment-wheel|
+2. Download `Python 2.7.11`_ to `Expyriment_Installation`
+
+3. Download Pygame_ to `Expyriment_Installation`
+
+4. In a command prompt, run::
+
+    python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment
+    
+For the additional packages (optional):
+
+a. Download Inpout32_ or dlportio_ to `Expyriment_Installation`
+
+b. In a command prompt, run::
+
+    python -m pip download -d %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
+
+In any case:
+
+5. Copy the directory `Expyriment_Installation` from the Desktop to a portable storage device
+
+
+On the target PC:
+
+1. Copy the directory `Expyriment_Installation` from the portable storage device to the Desktop
+
+2. Install `Expyriment_Installation\python-2.7.11.msi`
+
+3. Install `Expyriment_Installation\pygame-1.9.1.win32-py2.7.msi`
+
+4. In a command prompt, run::
+
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation expyriment
 
 For the additional packages (optional):
 
-5. Install Numpy_
-6. Install PySerial_
-7. Install Inpout32_ or dlportio_
+a. In a command prompt, run::
+
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
+
+b. Install Inpout32_ or dlportio_
 
 
 Notes
@@ -64,6 +95,7 @@ Notes
     line when testing participants.
 
 .. _`Python 2.7.11`: https://www.python.org/ftp/python/2.7.11/python-2.7.11.msi
+.. _`Python 3.5.2`: https://www.python.org/ftp/python/3.5.2/python-3.5.2.exe
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
