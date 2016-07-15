@@ -29,7 +29,8 @@ b. Install Inpout32_ or dlportio_
 2) Manually (alternative)
 --------------------------
 
-On an PC with internet connection (same OS, architecture and Python version!):
+On an PC with internet connection (same OS, architecture and Python version!)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
@@ -54,7 +55,8 @@ In any case:
 5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
-On the target PC:
+On the target PC
+~~~~~~~~~~~~~~~~
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
