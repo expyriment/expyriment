@@ -70,11 +70,11 @@ On the target PC
 
 For the additional packages (optional):
 
-a. In a command prompt, run::
+5. In a command prompt, run::
 
     python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
 
-b. Install Inpout32_ or dlportio_
+6. Install Inpout32_ or dlportio_
 
 
 Notes
