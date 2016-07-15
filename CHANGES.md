@@ -5,6 +5,8 @@ Expyriment Release Notes
 upcoming
 --------
 New Features:
+- Python 3 compatibility
+- New Video stimulus implementation that supports a large range of formats
 - new global boolean constant expyriment.PYTHON3 indicates Python version
 - new io device: io.extras.TcpServer
 - new method to add full factorial designs:
@@ -30,7 +32,7 @@ Changed:
   from control to misc
 - move get_module_hash_dictionary, get_experiment_secure_hash,
   module_hashes_as_string and get_system_info from expyriment to misc
-
+- Testsuite: Visual test will now colour code reported refresh rates
 
 Fixed:
 - unicode bug on Windows for font files
