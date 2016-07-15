@@ -11,7 +11,9 @@ on your system:
 * `Python`_ (2.7 or 3.5)
 * Pygame_ (>=1.9)
 * PyOpenGL_ (>=3.0)
-* Numpy_ (>=1.6)
+* NumPy_ (>=1.6)
+* sounddevice_ (>=0.3)
+* mediadecoder_ (>=0.1)
 
 Additional packages, which are optional and only required for some features of 
 Expyriment are:
@@ -38,6 +40,8 @@ Expyriment here:
 .. _`Python`: http://www.python.org/
 .. _Pygame: http://www.pygame.org/
 .. _PyOpenGl: http://www.pyopengl.sourceforge.net
+.. _sounddevice: http://python-sounddevice.readthedocs.io/en/0.3.3/
+.. _mediadecoder: http://dschreij.github.io/python-mediadecoder/
    
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
