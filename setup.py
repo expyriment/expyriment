@@ -217,6 +217,12 @@ if __name__=="__main__":
                                glob('documentation/sphinx/_build/html/_sources/*.*')))
             data_files.append(('share/expyriment/documentation/html/_static',
                                glob('documentation/sphinx/_build/html/_static/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_static/css',
+                               glob('documentation/sphinx/_build/html/_static/css/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_static/fonts',
+                               glob('documentation/sphinx/_build/html/_static/fonts/*.*')))
+            data_files.append(('share/expyriment/documentation/html/_static/js',
+                               glob('documentation/sphinx/_build/html/_static/js/*.*')))
             html_created = True
         except:
             warning = "HTML documentation NOT created! (sphinx and numpydoc installed?)"
