@@ -36,5 +36,5 @@ data preprocessing in Python. The R function ``read.expyriment.data`` concatinat
 raw data and returns an R data frame with all subjects. Between subject factors will 
 be added as variables to the data matrix.
 
-.. _expyriment_data.R: https://raw.githubusercontent.com/expyriment/expyriment/master/tools/expyriment_data.R
+.. _expyriment_data.R: https://github.com/expyriment/expyriment-stash/blob/master/tools/expyriment_data.R
 .. _rpy2: http://rpy.sourceforge.net
