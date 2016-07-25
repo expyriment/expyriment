@@ -1,13 +1,17 @@
 Platform-specific instructions: Windows
 =======================================
 
-There are two different ways to install Expyriment on Windows. If you need to install
-Expyriment on a computer that has no network connection (like lab PCs), please use 
-method 2. 
+Expyriment can be installed for Python 2 or Python 3. In both cases there are
+two different ways to install Expyriment. The recommended method requires an
+active internet connection. If you need to install Expyriment on a computer that
+has no internet connection (like lab PCs), please use the alternative method. 
 
 
-1) Using PYPI (recommended)
----------------------------
+Python 2 (recommended)
+----------------------
+
+Default installation (online)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 1. Install `Python 2.7.11`_ (during installation, also select "Add python.exe to Path"!)
 
@@ -26,11 +30,10 @@ For the additional packages (optional):
 5. Install Inpout32_ or dlportio_
 
 
-2) Manually (alternative)
---------------------------
+Alternative installation (offline)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-On an PC with internet connection (same OS, architecture and Python version!)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**On an PC with internet connection (same OS, architecture and Python version!)**
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
@@ -55,8 +58,7 @@ For the additional packages (optional):
 8. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
-On the target PC
-~~~~~~~~~~~~~~~~
+**On the target PC**
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
@@ -66,13 +68,91 @@ On the target PC
 
 4. In a command prompt, run::
 
-    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation expyriment
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment
 
 For the additional packages (optional):
 
 5. In a command prompt, run::
 
-    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade 'pyserial>=3,<4'
+
+6. Install Inpout32_ or dlportio_
+
+
+Python 3
+--------
+
+Default installation (online)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Install `Python 3.5.2`_ (during installation, also select "Add python.exe to Path"!)
+
+2. In a command prompt, run::
+
+    python3 -m pip install --upgrade --pre pygame
+
+3. In a command prompt, run::
+
+    python3 -m pip install --upgrade expyriment
+
+For the additional packages (optional):
+
+4. In a command prompt, run::
+
+      python3 -m pip install --upgrade 'pyserial>=3,<4'
+
+5. Install Inpout32_ or dlportio_
+
+
+Alternative installation (offline)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**On an PC with internet connection (same OS, architecture and Python version!)**
+
+1. On the Desktop, create a directory called ``Expyriment_Installation``
+
+2. Download `Python 3.5.2`_ to ``Expyriment_Installation``
+
+3. In a command prompt, run::
+
+    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation --pre pygame
+
+4. In a command prompt, run::
+
+    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment
+    
+5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+    
+For the additional packages (optional):
+
+6. Download Inpout32_ or dlportio_ to ``Expyriment_Installation``
+
+7. In a command prompt, run::
+
+    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation 'pyserial>=3,<4'
+
+8. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+
+
+**On the target PC**
+
+1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
+
+2. Install ``Expyriment_Installation\python-3.5.2.exe``
+
+4. In a command prompt, run::
+
+    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade --pre pygame
+
+4. In a command prompt, run::
+
+    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment
+
+For the additional packages (optional):
+
+5. In a command prompt, run::
+
+    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade 'pyserial>=3,<4'
 
 6. Install Inpout32_ or dlportio_
 
