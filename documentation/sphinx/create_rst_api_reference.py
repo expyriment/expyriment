@@ -143,7 +143,7 @@ def create_change_log_rst():
 
 def make_cli_rst():
     """make to commandline interface docu"""
-    from expyriment.cli import info
+    from expyriment.cli import cli_documentaion
     with open("CommandLineInterface.rst", 'w') as fl:
          fl.write("""
 Command line interface
@@ -154,7 +154,7 @@ Usage
 ::
 
 """)
-         s = info.replace("\n", "\n    ").replace("Usage: ", "")
+         s = cli_documentaion.replace("\n", "\n    ")
          fl.write("\n    " + s)
 
 
