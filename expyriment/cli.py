@@ -103,7 +103,7 @@ methods helpful for the development and testing of experiments as well as
 functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
 
-    parser.add_argument("SCRIPT", action='store_const', const=None,
+    parser.add_argument("SCRIPT", action='store', default=None,
                     help="The expyriment script to be executed")
 
     parser.add_argument("-g", "-0", action="store_true",
@@ -245,4 +245,4 @@ functions to join the data output.""",
         _secure_hash.secure_hashes = secure_hashes
         _secure_hash.cout_hashes()
 
-        import_module(os.path.splitext(pyfile)[0])
+        execfile(pyfile)
