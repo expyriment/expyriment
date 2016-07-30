@@ -96,8 +96,8 @@ class Video(_visual.Stimulus):
         self._is_preloaded = False
         self._is_paused = False
         self._frame = 0
-	self._new_frame_available = False
-	self._texture_locked = False
+        self._new_frame_available = False
+        self._texture_locked = False
         if backend:
             self._backend = backend
         else:
@@ -198,12 +198,12 @@ class Video(_visual.Stimulus):
     def new_frame_available(self):
         """Property to check if new  video frame is available to render."""
 
-	if self._is_preloaded:
-	    if self._backend == "pygame":
-    	        return self.frame > self._frame
-	    elif self._backend == "mediadecoder":
-        	time.sleep(0.0001)  # Needed for performance for some reason
-                return self._new_frame_available
+        if self._is_preloaded:
+            if self._backend == "pygame":
+                    return self.frame > self._frame
+            elif self._backend == "mediadecoder":
+                time.sleep(0.0001)  # Needed for performance for some reason
+        return self._new_frame_available
 
     @property
     def length(self):
@@ -313,7 +313,7 @@ class Video(_visual.Stimulus):
             if log_event_tag is defined and if logging is switched on for this
             stimulus (default), a summary of the inter-event-intervalls are
             appended at the end of the event file
-            
+
         Note
         ----
         When the audio from the video should be played as well, the audiosystem
@@ -327,7 +327,7 @@ class Video(_visual.Stimulus):
         Video.wait_end(), dropped video frames will be reported and logged.
 
         """
-        
+
         if self._is_paused:
             self.pause()
         else:
@@ -405,13 +405,13 @@ class Video(_visual.Stimulus):
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
 
-	if self._texture_locked:
-	    return
+        if self._texture_locked:
+            return
         elif self._backend == "pygame":
             return
         elif self._backend == "mediadecoder":
             self._surface = frame
-	    self._new_frame_available = True
+        self._new_frame_available = True
 
     def present(self):
         """Present current frame.
@@ -437,7 +437,7 @@ class Video(_visual.Stimulus):
         start = Clock.monotonic_time()
         while not self.new_frame_available:
             if not self.is_playing:
-            	return
+                return
         diff = self.frame - self._frame
         if diff > 1:
             warn_message = repr(diff - 1) + " video frame(s) dropped!"
@@ -451,21 +451,21 @@ class Video(_visual.Stimulus):
     def update(self):
         """Update the screen."""
 
-	start = Clock.monotonic_time()
-       	self._surface_locked = True
+        start = Clock.monotonic_time()
+        self._surface_locked = True
         if not _internals.active_exp._screen.open_gl:
             _internals.active_exp._screen.surface.blit(
-			    pygame.surfarray.make_surface(
-				    self._surface.swapaxes(0,1)),
-			    self._pos)
-	    self._surface_locked = False
-	    self._new_frame_available = False
+                pygame.surfarray.make_surface(
+                    self._surface.swapaxes(0,1)),
+                self._pos)
+            self._surface_locked = False
+            self._new_frame_available = False
         else:
             ogl_screen = _visual._LaminaPanelSurface(
                 self._surface, quadDims=(1,1,1,1), position=self._position)
-	    self._surface_locked = False
-	    self._new_frame_available = False
-            ogl_screen.display()
+        self._surface_locked = False
+        self._new_frame_available = False
+        ogl_screen.display()
         _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
@@ -481,13 +481,13 @@ class Video(_visual.Stimulus):
         design.experiment.register_wait_callback_function
 
         """
-            
+
         while self.is_playing:
 
             self.present()
             if frame is not None and self.frame >= frame:
                 break
-                
+
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback
@@ -525,7 +525,7 @@ class Video(_visual.Stimulus):
             number of the frame to stop after
 
         """
-        
+
         if self.is_playing:
             self._wait(frame)
 
