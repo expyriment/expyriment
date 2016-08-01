@@ -73,7 +73,7 @@ try:
         #     def setPin(self, pin, state):
         #         pass
         # _ParallelPort = PP
-except ImportError:
+except:
     _ParallelPort = None
 
 
@@ -114,7 +114,7 @@ class ParallelPort(Input, Output):
         """
 
         if _ParallelPort is None:
-            if sys.platform == "win32":
+            if sys.platform == "win32": # TODO to be tested for Windows 7 and 10
                 _message = "Please install one of the following parallel port " + \
 "drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
 "'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/)."
