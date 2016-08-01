@@ -97,7 +97,7 @@ class Video(_visual.Stimulus):
         self._is_paused = False
         self._frame = 0
         self._new_frame_available = False
-        self._texture_locked = False
+        self._surface_locked = False
         if backend:
             self._backend = backend
         else:
@@ -196,14 +196,14 @@ class Video(_visual.Stimulus):
 
     @property
     def new_frame_available(self):
-        """Property to check if new  video frame is available to render."""
+        """Property to check if new video frame is available to render."""
 
         if self._is_preloaded:
             if self._backend == "pygame":
-                    return self.frame > self._frame
+                return self.frame > self._frame
             elif self._backend == "mediadecoder":
                 time.sleep(0.0001)  # Needed for performance for some reason
-        return self._new_frame_available
+                return self._new_frame_available
 
     @property
     def length(self):
@@ -405,13 +405,9 @@ class Video(_visual.Stimulus):
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
 
-        if self._texture_locked:
-            return
-        elif self._backend == "pygame":
-            return
-        elif self._backend == "mediadecoder":
+        if self._backend == "mediadecoder" and not self._surface_locked:
             self._surface = frame
-        self._new_frame_available = True
+            self._new_frame_available = True
 
     def present(self):
         """Present current frame.
@@ -455,17 +451,16 @@ class Video(_visual.Stimulus):
         self._surface_locked = True
         if not _internals.active_exp._screen.open_gl:
             _internals.active_exp._screen.surface.blit(
-                pygame.surfarray.make_surface(
-                    self._surface.swapaxes(0,1)),
+                pygame.surfarray.make_surface(self._surface.swapaxes(0,1)),
                 self._pos)
             self._surface_locked = False
             self._new_frame_available = False
         else:
             ogl_screen = _visual._LaminaPanelSurface(
                 self._surface, quadDims=(1,1,1,1), position=self._position)
-        self._surface_locked = False
-        self._new_frame_available = False
-        ogl_screen.display()
+            self._surface_locked = False
+            self._new_frame_available = False
+            ogl_screen.display()
         _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
@@ -512,7 +507,7 @@ class Video(_visual.Stimulus):
         manually like::
 
             video.present()
-            while video.is_playing:
+            while video.is_playing and video.frame < frame:
                 while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
