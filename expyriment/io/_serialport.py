@@ -15,8 +15,6 @@ __date__ = ''
 
 
 import atexit
-from sys import platform
-from os import listdir
 from types import ModuleType
 
 try:
