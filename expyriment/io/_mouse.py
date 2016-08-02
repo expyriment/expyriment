@@ -508,7 +508,7 @@ class Mouse(Input):
 
 
     def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
-                   function=None, process_quit_events=True):
+                   function=None, process_control_events=True):
         """Wait for a mouse button press or mouse wheel event.
 
         Parameters

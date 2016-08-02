@@ -369,7 +369,7 @@ class Keyboard(Input):
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if _internals.active_exp is not None and \
                    _internals.active_exp.is_initialized and \
-                   check_for_control_keys and \
+                   process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
