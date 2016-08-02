@@ -13,12 +13,14 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+
+from types import FunctionType
+
 from . import defaults
 from .. import _internals
 from ..misc import compare_codes
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, skip_wait_functions
 from ..misc._timer import get_time
-from ._keyboard import Keyboard
 from ._input_output import Input, Output
 
 
@@ -111,7 +113,8 @@ class StreamingButtonBox(Input, Output):
                 return None
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
-             bitwise_comparison=False, check_for_control_keys=True):
+             bitwise_comparison=False, function=None,
+             process_control_events=True):
         """Wait for responses defined as codes.
 
         Notes
@@ -136,8 +139,11 @@ class StreamingButtonBox(Input, Output):
             do not clear the buffer (default = False)
         bitwise_comparison : bool, optional
             make a bitwise comparison (default = False)
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -159,11 +165,22 @@ class StreamingButtonBox(Input, Output):
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
-                found = rtn_callback
-                rt = int((get_time() - start) * 1000)
-                break
+            if isinstance(function, FunctionType):
+                function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    found = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    import pygame
+                    pygame.event.pump()
             if duration is not None:
                 if int((get_time() - start) * 1000) > duration:
                     return None, None
@@ -171,9 +188,7 @@ class StreamingButtonBox(Input, Output):
             if found is not None:
                 rt = int((get_time() - start) * 1000)
                 break
-            if check_for_control_keys:
-                if Keyboard.process_control_keys():
-                    break
+
         if self._logging:
             _internals.active_exp._event_file_log(
                                 "{0},received,{1},wait".format(

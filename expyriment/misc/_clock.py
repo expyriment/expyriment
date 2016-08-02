@@ -12,11 +12,14 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+
 import sys
 import time
 from types import FunctionType
+
 from ._timer import get_time
 from .. import _internals
+
 
 class Clock(object) :
     """Basic timing class.
@@ -110,8 +113,8 @@ class Clock(object) :
         function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
-            process ``Keyboard.process_control_keys()`` and
-            ``Mouse.process_quit_event()`` (default=False)
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = False)
 
         Returns
         -------
@@ -127,36 +130,44 @@ class Clock(object) :
         if _internals.skip_wait_functions:
             return
         start = self.time
-        if isinstance(function, FunctionType) or\
-           _internals.active_exp.is_callback_registered:
+        if isinstance(function, FunctionType) or \
+           (_internals.active_exp is not None and \
+            (process_control_events or \
+             _internals.active_exp.is_callback_registered)):
             while (self.time < start + waiting_time):
                 if isinstance(function, FunctionType):
                     function()
-                rtn_callback = _internals.active_exp._execute_wait_callback()
-                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                    return rtn_callback
                 if _internals.active_exp.is_initialized:
-                    import pygame
-                    pygame.event.pump()
+                    rtn_callback = _internals.active_exp._execute_wait_callback()
+                    if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                        return rtn_callback
                     if process_control_events:
-                        _internals.active_exp.keyboard.process_control_keys()
+                        if _internals.active_exp.keyboard.process_control_keys():
+                            break
                         _internals.active_exp.mouse.process_quit_event()
+                    else:
+                        import pygame
+                        pygame.event.pump()
         else:
             looptime = 200
             if (waiting_time > looptime):
-                if _internals.active_exp.is_initialized:
+                if _internals.active_exp is not None and \
+                   _internals.active_exp.is_initialized:
                     while (self.time < start + (waiting_time - looptime)):
-                        import pygame
-                        pygame.event.pump()
                         if process_control_events:
-                            _internals.active_exp.keyboard.process_control_keys()
-                            _internals.active_exp.mouse.process_quit_event()
+                            if _internals.active_exp.mouse.process_quit_event() or \
+                               _internals.active_exp.keyboard.process_control_keys():
+                                break
+                        else:
+                            import pygame
+                            pygame.event.pump()
                 else:
                     time.sleep((waiting_time - looptime) // 1000)
             while (self.time < start + waiting_time):
                 pass
 
-    def wait_seconds(self, time_sec, function=None):
+    def wait_seconds(self, time_sec, function=None,
+                     process_control_events=False):
         """Wait for a certain amout of seconds.
 
         Parameters
@@ -165,6 +176,9 @@ class Clock(object) :
             time to wait in seconds
         function : function, optional
             function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = False)
 
         Returns
         -------
@@ -177,9 +191,10 @@ class Clock(object) :
 
         """
 
-        return self.wait(time_sec * 1000, function)
+        return self.wait(time_sec * 1000, function, process_control_events)
 
-    def wait_minutes(self, time_minutes, function=None):
+    def wait_minutes(self, time_minutes, function=None,
+                     process_control_events=False):
         """Wait for a certain amount of minutes.
 
         Parameters
@@ -188,6 +203,9 @@ class Clock(object) :
             time to wait in minutes
         function : function, optional
             function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = False)
 
         Returns
         -------
@@ -200,4 +218,5 @@ class Clock(object) :
 
         """
 
-        return self.wait_seconds(time_minutes * 60, function)
+        return self.wait_seconds(time_minutes * 60, function,
+                                 process_control_events)

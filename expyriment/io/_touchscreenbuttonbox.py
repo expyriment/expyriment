@@ -14,11 +14,14 @@ __revision__ = ''
 __date__ = ''
 
 
+from types import FunctionType
+
 from .. import _internals, stimuli
 from ._keyboard import Keyboard
 from ..misc._timer import get_time
-from .._internals import CallbackQuitEvent, skip_wait_functions
+from .._internals import CallbackQuitEvent
 from ._input_output import Input
+
 
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
@@ -167,15 +170,13 @@ class TouchScreenButtonBox(Input):
             self.create()
         self._canvas.present()
 
-    def check(self, button_fields=None, check_for_control_keys=True):
+    def check(self, button_fields=None):
         """Check if a button field is clicked.
 
         Parameters
         ----------
         button_fields : Expyriment stimulus or list of stimuli, optional
             The button fields that will be checked for.
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
 
         Returns
         -------
@@ -198,8 +199,6 @@ class TouchScreenButtonBox(Input):
                 button_fields = list(button_fields)
             except:
                 button_fields = [button_fields]
-        if check_for_control_keys:
-            Keyboard.process_control_keys()
 
         pressed_button_field = None
         touch_time = None
@@ -224,8 +223,8 @@ class TouchScreenButtonBox(Input):
                 return bf
         return None
 
-    def wait(self, duration=None, button_fields=None,
-                check_for_control_keys=True):
+    def wait(self, duration=None, button_fields=None, function=None,
+                process_control_keys=True):
         """Wait for a touchscreen button box click.
 
         Parameters
@@ -234,6 +233,11 @@ class TouchScreenButtonBox(Input):
             The button fields that will be checked for.
         duration : int, optional
             maximal time to wait in ms
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -252,16 +256,27 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None
         start = get_time()
         self.clear_event_buffer()
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
-                return rtn_callback, int((get_time()-start)*1000)
-            pressed_button_field, touch_time = self.check(button_fields,
-                        check_for_control_keys)
+            if isinstance(function, FunctionType):
+                function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    return rtn_callback, int((get_time()-start)*1000)
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        pressed_button_field, rt = None, None
+                        break
+                else:
+                    import pygame
+                    pygame.event.pump()
+            pressed_button_field, touch_time = self.check(button_fields)
             if pressed_button_field is not None:
                 rt = int((get_time()-start)*1000)
                 break

@@ -94,7 +94,7 @@ class Expyriment_object(object):
         See also design.experiment.set_log_level fur further information about
         event logging.
 
-    """
+        """
 
         self._logging = onoff
 

@@ -15,12 +15,13 @@ __revision__ = ''
 __date__ = ''
 
 
+from types import FunctionType
+
 import pygame
 
 from . import defaults
 from ..misc._timer import get_time
 from ..misc import is_android_running
-from ._keyboard import Keyboard
 from ._input_output  import Input
 from .. import _internals, misc
 
@@ -188,9 +189,10 @@ class Mouse(Input):
                 diff = get_time()-Mouse._quit_action_events.pop(0)
                 if (diff < 1):
                     # simulate quit key
-                    simulated_key = pygame.event.Event(pygame.KEYDOWN,\
-                                {'key': Keyboard.get_quit_key()})
-                    return Keyboard.process_control_keys(
+                    simulated_key = pygame.event.Event(
+                        pygame.KEYDOWN,
+                        {'key': _internals.active_exp.eyboard.get_quit_key()})
+                    return _internals.active_exp.keyboard.process_control_keys(
                         key_event=simulated_key)
         return False
 
@@ -271,9 +273,9 @@ class Mouse(Input):
         ----------
         process_quit_event : boolean, optional
             if False, the current location will not be processed for mouse
-                quitting events in the case that a button down event has been
-                found (default = True).
-            
+            quitting events in the case that a button down event has been
+            found (default = True).
+
         Returns
         -------
         btn_id : int
@@ -288,7 +290,7 @@ class Mouse(Input):
             if event.button > 0:
                 rtn = event.button - 1
         if rtn==0:
-            if Mouse.process_quit_event(self.position):
+            if process_quit_event and Mouse.process_quit_event(self.position):
                 return -1
         return rtn
 
@@ -319,7 +321,7 @@ class Mouse(Input):
         ----------
         button_number : int
             the button number (0,1,2) to be checked
-            
+
         Returns
         -------
         is_pressed: boolean
@@ -403,7 +405,8 @@ class Mouse(Input):
 
 
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
-                   duration=None, wait_for_buttonup=False):
+                   duration=None, wait_for_buttonup=False,
+                   function=None, process_control_events=True):
         """Wait for a mouse event (i.e., motion, button press or wheel event)
 
         Parameters
@@ -418,6 +421,11 @@ class Mouse(Input):
             the maximal time to wait in ms
         wait_for_buttonup : bool, optional
             if True it waits for button-up default=False)
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.keyboard.process_control_keys()`` and
+            ``io.mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -461,25 +469,33 @@ class Mouse(Input):
             except:
                 buttons = [buttons]
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                btn_id = rtn_callback
-                rt = int((get_time() - start) * 1000)
-                break
+            if isinstance(function, FunctionType):
+                function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    btn_id = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+                if process_control_events:
+                    if _internals.active_exp.keyboard.process_control_keys():
+                        break
             if wait_motion:
                 motion_occured = old_pos != pygame.mouse.get_pos()
             if wait_button:
                 if wait_for_buttonup:
                     btn_id = self.get_last_button_up_event()
                 else:
-                    btn_id = self.get_last_button_down_event()
+                    btn_id = self.get_last_button_down_event(
+                        process_quit_event=process_control_events)
             if btn_id ==-1:
                 btn_id = None
                 break
             elif btn_id in buttons or motion_occured:
                 rt = int((get_time() - start) * 1000)
                 break
-            elif Keyboard.process_control_keys() or (duration is not None and \
+            elif (duration is not None and \
                     int((get_time() - start) * 1000) >= duration):
                 break
 
@@ -491,7 +507,8 @@ class Mouse(Input):
         return btn_id, motion_occured, position_in_expy_coordinates, rt
 
 
-    def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False):
+    def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
+                   function=None, process_quit_events=True):
         """Wait for a mouse button press or mouse wheel event.
 
         Parameters
@@ -502,6 +519,11 @@ class Mouse(Input):
             maximal time to wait in ms
         wait_for_buttonup : bool, optional
             if True it waits for button-up
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.keyboard.process_control_keys()`` and
+            ``io.mouse.process_quit_event()`` (default = false)
 
         Returns
         -------
@@ -525,16 +547,24 @@ class Mouse(Input):
 
         rtn = self.wait_event(wait_button=True, wait_motion=False,
                               buttons=buttons, duration=duration,
-                              wait_for_buttonup=wait_for_buttonup)
+                              wait_for_buttonup=wait_for_buttonup,
+                              function=function,
+                              process_control_events=process_control_events)
         return rtn[0], rtn[2], rtn[3]
 
-    def wait_motion(self, duration=None):
+    def wait_motion(self, duration=None, function=None,
+                    process_control_events=True):
         """Wait for a mouse motion.
 
         Parameters
         ----------
         duration : int, optional
             maximal time to wait in ms
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.keyboard.process_control_keys()`` and
+            ``io.mouse.process_quit_event()`` (default = false)
 
         Returns
         -------
@@ -544,10 +574,13 @@ class Mouse(Input):
             reaction time
 
 
+
         """
 
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
-                        duration=duration, wait_for_buttonup=False)
+                              duration=duration, wait_for_buttonup=False,
+                              function=function,
+                              process_control_events=process_control_events)
 
         if isinstance(rtn[0], _internals.CallbackQuitEvent):
             return rtn[0], rtn[3]
