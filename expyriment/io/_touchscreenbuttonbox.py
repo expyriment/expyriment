@@ -17,9 +17,8 @@ __date__ = ''
 from .. import _internals, stimuli
 from ._keyboard import Keyboard
 from ..misc._timer import get_time
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, skip_wait_functions
 from ._input_output import Input
-from .defaults import _skip_wait_functions
 
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
@@ -253,7 +252,7 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if _skip_wait_functions:
+        if skip_wait_functions:
             return None, None
         start = get_time()
         self.clear_event_buffer()

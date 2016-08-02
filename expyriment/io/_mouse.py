@@ -445,7 +445,7 @@ class Mouse(Input):
 
         """
 
-        if defaults._skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None, None, None
         start = get_time()
         self.clear()

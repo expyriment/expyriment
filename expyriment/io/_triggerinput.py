@@ -17,7 +17,7 @@ __date__ = ''
 from . import defaults
 from .. import _internals
 from ..misc import compare_codes
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, skip_wait_functions
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input
@@ -77,7 +77,7 @@ class TriggerInput(Input):
 
        """
 
-        if defaults._skip_wait_functions:
+        if skip_wait_functions:
             return None, None
         start = get_time()
         found = None

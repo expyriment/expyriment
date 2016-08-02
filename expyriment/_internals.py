@@ -3,6 +3,7 @@
 This module also contains the currently active experiment:
             active_exp
 """
+
 from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
@@ -11,19 +12,13 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+
 import sys
 import os
 try:
     import android
 except ImportError:
     android = None
-
-PYTHON3 = (sys.version_info[0] == 3)
-
-###
-active_exp = None # expyriment.design.__init__ sets active_exp to design.Experiment("None")
-### Provides the access to the currently active experiment
-### import ._internals to read and write _active.exp
 
 
 def get_version():
@@ -46,6 +41,35 @@ def get_version():
             #no use of .major, .minor to ensure MacOS compatibility
     return "{0} (Python {1})".format(__version__, pv)
 
+
+# GLOBALLY NEEDED STUFF
+
+PYTHON3 = (sys.version_info[0] == 3)
+
+active_exp = None # expyriment.design.__init__ sets active_exp to
+                  # design.Experiment("None")
+                  # Provides the access to the currently active experiment
+                  # import ._internals to read and write _active.exp
+
+skip_wait_functions = False  # global toggle, can be changed by set_develop_mode
+
+def is_base_string(s):
+    if PYTHON3:
+        return isinstance(s, (str, bytes))
+    else:
+        return isinstance(s, (unicode, str))
+
+def is_unicode_string(s):
+    if PYTHON3:
+        return isinstance(s, str)
+    else:
+        return isinstance(s, unicode)
+
+def is_byte_string(s):
+    if PYTHON3:
+        return isinstance(s, bytes)
+    else:
+        return isinstance(s, str)
 
 class Expyriment_object(object):
     """A class implementing a general Expyriment object.
@@ -80,8 +104,6 @@ class Expyriment_object(object):
 
         return self._logging
 
-
-
 class CallbackQuitEvent(object):
     """A CallbackQuitEvent
 
@@ -111,9 +133,8 @@ class CallbackQuitEvent(object):
         return "CallbackQuitEvent: data={0}".format(self.data)
 
 
+# IMPORTER FUNCTIONS
 
-
-###   importer functions
 def import_command(path):
     # helper function to generate import command for extras that is Python2/3 compatible
     if PYTHON3:
@@ -272,20 +293,3 @@ def post_import_hook():
     else:
         return ""
 
-def is_base_string(s):
-    if PYTHON3:
-        return isinstance(s, (str, bytes))
-    else:
-        return isinstance(s, (unicode, str))
-
-def is_unicode_string(s):
-    if PYTHON3:
-        return isinstance(s, str)
-    else:
-        return isinstance(s, unicode)
-
-def is_byte_string(s):
-    if PYTHON3:
-        return isinstance(s, bytes)
-    else:
-        return isinstance(s, str)

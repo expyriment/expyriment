@@ -42,7 +42,6 @@ class Clock(object) :
 
         """
 
-        from ..io.defaults import _skip_wait_functions
         if (sync_clock.__class__.__name__ == "Clock"):
             self.__init_time = sync_clock.init_time // 1000
         else:
@@ -50,8 +49,6 @@ class Clock(object) :
 
         self._init_localtime = time.localtime()
         self.__start = get_time()
-
-        self._skip_wait_functions = _skip_wait_functions
 
 
     @staticmethod
@@ -103,7 +100,7 @@ class Clock(object) :
 
         self.__start = get_time()
 
-    def wait(self, waiting_time, function=None):
+    def wait(self, waiting_time, function=None, process_control_events=False):
         """Wait for a certain amout of milliseconds.
 
         Parameters
@@ -112,33 +109,50 @@ class Clock(object) :
             time to wait in milliseconds
         function : function, optional
             function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``Keyboard.process_control_keys()`` and
+            ``Mouse.process_quit_event()`` (default=False)
 
         Returns
         -------
         quit_event : expyriment.control.CallbackQuitEvent object
            the callback quit even in case a wait function has been registered
-            
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if self._skip_wait_functions:
+        if _internals.skip_wait_functions:
             return
         start = self.time
         if isinstance(function, FunctionType) or\
-                            _internals.active_exp.is_callback_registered:
+           _internals.active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
                 if isinstance(function, FunctionType):
                     function()
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     return rtn_callback
+                if _internals.active_exp.is_initialized:
+                    import pygame
+                    pygame.event.pump()
+                    if process_control_events:
+                        _internals.active_exp.keyboard.process_control_keys()
+                        _internals.active_exp.mouse.process_quit_event()
         else:
             looptime = 200
             if (waiting_time > looptime):
-                time.sleep((waiting_time - looptime) // 1000)
+                if _internals.active_exp.is_initialized:
+                    while (self.time < start + (waiting_time - looptime)):
+                        import pygame
+                        pygame.event.pump()
+                        if process_control_events:
+                            _internals.active_exp.keyboard.process_control_keys()
+                            _internals.active_exp.mouse.process_quit_event()
+                else:
+                    time.sleep((waiting_time - looptime) // 1000)
             while (self.time < start + waiting_time):
                 pass
 
@@ -156,7 +170,7 @@ class Clock(object) :
         -------
         quit_event : expyriment.control.CallbackQuitEvent object
            the callback quit even in case a wait function has been registered
-        
+
         See Also
         --------
         Clock.wait, design.experiment.register_wait_callback_function
@@ -179,7 +193,7 @@ class Clock(object) :
         -------
         quit_event : expyriment.control.CallbackQuitEvent object
            the callback quit even in case a wait function has been registered
-            
+
         See Also
         --------
         Clock.wait, design.experiment.register_wait_callback_function

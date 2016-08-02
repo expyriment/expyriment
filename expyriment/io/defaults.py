@@ -92,5 +92,3 @@ textmenu_select_frame_colour = _constants.C_EXPYRIMENT_ORANGE
 textmenu_select_frame_line_width = 0
 textmenu_justification = 1
 textmenu_scroll_menu = 0
-
-_skip_wait_functions = False

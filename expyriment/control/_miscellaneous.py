@@ -89,7 +89,7 @@ def wait_end_audiosystem(channel=None):
                     io.Keyboard.process_control_keys(event)
 
 
-def set_develop_mode(onoff, intensive_logging=False):
+def set_develop_mode(onoff, intensive_logging=False, skip_wait_functions=False):
     """Set defaults for a more convenient develop mode.
 
     Notes
@@ -109,6 +109,9 @@ def set_develop_mode(onoff, intensive_logging=False):
     intensive_logging : bool, optional
         True sets expyriment.io.defaults.event_logging=2
         (default = False)
+    skip_wait_functions : bool, optional
+        If True, all wait functions in the experiment (i.e. all wait functions
+        in ``expyriment.io`` and the clock) will be ommited (default = False)
 
     """
 
@@ -142,6 +145,9 @@ def set_develop_mode(onoff, intensive_logging=False):
 
     if intensive_logging:
         defaults.event_logging = 2
+
+    _internals.skip_wait_functions = skip_wait_functions
+
 
 def _get_module_values(goal_dict, module):
     value = None
