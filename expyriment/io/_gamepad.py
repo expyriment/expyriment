@@ -13,13 +13,15 @@ __revision__ = ''
 __date__ = ''
 
 
-import pygame
 import time
+from types import FunctionType
+
+import pygame
+
 from .. import _internals
 from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input, Output
-from .defaults import _skip_wait_functions
 
 pygame.joystick.init()
 
@@ -205,7 +207,8 @@ class GamePad(Input, Output):
         if self._logging:
             _internals.active_exp._event_file_log("GamePad,cleared", 2)
 
-    def wait_press(self, buttons=None, duration=None):
+    def wait_press(self, buttons=None, duration=None, callback_function=None,
+                   process_control_events=True):
         """Wait for gamepad button press.
 
         Returns the found button and the reaction time.
@@ -216,6 +219,11 @@ class GamePad(Input, Output):
             specific buttons to wait for
         duration : int, optional
             maximal time to wait in ms
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -230,7 +238,7 @@ class GamePad(Input, Output):
 
         """
 
-        if _skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
@@ -244,19 +252,26 @@ class GamePad(Input, Output):
             buttons = [buttons]
         done = False
         while not done:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                _button = rtn_callback
-                rt = int((get_time() - start) * 1000)
-                done = True
-
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    _button = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    done = True
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        done = True
             for button in buttons:
                 if self.get_button(button):
                     _button = button
                     rt = int((get_time() - start) * 1000)
                     done = True
                     break
-                if _button is not None or Keyboard.process_control_keys():
+                if _button is not None:
                     done = True
                     break
                 if duration:

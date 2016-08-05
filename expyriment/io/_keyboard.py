@@ -15,6 +15,7 @@ __date__ = ''
 
 
 import time, sys
+from types import FunctionType
 
 import pygame
 
@@ -175,7 +176,7 @@ class Keyboard(Input):
         keys : int or list, optional
             a specific key or list of keys to check
         check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
+            checks if control key has been pressed (default = True)
 
         Returns
         -------
@@ -210,7 +211,7 @@ class Keyboard(Input):
         return None
 
     def wait(self, keys=None, duration=None, wait_for_keyup=False,
-             check_for_control_keys=True):
+             callback_function=None, process_control_events=True):
         """Wait for keypress(es) (optionally for a certain amount of time).
 
         This function will wait for a keypress and returns the found key as
@@ -225,8 +226,11 @@ class Keyboard(Input):
             maximal time to wait in ms
         wait_for_keyup : bool, optional
             if True it waits for key-up
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -245,7 +249,7 @@ class Keyboard(Input):
 
         """
 
-        if defaults._skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None
         if android_show_keyboard is not None:
             android_show_keyboard()
@@ -267,13 +271,22 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                done = True
-                found_key = rtn_callback
-                rt = int((get_time() - start) * 1000)
+            if isinstance(callback_function, FunctionType):
+                callback_function
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    done = True
+                    found_key = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                if process_control_events:
+                    _internals.active_exp.mouse.process_quit_event()
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
-                if check_for_control_keys and Keyboard.process_control_keys(event):
+                if _internals.active_exp is not None and \
+                   _internals.active_exp.is_initialized and \
+                   process_control_events and \
+                   Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == target_event:
                     if keys is not None:
@@ -295,7 +308,8 @@ class Keyboard(Input):
             android_hide_keyboard()
         return found_key, rt
 
-    def wait_char(self, char, duration=None, check_for_control_keys=True):
+    def wait_char(self, char, duration=None, callback_function=None,
+                  process_control_events=True):
         """Wait for character(s) (optionally for a certain amount of time).
 
         This function will wait for one or more characters and returns the
@@ -308,13 +322,16 @@ class Keyboard(Input):
             a specific character or list of characters to wait for
         duration : int, optional
             maximal time to wait in ms
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
         found : char
-            pressed charater
+            pressed character
         rt : int
             reaction time in ms
 
@@ -324,7 +341,7 @@ class Keyboard(Input):
 
         """
 
-        if defaults._skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
@@ -338,14 +355,22 @@ class Keyboard(Input):
         done = False
 
         while not done:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                    done = True
-                    rt = int((get_time() - start) * 1000)
-                    found_char = rtn_callback
-
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                        done = True
+                        rt = int((get_time() - start) * 1000)
+                        found_char = rtn_callback
+                if process_control_events:
+                    _internals.active_exp.mouse.process_quit_event()
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
-                if check_for_control_keys and Keyboard.process_control_keys(event):
+                if _internals.active_exp is not None and \
+                   _internals.active_exp.is_initialized and \
+                   process_control_events and \
+                   Keyboard.process_control_keys(event):
                     done = True
                 elif event.type == pygame.KEYDOWN:
                     if event.unicode in char:

@@ -303,7 +303,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                          text_size=24).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        char = Keyboard().wait_char(["y", "n"], check_for_control_keys=False)
+        char = Keyboard().wait_char(["y", "n"], process_control_events=False)
         if char[0] == "n":
             experiment._screen.colour = screen_colour
             experiment._event_file_log("Experiment,resumed")

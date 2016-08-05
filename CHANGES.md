@@ -25,6 +25,15 @@ New Features:
   to Eventfile.log (see above)
 
 Changed:
+- all wait methods (io and Clock) now
+    (1) have process_control_events attribute to check for quit events from
+        keyboard and mouse
+    (2) have function attribute (callback_function) to repeatedly run a
+        specific function in every loop iteration
+    (3) pump the pygame event queue to (hopefully) prevent the OS to think the
+        window is "not responding"
+- control.set_develop_mode: new skip_wait_functions attribute to ommit all wait 
+  functions in the experiment (for testing)
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
 - move set_skip_wait_functions from misc to io

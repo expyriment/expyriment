@@ -14,6 +14,8 @@ __revision__ = ''
 __date__ = ''
 
 
+from types import FunctionType
+
 from . import defaults
 from .. import _internals
 from ..misc import compare_codes
@@ -58,7 +60,8 @@ class TriggerInput(Input):
         """Getter for default_code"""
         self._default_code = value
 
-    def wait(self, code=None, bitwise_comparison=False):
+    def wait(self, code=None, bitwise_comparison=False, callback_function=None,
+             process_control_events=True):
         """Wait for a trigger.
 
         Returns the code received and the reaction time [code, rt].
@@ -68,8 +71,16 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to wait for (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to wait for
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         See Also
         --------
@@ -77,7 +88,7 @@ class TriggerInput(Input):
 
        """
 
-        if defaults._skip_wait_functions:
+        if _internals.skip_wait_functions:
             return None, None
         start = get_time()
         found = None
@@ -86,9 +97,20 @@ class TriggerInput(Input):
             code = self._default_code
         self.interface.clear()
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
-                return rtn_callback, int((get_time() - start) * 1000)
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    return rtn_callback, int((get_time() - start) * 1000)
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    import pygame
+                    pygame.event.pump()
             read = self.interface.poll()
             if read is not None:
                 if code is None: #return for every event
@@ -118,8 +140,11 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to get (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to get
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
 
         """
 
@@ -150,8 +175,11 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to count (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to count
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
 
         """
 
