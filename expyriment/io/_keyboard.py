@@ -211,7 +211,7 @@ class Keyboard(Input):
         return None
 
     def wait(self, keys=None, duration=None, wait_for_keyup=False,
-             function=None, process_control_events=True):
+             callback_function=None, process_control_events=True):
         """Wait for keypress(es) (optionally for a certain amount of time).
 
         This function will wait for a keypress and returns the found key as
@@ -226,7 +226,7 @@ class Keyboard(Input):
             maximal time to wait in ms
         wait_for_keyup : bool, optional
             if True it waits for key-up
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -271,8 +271,8 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
@@ -308,7 +308,7 @@ class Keyboard(Input):
             android_hide_keyboard()
         return found_key, rt
 
-    def wait_char(self, char, duration=None, function=None,
+    def wait_char(self, char, duration=None, callback_function=None,
                   process_control_events=True):
         """Wait for character(s) (optionally for a certain amount of time).
 
@@ -322,7 +322,7 @@ class Keyboard(Input):
             a specific character or list of characters to wait for
         duration : int, optional
             maximal time to wait in ms
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -331,7 +331,7 @@ class Keyboard(Input):
         Returns
         -------
         found : char
-            pressed charater
+            pressed character
         rt : int
             reaction time in ms
 
@@ -355,8 +355,8 @@ class Keyboard(Input):
         done = False
 
         while not done:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

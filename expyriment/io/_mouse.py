@@ -406,7 +406,7 @@ class Mouse(Input):
 
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
                    duration=None, wait_for_buttonup=False,
-                   function=None, process_control_events=True):
+                   callback_function=None, process_control_events=True):
         """Wait for a mouse event (i.e., motion, button press or wheel event)
 
         Parameters
@@ -421,7 +421,7 @@ class Mouse(Input):
             the maximal time to wait in ms
         wait_for_buttonup : bool, optional
             if True it waits for button-up default=False)
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
@@ -469,8 +469,8 @@ class Mouse(Input):
             except:
                 buttons = [buttons]
         while True:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
@@ -508,7 +508,7 @@ class Mouse(Input):
 
 
     def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
-                   function=None, process_control_events=True):
+                   callback_function=None, process_control_events=True):
         """Wait for a mouse button press or mouse wheel event.
 
         Parameters
@@ -519,7 +519,7 @@ class Mouse(Input):
             maximal time to wait in ms
         wait_for_buttonup : bool, optional
             if True it waits for button-up
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
@@ -548,11 +548,11 @@ class Mouse(Input):
         rtn = self.wait_event(wait_button=True, wait_motion=False,
                               buttons=buttons, duration=duration,
                               wait_for_buttonup=wait_for_buttonup,
-                              function=function,
+                              callback_function=callback_function,
                               process_control_events=process_control_events)
         return rtn[0], rtn[2], rtn[3]
 
-    def wait_motion(self, duration=None, function=None,
+    def wait_motion(self, duration=None, callback_function=None,
                     process_control_events=True):
         """Wait for a mouse motion.
 
@@ -560,7 +560,7 @@ class Mouse(Input):
         ----------
         duration : int, optional
             maximal time to wait in ms
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
@@ -579,7 +579,7 @@ class Mouse(Input):
 
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                               duration=duration, wait_for_buttonup=False,
-                              function=function,
+                              callback_function=callback_function,
                               process_control_events=process_control_events)
 
         if isinstance(rtn[0], _internals.CallbackQuitEvent):

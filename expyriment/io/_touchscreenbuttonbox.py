@@ -223,8 +223,8 @@ class TouchScreenButtonBox(Input):
                 return bf
         return None
 
-    def wait(self, duration=None, button_fields=None, function=None,
-                process_control_keys=True):
+    def wait(self, duration=None, button_fields=None, callback_function=None,
+                process_control_events=True):
         """Wait for a touchscreen button box click.
 
         Parameters
@@ -233,7 +233,7 @@ class TouchScreenButtonBox(Input):
             The button fields that will be checked for.
         duration : int, optional
             maximal time to wait in ms
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -261,8 +261,8 @@ class TouchScreenButtonBox(Input):
         start = get_time()
         self.clear_event_buffer()
         while True:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

@@ -60,7 +60,7 @@ class TriggerInput(Input):
         """Getter for default_code"""
         self._default_code = value
 
-    def wait(self, code=None, bitwise_comparison=False, function=None,
+    def wait(self, code=None, bitwise_comparison=False, callback_function=None,
              process_control_events=True):
         """Wait for a trigger.
 
@@ -97,8 +97,8 @@ class TriggerInput(Input):
             code = self._default_code
         self.interface.clear()
         while True:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

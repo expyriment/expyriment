@@ -113,13 +113,13 @@ class StreamingButtonBox(Input, Output):
                 return None
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
-             bitwise_comparison=False, function=None,
+             bitwise_comparison=False, callback_function=None,
              process_control_events=True):
         """Wait for responses defined as codes.
 
         Notes
         -----
-        If bitwise_comparision = True, the function performs a bitwise
+        If bitwise_comparison = True, the function performs a bitwise
         comparison (logical and) between codes and received input and waits
         until a certain bit pattern is set.
 
@@ -139,7 +139,7 @@ class StreamingButtonBox(Input, Output):
             do not clear the buffer (default = False)
         bitwise_comparison : bool, optional
             make a bitwise comparison (default = False)
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -148,7 +148,7 @@ class StreamingButtonBox(Input, Output):
         Returns
         -------
         key : int
-            key code (or None) that quitted waiting
+            key code (or None) that quited waiting
         rt : int
             reaction time
 
@@ -165,8 +165,8 @@ class StreamingButtonBox(Input, Output):
         if not no_clear_buffer:
             self.clear()
         while True:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

@@ -207,7 +207,7 @@ class GamePad(Input, Output):
         if self._logging:
             _internals.active_exp._event_file_log("GamePad,cleared", 2)
 
-    def wait_press(self, buttons=None, duration=None, function=None,
+    def wait_press(self, buttons=None, duration=None, callback_function=None,
                    process_control_events=True):
         """Wait for gamepad button press.
 
@@ -219,7 +219,7 @@ class GamePad(Input, Output):
             specific buttons to wait for
         duration : int, optional
             maximal time to wait in ms
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -252,8 +252,8 @@ class GamePad(Input, Output):
             buttons = [buttons]
         done = False
         while not done:
-            if isinstance(function, FunctionType):
-                function()
+            if isinstance(callback_function, FunctionType):
+                callback_function()
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

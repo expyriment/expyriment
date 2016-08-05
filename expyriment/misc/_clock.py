@@ -103,8 +103,8 @@ class Clock(object) :
 
         self.__start = get_time()
 
-    def wait(self, waiting_time, function=None, process_control_events=False):
-        """Wait for a certain amout of milliseconds.
+    def wait(self, waiting_time, callback_function=None, process_control_events=False):
+        """Wait for a certain amount of milliseconds.
 
         Parameters
         ----------
@@ -130,13 +130,13 @@ class Clock(object) :
         if _internals.skip_wait_functions:
             return
         start = self.time
-        if isinstance(function, FunctionType) or \
+        if isinstance(callback_function, FunctionType) or \
            (_internals.active_exp is not None and \
             (process_control_events or \
              _internals.active_exp.is_callback_registered)):
             while (self.time < start + waiting_time):
-                if isinstance(function, FunctionType):
-                    function()
+                if isinstance(callback_function, FunctionType):
+                    callback_function()
                 if _internals.active_exp.is_initialized:
                     rtn_callback = _internals.active_exp._execute_wait_callback()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):
@@ -166,7 +166,7 @@ class Clock(object) :
             while (self.time < start + waiting_time):
                 pass
 
-    def wait_seconds(self, time_sec, function=None,
+    def wait_seconds(self, time_sec, callback_function=None,
                      process_control_events=False):
         """Wait for a certain amout of seconds.
 
@@ -174,7 +174,7 @@ class Clock(object) :
         ----------
         time_sec : int
             time to wait in seconds
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -191,9 +191,9 @@ class Clock(object) :
 
         """
 
-        return self.wait(time_sec * 1000, function, process_control_events)
+        return self.wait(time_sec * 1000, callback_function, process_control_events)
 
-    def wait_minutes(self, time_minutes, function=None,
+    def wait_minutes(self, time_minutes, callback_function=None,
                      process_control_events=False):
         """Wait for a certain amount of minutes.
 
@@ -201,7 +201,7 @@ class Clock(object) :
         ----------
         time_minutes : int
             time to wait in minutes
-        function : function, optional
+        callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
@@ -218,5 +218,5 @@ class Clock(object) :
 
         """
 
-        return self.wait_seconds(time_minutes * 60, function,
+        return self.wait_seconds(time_minutes * 60, callback_function,
                                  process_control_events)
