@@ -13,10 +13,13 @@ __revision__ = ''
 __date__ = ''
 
 import sys
+from types import FunctionType
+
 import pygame
 
 from . import defaults
 from .. import _internals
+from .._internals import CallbackQuitEvent
 from ..misc import is_idle_running, is_ipython_running
 
 
@@ -65,7 +68,8 @@ def get_audiosystem_is_playing(channel=None):
     return rtn
 
 
-def wait_end_audiosystem(channel=None):
+def wait_end_audiosystem(channel=None, callback_function=None,
+                         process_control_events=True):
     """Wait until audiosystem has ended playing sounds.
 
     Blocks until the audiosystem is not busy anymore and only returns then.
@@ -74,22 +78,48 @@ def wait_end_audiosystem(channel=None):
     ----------
     channel : pygame.mixer.Channel, optional
         specific channel to wait for end of playing
+    callback_function : function, optional
+        function to repeatedly execute during waiting loop
+    process_control_events : bool, optional
+        process ``io.Keyboard.process_control_keys()`` and
+        ``io.Mouse.process_quit_event()`` (default = True)
+
+    Notes
+    ------
+    This will also by default process control events (quit and pause).
+    Thus, keyboard events will be cleared from the cue and cannot be
+    received by a Keyboard().check() anymore!
 
     """
+
     from .. import io
     while get_audiosystem_is_playing(channel):
-            for event in pygame.event.get(pygame.KEYDOWN):
-                if event.type == pygame.KEYDOWN and \
-                        (event.key == io.Keyboard.get_quit_key() or
-                         event.key == io.Keyboard.get_pause_key()):
+        if _internals.skip_wait_methods:
+            break
+        if isinstance(callback_function, FunctionType):
+            callback_function
+        if _internals.active_exp is not None and \
+           _internals.active_exp.is_initialized:
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, CallbackQuitEvent):
+                if channel is None:
+                    pygame.mixer.stop()
+                else:
+                    channel.stop()
+                return rtn_callback
+            if process_control_events:
+                if _internals.active_exp.mouse.process_quit_event() or \
+                   _internals.active_exp.keyboard.process_control_keys():
                     if channel is None:
                         pygame.mixer.stop()
                     else:
                         channel.stop()
-                    io.Keyboard.process_control_keys(event)
+                    break
+            else:
+                pygame.event.pump()
 
 
-def set_develop_mode(onoff, intensive_logging=False, skip_wait_functions=False):
+def set_develop_mode(onoff, intensive_logging=False, skip_wait_methods=False):
     """Set defaults for a more convenient develop mode.
 
     Notes
@@ -109,7 +139,7 @@ def set_develop_mode(onoff, intensive_logging=False, skip_wait_functions=False):
     intensive_logging : bool, optional
         True sets expyriment.io.defaults.event_logging=2
         (default = False)
-    skip_wait_functions : bool, optional
+    skip_wait_methods : bool, optional
         If True, all wait functions in the experiment (i.e. all wait functions
         in ``expyriment.io`` and the clock) will be ommited (default = False)
 
@@ -146,7 +176,7 @@ def set_develop_mode(onoff, intensive_logging=False, skip_wait_functions=False):
     if intensive_logging:
         defaults.event_logging = 2
 
-    _internals.skip_wait_functions = skip_wait_functions
+    _internals.skip_wait_methods = skip_wait_methods
 
 
 def _get_module_values(goal_dict, module):

@@ -19,7 +19,7 @@ from types import FunctionType
 from . import defaults
 from .. import _internals
 from ..misc import compare_codes
-from .._internals import CallbackQuitEvent, skip_wait_functions
+from .._internals import CallbackQuitEvent, skip_wait_methods
 from ..misc._timer import get_time
 from ._input_output import Input, Output
 
@@ -117,15 +117,9 @@ class StreamingButtonBox(Input, Output):
              process_control_events=True):
         """Wait for responses defined as codes.
 
-        Notes
-        -----
         If bitwise_comparison = True, the function performs a bitwise
         comparison (logical and) between codes and received input and waits
         until a certain bit pattern is set.
-
-        This will also by default check for control keys (quit and pause).
-        Thus, keyboard events will be cleared from the cue and cannot be
-        received by a Keyboard().check() anymore!
 
         Parameters
         ----------
@@ -152,13 +146,19 @@ class StreamingButtonBox(Input, Output):
         rt : int
             reaction time
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None
@@ -179,8 +179,7 @@ class StreamingButtonBox(Input, Output):
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    import pygame
-                    pygame.event.pump()
+                    _internals.pump_pygame_events()
             if duration is not None:
                 if int((get_time() - start) * 1000) > duration:
                     return None, None

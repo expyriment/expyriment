@@ -82,13 +82,19 @@ class TriggerInput(Input):
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
        """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         found = None
@@ -109,8 +115,7 @@ class TriggerInput(Input):
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    import pygame
-                    pygame.event.pump()
+                    _internals.pump_pygame_events()
             read = self.interface.poll()
             if read is not None:
                 if code is None: #return for every event

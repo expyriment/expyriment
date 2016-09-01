@@ -32,7 +32,7 @@ Changed:
         specific function in every loop iteration
     (3) pump the pygame event queue to (hopefully) prevent the OS to think the
         window is "not responding"
-- control.set_develop_mode: new skip_wait_functions attribute to ommit all wait 
+- control.set_develop_mode: new skip_wait_methods attribute to ommit all wait 
   functions in the experiment (for testing)
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient

@@ -23,7 +23,9 @@ from ..misc._timer import get_time
 from ._keyboard import Keyboard
 from  ._input_output import Input, Output
 
+
 pygame.joystick.init()
+
 
 class GamePad(Input, Output):
     """A class for creating gamepad/joystick input."""
@@ -232,13 +234,19 @@ class GamePad(Input, Output):
         rt : int
             reaction time in ms
 
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None

@@ -249,7 +249,7 @@ class Keyboard(Input):
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         if android_show_keyboard is not None:
             android_show_keyboard()
@@ -341,7 +341,7 @@ class Keyboard(Input):
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None

@@ -407,7 +407,14 @@ class Mouse(Input):
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
                    duration=None, wait_for_buttonup=False,
                    callback_function=None, process_control_events=True):
-        """Wait for a mouse event (i.e., motion, button press or wheel event)
+        """Wait for a mouse event (i.e., motion, button press or wheel event).
+
+        Button id coding:
+
+        - None    for no mouse button event or
+        - 0,1,2   for left. middle and right button or
+        - 3       for wheel up or
+        - 4       for wheel down (wheel works only for keydown events).
 
         Parameters
         ----------
@@ -440,12 +447,9 @@ class Mouse(Input):
 
         Notes
         ------
-        button id coding
-
-        - None    for no mouse button event or
-        - 0,1,2   for left. middle and right button or
-        - 3       for wheel up or
-        - 4       for wheel down (wheel works only for keydown events).
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
 
         See Also
         --------
@@ -453,7 +457,7 @@ class Mouse(Input):
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None, None, None
         start = get_time()
         self.clear()
