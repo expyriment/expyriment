@@ -127,7 +127,7 @@ class Clock(object) :
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return
         start = self.time
         if isinstance(callback_function, FunctionType) or \
@@ -146,8 +146,7 @@ class Clock(object) :
                             break
                         _internals.active_exp.mouse.process_quit_event()
                     else:
-                        import pygame
-                        pygame.event.pump()
+                        _internals.pump_pygame_events()
         else:
             looptime = 200
             if (waiting_time > looptime):

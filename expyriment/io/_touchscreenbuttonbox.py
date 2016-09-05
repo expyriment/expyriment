@@ -248,6 +248,10 @@ class TouchScreenButtonBox(Input):
 
         Notes
         -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         Don't forget to show the TouchScreenButtonBox.
 
         See Also
@@ -256,7 +260,7 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        if _internals.skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         self.clear_event_buffer()
@@ -274,8 +278,7 @@ class TouchScreenButtonBox(Input):
                         pressed_button_field, rt = None, None
                         break
                 else:
-                    import pygame
-                    pygame.event.pump()
+                    _internals.pump_pygame_events()
             pressed_button_field, touch_time = self.check(button_fields)
             if pressed_button_field is not None:
                 rt = int((get_time()-start)*1000)

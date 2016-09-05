@@ -13,13 +13,13 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-from types import ModuleType
+from types import ModuleType, FunctionType
 from . import _midiin_defaults as defaults
 from ... import _internals
+from .._internals import CallbackQuitEvent
 from ...misc._timer import get_time
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input
-from ..defaults import _skip_wait_functions
 
 
 import time
@@ -128,7 +128,8 @@ class MidiIn(Input):
                 _internals.active_exp._event_file_log(
                 "MIDI In ({0}),cleared".format(self.id), 2)
 
-    def wait(self, events, duration=None):
+    def wait(self, events, duration=None, callback_function=None,
+             process_control_events=True):
         """Wait for (a) certain event(s).
 
         Events to wait for are in the form of a list with 4 elements and do
@@ -140,6 +141,11 @@ class MidiIn(Input):
             event(s) to wait for
         duration : int, optional
             maximal time to wait in ms
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -148,13 +154,19 @@ class MidiIn(Input):
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if _skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None
@@ -169,16 +181,25 @@ class MidiIn(Input):
             events = [events]
         done = False
         while not done:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                return rtn_callback, int((get_time() - start) * 1000)
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    _event = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             event = self.read(1)
             if event is not None and event[0][0] in events:
                 rt = int((get_time() - start) * 1000)
                 _event = event[0][0]
-                done = True
-                break
-            if Keyboard.process_control_keys():
                 done = True
                 break
             if duration:

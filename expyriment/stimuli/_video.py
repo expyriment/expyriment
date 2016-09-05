@@ -17,6 +17,7 @@ __date__ = ''
 
 import os
 import time
+from types import FunctionType
 
 import pygame
 try:
@@ -463,13 +464,25 @@ class Video(_visual.Stimulus):
             ogl_screen.display()
         _internals.active_exp._screen.update()
 
-    def _wait(self, frame=None):
+    def _wait(self, frame=None, callback_function=None,
+              process_control_events=True):
         """Wait until frame was shown or end of video and update screen.
 
         Parameters
         ----------
         frame : int, optional
             number of the frame to stop after
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
 
         See Also
         --------
@@ -479,28 +492,52 @@ class Video(_visual.Stimulus):
 
         while self.is_playing:
 
+            if _internals.skip_wait_methods:
+                return
+
             self.present()
             if frame is not None and self.frame >= frame:
                 break
 
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, CallbackQuitEvent):
-                return rtn_callback
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    return rtn_callback
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event():
+                        break
 
             for event in pygame.event.get(pygame.KEYDOWN):
-                if event.type == pygame.KEYDOWN and (
-                event.key == self.Keyboard.get_quit_key() or
-                event.key == self.Keyboard.get_pause_key()):
+                if _internals.active_exp is not None and \
+                   _internals.active_exp.is_initialized and \
+                   process_control_events and \
+                   event.type == pygame.KEYDOWN and (
+                       event.key == self.Keyboard.get_quit_key() or
+                       event.key == self.Keyboard.get_pause_key()):
                     self.pause()
                     self.Keyboard.process_control_keys(event, self.stop)
                     self.play()
 
-    def wait_frame(self, frame):
+    def wait_frame(self, frame, callback_function=None,
+                   process_control_events=True):
         """Wait until certain frame was shown and constantly update screen.
 
-        Note
-        ----
-        This function will also check for control keys (quit and pause).
+        Parameters
+        ----------
+        frame : int
+            number of the frame to stop after
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
         If keybaord events should not be cleared, a loop has to be created
@@ -514,29 +551,32 @@ class Video(_visual.Stimulus):
                 video.update()
             video.stop()
 
-        Parameters
-        ----------
-        frame : int
-            number of the frame to stop after
-
         """
 
         if self.is_playing:
-            self._wait(frame)
+            self._wait(frame, callback_function, process_control_events)
 
-    def wait_end(self):
+    def wait_end(self, callback_function=None, process_control_events=True):
         """Wait until video has ended and constantly update screen.
 
-        Note
-        ----
-        This will also check for control keys (quit and pause).
+        Parameters
+        ----------
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
         If keybaord events should not be cleared, a loop has to be created
         manually like::
 
             video.present()
-            while video.is_playing:
+            while video.is_playing and video.frame < frame:
                 while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
@@ -545,4 +585,4 @@ class Video(_visual.Stimulus):
 
         """
 
-        self._wait()
+        self._wait(callback_function, process_control_events)

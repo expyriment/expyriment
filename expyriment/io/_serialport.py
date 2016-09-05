@@ -15,7 +15,7 @@ __date__ = ''
 
 
 import atexit
-from types import ModuleType
+from types import ModuleType, FunctionType
 
 try:
     import serial
@@ -27,8 +27,7 @@ except:
 from . import defaults
 from ._input_output import Input, Output
 from .. import _internals, misc
-
-
+from .._internals import CallbackQuitEvent
 
 
 class SerialPort(Input, Output):
@@ -366,11 +365,10 @@ The Python package 'pySerial' is not installed."""
             return ord(read)
         return None
 
-    def read_line(self, duration=None):
+    def read_line(self, duration=None, callback_function=None,
+                  process_control_events=True):
         """Read a line from serial port (until newline) and return string.
 
-        Notes
-        -----
         The function is waiting for input. Use the duration parameter
         to avoid too long program blocking.
 
@@ -378,16 +376,30 @@ The Python package 'pySerial' is not installed."""
         ----------
         duration : int, optional
             try to read for given amount of time (default=None)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
         line : str
+
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
 
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
+
+        if _internals.skip_wait_methods:
+            return
 
         rtn_string = ""
         if duration is not None:
@@ -399,10 +411,21 @@ The Python package 'pySerial' is not installed."""
                     repr(self._serial.port)), 2)
 
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                rtn_string = rtn_callback
-                break
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    rtn_string = rtn_callback
+                    break
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
+
             byte = self.poll()
             if byte:
                 byte = chr(byte)

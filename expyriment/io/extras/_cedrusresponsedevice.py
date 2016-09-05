@@ -13,7 +13,8 @@ __revision__ = ''
 __date__ = ''
 
 
-from types import ModuleType
+from types import ModuleType, FunctionType
+
 try:
     import pyxid as _pyxid
 except:
@@ -21,7 +22,6 @@ except:
 
 from ...io._input_output import Input
 from ... import _internals, stimuli, misc
-from ..defaults import _skip_wait_functions
 
 
 class CedrusResponseDevice(Input):
@@ -197,18 +197,12 @@ class CedrusResponseDevice(Input):
         return None
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
-             check_for_control_keys=True):
+             callback_function=None, process_control_events=True):
         """Wait for responses defined as codes.
 
         The functions returns the found key code and the reaction time, that
         is, the time relative to the called of wait. By default the buffer
         will be cleared() before waiting.
-
-        Notes
-        -----
-        The function checks for control keys (quit and pause) by default.
-        Thus, keyboard events will be cleared from the cue and cannot be
-        received by a Keyboard().check() anymore!
 
         Parameters
         ----------
@@ -219,8 +213,11 @@ class CedrusResponseDevice(Input):
         no_clear_buffer : bool, optional
             do not clear the buffer.  In this case RT could be negative,
             if the event is already in the buffer (default = False)
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default = True)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -229,21 +226,37 @@ class CedrusResponseDevice(Input):
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if _skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = self._buffer.clock.time
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = _internals.active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                return rtn_callback
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    return rtn_callback
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             if duration is not None:
                 if int(self._buffer.clock.time - start) > duration:
                     return (None, None)
@@ -251,12 +264,11 @@ class CedrusResponseDevice(Input):
             if found is not None:
                 found = (found[0], found[1] - start)
                 break
-            if check_for_control_keys:
-                if _internals.active_exp.keyboard.process_control_keys():
-                    break
-        _internals.active_exp._event_file_log(
-                            "CedrusResponseDevice,received,{0},wait".format(
-                                                                        found))
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                "CedrusResponseDevice,received,{0},wait".format(found))
+
         return found
 
     if isinstance(_pyxid, ModuleType):

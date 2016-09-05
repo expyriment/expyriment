@@ -15,6 +15,7 @@ __date__ = ''
 
 import socket
 import errno
+from types import FunctionType
 
 from . import _tcpclient_defaults as defaults
 from ... import _internals
@@ -22,8 +23,6 @@ from ...misc._timer import get_time
 from ..._internals import CallbackQuitEvent
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input, Output
-from ..defaults import _skip_wait_functions
-
 
 
 class TcpClient(Input, Output):
@@ -151,11 +150,11 @@ class TcpClient(Input, Output):
                 "TcpClient,sent,{0}".format(data))
 
     def wait(self, length=None, package_size=None, duration=None,
-             check_control_keys=True):
+             callback_function=None, process_control_events=True):
         """Wait for data.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         length : int, optional
             The length of the data to be waited for in bytes.
             If not set, a single package will be waited for.
@@ -165,8 +164,11 @@ class TcpClient(Input, Output):
             If length < package_size, package_size = length.
         duration: int, optional
             The duration to wait in milliseconds.
-        process_control_keys : bool, optional
-            Check if control key has been pressed (default = True).
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns:
         --------
@@ -175,13 +177,19 @@ class TcpClient(Input, Output):
         rt : int
             The time it took to receive the data in milliseconds.
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if _skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
 
         start = get_time()
@@ -213,13 +221,22 @@ class TcpClient(Input, Output):
             except socket.error as e:
                 err = e.args[0]
                 if err == errno.EAGAIN or err == errno.EWOULDBLOCK:
-                    rtn_callback = _internals.active_exp._execute_wait_callback()
-                    if isinstance(rtn_callback, CallbackQuitEvent):
-                        return rtn_callback, int((get_time() - start) * 1000)
-
-                    if check_control_keys:
-                        if Keyboard.process_control_keys():
+                    if isinstance(callback_function, FunctionType):
+                        callback_function()
+                    if _internals.active_exp is not None and \
+                    _internals.active_exp.is_initialized:
+                        rtn_callback = _internals.active_exp._execute_wait_callback()
+                        if isinstance(rtn_callback, CallbackQuitEvent):
+                            data = rtn_callback
+                            rt = int((get_time() - start) * 1000)
                             break
+                        if process_control_events:
+                            if _internals.active_exp.mouse.process_quit_event() or \
+                            _internals.active_exp.keyboard.process_control_keys():
+                                break
+                        else:
+                            _internals.pump_pygame_events()
+
             if duration:
                 if int((get_time() - start) * 1000) >= duration:
                     data = None

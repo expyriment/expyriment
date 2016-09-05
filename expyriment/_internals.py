@@ -15,6 +15,9 @@ __date__ = ''
 
 import sys
 import os
+
+import pygame
+
 try:
     import android
 except ImportError:
@@ -46,12 +49,12 @@ def get_version():
 
 PYTHON3 = (sys.version_info[0] == 3)
 
-active_exp = None # expyriment.design.__init__ sets active_exp to
-                  # design.Experiment("None")
-                  # Provides the access to the currently active experiment
-                  # import ._internals to read and write _active.exp
+active_exp = None  # expyriment.design.__init__ sets active_exp to
+                   # design.Experiment("None")
+                   # Provides the access to the currently active experiment
+                   # import ._internals to read and write _active.exp
 
-skip_wait_functions = False  # global toggle, can be changed by set_develop_mode
+skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
 def is_base_string(s):
     if PYTHON3:
@@ -70,6 +73,9 @@ def is_byte_string(s):
         return isinstance(s, bytes)
     else:
         return isinstance(s, str)
+
+def pump_pygame_events():
+    pygame.event.pump()
 
 class Expyriment_object(object):
     """A class implementing a general Expyriment object.
