@@ -1,2 +1,6 @@
 sphinx
 numpydoc
+pyopengl
+pygame
+pyserial
+pyparallel
