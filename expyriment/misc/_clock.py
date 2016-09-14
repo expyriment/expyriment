@@ -136,7 +136,9 @@ class Clock(object) :
              _internals.active_exp.is_callback_registered)):
             while (self.time < start + waiting_time):
                 if isinstance(callback_function, FunctionType):
-                    callback_function()
+                    rtn_callback = callback_function()
+                    if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                        return rtn_callback
                 if _internals.active_exp.is_initialized:
                     rtn_callback = _internals.active_exp._execute_wait_callback()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):

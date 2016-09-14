@@ -500,7 +500,9 @@ class Video(_visual.Stimulus):
                 break
 
             if isinstance(callback_function, FunctionType):
-                callback_function()
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    return rtn_callback
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
