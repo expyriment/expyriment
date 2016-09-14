@@ -62,7 +62,14 @@ data_files = [('share/expyriment/examples',
               ('share/expyriment/documentation/sphinx',
                glob('documentation/sphinx/Makefile'))]
 
-install_requires = ["pyopengl>=3.0", "future"]
+install_requires = ["future>=0.15,<1",
+                    "pygame>=1.9,<2",
+                    "pyopengl>=3.0,<4",
+                    "numpy>=1.6,<2",
+                    "pyserial>=3,<4",
+                    "pyparallel>=0.2,<1",
+                    "sounddevice>=0.3,<1",
+                    "mediadecoder>=0.1,<1"]
 
 
 # Clear old installation when installing
