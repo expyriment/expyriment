@@ -119,7 +119,24 @@ def wait_end_audiosystem(channel=None, callback_function=None,
                 pygame.event.pump()
 
 
-def set_develop_mode(onoff, intensive_logging=False, skip_wait_methods=False):
+def set_skip_wait_methods(on=True):
+    """Skip all wait methods.
+
+    Parameters
+    ----------
+    on : bool, optional
+        If True, all wait methods in the experiment (i.e. all wait functions
+        in ``expyriment.io`` and the clock) will be ommited (default = True)
+
+    """
+
+    if on:
+        _internals.skip_wait_methods = True
+    else:
+        _internals.skip_wait_methods = False
+
+
+def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
     """Set defaults for a more convenient develop mode.
 
     Notes
@@ -134,7 +151,7 @@ def set_develop_mode(onoff, intensive_logging=False, skip_wait_methods=False):
 
     Parameters
     ----------
-    onoff : bool
+    on : bool, optional
         set develop_mode on (True) or off (False)
     intensive_logging : bool, optional
         True sets expyriment.io.defaults.event_logging=2
@@ -146,13 +163,17 @@ def set_develop_mode(onoff, intensive_logging=False, skip_wait_methods=False):
     """
 
     from .. import io
-    if onoff:
+    if on:
         defaults._mode_settings = [defaults.initialize_delay,
                                    defaults.window_mode,
                                    defaults.fast_quit,
                                    io.defaults.outputfile_time_stamp,
                                    defaults.auto_create_subject_id]
-
+        if intensive_logging:
+                defaults._mode_settings.append(defaults.event_logging)
+                defaults.event_logging = 2
+        if skip_wait_methods:
+            set_skip_wait_methods(True)
         print("*** DEVELOP MODE ***")
         defaults.initialize_delay = 0
         defaults.window_mode = True
@@ -169,14 +190,13 @@ def set_develop_mode(onoff, intensive_logging=False, skip_wait_methods=False):
                 defaults._mode_settings[3]
             defaults.auto_create_subject_id = defaults._mode_settings[4]
             defaults._mode_settings = None
-
+            try:
+                defaults.event_logging = defaults._mode_settings[5]
+            except:
+                pass
+            set_skip_wait_methods(False)
         else:
             pass  # Nothing to do
-
-    if intensive_logging:
-        defaults.event_logging = 2
-
-    _internals.skip_wait_methods = skip_wait_methods
 
 
 def _get_module_values(goal_dict, module):
