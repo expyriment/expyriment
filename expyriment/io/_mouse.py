@@ -474,7 +474,11 @@ class Mouse(Input):
                 buttons = [buttons]
         while True:
             if isinstance(callback_function, FunctionType):
-                callback_function()
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    btn_id = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()

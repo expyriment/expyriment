@@ -272,7 +272,11 @@ class Keyboard(Input):
         done = False
         while not done:
             if isinstance(callback_function, FunctionType):
-                callback_function
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    done = True
+                    found_key = rtn_callback
+                    rt = int((get_time() - start) * 1000)
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
@@ -356,14 +360,18 @@ class Keyboard(Input):
 
         while not done:
             if isinstance(callback_function, FunctionType):
-                callback_function()
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    done = True
+                    rt = int((get_time() - start) * 1000)
+                    found_char = rtn_callback
             if _internals.active_exp is not None and \
                _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
-                        done = True
-                        rt = int((get_time() - start) * 1000)
-                        found_char = rtn_callback
+                    done = True
+                    rt = int((get_time() - start) * 1000)
+                    found_char = rtn_callback
                 if process_control_events:
                     _internals.active_exp.mouse.process_quit_event()
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
