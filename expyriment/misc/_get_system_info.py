@@ -31,6 +31,8 @@ try:
     import parallel as _parallel
 except ImportError:
     _parallel = None
+except WindowsError:
+    _parallel = None
 try:
     import numpy as _numpy
 except:
