@@ -185,6 +185,8 @@ def add_fonts(folder):
     """
 
     pygame.font.init()
+    if pygame.sysfont.get_fonts() == [None]:
+        print("Initializing system fonts. This might take a couple of minutes...")
     pygame.sysfont.initsysfonts()
 
     for font in glob.glob(os.path.join(folder, "*")):
