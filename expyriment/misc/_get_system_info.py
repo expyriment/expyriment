@@ -354,7 +354,7 @@ def get_system_info(as_string=False):
     info["hardware_disk_space_free"] = hardware_disk_space_free
     info["hardware_disk_space_total"] = hardware_disk_space_total
     try:
-        socket.gethostbyname("expyriment.googlecode.com")
+        socket.gethostbyname("google.com")
         hardware_internet_connection = "Yes"
     except:
         hardware_internet_connection = "No"
