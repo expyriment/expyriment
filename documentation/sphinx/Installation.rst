@@ -4,15 +4,14 @@ Installation
 How to install Expyriment?
 --------------------------
 
+Expyriment works with all current `Python`_ versions (2.7 or 3.5).
 The latest release of Expyriment can be found at the `release page`_. Note, that
-Expyriment depends on the following software packages that have to be installed 
+Expyriment depends on the following Python packages that have to be installed 
 on your system:
 
-* `Python`_ (2.7 or 3.5)
 * Future_ (>=0.15)
 * Pygame_ (>=1.9)
 * PyOpenGL_ (>=3.0)
-
 
 Additional packages, which are optional and only required for some features of 
 Expyriment are:
