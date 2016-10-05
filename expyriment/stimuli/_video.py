@@ -111,6 +111,21 @@ class Video(_visual.Stimulus):
         if not(os.path.isfile(self._filename)):
             raise IOError("The video file {0} does not exists".format(
                 unicode2byte(self._filename)))
+            
+        if self._backend == "mediadecoder":
+            try:
+                import mediadecoder as _mediadecoder
+            except ImportError:
+                message = """Video cannot be initialized with backend
+"mediadecoder". The Python package 'mediadecoder' is not installed."""
+                raise ImportError(message)
+
+            try:
+                import sounddevice as _sounddevice
+            except ImportError:
+                print("Warning: Package 'sounddevice' not installed!\n" +
+                      "Audio will be played back using 'Pygame' backend.)
+
 
     def __del__(self):
         """Destructor for the video stimulus."""
