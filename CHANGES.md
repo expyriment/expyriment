@@ -23,6 +23,7 @@ New Features:
   will be added to the event file.
 - All present methods have an optional log_event_tag that will be passed
   to Eventfile.log (see above)
+- New method: misc.has_internet_connection()
 
 Changed:
 - all wait methods (io and Clock) now
