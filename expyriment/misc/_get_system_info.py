@@ -38,6 +38,14 @@ try:
 except:
     _numpy = None
 try:
+    import mediadecoder as _mediadecoder
+except:
+    _mediadecoder = None
+try:
+    import sounddevice as _sounddevice
+except:
+    _sounddevice = None
+try:
     import PIL.Image as _pil
 except:
     _pil = None
@@ -322,6 +330,16 @@ def get_system_info(as_string=False):
     else:
         numpy_version = ""
     info["python_numpy_version"] = numpy_version
+    if _mediadecoder is not None:
+        mediadecoder_version = _mediadecoder.__version__
+    else:
+        mediadecoder_version = ""
+    info["python_mediadecoder_version"] = mediadecoder_version
+    if _sounddevice is not None:
+        sounddevice_version = _sounddevice.__version__
+    else:
+        sounddevice_version = ""
+    info["python_sounddevice_version"] = sounddevice_version
     if _pil is not None:
         pil_version = _pil.VERSION
     else:
