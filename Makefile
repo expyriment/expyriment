@@ -12,7 +12,7 @@ wheel: dist build/wheel_version
 
 dist:
 	mkdir -p build
-	python setup.py bdist_wheel | tee build/wheel.log
+	python setup.py bdist_wheel --universal | tee build/wheel.log
 
 build/wheel_version: dist 
 	@grep "Expyriment Version:" build/wheel.log | sed  \
