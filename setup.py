@@ -64,13 +64,15 @@ data_files = [('share/expyriment/examples',
 
 install_requires = ["future>=0.15,<1",
                     "pygame>=1.9,<2",
-                    "pyopengl>=3.0,<4",
-                    "numpy>=1.6,<2",
-                    "pyserial>=3,<4",
-                    "pyparallel>=0.2,<1",
-                    "sounddevice>=0.3,<1",
-                    "mediadecoder>=0.1,<1"]
+                    "pyopengl>=3.0,<4"]
 
+extras_require = {
+        'optional': ["numpy>=1.6,<2",
+                     "pyserial>=3,<4",
+                     "pyparallel>=0.2,<1",
+                     "sounddevice>=0.3,<1",
+                     "mediadecoder>=0.1,<1"],
+    }
 
 # Clear old installation when installing
 class Install(install):
@@ -267,6 +269,7 @@ if __name__=="__main__":
                       package_data=package_data,
                       data_files=data_files,
                       install_requires=install_requires,
+                      extras_require=extras_require,
                       cmdclass={'build_py': Build, 'install': Install,
                                 'bdist_wininst': Wininst}
             )
@@ -292,6 +295,7 @@ if __name__=="__main__":
               package_data=package_data,
               data_files=data_files,
               install_requires=install_requires,
+              extras_require=extras_require,
               cmdclass={'install': Install, 'bdist_wininst': Wininst}
         )
 
