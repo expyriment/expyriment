@@ -256,6 +256,7 @@ def find_font(font):
     else:
         return ""
 
+
 def get_monitor_resolution():
     """Returns the monitor resolution
 
@@ -274,6 +275,7 @@ def get_monitor_resolution():
         return (pygame.display.Info().current_w,
                 pygame.display.Info().current_h)
 
+
 def is_ipython_running():
     """Return True if IPython is running."""
 
@@ -283,10 +285,12 @@ def is_ipython_running():
     except NameError:
         return False
 
+
 def is_idle_running():
     """Return True if IDLE is running."""
 
     return "idlelib.run" in sys.modules
+
 
 def is_interactive_mode():
     """Returns if Python is running in interactive mode (such as IDLE or
@@ -301,11 +305,21 @@ def is_interactive_mode():
     # ps2 is only defined in interactive mode
     return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
 
+
 def is_android_running():
     """Return True if Exypriment runs on Android."""
 
     return android is not None
-    
+
+
+def has_internet_connection():
+    """Return True if computer is connected to internet."""
+    try:
+        socket.gethostbyname("google.com")
+        return True
+    except:
+        return False
+
 
 def create_colours(amount):
     """Create different and equally spaced RGB colours.
