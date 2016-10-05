@@ -139,6 +139,7 @@ Notes
 -----
 
 **Make sure python.exe is in your Path**
+
     If you get an an error that `'python' is not recognized as an internal or
     external command, operable program or batch file`, Windows does not know
     where to find the Python interpreter. To fix this, find the directory that
