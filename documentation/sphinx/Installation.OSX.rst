@@ -26,22 +26,18 @@ Default installation (online)
 
 3. In a terminal, run::
 
-   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-   brew tap Homebrew/python
-   brew update
-   brew install python pygame
-   sudo /usr/local/bin/python -m pip install --upgrade expyriment
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew tap Homebrew/python
+    brew update
+    brew install python pygame
+    sudo /usr/local/bin/python -m pip install --upgrade expyriment[optional]
 
+   (Ommit ``[optional]`` to install without additional packages)
+   
 4. To make the Homebrew Python the one that is called when typing "python", in a
 terminal, add the following to ``~/.bash_profile``::
 
     export PATH=/usr/local/bin:$PATH
-
-For the alternative packages (optional):
-
-4. In a terminal, run ::
-
-    sudo /usr/local/bin/python -m pip install --upgrade pyserial
 
 
 Alternative installation (offline)
@@ -59,19 +55,15 @@ Alternative installation (offline)
 
 5. Download Pygame_ to ``Expyriment_Installation``
 
-7. In a terminal, run::
+6. In a terminal, run::
 
-    sudo python -m pip download -d ~/Desktop/Expyriment_Installation expyriment
- 
-5. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+    sudo python -m pip download -d ~/Desktop/Expyriment_Installation expyriment[optional]
     
-For the additional packages (optional):
+   (Ommit ``[optional]`` to install without additional packages)
+ 
+7. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-6. In a command prompt, run::
-
-    sudo python -m pip download -d ~/Desktop/Expyriment_Installation 'pyserial>=3,<4'
-
-7. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+8. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 **On the target PC**
@@ -86,15 +78,20 @@ For the additional packages (optional):
 
 5. Install ``Expyriment_Installation/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg``
 
-4. In a command prompt, run::
+6. In a command prompt, run::
 
-    python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment
+    python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
 
-For the additional packages (optional):
+   (Ommit ``[optional]`` to install without additional packages)
+   
+7. To use enhanced video playback, run::
 
-5. In a command prompt, run::
-
-    python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade 'pyserial>=3,<4'
+    mkdir -p ~/.local/bin
+    cd ~/Desktop/Expyriment_Installation
+    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
+    mv ffmpeg ffprobe ffserver ~/.local/bin
+    echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
+    source ~/.bash_profile
 
 
 Python 3
@@ -116,18 +113,14 @@ Default installation (online)
    brew update
    brew install python3 pygame
    brew install pygame --without-python
-   sudo /usr/local/bin/python3 -m pip install --upgrade expyriment
+   sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[optional]
+   
+  (Ommit ``[optional]`` to install without additional packages)
 
 4. To make the Homebrew Python the one that is called when typing "python", in a
 terminal, add the following to ``~/.bash_profile``::
 
     export PATH=/usr/local/bin:$PATH
-
-For the alternative packages (optional):
-
-4. In a terminal, run ::
-
-    sudo /usr/local/bin/python3 -m pip install --upgrade pyserial
 
 
 Alternative installation (offline)
@@ -145,21 +138,11 @@ Alternative installation (offline)
 
 5. In a terminal, run::
 
-    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation --pre pygame
+    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation expyriment[optional]
  
-6. In a terminal, run::
+6. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation expyriment
- 
 7. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
-    
-For the additional packages (optional):
-
-8. In a command prompt, run::
-
-    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation 'pyserial>=3,<4'
-
-9. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 **On the target PC**
@@ -174,17 +157,19 @@ For the additional packages (optional):
 
 5. In a command prompt, run::
 
-    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade --pre pygame
+    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
+    
+   (Ommit `[optional]` to install without additional packages)
 
-6. In a command prompt, run::
+6. To use enhanced video playback, run::
 
-    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment
+    mkdir -p ~/.local/bin
+    cd ~/Desktop/Expyriment_Installation
+    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
+    mv ffmpeg ffprobe ffserver ~/.local/bin
+    echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
+    source ~/.bash_profile
 
-For the additional packages (optional):
-
-7. In a command prompt, run::
-
-    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade 'pyserial>=3,<4'
 
 
 Notes
@@ -214,3 +199,4 @@ Notes
 .. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
 .. _XQuartz: https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.9.dmg
 .. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
+.. _ffmpeg: http://www.ffmpegmac.net/resources/Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
