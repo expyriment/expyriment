@@ -3,29 +3,26 @@
 Platform-specific instructions: Linux
 =====================================
 
-All Linux distributions
------------------------
+All Linux distributions (recommended)
+-------------------------------------
 
 1. Use your distribution's package manager to install
 
   * Python or Python3
   * pip or pip3
   * Pygame
+  * build-essential (or equivalent)
+  * libffi-dev
+  * python-dev
 
 2. In a command line, run::
 
     sudo pip install --upgrade pip
-    sudo pip install --upgrade expyriment
+    sudo pip install --upgrade expyriment[optional]
+    
+   (Ommit ``[optional]`` to install without additional packages)
 
-Replace `pip` with `pip3` when using Python3.
-
-For the alternative packages (optional):
-
-1. Use your distribution's package manager to install
-
-  * Numpy
-  * PyParallel
-  * PySerial
+   Replace `pip` with `pip3` when using Python3
 
 
 Debian, Ubuntu and derivatives
