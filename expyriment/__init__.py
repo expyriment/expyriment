@@ -48,6 +48,22 @@ if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
                       "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))
+
+try:
+    import future as _future
+    if _future.__version__.split(".")[1] < 15:
+      raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Future {0}.{1}.{2}.".format(
+                        int(_future.version.__version__[0]),
+                        int(_future.version.__version__[2]),
+                        int(_future.version.__version__[4]),
+                          ) +
+                      "\nPlease install Future >= 0.15.")
+except ImportError:
+    raise ImportError("Expyriment {0} ".format(__version__) +
+                      "needs the package 'Future')." +
+                      "\nPlease install Future >= 0.15.")
+
 try:
     import pygame as _pygame
     if _pygame.vernum < (1, 9, 1):
