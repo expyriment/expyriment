@@ -10,9 +10,11 @@ Non-English characters in strings in the Expyriment script file
 When attempting to use non-English characters in strings in your Expyriment
 script file, the following three conditions have to be met:
 
-1. **Only use non-English charactes in unicode strings!**
+1. **Only use non-English charactes in unicode strings (Python 2 only)!**
    
    For example: Use ``u"Überexperiment"`` instead of ``"Überexperiment"``.
+   
+   In Python 3 you can use normal strings, as they are already unicode compatible.
 
 2. **Know the encoding used by your editor!**
    
