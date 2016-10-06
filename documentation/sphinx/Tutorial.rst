@@ -46,13 +46,16 @@ The following should happen:
 * After pressing ENTER "Quitting experiment..." will be presented on the screen
 
 Let's see what we just did in more detail:
+    
     ::
+    
         import expyriment 
     
     We imported the Expyriment package into Python, such that we can use it 
     there.
 
     ::
+    
         exp = expyriment.design.Experiment(name="First Experiment")
         expyriment.control.initialize(exp)
     
