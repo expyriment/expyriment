@@ -124,7 +124,7 @@ class Video(_visual.Stimulus):
                 import sounddevice as _sounddevice
             except ImportError:
                 print("Warning: Package 'sounddevice' not installed!\n" +
-                      "Audio will be played back using 'Pygame' backend.)
+                      "Audio will be played back using 'Pygame' backend.")
 
 
     def __del__(self):
