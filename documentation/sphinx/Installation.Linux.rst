@@ -23,7 +23,7 @@ All Linux distributions (recommended)
     
    (Ommit ``[optional]`` to install without additional packages)
 
-   Replace `pip` with `pip3` when using Python3
+   Replace ``pip`` with ``pip3`` when using Python3
 
 For example, in Debian run::
 
