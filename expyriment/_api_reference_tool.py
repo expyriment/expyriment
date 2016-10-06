@@ -23,6 +23,7 @@ from pydoc import getdoc as _getdoc
 import inspect as _inspect
 from types import ModuleType, MethodType, FunctionType
 
+import expyriment
 from ._internals import get_version
 
 
@@ -51,6 +52,7 @@ def _get_doc_and_function(obj):
 
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
+    import expyriment
     namespace = locals()
     for cl in classes:
         cl = "{0}.{1}".format(mod.__name__, cl)
