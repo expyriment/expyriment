@@ -569,14 +569,14 @@ def run_test_suite():
                             'go_on=False;rtn=[];'])
 
     background = stimuli.Canvas(size=[400, 600])
-    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 200))
-    pict.scale(0.5)
+    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 255))
+    pict.scale(0.35)
     pict.plot(background)
-
-    v = stimuli.TextLine(get_version(), text_size=14)
-    v.move((0, 150))
+    
+    v = stimuli.TextLine("Version {0}".format(get_version()), text_size=10,
+            text_colour=constants.C_EXPYRIMENT_PURPLE)
+    v.move((0, 205))
     v.plot(background)
-
     results = get_system_info()
 
     try:

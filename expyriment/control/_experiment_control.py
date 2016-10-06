@@ -202,7 +202,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         counter.present(clear=False)
         number -= 1
         key = experiment.keyboard.wait(pygame.K_ESCAPE, duration=1000,
-                                       check_for_control_keys=False)
+                                       process_control_events=False)
         if key[0] is not None:
             break
 
@@ -448,10 +448,10 @@ fullscreen.""")
                            position=(0, 100))
     logo.scale((0.7, 0.7))
     text = stimuli.TextLine("Version {0}".format(get_version()),
-                            text_size=14,
-                            text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                            text_size=20,
+                            text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
-                            position=(0, -10))
+                            position=(0, -5))
     canvas = stimuli.Canvas((600, 400), colour=(0, 0, 0))
     canvas2 = stimuli.Canvas((600, 400), colour=(0, 0, 0))
     logo.plot(canvas)
@@ -466,7 +466,7 @@ fullscreen.""")
             text_size=14,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),
-            position=(0, -40))
+            position=(0, -50))
         text2.plot(canvas)
     canvas.preload(True)
     canvas._set_surface(canvas._get_surface().convert())
