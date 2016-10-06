@@ -22,19 +22,19 @@ an instance of this class) within expyriment.design can be set via:
 ``expyriment.design.defaults.classname_parametername = x``
 
 `expyriment.stimuli.defaults`_
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.stimuli can be set via:
 ``expyriment.stimuli.defaults.classname_parametername = x``
 
 `expyriment.io.defaults`_
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.io can be set via:
 ``expyriment.io.defaults.classname_parametername = x``
 
 `expyriment.misc.defaults`_
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 The parameters of every class' constructor (i.e. the parameters when creating
 an instance of this class) within expyriment.misc can be set via:
 ``expyriment.misc.defaults.classname_parametername = x``
