@@ -22,7 +22,7 @@ Default installation (online)
 
 2. Install Xcode Command Line Tools by running the following in a terminal::
 
-   xcode-select --install
+    xcode-select --install
 
 3. In a terminal, run::
 
