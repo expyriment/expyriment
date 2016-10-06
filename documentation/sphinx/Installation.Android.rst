@@ -36,8 +36,11 @@ Examples of correctly located Expyriment scripts include:
 
 Notes
 -----
+
 **Extra plugins not supported**
+
     The current version of the "Expyriment Android Runtime" does not support extras plugins.
+
 
 .. _`PGS4A`: http://pygame.renpy.org
 .. _`Android release page`: https://github.com/expyriment/expyriment-android-runtime/releases
