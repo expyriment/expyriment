@@ -16,7 +16,7 @@ __date__ = ''
 from types import ModuleType, FunctionType
 from . import _midiin_defaults as defaults
 from ... import _internals
-from .._internals import CallbackQuitEvent
+from ..._internals import CallbackQuitEvent
 from ...misc._timer import get_time
 from ...io._keyboard import Keyboard
 from ...io._input_output import Input
