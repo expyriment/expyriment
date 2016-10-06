@@ -27,7 +27,7 @@ Alternatively, you can start the test suite from the command line using the
 
    $ python -m expyriment.cli -T 
 
-**Please note that all changes to the** :doc: Defaults_ **prior to starting the test suite apply!**
+**Please note that all changes to the** :doc:`Defaults` **prior to starting the test suite apply!**
 
 Menu overview
 ~~~~~~~~~~~~~
