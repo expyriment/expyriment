@@ -14,6 +14,7 @@ All Linux distributions (recommended)
   * build-essential (or equivalent)
   * libffi-dev
   * python-dev
+  * PortAudio
 
 2. In a command line, run::
 
@@ -24,11 +25,17 @@ All Linux distributions (recommended)
 
    Replace `pip` with `pip3` when using Python3
 
+For example, in Debian run::
 
+    sudo apt-get install python python-pip python-pygame build-essential libffi-dev python-dev libportaudio2
+    sudo pip install --upgrade pip
+    sudo pip install --upgrade expyriment[optional]
+    
+     
 Debian, Ubuntu and derivatives
 ------------------------------
 
-We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
+We also provide `Debian`_ packages for Expyriment (``python-expyriment``).  We 
 suggest to install ``python-expyriment`` via `NeuroDebian`_, a platform
 providing a large collection of neuroscience research software. For detailed
 instructions see:
