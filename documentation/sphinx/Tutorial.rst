@@ -46,15 +46,15 @@ The following should happen:
 * After pressing ENTER "Quitting experiment..." will be presented on the screen
 
 Let's see what we just did in more detail:
-
-    ``import expyriment`` 
+    ::
+        import expyriment 
     
     We imported the Expyriment package into Python, such that we can use it 
     there.
 
-    ``exp = expyriment.design.Experiment(name="First Experiment")``
-
-    ``expyriment.control.initialize(exp)``
+    ::
+        exp = expyriment.design.Experiment(name="First Experiment")
+        expyriment.control.initialize(exp)
     
     We created a new Experiment object by calling the Experiment class in the 
     submodule design and named it "First Experiment". Immediately after we 
