@@ -53,3 +53,4 @@ be available in extras.defaults (e.g. ``expyriment.stimuli.extras.defaults``).
 .. _`expyriment.stimuli.defaults`: expyriment.stimuli.defaults.html
 .. _`expyriment.io.defaults`: expyriment.io.defaults.html
 .. _`expyriment.misc.defaults`: expyriment.misc.defaults.html
+.. _Plugins: plugins.html
