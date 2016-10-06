@@ -118,7 +118,7 @@ Default installation (online)
   (Ommit ``[optional]`` to install without additional packages)
 
 4. To make the Homebrew Python the one that is called when typing "python", in a
-terminal, add the following to ``~/.bash_profile``::
+   terminal, add the following to ``~/.bash_profile``::
 
     export PATH=/usr/local/bin:$PATH
 
