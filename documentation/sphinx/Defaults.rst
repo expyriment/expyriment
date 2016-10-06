@@ -46,3 +46,5 @@ Upon start, Expyriment will read all files in the extra folder that have the sam
 name as the plugin, followd by ``_defaults.py`` (e.g. ``dotcloud_defaults.py``).
 All variables within this file will be integrated into the namespace and will
 be available in extras.defaults (e.g. ``expyriment.stimuli.extras.defaults``).
+
+.. _`expyriment.control.defaults`: expyriment.control.defaults.html 
