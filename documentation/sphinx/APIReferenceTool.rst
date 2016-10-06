@@ -13,7 +13,7 @@ To show the API reference tool, call the following from within Python::
     expyriment.show_documentation(3)
 
 
-Alternatively, the API reference tool can be started with the `command line interface <CommandLineInterface>`:
+Alternatively, the API reference tool can be started with the `command line interface <CommandLineInterface>`_:
 
     python -m expyriment.cli -A
 
