@@ -25,8 +25,10 @@ except ImportError:
 try:
     import serial as _serial
     from serial.tools.list_ports import comports as _list_com_ports
+    _com_port_list = _list_com_ports()
 except ImportError:
     _serial = None
+    _com_port_list = []
 try:
     import parallel as _parallel
 except ImportError:
@@ -381,8 +383,7 @@ def get_system_info(as_string=False):
     info["hardware_memory_free"] = hardware_memory_free
     info["hardware_ports_parallel"] = \
             ParallelPort.get_available_ports()
-    info["hardware_ports_serial"] = \
-            _list_com_ports()
+    info["hardware_ports_serial"] = _com_port_list
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:
