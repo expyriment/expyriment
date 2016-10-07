@@ -51,13 +51,10 @@ else:
 
 try:
     import future as _future
-    if _future.__version__.split(".")[1] < 15:
+    if int(_future.__version__.split(".")[1]) < 15:
       raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Future {0}.{1}.{2}.".format(
-                        int(_future.version.__version__[0]),
-                        int(_future.version.__version__[2]),
-                        int(_future.version.__version__[4]),
-                          ) +
+                      "is not compatible with Future {0}".format(
+                        _future.__version__) +
                       "\nPlease install Future >= 0.15.")
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
