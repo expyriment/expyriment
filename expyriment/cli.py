@@ -104,7 +104,8 @@ functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
 
     parser.add_argument("SCRIPT", action='store', default=None,
-                    help="The expyriment script to be executed")
+                    help="The expyriment script to be executed",
+                        nargs='?')
 
     parser.add_argument("-g", "-0", action="store_true",
                     help="No OpenGL (no vsync / no blocking)")
