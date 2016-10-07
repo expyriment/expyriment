@@ -169,60 +169,60 @@ functions to join the data output.""",
 
     if args['d']:
         control.set_develop_mode(True)
-    elif args['i']:
+    if args['i']:
         print("* Intensive logging")
         control.defaults.event_logging = 2
-    elif args['f']:
+    if args['f']:
         print("* Fast mode")
         control.defaults.initialize_delay = 0
         control.defaults.fast_quit = False
-    elif args['w']:
+    if args['w']:
         print("* Window mode")
         control.defaults.window_mode = True
-    elif args['g']:
+    if args['g']:
         print("* No OpenGL (no vsync / no blocking)")
         control.defaults.open_gl = False
-    elif args['1']:
+    if args['1']:
         print("* OpenGL (vsync / no blocking)")
         control.defaults.open_gl = 1
-    elif args['2']:
+    if args['2']:
         print("* OpenGL (vsync / blocking)")
         control.defaults.open_gl = 2
-    elif args['3']:
+    if args['3']:
         print("* OpenGL (vsync / alternative blocking)")
         control.defaults.open_gl = 3
-    elif args['t']:
+    if args['t']:
         print("* No time stamps")
         io.defaults.outputfile_time_stamp = False
-    elif args['a']:
+    if args['a']:
         print("* Auto create subject id")
         control.defaults.auto_create_subject_id = True
-    elif args["S"]:
+    if args["S"]:
         print("System Info")
         print(get_system_info(as_string=True))
         sys.exit()
-    elif args["T"]:
+    if args["T"]:
         print("Run Test Suite")
         control.run_test_suite()
         sys.exit()
-    elif args["B"]:
+    if args["B"]:
         show_documentation(2)
         sys.exit()
-    elif args["A"]:
+    if args["A"]:
         print("Start API Reference Tool")
         show_documentation(3)
         sys.exit()
-    elif args["C"]:
+    if args["C"]:
         create_template()
         sys.exit()
-    elif args["J"]:
+    if args["J"]:
         d = join_data()
         output =""
         while len(output) <= 1:
             output = input(" name of output csv file? ")
         d.write_concatenated_data(output)
         sys.exit()
-    elif args["R"]:
+    if args["R"]:
         d = join_data()
         output =""
         while len(output) <= 1:
@@ -246,4 +246,4 @@ functions to join the data output.""",
         _secure_hash.secure_hashes = secure_hashes
         _secure_hash.cout_hashes()
 
-        execfile(pyfile)
+    execfile(pyfile)
