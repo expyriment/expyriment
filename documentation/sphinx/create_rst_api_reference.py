@@ -17,6 +17,7 @@ import expyriment.design.extras
 import expyriment.stimuli.extras
 import expyriment.misc.extras
 
+
 exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
                                              'True', 'False']
 
@@ -142,8 +143,8 @@ def create_change_log_rst():
     fl.close()
 
 def make_cli_rst():
-    """make to commandline interface docu"""
-    from expyriment.cli import cli_documentaion
+    """Make commandline interface docu"""
+    from expyriment.cli import cli_documentation
     with open("CommandLineInterface.rst", 'w') as fl:
          fl.write("""
 Command line interface
@@ -154,7 +155,7 @@ Usage
 ::
 
 """)
-         s = cli_documentaion.replace("\n", "\n    ")
+         s = cli_documentation.replace("\n", "\n    ")
          fl.write("\n    " + s)
 
 
@@ -186,8 +187,6 @@ Functions
 ---------
 .. autofunction:: expyriment.get_version
 .. autofunction:: expyriment.show_documentation
-.. autofunction:: expyriment.get_system_info
-.. autofunction:: expyriment.get_experiment_secure_hash
 
 """)
 

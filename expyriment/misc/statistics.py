@@ -13,7 +13,9 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import math
+
+import math as _math
+
 
 def sum(data):
     """Returns the sum of data.
@@ -197,4 +199,4 @@ def std(data):
 
     """
 
-    return math.sqrt(variance(data))
+    return _math.sqrt(variance(data))

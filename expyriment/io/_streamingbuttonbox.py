@@ -32,8 +32,8 @@ class StreamingButtonBox(Input, Output):
 
         Parameters
         ----------
-        interface : io.SerialPort or io.ParallelPort
-            an interface object
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
         baseline : int
             code that is sent when nothing is pressed (int)
 

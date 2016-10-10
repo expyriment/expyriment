@@ -39,8 +39,8 @@ class MarkerOutput(Output):
 
         Parameters
         ----------
-        interface : io.SerialPort or io.ParallelPort
-            interface to use
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
         default_code : int, optional
             default code
         default_duration : int, optional

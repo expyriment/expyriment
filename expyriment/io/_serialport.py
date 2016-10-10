@@ -60,11 +60,11 @@ class SerialPort(Input, Output):
         Parameters
         ----------
         port : int or str
-            port to use
+            the port name
         baudrate : int, optional
         bytesize : int, optional
         parity : str, optional
-            parity:'E'=even, 'O'=odd, 'N'=none
+            'E'=even, 'O'=odd, 'N'=none
         stopbits : int, optional
         timeout : int, optional
             the timeout for read(): -1=block

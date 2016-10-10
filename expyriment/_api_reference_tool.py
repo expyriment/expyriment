@@ -19,6 +19,8 @@ __revision__ = ''
 __date__ = ''
 
 
+import os
+import sys
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
 from types import ModuleType, MethodType, FunctionType
@@ -52,6 +54,10 @@ def _get_doc_and_function(obj):
 
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
+  
+    p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..'))
+    sys.path.insert(0, p)
+   
     import expyriment
     namespace = locals()
     for cl in classes:
@@ -494,10 +500,10 @@ def show_documentation(docu_type=None):
     Parameters
     ----------
     docu_type : int
-        documentation type. Three options are available:
-            1) Open online documentation
-            2) Open online API reference
-            3) Open API reference and search tool
+        the documentation type:
+        1 = open online documentation
+        2 = open online API reference
+        3 = open API reference and search tool
 
     """
 

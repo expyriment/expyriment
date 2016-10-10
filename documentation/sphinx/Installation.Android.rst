@@ -25,7 +25,8 @@ Installing Expyriment scripts
 Once installed, the application will look for Expyriment scripts (each in its own
 subdirectory) in a directory called 'expyriment', located at the root level of
 either storage device under 'mnt' (i.e. the internal or external SD card).
-Examples of correctly located Expyriment scripts include:
+Examples of correctly located Expyriment scripts include::
+
     /mnt/sdcard0/expyriment/exp1/exp1.py
     
     /mnt/sdcard0/expyriment/exp2/exp2.py

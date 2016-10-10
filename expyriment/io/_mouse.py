@@ -28,7 +28,7 @@ from .. import _internals, misc
 class Mouse(Input):
     """A class implementing a mouse input.
 
-    Calling `expyriment.control.intialize(exp)` will automatically create a
+    Calling ``expyriment.control.intialize(exp)`` will automatically create a
     mouse instance and will reference it in exp.mouse for easy access.
 
     """
@@ -59,7 +59,7 @@ class Mouse(Input):
         the Pygame event queue and you might consequently loose important
         events.
 
-        (b) See `process_quit_event` for the forced quitting of experiments
+        (b) See ``process_quit_event`` for the forced quitting of experiments
         via mouse events.
 
         """
@@ -83,12 +83,12 @@ class Mouse(Input):
     def process_quit_event(click_position=None):
         """Check if mouse exit action has been performed
 
-        If Mouse.quit_rect_location is defined (i.e. 0, 1, 2 or 3), clicking
+        If ``Mouse.quit_rect_location`` is defined (i.e. 0, 1, 2 or 3), clicking
         quickly three times (i.e., within 1 second) in one of the corners of
         the screen forces the experiment to quit.
 
         The function is called automatically by all mouse get event and wait
-        methods (similar to Keyboard.process_control_keys).  If no mouse
+        methods (similar to ``Keyboard.process_control_keys``).  If no mouse
         functions are called by your program, this function can be polled to
         ensure quitting experiment by mouse.
 
@@ -111,26 +111,25 @@ class Mouse(Input):
         Notes
         -----
         To switch on or off the detection of mouse quit events, please use the
-        static class property `quit_rect_location' (see below).
+        static class property ``quit_rect_location`` (see below).
 
         The detection of mouse quit events is activated by default under
         Android.
 
-        Static class properties
-        ~~~~~~~~~~~~~~~~~~~~~~~
+        Static class properties::
 
-        `Mouse.quit_rect_location` = int, optional
-            Location of the quit click action field or None.
+            Mouse.quit_rect_location = int, optional
+                Location of the quit click action field or None.
 
-            0 = upper left corner,  1 = upper right corner   (0) (1)
-            2 = lower right corner, 3 = lower left corner    (3) (2)
-            otherwise the detection of mouse quit events is deactivated.
+                0 = upper left corner,  1 = upper right corner   (0) (1)
+                2 = lower right corner, 3 = lower left corner    (3) (2)
+                otherwise the detection of mouse quit events is deactivated.
 
-            Default value under Android is 1, otherwise  None
+                Default value under Android is 1, otherwise None
 
-        `Mouse.quit_click_rect_size` : tuple (int, int)
-            size of the field (rect) that detects the quit action by
-            triple clicking in one corner of the screen. (default = (30, 30))
+            Mouse.quit_click_rect_size = tuple (int, int)
+                size of the field (rect) that detects the quit action by
+                triple clicking in one corner of the screen. (default = (30, 30))
 
         Changing the static class properties affects always all mouse
         instances.
@@ -252,14 +251,14 @@ class Mouse(Input):
 
     @property
     def pressed_buttons(self):
-        """Getter for pressed buttons."""
+        """Getter for pressed_buttons."""
 
         pygame.event.pump()
         return pygame.mouse.get_pressed()
 
     @property
     def is_cursor_visible(self):
-        """returns if cursor is visible"""
+        """Getter for is_cursor_visible"""
 
         visible = pygame.mouse.set_visible(False)
         pygame.mouse.set_visible(visible)
@@ -355,7 +354,7 @@ class Mouse(Input):
 
     @property
     def position(self):
-        """Getter of mouse position."""
+        """Getter for position."""
 
         pygame.event.pump()
         screen_size = _internals.active_exp.screen.surface.get_size()
@@ -364,7 +363,7 @@ class Mouse(Input):
 
     @position.setter
     def position(self, position):
-        """Setter for mouse position."""
+        """Setter for position."""
 
         screen_size = _internals.active_exp.screen.surface.get_size()
         pos = (position[0] + screen_size[0] // 2,
@@ -449,7 +448,7 @@ class Mouse(Input):
         ------
         This will also by default process control events (quit and pause).
         Thus, keyboard events will be cleared from the cue and cannot be
-        received by a Keyboard().check() anymore!
+        received by a ``Keyboard().check()`` anymore!
 
         See Also
         --------
@@ -580,8 +579,6 @@ class Mouse(Input):
             mouse position (tuple)
         rt : int
             reaction time
-
-
 
         """
 

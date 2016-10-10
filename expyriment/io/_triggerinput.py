@@ -32,9 +32,11 @@ class TriggerInput(Input):
         """Create a trigger input.
 
         Parameters
-        interface    -- the interface to use (expyrment.io.SerialPort or
-                        expyriment.io.ParallelPort object)
-        default_code -- the default code of the trigger (int) (optional)
+        ----------
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
+        default_code : int, optional
+            the default code of the trigger
 
         """
 

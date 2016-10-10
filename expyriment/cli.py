@@ -66,7 +66,7 @@ def join_data():
     return d
 
 
-cli_documentaion = """
+cli_documentation = """
 python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
 
 The Expyriment command line interface provides a collection of convenient

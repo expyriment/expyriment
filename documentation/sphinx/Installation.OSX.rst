@@ -47,7 +47,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.11`_ to  ``Expyriment_Installation``
+2. Download `Python 2.7.12`_ to ``Expyriment_Installation``
 
 3. Download Tcl_ to ``Expyriment_Installation``
 
@@ -104,16 +104,16 @@ Default installation (online)
 
 2. Install Xcode Command Line Tools by running the following in a terminal::
 
-   xcode-select --install
+    xcode-select --install
 
 3. In a terminal, run::
 
-   /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-   brew tap Homebrew/python
-   brew update
-   brew install python3 pygame
-   brew install pygame --without-python
-   sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[optional]
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew tap Homebrew/python
+    brew update
+    brew install python3 pygame
+    brew install pygame --without-python
+    sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[optional]
    
   (Ommit ``[optional]`` to install without additional packages)
 

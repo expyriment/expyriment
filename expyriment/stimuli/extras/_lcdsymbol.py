@@ -33,14 +33,15 @@ class LcdSymbol(Visual):
 
     IDs for points and line ::
 
-    Point=      Lines =
-    0---1         X-0-X
-    |   |         1   2
-    2---3         X-3-X
-    |   |         4   5
-    4---5         X-6-X
+        Point=      Lines =
+        0---1         X-0-X
+        |   |         1   2
+        2---3         X-3-X
+        |   |         4   5
+        4---5         X-6-X
 
-    Valid shapes are:
+    Valid shapes are::
+
         '0','1','2','3','4','5','6','7','8','9'
         'A','C','E','F','U','H','L','P','h'
 

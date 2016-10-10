@@ -29,8 +29,8 @@ class EventButtonBox(StreamingButtonBox):
 
         Parameters
         ----------
-        interface : io.SerialPort or io.ParallelPort
-            an interface object
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
 
         """
 

@@ -104,12 +104,15 @@ class ParallelPort(Input, Output):
         Notes
         -----
         On Windows, common port addresses are::
+            
             LPT1 = 0x0378 or 0x03BC
             LPT2 = 0x0278 or 0x0378
             LPT3 = 0x0278
-
+            
         On Linux, port addresses are in the following format::
+            
             /dev/parport0
+            
 
         """
 
@@ -269,14 +272,14 @@ class ParallelPort(Input, Output):
 
         The received data is encoded in 17 bits, corresponding to the 17 pins::
 
-            Pin:  17    16    14     1     9     8     7     6     5  ...
+            Pin:  17    16    14     1     9     8     7     6     5
                    |     |     |     |     |     |     |     |     |
-            Bit: 65536 32768 16384 8192  4096  2048  1024   512   256 ...
-
-            Pin: ...  4    3    2   11   10   12   13   15
-                      |    |    |    |    |    |    |    |
-            Bit: ... 128  64   32   16    8    4    2    1
-
+            Bit: 65536 32768 16384 8192  4096  2048  1024   512   256
+             
+            Pin:  4    3    2   11   10   12   13   15
+                  |    |    |    |    |    |    |    |
+            Bit: 128  64   32   16    8    4    2    1
+             
         Returns
         -------
         data : int (0-65535)

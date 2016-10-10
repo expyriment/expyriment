@@ -29,10 +29,10 @@ class CedrusResponseDevice(Input):
 
     Notes
     -----
-    The  CedrusResponseDevice class requires a free Python package for Cedrus
+    The CedrusResponseDevice class requires a free Python package for Cedrus
     devices called "pyxid".
     For installation instructions see Expyriment online documentation:
-        http://docs.expyriment.org/Hardware.html
+    http://docs.expyriment.org/Hardware.html.
     The class does not use the hardware timer, due to the known bug in the
     Cedrus hardware. Events will be time stamped by Expyriment. Thus, ensure
     constant polling / checking when not using the wait function.

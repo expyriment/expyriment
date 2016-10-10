@@ -1,5 +1,5 @@
 Defaults (settings)
-==================
+===================
 For each package of Expyriment, there are various default settings, defining
 the behaviour of elements of that package.
 
