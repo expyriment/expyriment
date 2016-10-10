@@ -51,11 +51,7 @@ packages = ['expyriment',
 
 package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
 
-data_files = [('share/expyriment/examples',
-               glob('examples/*.*')),
-              ('share/expyriment/tools',
-               glob('tools/*.*')),
-              ('share/expyriment/documentation/api',
+data_files = [('share/expyriment/documentation/api',
                glob('documentation/api/*.*')),
               ('share/expyriment/documentation/sphinx',
                glob('documentation/sphinx/*.*')),
