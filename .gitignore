@@ -44,6 +44,9 @@ nosetests.xml
 # PyPi
 .pypirc
 
+# macOS
+.DS_Store
+
 #### Expyriment specific
 test_suite_protocol.xpp
 data/
