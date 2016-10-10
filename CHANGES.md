@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-upcoming
---------
+Version 0.9.0b1 (10 Oct 2016)
+-----------------------------
 New Features:
 - Python 3 compatibility
 - New Video stimulus implementation that supports a large range of formats
