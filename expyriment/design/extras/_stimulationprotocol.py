@@ -192,7 +192,7 @@ class StimulationProtocol(object):
                     self.add_event(data[0], int(data[1]), int(data[2]),
                                    int(data[3]))
 
-    def export2brainvoyager(self, exp_name, filename):
+    def export_to_brainvoyager(self, exp_name, filename):
         """Convert the stimulation protocol to BrainVoyager '.prt' format.
 
         Parameters
@@ -246,6 +246,22 @@ class StimulationProtocol(object):
                                                                    colours[c][1],
                                                                    colours[c][2])))
 
+    def export2brainvoyager(self, exp_name, filename):
+        """Convert the stimulation protocol to BrainVoyager '.prt' format.
+
+        DEPRECATED: Use ``export_to_brainvoyager``.
+        
+        Parameters
+        ----------
+        exp_name : str
+            The name of the Experiment
+        filename : str
+             The name of the file to write
+
+        """
+        
+        self.export_to_brainvoyager(exp_name, filename)
+        
     def import_from_brainvoyager(self, prt_file):
         """Import prt file as stimulation protocol.
 
