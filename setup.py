@@ -191,7 +191,7 @@ def remove_file(file_):
 
 if __name__=="__main__":
     # Check if we are building/installing from unreleased code
-    version_nr = get_version_from_file("expyriment/__init__.py")
+    version_nr = '0.8.1.opensesame2' #get_version_from_file("expyriment/__init__.py")
     warning = ""
     if version_nr == '':
         # Try to create html documentation
