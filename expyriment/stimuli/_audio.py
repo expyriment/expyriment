@@ -4,6 +4,8 @@ Audio playback.
 This module contains a class implementing audio playback.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,9 +20,9 @@ try:
     import android.mixer as mixer
 except:
     import pygame.mixer as mixer
-import expyriment
-from expyriment.misc import unicode2str
-from _stimulus import Stimulus
+from .. import _internals
+from ..misc import unicode2byte
+from ._stimulus import Stimulus
 
 
 class Audio(Stimulus):
@@ -53,7 +55,7 @@ class Audio(Stimulus):
         self._is_preloaded = False
         if not(os.path.isfile(self._filename)):
             raise IOError("The audio file {0} does not exists".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
 
@@ -100,7 +102,7 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            self._file = mixer.Sound(unicode2str(self._filename, fse=True))
+            self._file = mixer.Sound(unicode2byte(self._filename, fse=True))
             self._is_preloaded = True
 
     def unload(self, **kwargs):
@@ -136,13 +138,13 @@ class Audio(Stimulus):
             self.preload()
         rtn = self._file.play(loops, maxtime, fade_ms)
         if self._logging:
-            if isinstance(self._filename, unicode):
+            if isinstance(self._filename, str):
                 import sys
                 filename = self._filename.encode(sys.getfilesystemencoding())
             else:
                 filename = self._filename
 
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,played,{0}".format(filename), 1)
         return rtn
 

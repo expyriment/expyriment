@@ -4,6 +4,8 @@ The geometry module.
 This module contains miscellaneous geometry functions for expyriment.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,7 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 import math as _math
-import expyriment as _expyriment
+from .. import _internals
 
 
 def coordinates2position(coordinate):
@@ -29,9 +31,9 @@ def coordinates2position(coordinate):
 
     """
 
-    screen_size = _expyriment._active_exp.screen.surface.get_size()
-    return (coordinate[0] - screen_size[0] / 2,
-            - coordinate[1] + screen_size[1] / 2)
+    screen_size = _internals.active_exp.screen.surface.get_size()
+    return (coordinate[0] - screen_size[0] // 2,
+            - coordinate[1] + screen_size[1] // 2)
 
 def position2coordinate(position):
     """Convert an expyriment position to a coordinate on screen.
@@ -47,9 +49,9 @@ def position2coordinate(position):
 
     """
 
-    screen_size = _expyriment._active_exp.screen.surface.get_size()
-    return (position[0] + screen_size[0] / 2,
-            - position[1] + screen_size[1] / 2)
+    screen_size = _internals.active_exp.screen.surface.get_size()
+    return (position[0] + screen_size[0] // 2,
+            - position[1] + screen_size[1] // 2)
 
 
 def position2visual_angle(position, viewing_distance, monitor_size):
@@ -71,7 +73,7 @@ def position2visual_angle(position, viewing_distance, monitor_size):
 
     """
 
-    screen_size = _expyriment._active_exp.screen.surface.get_size()
+    screen_size = _internals.active_exp.screen.surface.get_size()
     cm = (position[0] * monitor_size[0] / float(screen_size[0]),
           position[1] * monitor_size[1] / float(screen_size[1]))
 
@@ -100,7 +102,7 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
 
     """
 
-    screen_size = _expyriment._active_exp.screen.surface.get_size()
+    screen_size = _internals.active_exp.screen.surface.get_size()
     angle = (visual_angle[0] * _math.pi / 360,
              visual_angle[1] * _math.pi / 360) # angle / 180 / 2
     cm = (_math.tan(angle[0]) * viewing_distance * 2,
@@ -155,7 +157,7 @@ def lines_intersect(pa, pb, pc, pd):
 
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
 
-class XYPoint:
+class XYPoint(object):
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
         """Initialize a XYPoint.
@@ -300,7 +302,7 @@ class XYPoint:
                 if self._y <= max(p1._y, p2._y):
                     if self._x <= max(p1._x, p2._x):
                         if p1._y != p2._y:
-                            xinters = (self._y - p1._y) * (p2._x - p1._x) / (p2._y - p1._y) + p1._x
+                            xinters = (self._y - p1._y) * (p2._x - p1._x) // (p2._y - p1._y) + p1._x
                         if p1._x == p2._x or self._x <= xinters:
                             inside = not inside
             p1 = p2

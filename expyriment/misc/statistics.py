@@ -4,6 +4,8 @@ The statistics module.
 This module contains miscellaneous stastistical functions for expyriment.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -60,7 +62,7 @@ def mode(data):
 
     freq = frequence_table(data)
     Fmax = max(freq.values())
-    for x, f in freq.items():
+    for x, f in list(freq.items()):
         if f == Fmax:
             break
     return x
@@ -120,14 +122,14 @@ def median(data):
 
     tmp = []
     for elem in data: # remove non numerics
-        if isinstance(elem, (int, long, float)):
+        if isinstance(elem, (int, int, float)):
             tmp.append(elem)
     data = sorted(tmp)
     if len(data) % 2 == 1:
-        return data[(len(data) - 1) / 2 ]
+        return data[(len(data) - 1) // 2 ]
     else:
-        lower = data[len(data) / 2 - 1]
-        upper = data[len(data) / 2]
+        lower = data[len(data) // 2 - 1]
+        upper = data[len(data) // 2]
         return (float(lower + upper)) / 2.0
 
 def frequence_table(data):

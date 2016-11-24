@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """Example: moving stimulus in Expyriment using none OpenGL mode"""
+from __future__ import division
 
 from expyriment import control, stimuli, misc
 
@@ -12,7 +13,7 @@ control.start()
 
 radius = 20
 movement = [4, 8]
-arena = (exp.screen.size[0] / 2 - radius, exp.screen.size[1] / 2 - radius)
+arena = (exp.screen.size[0] // 2 - radius, exp.screen.size[1] // 2 - radius)
 dot = stimuli.Circle(radius=radius, colour=misc.constants.C_YELLOW)
 
 stimuli.BlankScreen().present()

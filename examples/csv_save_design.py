@@ -4,6 +4,7 @@
 """
 Save design to csv file
 """
+from __future__ import print_function
 
 from expyriment import design
 
@@ -30,4 +31,4 @@ exp.data_variable_names = ["block", "mapping", "trial", "digit", "ISI",
 
 exp.save_design("design.csv")
 
-print exp
+print(exp)

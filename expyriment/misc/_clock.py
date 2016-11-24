@@ -3,6 +3,8 @@
 This module contains an experimental clock.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -10,13 +12,11 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
 import sys
 import time
-import types
-from _timer import get_time
-
-import expyriment
+from types import FunctionType
+from ._timer import get_time
+from .. import _internals
 
 class Clock(object) :
     """Basic timing class.
@@ -31,6 +31,7 @@ class Clock(object) :
         _cpu_time = time.time
 
 
+
     def __init__(self, sync_clock=None):
         """Create a clock.
 
@@ -41,13 +42,17 @@ class Clock(object) :
 
         """
 
+        from ..io.defaults import _skip_wait_functions
         if (sync_clock.__class__.__name__ == "Clock"):
-            self.__init_time = sync_clock.init_time / 1000
+            self.__init_time = sync_clock.init_time // 1000
         else:
             self.__init_time = get_time()
 
         self._init_localtime = time.localtime()
         self.__start = get_time()
+
+        self._skip_wait_functions = _skip_wait_functions
+
 
     @staticmethod
     def monotonic_time():
@@ -119,21 +124,21 @@ class Clock(object) :
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if self._skip_wait_functions:
             return
         start = self.time
-        if type(function) == types.FunctionType or\
-                                 expyriment._active_exp.is_callback_registered:
+        if isinstance(function, FunctionType) or\
+                            _internals.active_exp.is_callback_registered:
             while (self.time < start + waiting_time):
-                if type(function) == types.FunctionType:
+                if isinstance(function, FunctionType):
                     function()
-                rtn_callback = expyriment._active_exp._execute_wait_callback()
-                if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     return rtn_callback
         else:
             looptime = 200
             if (waiting_time > looptime):
-                time.sleep((waiting_time - looptime) / 1000)
+                time.sleep((waiting_time - looptime) // 1000)
             while (self.time < start + waiting_time):
                 pass
 

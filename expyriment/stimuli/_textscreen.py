@@ -6,6 +6,8 @@ A text screen stimulus.
 This module contains a class implementing a text screen stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,12 +18,13 @@ __date__ = ''
 
 import pygame
 
-import defaults
-from _visual import Visual
-from _textline import TextLine
-from _textbox import TextBox
-from expyriment.misc import find_font, unicode2str
-import expyriment
+from . import defaults
+from ._stimulus import Stimulus
+from ._visual import Visual
+from ._textline import TextLine
+from ._textbox import TextBox
+from ..misc import find_font, unicode2byte
+from .. import _internals
 
 
 class TextScreen(Visual):
@@ -86,10 +89,10 @@ class TextScreen(Visual):
         if heading_font is not None:
             self._heading_font = find_font(heading_font)
         else:
-            self._heading_font = find_font(expyriment._active_exp.text_font)
+            self._heading_font = find_font(_internals.active_exp.text_font)
         try:
             _font = pygame.font.Font(
-                unicode2str(self._heading_font, fse=True), 10)
+                unicode2byte(self._heading_font, fse=True), 10)
             _font = None
         except:
             raise IOError("Font '{0}' not found!".format(heading_font))
@@ -98,7 +101,7 @@ class TextScreen(Visual):
         if heading_size:
             self._heading_size = heading_size
         else:
-            self._heading_size = int(expyriment._active_exp.text_size
+            self._heading_size = int(_internals.active_exp.text_size
                                      * 1.2)
         if heading_bold is not None:
             self._heading_bold = heading_bold
@@ -119,15 +122,15 @@ class TextScreen(Visual):
         if heading_colour is not None:
             self._heading_colour = heading_colour
         else:
-            self._heading_colour = expyriment._active_exp.foreground_colour
+            self._heading_colour = _internals.active_exp.foreground_colour
         if text_font is None:
             text_font = defaults.textscreen_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(expyriment._active_exp.text_font)
+            self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
             _font = None
         except:
@@ -137,7 +140,7 @@ class TextScreen(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = expyriment._active_exp.text_size
+            self._text_size = _internals.active_exp.text_size
         if text_bold is not None:
             self._text_bold = text_bold
         else:
@@ -155,7 +158,7 @@ class TextScreen(Visual):
         if text_colour is not None:
             self._text_colour = text_colour
         else:
-            self._text_colour = expyriment._active_exp.foreground_colour
+            self._text_colour = _internals.active_exp.foreground_colour
         if text_justification is not None:
             self._text_justification = text_justification
         else:
@@ -168,12 +171,12 @@ class TextScreen(Visual):
             if size is None:
                 try:
                     self._size = (
-                        expyriment._active_exp.screen.surface.get_size()[0] -
-                        expyriment._active_exp.screen.surface.get_size()[0]
-                        / 5,
-                        expyriment._active_exp.screen.surface.get_size()[1] -
-                        expyriment._active_exp.screen.surface.get_size()[1]
-                        / 5)
+                        _internals.active_exp.screen.surface.get_size()[0] -
+                        _internals.active_exp.screen.surface.get_size()[0]
+                        // 5,
+                        _internals.active_exp.screen.surface.get_size()[1] -
+                        _internals.active_exp.screen.surface.get_size()[1]
+                        // 5)
                 except:
                     raise RuntimeError("Cannot get size of screen!")
 
@@ -471,28 +474,28 @@ class TextScreen(Visual):
                           text_bold=self.heading_bold,
                           text_italic=self.heading_italic,
                           text_underline=self.heading_underline)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        Stimulus._id_counter -= 1
         box = TextBox(text=self.text, text_font=self.text_font,
                       text_size=self.text_size, text_bold=self.text_bold,
                       text_italic=self.text_italic,
                       text_underline=self.text_underline,
                       text_colour=self.text_colour,
                       background_colour=self.background_colour,
-                      size=(self.size[0], self.size[1] - self.size[1] / 5),
+                      size=(self.size[0], self.size[1] - self.size[1] // 5),
                       text_justification=self.text_justification)
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        Stimulus._id_counter -= 1
         surface.blit(header._get_surface(),
-                     (self.size[0] / 2 - header.surface_size[0] / 2,
+                     (self.size[0] // 2 - header.surface_size[0] // 2,
                       0))
         surface.blit(box._get_surface(),
-                     (self.size[0] / 2 - box.size[0] / 2, self.size[1] / 5))
+                     (self.size[0] // 2 - box.size[0] // 2, self.size[1] // 5))
         return surface
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     textscreen = TextScreen("Hello World",
                             "Line one.\nLine two.\nLine three.")

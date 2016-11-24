@@ -6,6 +6,8 @@ A Visual Mask.
 This module contains a class implementing a Visual Mask.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,16 +19,17 @@ __date__ = ''
 from random import shuffle
 import tempfile
 import os
+from types import ModuleType
 
 try:
     from PIL import Image, ImageDraw, ImageFilter #import PIL
 except:
     Image = None
 
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.stimuli._picture import Picture
-import defaults
+from ... import _internals, stimuli
+from ...misc._timer import get_time
+from ...stimuli._picture import Picture
+from . import defaults
 
 
 class VisualMask(Picture):
@@ -54,14 +57,13 @@ class VisualMask(Picture):
 
         """
 
-        import types
-        if type(Image) is not types.ModuleType:
+        if not isinstance(Image, ModuleType):
             message = """VisualMask can not be initialized.
 The Python package 'Python Imaging Library (PIL)' is not installed."""
             raise ImportError(message)
 
         fid, filename = tempfile.mkstemp(
-                    dir=expyriment.stimuli.defaults.tempdir,
+                    dir=stimuli.defaults.tempdir,
                     suffix=".png")
         os.close(fid)
         Picture.__init__(self, filename, position)
@@ -76,13 +78,13 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
         if background_colour is not None:
             self.background_colour = background_colour
         else:
-            self.background_colour = expyriment._active_exp.background_colour
+            self.background_colour = _internals.active_exp.background_colour
         if dot_colour is None:
             self.dot_colour = defaults.visualmask_dot_colour
         if dot_colour is not None:
             self.dot_colour = dot_colour
         else:
-            self.dot_colour = expyriment._active_exp.foreground_colour
+            self.dot_colour = _internals.active_exp.foreground_colour
         if dot_percentage is not None:
             self.dot_percentage = dot_percentage
         else:
@@ -123,10 +125,10 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
         n_dots_x = int(s[0] / self.dot_size[0]) + 1
         n_dots_y = int(s[1] / self.dot_size[1]) + 1
-        dots = range(n_dots_x * n_dots_y)
+        dots = list(range(n_dots_x * n_dots_y))
         shuffle(dots)
         for d in dots[:int(len(dots) * self.dot_percentage / 100)]:
-            y = (d / n_dots_x) * self.dot_size[1]
+            y = (d // n_dots_x) * self.dot_size[1]
             x = (d % n_dots_x) * self.dot_size[0]
             draw.rectangle([(x, y),
                             (x + self.dot_size[0], y + self.dot_size[1])],
@@ -136,9 +138,9 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
             im = im.filter(ImageFilter.BLUR).filter(ImageFilter.SMOOTH_MORE)
 
         #crop image and save
-        c = (im.size[0] / 2, im.size[1] / 2)
-        box = (c[0] - self._size[0] / 2, c[1] - self._size[1] / 2,
-               c[0] + self._size[0] / 2, c[1] + self._size[1] / 2)
+        c = (im.size[0] // 2, im.size[1] // 2)
+        box = (c[0] - self._size[0] // 2, c[1] - self._size[1] // 2,
+               c[0] + self._size[0] // 2, c[1] + self._size[1] // 2)
         im = im.crop(box)
         im.save(self._filename, format="png")
 
@@ -148,11 +150,11 @@ The Python package 'Python Imaging Library (PIL)' is not installed."""
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from ... import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     mask = VisualMask(size=(200, 200))
     mask.present()
-    print mask.surface_size
+    print(mask.surface_size)
     exp.clock.wait(1000)

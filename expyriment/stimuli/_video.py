@@ -4,6 +4,9 @@ Video playback.
 This module contains a class implementing video playback.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,11 +23,11 @@ try:
 except:
     import pygame.mixer as mixer
 
-import defaults
-import _visual
-from expyriment.io import Keyboard
-from expyriment.misc import unicode2str
-import expyriment
+from . import defaults
+from . import _visual
+from ..misc import unicode2byte
+from .._internals import CallbackQuitEvent
+from .. import _internals
 
 
 class Video(_visual.Stimulus):
@@ -78,7 +81,10 @@ class Video(_visual.Stimulus):
 
         """
 
+        from ..io import Keyboard
+
         _visual.Stimulus.__init__(self, filename)
+        self.Keyboard = Keyboard()
         self._filename = filename
         self._is_preloaded = False
         self._frame = 0
@@ -88,7 +94,7 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
         if not(os.path.isfile(self._filename)):
             raise IOError("The video file {0} does not exists".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
     def __del__(self):
         """Destructor for the video stimulus."""
@@ -188,12 +194,12 @@ class Video(_visual.Stimulus):
         """
 
         if not self._is_preloaded:
-            self._file = pygame.movie.Movie(unicode2str(self._filename,
-                                                        fse=True))
-            screen_size = expyriment._active_exp.screen.surface.get_size()
-            self._pos = [screen_size[0] / 2 - self._file.get_size()[0] / 2 +
+            self._file = pygame.movie.Movie(unicode2byte(self._filename,
+                                                         fse=True))
+            screen_size = _internals.active_exp.screen.surface.get_size()
+            self._pos = [screen_size[0] // 2 - self._file.get_size()[0] // 2 +
                          self._position[0],
-                         screen_size[1] / 2 - self._file.get_size()[1] / 2 -
+                         screen_size[1] // 2 - self._file.get_size()[1] // 2 -
                          self._position[1]]
             size = self._file.get_size()
             self._surface = pygame.surface.Surface(size)
@@ -233,16 +239,16 @@ class Video(_visual.Stimulus):
         if mixer.get_init() is not None:
             message = "Mixer is still initialized, cannot play audio! Call \
 expyriment.control.stop_audiosystem() before preloading the video."
-            print "Warning: ", message
+            print("Warning: ", message)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "Video,warning," + message)
 
         if not self._is_preloaded:
             self.preload()
         if self._logging:
-            expyriment._active_exp._event_file_log(
-                "Video,playing,{0}".format(unicode2str(self._filename)))
+            _internals.active_exp._event_file_log(
+                "Video,playing,{0}".format(unicode2byte(self._filename)))
         self._file.play()
 
     def stop(self):
@@ -315,14 +321,14 @@ expyriment.control.stop_audiosystem() before preloading the video."
             frame = self._file.get_frame()
             if frame > self._frame:
                 self._frame = frame
-                if expyriment._active_exp._screen.open_gl:
+                if _internals.active_exp._screen.open_gl:
                     ogl_screen = _visual._LaminaPanelSurface(
                         self._surface, position=self._position)
                     ogl_screen.display()
                 else:
-                    expyriment._active_exp._screen.surface.blit(self._surface,
+                    _internals.active_exp._screen.surface.blit(self._surface,
                                                                 self._pos)
-                expyriment._active_exp._screen.update()
+                _internals.active_exp._screen.update()
 
     def _wait(self, frame=None):
         """Wait until frame was shown or end of movie and update screen.
@@ -339,8 +345,8 @@ expyriment.control.stop_audiosystem() before preloading the video."
         """
 
         while self.is_playing:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback
 
             old_frame = self._frame
@@ -352,15 +358,15 @@ expyriment.control.stop_audiosystem() before preloading the video."
             diff = new_frame - old_frame
             if diff > 1:
                 warn_message = repr(diff - 1) + " video frames dropped!"
-                print warn_message
-                expyriment._active_exp._event_file_warn(
+                print(warn_message)
+                _internals.active_exp._event_file_warn(
                     "Video,warning," + warn_message)
             for event in pygame.event.get(pygame.KEYDOWN):
                 if event.type == pygame.KEYDOWN and (
-                   event.key == Keyboard.get_quit_key() or
-                   event.key == Keyboard.get_pause_key()):
+                   event.key == self.Keyboard.get_quit_key() or
+                   event.key == self.Keyboard.get_pause_key()):
                     self.stop()
-                    Keyboard.process_control_keys(event)
+                    self.Keyboard.process_control_keys(event)
                     self.play()
 
     def wait_frame(self, frame):

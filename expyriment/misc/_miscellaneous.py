@@ -6,6 +6,8 @@ This module contains miscellaneous functions for expyriment.
 All classes in this module should be called directly via expyriment.misc.*:
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,15 +15,29 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import sys
 import os
-try:
-    import locale
-except ImportError:
-    locale = None  # Not available on Android
+import sys
 import glob
+import random
+import colorsys
+
 import pygame
-import expyriment
+
+from .._internals import PYTHON3, android
+
+try:
+    from locale import getdefaultlocale
+    LOCALE_ENC = getdefaultlocale()[1]
+except ImportError:
+    LOCALE_ENC = None  # Not available on Android
+
+if LOCALE_ENC is None:
+    LOCALE_ENC = 'utf-8'
+
+FS_ENC = sys.getfilesystemencoding()
+if FS_ENC is None:
+    FS_ENC = 'utf-8'
+
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
@@ -39,7 +55,7 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
     """
 
-    if type(standard_codes) is list:
+    if isinstance(standard_codes, (list, tuple)):
         for code in standard_codes:
             if compare_codes(input_code, code, bitwise_comparison):
                 return True
@@ -54,6 +70,41 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
             return False
 
 
+def byte2unicode(s, fse=False):
+    if (PYTHON3 and isinstance(s, str)) or\
+       (not PYTHON3 and isinstance(s, unicode)):
+        return s
+
+    if fse:
+        try:
+            u = s.decode(FS_ENC)
+        except UnicodeDecodeError:
+            u = s.decode('utf-8', 'replace')
+    else:
+        try:
+            u = s.decode(LOCALE_ENC)
+        except UnicodeDecodeError:
+            u = s.decode('utf-8', 'replace')
+    return u
+
+
+def unicode2byte(u, fse=False):
+    if isinstance(u, bytes):
+        return u
+
+    if fse:
+        try:
+            s = u.encode(FS_ENC)
+        except UnicodeEncodeError:
+            s = u.encode('utf-8', 'replace')
+    else:
+        try:
+            s = u.encode(LOCALE_ENC)
+        except UnicodeEncodeError:
+            s = u.encode('utf-8', 'replace')
+    return s
+
+
 def str2unicode(s, fse=False):
     """Convert str to unicode.
 
@@ -61,7 +112,7 @@ def str2unicode(s, fse=False):
     throwing an exception. If fse is False, the first encoding that is tried is
     the encoding according to the locale settings, falling back to utf-8
     encoding if this throws an error. If fse is True, the filesystem encoding
-    is tried, falling back to utf-8. Unicode input objects are return
+    is tried, falling back to utf-8. Unicode input objects are returned
     unmodified.
 
     Parameters
@@ -76,31 +127,7 @@ def str2unicode(s, fse=False):
     -------
     A unicode-type string.
     """
-
-    if isinstance(s, unicode):
-        return s
-
-    try:
-        locale_enc = locale.getdefaultlocale()[1]
-    except:
-        locale_enc = None
-    if locale_enc is None:
-        locale_enc = u'utf-8'
-    fs_enc = sys.getfilesystemencoding()
-    if fs_enc is None:
-        fs_enc = u'utf-8'
-    if fse:
-        try:
-            u = s.decode(fs_enc)
-        except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'replace')
-    else:
-        try:
-            u = s.decode(locale_enc)
-        except UnicodeDecodeError:
-            u = s.decode(u'utf-8', u'replace')
-    return u
-
+    return byte2unicode(s, fse)
 
 def unicode2str(u, fse=False):
     """Convert unicode to str.
@@ -108,7 +135,7 @@ def unicode2str(u, fse=False):
     Converts an input str or unicode object to a str object without throwing
     an exception. If fse is False, the str is encoded according to the locale
     (with utf-8 as a fallback), otherwise it is encoded with the
-    filesystemencoding. Str input objects are return unmodified.
+    filesystemencoding. Str input objects are returned unmodified.
 
     Parameters
     ----------
@@ -123,29 +150,7 @@ def unicode2str(u, fse=False):
     A str-type string.
     """
 
-    if isinstance(u, str):
-        return u
-
-    try:
-        locale_enc = locale.getdefaultlocale()[1]
-    except:
-        locale_enc = None
-    if locale_enc is None:
-        locale_enc = u'utf-8'
-    fs_enc = sys.getfilesystemencoding()
-    if fs_enc is None:
-        fs_enc = u'utf-8'
-    if fse:
-        try:
-            s = u.encode(fs_enc)
-        except UnicodeEncodeError:
-            s = u.encode(u'utf-8', u'replace')
-    else:
-        try:
-            s = u.encode(locale_enc)
-        except UnicodeEncodeError:
-            s = u.encode(u'utf-8', u'replace')
-    return s
+    return unicode2byte(u, fse)
 
 def numpad_digit_code2ascii(keycode):
     """Convert numpad keycode to the ascii code of that particular number
@@ -159,7 +164,7 @@ def numpad_digit_code2ascii(keycode):
 
     """
 
-    from expyriment.misc import constants
+    from ..misc import constants
     if keycode in constants.K_ALL_KEYPAD_DIGITS:
         return keycode - (constants.K_KP1 - constants.K_1)
     else:
@@ -184,7 +189,7 @@ def add_fonts(folder):
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
-            font = str2unicode(font, fse=True)
+            font = byte2unicode(font, fse=True)
             name = os.path.split(font)[1]
             bold = name.find('Bold') >= 0
             italic = name.find('Italic') >= 0
@@ -243,9 +248,9 @@ def find_font(font):
 
     try:
         if os.path.isfile(font):
-            pygame.font.Font(unicode2str(font, fse=True), 10)
+            pygame.font.Font(unicode2byte(font, fse=True), 10)
         else:
-            pygame.font.Font(unicode2str(font), 10)
+            pygame.font.Font(unicode2byte(font), 10)
         return font
     except:
         font_file = pygame.font.match_font(font)
@@ -264,9 +269,66 @@ def get_monitor_resolution():
 
     """
 
-    if expyriment._active_exp.is_initialized:
-        return expyriment._active_exp.screen.monitor_resolution
+    from .. import _internals
+    if _internals.active_exp.is_initialized:
+        return _internals.active_exp.screen.monitor_resolution
     else:
         pygame.display.init()
         return (pygame.display.Info().current_w,
                 pygame.display.Info().current_h)
+
+def is_ipython_running():
+    """Return True if IPython is running."""
+
+    try:
+        __IPYTHON__
+        return True
+    except NameError:
+        return False
+
+def is_idle_running():
+    """Return True if IDLE is running."""
+
+    return "idlelib.run" in sys.modules
+
+def is_interactive_mode():
+    """Returns if Python is running in interactive mode (such as IDLE or
+    IPthon)
+
+    Returns
+    -------
+    interactive_mode : boolean
+    
+    """
+
+    # ps2 is only defined in interactive mode
+    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
+
+def is_android_running():
+    """Return True if Exypriment runs on Android."""
+
+    return android is not None
+    
+
+def create_colours(amount):
+    """Create different and equally spaced RGB colours.
+    
+    Parameters
+    ----------
+    amount : int
+        the number of colours to create
+        
+    Returns
+    -------
+    colours : list
+        a list of colours, each in the form [r, g, b]
+        
+    """
+    
+    colours = []
+    for i in range(0, 360, 360/amount):
+        h = i / 360.0
+        l = (50 + random.random() * 10) / 100
+        s = (90 + random.random() * 10) / 100
+        colours.append([int(x * 255) for x in colorsys.hls_to_rgb(h, l, s)])
+    return colours

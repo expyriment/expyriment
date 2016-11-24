@@ -4,6 +4,8 @@ A marker output.
 This module contains a class implementing a marker output
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,11 +14,10 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-import expyriment
-from  _input_output  import Output
-from expyriment.misc._timer import get_time
-
+from . import defaults
+from  ._input_output  import Output
+from ..misc._timer import get_time
+from .. import _internals
 
 class MarkerOutput(Output):
     """A class implementing a marker output."""
@@ -116,5 +117,5 @@ class MarkerOutput(Output):
                 pass
         self._interface.send(0)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                         "MarkerOutput,sent,{0}".format(code))

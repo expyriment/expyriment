@@ -4,6 +4,8 @@ Keyboard input.
 This module contains a class implementing pygame keyboard input.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,11 +24,12 @@ try:
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-import defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str
-from  _input_output import Input
+from . import defaults
+
+from ..misc._timer import get_time
+from ..misc import unicode2byte
+from  ._input_output import Input
+from .. import  _internals
 
 quit_key = None
 pause_key = None
@@ -75,8 +78,8 @@ class Keyboard(Input):
                     pause_function()
                     return True
                 elif key_event.key == refresh_key:
-                    if expyriment._active_exp is not None:
-                        expyriment._active_exp.screen.update() # todo: How often? double/triple buffering?
+                    if _internals.active_exp is not None:
+                        _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
@@ -146,7 +149,7 @@ class Keyboard(Input):
         pygame.event.clear(pygame.KEYUP)
 
         if self._logging:
-            expyriment._active_exp._event_file_log("Keyboard,cleared", 2)
+            _internals.active_exp._event_file_log("Keyboard,cleared", 2)
 
     def read_out_buffered_keys(self):
         """Reads out all keydown events and clears queue."""
@@ -192,12 +195,12 @@ class Keyboard(Input):
             if keys:
                 if event.key in keys:
                     if self._logging:
-                        expyriment._active_exp._event_file_log(
+                        _internals.active_exp._event_file_log(
                             "Keyboard,received,{0},check".format(event.key))
                     return event.key
             else:
                 if self._logging:
-                    expyriment._active_exp._event_file_log(
+                    _internals.active_exp._event_file_log(
                         "Keyboard,received,{0},check".format(event.key), 2)
                 return event.key
         return None
@@ -238,7 +241,7 @@ class Keyboard(Input):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if defaults._skip_wait_functions:
             return None, None
         if android_show_keyboard is not None:
             android_show_keyboard()
@@ -260,8 +263,8 @@ class Keyboard(Input):
         pygame.event.pump()
         done = False
         while not done:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                 done = True
                 found_key = rtn_callback
                 rt = int((get_time() - start) * 1000)
@@ -282,7 +285,7 @@ class Keyboard(Input):
                 done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
-            expyriment._active_exp._event_file_log("Keyboard,received,{0},wait"\
+            _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
@@ -317,7 +320,7 @@ class Keyboard(Input):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if defaults._skip_wait_functions:
             return None, None
         start = get_time()
         rt = None
@@ -331,8 +334,8 @@ class Keyboard(Input):
         done = False
 
         while not done:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     done = True
                     rt = int((get_time() - start) * 1000)
                     found_char = rtn_callback
@@ -349,7 +352,7 @@ class Keyboard(Input):
                 done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                         "Keyboard,received,{0},wait_char".format(
-                        unicode2str(found_char)))
+                        unicode2byte(found_char)))
         return found_char, rt

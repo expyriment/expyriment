@@ -6,6 +6,9 @@ A stimulus cloud stimulus.
 This module contains a class implementing a stimulus cloud stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>'
 __version__ = ''
@@ -17,9 +20,9 @@ import random
 
 import pygame
 
-import defaults
-import expyriment
-from expyriment.stimuli._visual import Visual
+from . import defaults
+from ... import _internals
+from ...stimuli._visual import Visual
 
 
 class StimulusCloud(Visual):
@@ -52,7 +55,7 @@ class StimulusCloud(Visual):
             size = defaults.stimuluscloud_size
             if size is None:
                 try:
-                    self._size = expyriment._active_exp.screen.surface.get_size()
+                    self._size = _internals.active_exp.screen.surface.get_size()
                 except:
                     raise RuntimeError("Could not get size of screen!")
         if background_colour is not None:
@@ -103,8 +106,8 @@ class StimulusCloud(Visual):
         for stim in self._cloud:
             stim.rect = pygame.Rect((0, 0), stim.surface_size)
             surface_size = surface.get_size()
-            stim.rect.center = [stim.position[0] + surface_size[0] / 2,
-                                - stim.position[1] + surface_size[1] / 2]
+            stim.rect.center = [stim.position[0] + surface_size[0] // 2,
+                                - stim.position[1] + surface_size[1] // 2]
             surface.blit(stim._get_surface(), stim.rect)
         return surface
 
@@ -141,10 +144,10 @@ class StimulusCloud(Visual):
                 reps = 0
                 stimulus._set_surface(stimulus._get_surface())
                 while(True): #find a solution
-                    stimulus.position = (random.randint(-self.size[0] / 2,
-                                                        self.size[0] / 2),
-                                         random.randint(-self.size[1] / 2,
-                                                        self.size[1] / 2))
+                    stimulus.position = (random.randint(-self.size[0] // 2,
+                                                        self.size[0] // 2),
+                                         random.randint(-self.size[1] // 2,
+                                                        self.size[1] // 2))
                     reps = reps + 1
                     if stimulus.inside_stimulus(self):
                         okay = True
@@ -170,7 +173,7 @@ class StimulusCloud(Visual):
 
             if (remix > 10):
                 message = "Stimuluscloud make: Cannot find a solution."
-                print("Warning: ", message)
+                print(("Warning: ", message))
                 return False
 
     def shuffel_surface_sequence(self, from_idx=0, to_idx= -1):
@@ -195,10 +198,10 @@ class StimulusCloud(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment.stimuli._textline import TextLine
-    from expyriment import control
+    from ...stimuli._textline import TextLine
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     stimuluscloud = StimulusCloud()
     stims = []

@@ -6,6 +6,9 @@ A fixation cross stimulus.
 This module contains a class implementing a fixation cross stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,9 +17,9 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-from _shape import Shape
-import expyriment
+from . import defaults
+from ._shape import Shape
+from .. import _internals
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""
@@ -56,7 +59,7 @@ class FixCross(Shape):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
         Shape.__init__(self, position=position, line_width=0,
@@ -68,8 +71,8 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        x = (self._size[0] - line_width) / 2
-        y = (self._size[1] - line_width) / 2
+        x = (self._size[0] - line_width) // 2
+        y = (self._size[1] - line_width) // 2
         self.add_vertex((line_width, 0))
         self.add_vertex((0, -y))
         self.add_vertex((x, 0))
@@ -102,9 +105,9 @@ class FixCross(Shape):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     fixcross = FixCross(size=(100, 100))
     fixcross.present()

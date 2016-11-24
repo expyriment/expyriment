@@ -6,6 +6,8 @@ A blank screen stimulus.
 This module contains a class implementing a blank screen stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,8 +16,8 @@ __revision__ = ''
 __date__ = ''
 
 
-import expyriment
-from _canvas import Canvas
+from ._canvas import Canvas
+from .. import _internals
 
 class BlankScreen(Canvas):
     """A class implementing a blank screen."""
@@ -32,18 +34,18 @@ class BlankScreen(Canvas):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.background_colour
+            self._colour = _internals.active_exp.background_colour
         try:
-            size = expyriment._active_exp.screen.surface.get_size()
+            size = _internals.active_exp.screen.surface.get_size()
         except:
             raise RuntimeError("Could not get size of screen!")
         Canvas.__init__(self, size, colour=self._colour)
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging.event_logging = 0
     exp = control.initialize()
     blankscreen = BlankScreen()
     blankscreen.present()

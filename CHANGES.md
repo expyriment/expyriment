@@ -5,7 +5,10 @@ Expyriment Release Notes
 upcoming
 --------
 New Features:
+- new global boolean constant expyriment.PYTHON3 indicates Python version
 - new io device: io.extras.TcpServer
+- new method to add full factorial designs:
+  Block.add_trials_full_factorial & Experiment.add_blocks_full_factorial
 - Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
@@ -16,6 +19,12 @@ New Features:
 Changed:
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
+- move set_skip_wait_functions from misc to io
+- move is_idle_running, is_interactive_mode, is_android_running
+  from control to misc
+- move get_module_hash_dictionary, get_experiment_secure_hash,
+  module_hashes_as_string and get_system_info from expyriment to misc
+
 
 Fixed:
 - bug fix in unicode2str
@@ -24,6 +33,7 @@ Fixed:
 - minor bug fixes in _secure_hash.py, _files.py
 - Cli: -0 option was not recognized
 - Correct anti-aliasing for Circle/Ellipse (now works on every background)
+- compatibility with pyserial version 3.0
 
 Version 0.8.0 (30 Jun 2015)
 ---------------------------

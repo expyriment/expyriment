@@ -4,6 +4,9 @@ Mouse input.
 This module contains a class implementing pygame mouse input.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,11 +17,12 @@ __date__ = ''
 
 import pygame
 
-import defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from _keyboard import Keyboard
-from _input_output  import Input
+from . import defaults
+from ..misc._timer import get_time
+from ..misc import is_android_running
+from ._keyboard import Keyboard
+from ._input_output  import Input
+from .. import _internals, misc
 
 class Mouse(Input):
     """A class implementing a mouse input.
@@ -60,7 +64,7 @@ class Mouse(Input):
         """
 
         Input.__init__(self)
-        if expyriment.control.is_android_running():
+        if is_android_running():
             Mouse.quit_rect_location = 1
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
@@ -133,19 +137,19 @@ class Mouse(Input):
         """
 
         if Mouse.quit_rect_location not in [0,1,2,3] or \
-            expyriment._active_exp is None:
+            _internals.active_exp is None:
             return False
 
         if click_position is None:
             # check Pygame queu
             pos = None
-            pygame.event.pump()
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            # pygame.event.pump() # TODO: not sure if it is required!
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
                 if event.button > 0:
+                    screen_size = _internals.active_exp.screen.surface.get_size()
                     pos = pygame.mouse.get_pos()
-                    pos = (pos[0] - screen_size[0] / 2,
-                          -pos[1] + screen_size[1] / 2)
+                    pos = (pos[0] - screen_size[0] // 2,
+                          -pos[1] + screen_size[1] // 2)
                     break
             if pos is None:
                 return False
@@ -154,16 +158,16 @@ class Mouse(Input):
 
         # determine threshold x & y
         if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
-            threshold_x = -expyriment._active_exp.screen.center_x + \
+            threshold_x = -_internals.active_exp.screen.center_x + \
                     Mouse.quit_click_rect_size[0]
         else:# right
-            threshold_x = expyriment._active_exp.screen.center_x - \
+            threshold_x = _internals.active_exp.screen.center_x - \
                     Mouse.quit_click_rect_size[0]
         if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 1: # upper
-            threshold_y = expyriment._active_exp.screen.center_y - \
+            threshold_y = _internals.active_exp.screen.center_y - \
                     Mouse.quit_click_rect_size[1]
         else:# lower
-            threshold_y = -expyriment._active_exp.screen.center_y + \
+            threshold_y = -_internals.active_exp.screen.center_y + \
                     Mouse.quit_click_rect_size[1]
         # check
         if (Mouse.quit_rect_location == 0 and \
@@ -352,17 +356,17 @@ class Mouse(Input):
         """Getter of mouse position."""
 
         pygame.event.pump()
-        screen_size = expyriment._active_exp.screen.surface.get_size()
+        screen_size = _internals.active_exp.screen.surface.get_size()
         pos = pygame.mouse.get_pos()
-        return (pos[0] - screen_size[0] / 2, -pos[1] + screen_size[1] / 2)
+        return (pos[0] - screen_size[0] // 2, -pos[1] + screen_size[1] // 2)
 
     @position.setter
     def position(self, position):
         """Setter for mouse position."""
 
-        screen_size = expyriment._active_exp.screen.surface.get_size()
-        pos = (position[0] + screen_size[0] / 2,
-               - position[1] + screen_size[1] / 2)
+        screen_size = _internals.active_exp.screen.surface.get_size()
+        pos = (position[0] + screen_size[0] // 2,
+               - position[1] + screen_size[1] // 2)
         pygame.mouse.set_pos(pos)
 
     def set_cursor(self, size, hotspot, xormasks, andmasks):
@@ -395,7 +399,7 @@ class Mouse(Input):
         pygame.event.clear(pygame.MOUSEBUTTONUP)
         pygame.event.clear(pygame.MOUSEMOTION)
         if self._logging:
-            expyriment._active_exp._event_file_log("Mouse,cleared", 2)
+            _internals.active_exp._event_file_log("Mouse,cleared", 2)
 
 
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
@@ -441,7 +445,7 @@ class Mouse(Input):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if defaults._skip_wait_functions:
             return None, None, None, None
         start = get_time()
         self.clear()
@@ -457,8 +461,8 @@ class Mouse(Input):
             except:
                 buttons = [buttons]
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                 btn_id = rtn_callback
                 rt = int((get_time() - start) * 1000)
                 break
@@ -482,7 +486,7 @@ class Mouse(Input):
         position_in_expy_coordinates = self.position
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
             "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occured))
         return btn_id, motion_occured, position_in_expy_coordinates, rt
 
@@ -545,7 +549,7 @@ class Mouse(Input):
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                         duration=duration, wait_for_buttonup=False)
 
-        if isinstance(rtn[0], expyriment.control.CallbackQuitEvent):
+        if isinstance(rtn[0], _internals.CallbackQuitEvent):
             return rtn[0], rtn[3]
         else:
             return rtn[2], rtn[3]
@@ -598,17 +602,18 @@ class Mouse(Input):
 
         """
 
+        from .. import stimuli
         # measure mouse polling time
         info = """This will test how timing accurate your mouse is.
 
 [Press RETURN to continue]"""
 
-        expyriment.stimuli.TextScreen("Mouse test (1)", info).present()
-        exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
-        mouse = expyriment.io.Mouse()
-        go = expyriment.stimuli.TextLine("Keep on moving...")
+        stimuli.TextScreen("Mouse test (1)", info).present()
+        exp.keyboard.wait(misc.constants.K_RETURN)
+        mouse = Mouse()
+        go = stimuli.TextLine("Keep on moving...")
         go.preload()
-        expyriment.stimuli.TextLine("Please move the mouse").present()
+        stimuli.TextLine("Please move the mouse").present()
         mouse.wait_motion()
         go.present()
         exp.clock.reset_stopwatch()
@@ -616,15 +621,15 @@ class Mouse(Input):
         while exp.clock.stopwatch_time < 200:
             _pos, rt = mouse.wait_motion()
             motion.append(rt)
-        expyriment.stimuli.TextLine("Thanks").present()
-        polling_time = expyriment.misc.statistics.mode(motion)
+        stimuli.TextLine("Thanks").present()
+        polling_time = misc.statistics.mode(motion)
 
         info = """Your mouse polling time is {0} ms.
 
 [Press RETURN to continue] """.format(polling_time)
-        text = expyriment.stimuli.TextScreen("Results", info)
+        text = stimuli.TextScreen("Results", info)
         text.present()
-        exp.keyboard.wait([expyriment.misc.constants.K_RETURN])
+        exp.keyboard.wait([misc.constants.K_RETURN])
 
         info = """This will test if you mouse buttons work.
 Please press all buttons one after the other to see if the corresponding buttons on the screen light up.
@@ -633,14 +638,14 @@ If your mouse buttons do not work, you can quit by pressing q.
 
 [Press RETURN to continue]"""
 
-        expyriment.stimuli.TextScreen("Mouse test (2)", info).present()
-        exp.keyboard.wait(expyriment.misc.constants.K_RETURN)
+        stimuli.TextScreen("Mouse test (2)", info).present()
+        exp.keyboard.wait(misc.constants.K_RETURN)
 
         # test mouse clicking
-        rects = [expyriment.stimuli.Rectangle(size=[30, 30], position=[-50, 0]),
-                 expyriment.stimuli.Rectangle(size=[30, 30], position=[0, 0]),
-                 expyriment.stimuli.Rectangle(size=[30, 30], position=[50, 0])]
-        canvas = expyriment.stimuli.Canvas(size=[350, 500])
+        rects = [stimuli.Rectangle(size=[30, 30], position=[-50, 0]),
+                 stimuli.Rectangle(size=[30, 30], position=[0, 0]),
+                 stimuli.Rectangle(size=[30, 30], position=[50, 0])]
+        canvas = stimuli.Canvas(size=[350, 500])
         btn = None
         go_on = True
         while go_on:
@@ -648,9 +653,9 @@ If your mouse buttons do not work, you can quit by pressing q.
             for cnt, r in enumerate(rects):
                 r.unload()
                 if cnt == btn:
-                    r.colour = expyriment.misc.constants.C_YELLOW
+                    r.colour = misc.constants.C_YELLOW
                 else:
-                    r.colour = expyriment.misc.constants.C_RED
+                    r.colour = misc.constants.C_RED
                 r.plot(canvas)
 
             if btn == 3:
@@ -659,7 +664,7 @@ If your mouse buttons do not work, you can quit by pressing q.
                 text = "Mouse wheel DOWN"
             else:
                 text = ""
-            expyriment.stimuli.TextLine(text, position=[0, 50]).plot(canvas)
+            stimuli.TextLine(text, position=[0, 50]).plot(canvas)
             canvas.present()
             btn = None
             while btn is None:
@@ -672,7 +677,7 @@ If your mouse buttons do not work, you can quit by pressing q.
                             mouse.hide_cursor()
                             go_on = False
                             break
-                elif exp.keyboard.check(keys=expyriment.misc.constants.K_q):
+                elif exp.keyboard.check(keys=misc.constants.K_q):
                     buttons_work = 0
                     mouse.hide_cursor()
                     go_on = False

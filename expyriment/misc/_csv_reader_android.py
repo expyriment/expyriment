@@ -1,6 +1,8 @@
 """An emulation of the csv.reader module.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -30,6 +32,6 @@ def reader(the_file):
     delimiter = ","
     rtn = []
     for row in the_file:
-        rtn.append(map(lambda strn: strn.strip(), row.split(delimiter)))
+        rtn.append([strn.strip() for strn in row.split(delimiter)])
     return rtn
 

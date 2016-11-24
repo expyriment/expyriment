@@ -33,6 +33,9 @@
 # SOFTWARE.
 #
 
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 class PParallelDLPortIO(object):
     """
     This class provides read/write access to the parallel port on a PC.
@@ -64,11 +67,11 @@ class PParallelDLPortIO(object):
         try:
             # Load dlportio.dll functions
             self.port = windll.dlportio
-        except Exception, e:
-            print "Could not import DLportIO driver, parallel Ports not available"
+        except Exception as e:
+            print("Could not import DLportIO driver, parallel Ports not available")
             raise e
 
-        if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
+        if isinstance(address, str) and address.startswith('0x'): #convert u"0x0378" into 0x0378
             self.base = int(address, 16)
         else:
             self.base = address
@@ -175,5 +178,5 @@ class PParallelDLPortIO(object):
         elif pinNumber==17:
             return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 3) & 1 # Select Printer
         else:
-            print 'Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber)
+            print('Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber))
 

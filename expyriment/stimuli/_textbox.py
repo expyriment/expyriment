@@ -6,6 +6,8 @@ A text box stimulus.
 This module contains a class implementing a text box stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,10 +21,10 @@ import re
 
 import pygame
 
-import defaults
-from expyriment.misc import find_font, unicode2str, str2unicode
-import expyriment
-from _visual import Visual
+from . import defaults
+from .. import _internals
+from ..misc import find_font, unicode2byte, byte2unicode
+from ._visual import Visual
 
 
 class TextBox(Visual):
@@ -94,16 +96,16 @@ class TextBox(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = expyriment._active_exp.text_size
+            self._text_size = _internals.active_exp.text_size
 
         if text_font is None:
             text_font = defaults.textbox_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(expyriment._active_exp.text_font)
+            self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      10)
             _font = None
         except:
@@ -130,7 +132,7 @@ class TextBox(Visual):
             if defaults.textbox_text_colour is not None:
                 self._text_colour = defaults.textbox_text_colour
             else:
-                self._text_colour = expyriment._active_exp.foreground_colour
+                self._text_colour = _internals.active_exp.foreground_colour
         if background_colour is not None:
             self._background_colour = background_colour
         else:
@@ -309,7 +311,7 @@ class TextBox(Visual):
         rect = pygame.Rect((0, 0), self.size)
 
         if os.path.isfile(self._text_font):
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
+            _font = pygame.font.Font(unicode2byte(self._text_font, fse=True),
                                      self._text_size)
         else:
             _font = pygame.font.Font(self._text_font, self._text_size)
@@ -318,9 +320,9 @@ class TextBox(Visual):
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
 
-        if type(self.text) is not unicode:
+        if not isinstance(self.text, str):
             # Pygame wants latin-1 encoding here for character strings
-            _text = str2unicode(self.text).encode('latin-1')
+            _text = byte2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         surface = self.render_textrect(self.format_block(_text),
@@ -408,7 +410,7 @@ class TextBox(Visual):
                     surface.blit(tempsurface, (0, accumulated_height))
                 elif justification == 1:
                     surface.blit(tempsurface,
-                                 ((rect.width - tempsurface.get_width()) / 2,
+                                 ((rect.width - tempsurface.get_width()) // 2,
                                   accumulated_height))
                 elif justification == 2:
                     surface.blit(tempsurface,
@@ -449,7 +451,7 @@ class TextBox(Visual):
         except:
             ws = None
         if ws:
-            lines = map(lambda x: x.replace(ws, '', 1), lines)
+            lines = [x.replace(ws, '', 1) for x in lines]
 
         # Remove leading/trailing blank lines (after leading ws removal)
         # We do this again in case there were pure-whitespace lines
@@ -462,9 +464,9 @@ class TextBox(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     textbox = TextBox("Line one.\nLine two.\nLine three.", size=(100, 100))
     textbox.present()

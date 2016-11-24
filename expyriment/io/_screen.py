@@ -2,6 +2,8 @@
 A screen.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -10,16 +12,14 @@ __revision__ = ''
 __date__ = ''
 
 
-import sys
-
 import pygame
 try:
     import OpenGL.GL as ogl
 except ImportError:
     ogl = None
 
-import expyriment
-from _input_output import Output
+from .. import _internals
+from ._input_output import Output
 
 
 class Screen(Output):
@@ -72,13 +72,13 @@ class Screen(Output):
             warn_message = "PyOpenGL is not installed. \
 OpenGL will be deactivated!"
             print("Warning: " + warn_message)
-            expyriment._active_exp._event_file_warn("Screen,warning," + warn_message)
+            _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
             self._open_gl = False
 
         pygame.display.init()
-        if expyriment._active_exp.is_initialized:
+        if _internals.active_exp.is_initialized:
             self._monitor_resolution = \
-                        expyriment._active_exp.screen.monitor_resolution
+                        _internals.active_exp.screen.monitor_resolution
         else:
             self._monitor_resolution = (pygame.display.Info().current_w,
                                         pygame.display.Info().current_h)
@@ -177,7 +177,7 @@ machine!")
                 ogl.glEnd()
             ogl.glFinish()
         if self._logging:
-            expyriment._active_exp._event_file_log("Screen,updated", 2)
+            _internals.active_exp._event_file_log("Screen,updated", 2)
 
     def update_stimuli(self, stimuli):
         """Update only some stimuli on the screen.
@@ -200,16 +200,16 @@ machine!")
 
         if not self._open_gl:
             rectangles = []
-            half_screen_size = (self.size[0] / 2, self.size[1] / 2)
+            half_screen_size = (self.size[0] // 2, self.size[1] // 2)
             for stim in stimuli:
                 pos = stim.absolute_position
                 stim_size = stim.surface_size
-                rect_pos = (pos[0] + half_screen_size[0] - stim_size[0] / 2,
-                            - pos[1] + half_screen_size[1] - stim_size[1] / 2)
+                rect_pos = (pos[0] + half_screen_size[0] - stim_size[0] // 2,
+                            - pos[1] + half_screen_size[1] - stim_size[1] // 2)
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
             pygame.display.update(rectangles)
             if self._logging:
-                expyriment._active_exp._event_file_log("Screen,stimuli updated,{0}"\
+                _internals.active_exp._event_file_log("Screen,stimuli updated,{0}"\
                                 .format([stim.id for stim in stimuli]), 2)
             pygame.event.pump()
 
@@ -224,7 +224,7 @@ machine!")
 
         """
 
-        return self._window_size[0] / 2
+        return self._window_size[0] // 2
 
     @property
     def center_y(self):
@@ -237,7 +237,7 @@ machine!")
 
         """
         
-        return self._window_size[1] / 2
+        return self._window_size[1] // 2
 
     @property
     def size(self):
@@ -267,7 +267,7 @@ machine!")
         else:
             self._surface.fill(self._colour)
         if self._logging:
-            expyriment._active_exp._event_file_log("Screen,cleared", 2)
+            _internals.active_exp._event_file_log("Screen,cleared", 2)
 
     def save(self, filename):
         """Save the content of the screen as a picture.

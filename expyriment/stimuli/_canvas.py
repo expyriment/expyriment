@@ -6,6 +6,8 @@ A Canvas stimulus.
 This module contains a class implementing a canvas stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,8 +18,8 @@ __date__ = ''
 
 import pygame
 
-import defaults
-from _visual import Visual
+from . import defaults
+from ._visual import Visual
 
 
 class Canvas(Visual):
@@ -89,9 +91,9 @@ class Canvas(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     cnvs = Canvas((200, 200), colour=(255, 255, 255))
     cnvs.present()

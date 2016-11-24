@@ -3,12 +3,18 @@
 Setup file for Expyriment
 """
 
+
+from __future__ import print_function
+from builtins import *
+
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
 import stat
 import os
+import sys
 from subprocess import Popen, PIPE, call
 try:
     from setuptools import setup
@@ -54,11 +60,9 @@ data_files = [('share/expyriment/examples',
               ('share/expyriment/documentation/sphinx',
                glob('documentation/sphinx/*.*')),
               ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/Makefile')),
-              ('share/expyriment/documentation/sphinx/numpydoc',
-               glob('documentation/sphinx/numpydoc/*.*'))]
+               glob('documentation/sphinx/Makefile'))]
 
-install_requires = ["pyopengl>=3.0"]
+install_requires = ["pyopengl>=3.0", "future"]
 
 
 # Clear old installation when installing
@@ -111,8 +115,8 @@ class Build(build_py):
             if f.endswith('.py'):
                 # Create temp file
                 fh, abs_path = mkstemp()
-                new_file = open(abs_path, 'w')
-                old_file = open(f, 'rU')
+                new_file = open(abs_path, 'wb')
+                old_file = open(f, 'rUb')
                 for line in old_file:
                     if line[0:11] == '__version__':
                         new_file.write("__version__ = '" + version_nr + "'" +
@@ -141,7 +145,7 @@ def get_version_from_git():
     proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
 
-    return version_nr.format(proc.stdout.read().lstrip("v").strip())
+    return version_nr.format(proc.stdout.read().lstrip(b"v").strip())
 
 def get_revision_from_git():
         proc = Popen(['git', 'log', '--format=%H', '-1'], \
@@ -200,7 +204,7 @@ if __name__=="__main__":
         try:
             copytree('expyriment', 'documentation/sphinx/expyriment')
             os.chdir('documentation/sphinx/')
-            call(["python", "./create_rst_api_reference.py"])
+            call([sys.executable, "./create_rst_api_reference.py"])
             call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
             os.chdir(cwd)
             data_files.append(('share/expyriment/documentation/html',
@@ -231,7 +235,7 @@ if __name__=="__main__":
             proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                          stdout=PIPE, stderr=PIPE)
             initial_revision = proc.stdout.readline()
-            if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
+            if not b'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
                                                             initial_revision:
                 raise Exception
             version_nr = get_version_from_git()
@@ -254,9 +258,9 @@ if __name__=="__main__":
                                 'bdist_wininst': Wininst}
             )
 
-            print ""
-            print "Expyriment Version: [{0}] (from repository)".format(
-                version_nr) # version_nr should be easy to parse
+            print("")
+            print("Expyriment Version: [{0}] (from repository)".format(
+                version_nr))  # version_nr should be easy to parse
         except:
             raise RuntimeError("Building from repository failed!")
 
@@ -279,8 +283,8 @@ if __name__=="__main__":
         )
 
 
-        print ""
-        print "Expyriment Version: [{0}]".format(version_nr)
+        print("")
+        print("Expyriment Version: [{0}]".format(version_nr))
 
     if len(warning)>0:
-        print "Warning:", warning
+        print("Warning:", warning)

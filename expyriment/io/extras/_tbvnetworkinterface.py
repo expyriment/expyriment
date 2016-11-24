@@ -4,6 +4,8 @@ This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,12 +16,13 @@ __date__ = ''
 
 import struct
 
-import _tbvnetworkinterface_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import str2unicode
-from expyriment.io._input_output import Input, Output
-from expyriment.io.extras._tcpclient import TcpClient
+from . import _tbvnetworkinterface_defaults as defaults
+
+from ... import _internals
+from ...misc._timer import get_time
+from ...misc._miscellaneous import byte2unicode
+from ...io._input_output import Input, Output
+from ...io.extras._tcpclient import TcpClient
 
 
 class TbvNetworkInterface(Input, Output):
@@ -140,7 +143,7 @@ class TbvNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "TbvNetworkInterface,connected,{0}:{1}".format(self._host,
                                                                    self._port))
 
@@ -286,7 +289,7 @@ class TbvNetworkInterface(Input, Output):
         elif name[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(name[19:-1]))
         else:
-            return str2unicode(name[4:-1]), rt
+            return byte2unicode(name[4:-1]), rt
 
     def get_watch_folder(self):
         """Get the watch folder.
@@ -306,7 +309,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_target_folder(self):
         """Get the target folder.
@@ -326,7 +329,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:]-1))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_feedback_folder(self):
         """Get the feedback folder.
@@ -346,7 +349,7 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     # Protocol, DM, GLM Queries
     def get_current_protocol_condition(self):
@@ -556,7 +559,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[8 + x * 4:8 + x * 4 + 4])[0]
-                     for x in range(0, len(data[8:]) / 4)], rt)
+                     for x in range(0, len(data[8:]) // 4)], rt)
 
     def get_mean_of_roi_at_time_point(self, roi, time_point):
         """Get the mean of a ROI at a time point.
@@ -706,7 +709,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             _all = [struct.unpack('!i', data[4 + x * 4:4 + x * 4 + 4])[0]
-                    for x in range(0, len(data[4:]) / 4)]
+                    for x in range(0, len(data[4:]) // 4)]
             return [_all[x:x+3] for x in range(0, len(_all), 3)], rt
 
     # Volume Data Access Queries
@@ -772,7 +775,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_raw_value_of_all_voxels_at_time(self, time_point):
         """Get the raw value of all voxels at a certain time point.
@@ -803,7 +806,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_beta_of_voxel(self, beta, coords):
         """Get a specific beta value of a voxel.
@@ -861,7 +864,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!d', data[x * 8:x * 8 + 8])[0]
-                     for x in range(0, len(data) / 8)], rt)
+                     for x in range(0, len(data) // 8)], rt)
 
     def get_map_value_of_voxel(self, map, coords):
         """Get a specific map value of a voxel.
@@ -920,7 +923,7 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)
 
     # SVM Access Functions
     def get_number_of_classes(self):
@@ -964,4 +967,4 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)

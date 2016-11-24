@@ -6,6 +6,9 @@ The noise tone stimulus module.
 This module contains a class implementing a noise tone stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,9 +25,9 @@ import tempfile
 import shutil
 import random
 
-import defaults
-from expyriment.stimuli import defaults as stim_defaults
-from expyriment.stimuli._audio import Audio
+from . import defaults
+from ...stimuli import defaults as stim_defaults
+from ...stimuli._audio import Audio
 
 
 class NoiseTone(Audio):
@@ -136,7 +139,7 @@ class NoiseTone(Audio):
         """Write in chunks."""
 
         args = [iter(iterable)] * n
-        return itertools.izip_longest(fillvalue=fillvalue, *args)
+        return itertools.zip_longest(fillvalue=fillvalue, *args)
 
     def _create_noise_wave(self):
         """Create the sine wave."""
@@ -146,13 +149,13 @@ class NoiseTone(Audio):
                  itertools.count(0))
         channels = ((noise,),)
         n_samples = self._duration * self._samplerate
-        samples = itertools.islice(itertools.izip(
-            *(itertools.imap(sum, itertools.izip(*channel)) \
+        samples = itertools.islice(zip(
+            *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
         fid, filename = tempfile.mkstemp(dir=stim_defaults.tempdir, suffix=".wav")
         os.close(fid)
         w = wave.open(filename, 'w')
-        w.setparams((1, self._bitdepth / 8, self._samplerate, n_samples, 'NONE',
+        w.setparams((1, self._bitdepth // 8, self._samplerate, n_samples, 'NONE',
                      'not compressed'))
         max_amplitude = float(int((2 ** (self._bitdepth)) / 2) - 1)
         for chunk in self._grouper(2048, samples):
@@ -177,9 +180,9 @@ class NoiseTone(Audio):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     control.start_audiosystem()
     sine = NoiseTone(duration=1000)

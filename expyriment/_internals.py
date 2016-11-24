@@ -1,25 +1,125 @@
+"""Expyriment internal function and variables
+
+This module also contains the currently active experiment:
+            active_exp
 """
-Importer functions.
+from builtins import object
 
-This module contains helper function needed for importing plugins (extras) and
-for reading config file while import
-
-"""
-
-__author__ = 'Florian Krause <florian@expyriment.org>, \
+__author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
-import os
 import sys
-
+import os
 try:
     import android
 except ImportError:
     android = None
+
+PYTHON3 = (sys.version_info[0] == 3)
+
+###
+active_exp = None # expyriment.design.__init__ sets active_exp to design.Experiment("None")
+### Provides the access to the currently active experiment
+### import ._internals to read and write _active.exp
+
+
+def get_version():
+    """
+    Return version information about Expyriment and Python.
+
+    Returns
+    -------
+    version_info : str
+
+    Notes
+    -----
+    For more detailed information see expyriment.misc.get_system_info().
+
+    """
+
+    pv = "{0}.{1}.{2}".format(sys.version_info[0],
+                              sys.version_info[1],
+                              sys.version_info[2])
+            #no use of .major, .minor to ensure MacOS compatibility
+    return "{0} (Python {1})".format(__version__, pv)
+
+
+class Expyriment_object(object):
+    """A class implementing a general Expyriment object.
+       Parent of all stimuli and IO objects
+
+    """
+
+    def __init__(self):
+        """Create an Expyriment object."""
+        self._logging = True
+
+    def set_logging(self, onoff):
+        """Set logging of this object on or off
+
+        Parameters
+        ----------
+        onoff : bool
+            set logging on (True) or off (False)
+
+        Notes
+        -----
+        See also design.experiment.set_log_level fur further information about
+        event logging.
+
+    """
+
+        self._logging = onoff
+
+    @property
+    def logging(self):
+        """Getter for logging."""
+
+        return self._logging
+
+
+
+class CallbackQuitEvent(object):
+    """A CallbackQuitEvent
+
+    If a callback function returns a CallbackQuitEvent object the currently processed
+    the wait or event loop function will be quited.
+    """
+
+    def __init__(self, data=None):
+        """Init CallbackQuitEvent
+
+        Parameter
+        ---------
+        data: any data type, optional
+            You might use this variable to return data or values from your callback
+            function to your main function, since the quited wait or event loop function
+            will return this CallbackQuitEvent.
+
+        See Also
+        --------
+        experiment.register_wait_callback_function()
+
+        """
+
+        self.data = data
+
+    def __str__(self):
+        return "CallbackQuitEvent: data={0}".format(self.data)
+
+
+
+
+###   importer functions
+def import_command(path):
+    # helper function to generate import command for extras that is Python2/3 compatible
+    if PYTHON3:
+        return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
+    else:
+        return "execfile(r'{0}')\n".format(path)
 
 
 def import_plugins(init_filename):
@@ -47,7 +147,7 @@ def import_plugins(init_filename):
                         tmp = line[6:].lstrip()
                         name = tmp[:len(filename[:-4])]
                         break
-                code[filename] = "from {0} import {1}\n".format(filename[:-3],
+                code[filename] = "from .{0} import {1}\n".format(filename[:-3],
                                                                 name)
             except:
                 print("Warning: Could not import {0}!".format(
@@ -70,10 +170,10 @@ def import_plugin_defaults(init_filename):
 
     # extra defaults
     code = []
-    for _filename in os.listdir(os.path.dirname(init_filename)):
+    folder = os.path.dirname(init_filename)
+    for _filename in os.listdir(folder):
         if _filename.endswith("_defaults.py"):
-            code.append("execfile(r'{0}')\n".format(os.path.dirname(
-                init_filename) + os.sep + os.sep + _filename))
+            code.append( import_command(folder + os.sep +  _filename) )
     return code
 
 
@@ -122,10 +222,10 @@ def import_plugins_from_settings_folder(init_filename):
                             tmp = line[6:].lstrip()
                             name = tmp[:len(filename[:-4])]
                             break
-                    code[filename] = "from {0} import {1}\n".format(filename[:-3],
+                    code[filename] = "from .{0} import {1}\n".format(filename[:-3],
                                                                     name)
-                    print "import {0}.extras.{1} (from homefolder)".format(
-                                                        module, name)
+                    print("import .{0}.extras.{1} (from homefolder)".format(
+                                                        module, name))
                 except:
                     print("Could not import {0}!".format(
                         os.path.dirname(folder) + os.sep + filename))
@@ -153,8 +253,7 @@ def import_plugin_defaults_from_home(init_filename):
     try:
         for _filename in os.listdir(os.path.dirname(folder)):
             if _filename.endswith("_defaults.py"):
-                code.append("execfile(r'{0}')\n".format(os.path.dirname(
-                    folder) + os.sep + os.sep + _filename))
+                code.append( import_command(folder + os.sep + _filename) )
     except:
         pass
     return code
@@ -168,7 +267,7 @@ def post_import_hook():
 
     filename = home + os.sep + "post_import.py"
     if os.path.isfile(filename):
-        print "process {0}".format(filename)
-        return "execfile(r'{0}')\n".format(filename)
+        print("process {0}".format(filename))
+        return import_command(filename)
     else:
         return ""

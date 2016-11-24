@@ -41,8 +41,6 @@ to match your Python version)::
 
     sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
 
-Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
-
 
 Notes
 -----

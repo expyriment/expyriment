@@ -36,7 +36,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
-	rm -f Changelog.rst CommandLineInterface.rst
+	rm -f Changelog.rst CommandLineInterface.rst sitemap.yml
 
 rst:
 	@make expyriment.rst
@@ -46,7 +46,13 @@ expyriment.rst:
 	./create_rst_api_reference.py
 	rm -f expyriment
 
+sitemap:
+	ln -fs ../../expyriment/ ./
+	./create_sitemap.py
+	rm -f expyriment
+
 html:
+	@make expyriment.rst
 	ln -fs ../../expyriment/ ./
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
