@@ -7,6 +7,10 @@ This script contains an API reference browser and search GUI interface (TK), as
 well as a function to call this browser or the online documentation.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+from future import standard_library
+standard_library.install_aliases()
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,9 +21,13 @@ __date__ = ''
 
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
+from types import ModuleType, MethodType, FunctionType
+
+from ._internals import get_version
+
 
 try:
-    import Tkinter as _tk
+    import tkinter as _tk
 except:
     try:
         import tkinter as _tk  # for future (Python 3)
@@ -27,18 +35,12 @@ except:
         _tk = None
 
 try:
-    import ttk as _ttk
+    import tkinter.ttk as _ttk
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
 except:
     _ttk = _tk  # for Python < 2.7
-
-import expyriment
-
-
-_x = None
-_y = None
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -49,14 +51,15 @@ def _get_doc_and_function(obj):
 
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
+    namespace = locals()
     for cl in classes:
         cl = "{0}.{1}".format(mod.__name__, cl)
-        exec("_x =" + cl)
-        doc_dict[cl], functions = _get_doc_and_function(_x)
+        exec("_x =" + cl, namespace)
+        doc_dict[cl], functions = _get_doc_and_function(namespace['_x']) # FIXME should work but is unchecked for python 2/3 compatibility
         for fnc in functions:
             fnc = "{0}.{1}".format(cl, fnc)
-            exec("_y =" + fnc)
-            doc_dict[fnc], _tmp = _get_doc_and_function(_y)
+            exec("_y =" + fnc, namespace)
+            doc_dict[fnc], _tmp = _get_doc_and_function(namespace['_y'])
 
 def _search_doc(search_str, doc_dict):
     """Search the documentation.
@@ -71,7 +74,7 @@ def _search_doc(search_str, doc_dict):
     """
 
     rtn = []
-    for k in doc_dict.keys():
+    for k in list(doc_dict.keys()):
         if k.lower().find(search_str.lower()) > -1 or\
             doc_dict[k].lower().find(search_str.lower()) > -1:
             rtn.append(k)
@@ -87,13 +90,14 @@ def _get_members(item_str):
 def show_GUI():
     """Show the GUI."""
 
-    import types
+    from types import ModuleType
+    import expyriment
     import expyriment.io.extras
     import expyriment.design.extras
     import expyriment.stimuli.extras
     import expyriment.misc.extras
 
-    if type(_tk) is not types.ModuleType:
+    if not isinstance(_tk, ModuleType):
         raise ImportError("""API Reference Tool could not be started.
 The Python package 'Tkinter' is not installed""")
 
@@ -170,13 +174,13 @@ The Python package 'Tkinter' is not installed""")
         else:
             items = _search_doc(value, doc_dict)
         for index, item in enumerate(items):
-            if type(eval(item)) == types.ModuleType:
+            if isinstance(eval(item), ModuleType):
                 items[index] = "# " + item
-            elif type(eval(item)) == types.TypeType:
+            elif isinstance(eval(item), type): ##
                 items[index] = "+ " + item
-            elif type(eval(item)) == types.MethodType:
+            elif isinstance(eval(item), MethodType):
                 items[index] = "- " + item
-            elif type(eval(item)) == types.FunctionType:
+            elif isinstance(eval(item), FunctionType):
                 items[index] = "= " + item
             else:
                 items[index] = "@ " + item
@@ -188,8 +192,7 @@ The Python package 'Tkinter' is not installed""")
             last_sel = None
         for index, item in enumerate(items):
             listbox.insert(_tk.END, item)
-            if type(eval(item[2:])) == types.ModuleType or \
-               type(eval(item[2:])) == types.TypeType:
+            if isinstance(eval(item[2:]), (type, ModuleType)):
                 listbox.itemconfig(index, fg="blue", selectforeground="blue")
         listbox.selection_set(_tk.ACTIVE)
         return True
@@ -219,7 +222,7 @@ The Python package 'Tkinter' is not installed""")
                     text.tag_config("heading", font=("Courier", 12, "bold"))
                     text.insert(_tk.END, item, "heading")
                     text.insert(_tk.END, "\n\n")
-                    if type(eval(item)) == types.TypeType:
+                    if isinstance(eval(item), type):
                         text.insert(_tk.END, doc_dict[item])
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
@@ -242,7 +245,7 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, _getdoc(
                             eval(item + "." + "__init__")))
-                    elif type(eval(item)) == types.FunctionType:
+                    elif isinstance(eval(item), FunctionType):
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
@@ -258,7 +261,7 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, doc_dict[item])
-                    elif type(eval(item)) == types.MethodType:
+                    elif isinstance(eval(item), MethodType):
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
@@ -278,14 +281,11 @@ The Python package 'Tkinter' is not installed""")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
                         text.insert(_tk.END, doc_dict[item])
-                    elif type(eval(item)) in (types.IntType, types.StringType,
-                                              types.BooleanType,
-                                              types.ListType,
-                                              types.TupleType,
-                                              types.DictionaryType):
+                    elif isinstance(eval(item), (int, bytes,bool, list,
+                                              tuple, dict)):
                         pass
                     else:
-                        if type(eval(item)) == property:
+                        if isinstance(eval(item), property):
                             if eval(item).fset is None:
                                 text.insert(_tk.END, "Read-only!")
                         else:
@@ -323,8 +323,7 @@ The Python package 'Tkinter' is not installed""")
                 if item == "":
                     update_search(None)
                 else:
-                    if type(eval(item)) == types.ModuleType or \
-                       type(eval(item)) == types.TypeType:
+                    if isinstance(eval(item), (type, ModuleType)):
                         s = tmp.split(".")
                         if len(s) >= 1:
                             last_item = ".".join(s[0:-1])
@@ -336,13 +335,13 @@ The Python package 'Tkinter' is not installed""")
                         listbox.delete(0, _tk.END)
                         for index, item in enumerate(items):
                             if item != "..":
-                                if type(eval(item)) == types.ModuleType:
+                                if isinstance(eval(item), ModuleType):
                                     items[index] = "# " + item
-                                elif type(eval(item)) == types.TypeType:
+                                elif isinstance(eval(item), type):
                                     items[index] = "+ " + item
-                                elif type(eval(item)) == types.MethodType:
+                                elif isinstance(eval(item), MethodType):
                                     items[index] = "- " + item
-                                elif type(eval(item)) == types.FunctionType:
+                                elif isinstance(eval(item), FunctionType):
                                     items[index] = "= " + item
                                 else:
                                     items[index] = "@ " + item
@@ -353,8 +352,7 @@ The Python package 'Tkinter' is not installed""")
                         for index, item in enumerate(items):
                             listbox.insert(_tk.END, item)
                             if item == ".." or \
-                               type(eval(item[2:])) == types.ModuleType or \
-                               type(eval(item[2:])) == types.TypeType:
+                                    isinstance(eval(item[2:]), (type, ModuleType)):
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)
@@ -501,15 +499,13 @@ def show_documentation(docu_type=None):
 
     """
 
-    from expyriment import get_version
-
     def call_info():
-        print ""
-        print "Call show_documentation with the following arguments to get further information:"
-        print "     show_documentation(1) -- Open local documentation in web browser"
-        print "     show_documentation(2) -- Open online documentation in web browser"
-        print "     show_documentation(3) -- Open API Reference Tool"
-        print ""
+        print("")
+        print("Call show_documentation with the following arguments to get further information:")
+        print("     show_documentation(1) -- Open local documentation in web browser")
+        print("     show_documentation(2) -- Open online documentation in web browser")
+        print("     show_documentation(3) -- Open API Reference Tool")
+        print("")
 
     import subprocess
     import os
@@ -519,22 +515,22 @@ def show_documentation(docu_type=None):
     f = os.path.abspath(__file__)
     path = os.path.abspath(os.path.join(os.path.split(f)[0], ".."))
     if docu_type is None:
-        print "Welcome to Expyriment {0}".format(get_version())
-        print ""
+        print("Welcome to Expyriment {0}".format(get_version()))
+        print("")
         author = __author__.replace(",", ",\n        ")
-        print "Website: http://expyriment.org"
-        print "License: GNU GPL v3"
-        print "Authors: {0}".format(author)
+        print("Website: http://expyriment.org")
+        print("License: GNU GPL v3")
+        print("Authors: {0}".format(author))
         call_info()
     elif docu_type == 1:
         docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
         if os.path.exists(docu):
-            from expyriment.misc import unicode2str
+            from .misc import unicode2byte
             webbrowser.open(
-                unicode2str('file://' + docu),
+                unicode2byte('file://' + docu),
                 new=1)
         else:
-            print "No local documentation found"
+            print("No local documentation found")
     elif docu_type == 2:
         webbrowser.open(
             "http://docs.expyriment.org/",
@@ -550,7 +546,7 @@ def show_documentation(docu_type=None):
             stdout=None,
             cwd=path)
     else:
-        print "Unknown documentation type"
+        print("Unknown documentation type")
         call_info()
 
 if __name__ == "__main__":

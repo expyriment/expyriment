@@ -12,7 +12,11 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-import permute
-import randomize
-from _structure import Experiment, Block, Trial
+from . import defaults
+from . import permute
+from . import randomize
+from ._structure import Experiment, Block, Trial
+
+from .. import _internals
+_internals.active_exp = Experiment("None")
+

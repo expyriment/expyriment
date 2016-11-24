@@ -4,6 +4,8 @@ This module contains several classes and functions that help
 to handle, preprocessing and aggregate Expyriment data files.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,7 +19,7 @@ try:
 except ImportError:
     _locale = None  # Does not exist on Android
 import sys as _sys
-import types as _types
+from types import ModuleType
 from tempfile import mkstemp as _mkstemp
 from copy import copy as _copy
 import codecs as _codecs
@@ -26,8 +28,8 @@ try:
     import numpy as _np
 except:
     _np = None
-from expyriment.misc import unicode2str as _unicode2str
-from expyriment.misc import str2unicode as _str2unicode
+from ..misc import unicode2byte as _unicode2str
+from ..misc import byte2unicode as _str2unicode
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
@@ -92,13 +94,12 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 if only_header_and_variable_names:
                     break
                 if read_variables is not None:
-                    read_in_columns = map(lambda x:variables.index(x),
-                                                            read_variables)
-                    variables = map(lambda x:variables[x], read_in_columns)
+                    read_in_columns = [variables.index(x) for x in read_variables]
+                    variables = [variables[x] for x in read_in_columns]
             else:
                 row =ln.split(delimiter)
                 if read_in_columns is not None:
-                    row = map(lambda x:row[x], read_in_columns)
+                    row = [row[x] for x in read_in_columns]
                 data.append(row)
         else:
             if ln.startswith("#s"):
@@ -116,7 +117,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 comments = comments + "\n" + ln
     fl.close()
     # strip variables
-    variables = map(lambda x:x.strip(), variables)
+    variables = [x.strip() for x in variables]
     return data, variables, subject_info, comments
 
 
@@ -141,28 +142,25 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
         _locale_enc = _locale.getdefaultlocale()[1]
     except:
         _locale_enc = "UTF-8"
-    with open(filename, 'w') as f:
-        header = "# -*- coding: {0} -*-\n".format(
-            _locale_enc)
-        f.write(header)
+    with open(filename, 'wb') as f:
+        header = "# -*- coding: {0} -*-\n".format(_locale_enc)
+        f.write(_unicode2str(header))
         if varnames is not None:
             for c, v in enumerate(varnames):
                 if c > 0:
-                    f.write(delimiter)
+                    f.write(_unicode2str(delimiter))
                 f.write(_unicode2str(v))
-            f.write("\n")
+            f.write(_unicode2str("\n"))
         cnt = 0
         for row in data:
             for c, v in enumerate(row):
                 if c > 0:
-                    f.write(delimiter)
-                if isinstance(v, unicode):
-                    _unicode2str(v)
-                f.write(v)
+                    f.write(_unicode2str(delimiter))
+                f.write(_unicode2str(v))
                 cnt += 1
-            f.write("\n")
+            f.write(_unicode2str("\n"))
 
-    print " ({0} cells in {1} rows)".format(cnt, len(data))
+    print(" ({0} cells in {1} rows)".format(cnt, len(data)))
 
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
@@ -230,7 +228,7 @@ def get_experiment_duration(event_filename):
             elif r[2]=="ended":
                 stop = int(r[0])
 
-    sec = (stop-start)/1000.0
+    sec = (stop-start) / 1000.0
     return sec / 60.0
 
 
@@ -294,7 +292,7 @@ class Aggregator(object):
 
         """
 
-        if type(_np) is not _types.ModuleType:
+        if not isinstance(_np, ModuleType):
             message = """Aggregator can not be initialized.
 The Python package 'Numpy' is not installed."""
             raise ImportError(message)
@@ -306,7 +304,7 @@ The Python package 'Numpy' is not installed."""
                                   _np.version.version) +
                               "\nPlease install Numpy 1.6 or higher.")
 
-        print "** Expyriment Data Preprocessor **"
+        print("** Expyriment Data Preprocessor **")
         self.reset(data_folder, file_name, suffix, read_variables)
 
     def __str__(self):
@@ -507,7 +505,7 @@ The Python package 'Numpy' is not installed."""
                 #find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
-                    if isinstance(row[iv], unicode):
+                    if isinstance(row[iv], str):
                         _row_data = _unicode2str(row[iv])
                     else:
                         _row_data = row[iv]
@@ -561,7 +559,7 @@ The Python package 'Numpy' is not installed."""
         result = {}
         for cnt, fac_cmb in enumerate(combinations):
             if fac_cmb == "total":
-                idx = range(0, data.shape[0])
+                idx = list(range(0, data.shape[0]))
             else:
                 # find idx of combinations
                 idx = None
@@ -708,10 +706,10 @@ The Python package 'Numpy' is not installed."""
             raise Exception("No data files found in {0}".format(
                 _unicode2str(self._data_folder)))
 
-        print "found {0} subject_data sets".format(len(self._data_files))
-        print "found {0} variables: {1}".format(len(self._variables),
+        print("found {0} subject_data sets".format(len(self._data_files)))
+        print("found {0} variables: {1}".format(len(self._variables),
                                                 [_unicode2str(x) for x
-                                                 in self._variables])
+                                                 in self._variables]))
 
     @property
     def data_folder(self):
@@ -836,7 +834,7 @@ The Python package 'Numpy' is not installed."""
 
         data, _vnames, subject_info, comments = \
             read_datafile(self._data_folder + "/" + filename)
-        print "   reading {0}".format(_unicode2str(filename))
+        print("   reading {0}".format(_unicode2str(filename)))
 
         if recode_variables:
             for var_id, recoding in self._recode:
@@ -960,7 +958,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             variables = [variables]
 
         cols = []
@@ -999,7 +997,7 @@ The Python package 'Numpy' is not installed."""
         if len(data_shape) < 2:
             d = _np.transpose([d])
             data_shape = (data_shape[0], 1)
-        if type(variable_names) != _types.ListType:
+        if not isinstance(variable_names, (list, tuple)):
             variable_names = [variable_names]
 
         if len(variable_names) != data_shape[1]:
@@ -1084,7 +1082,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             self._iv_txt = [variables]
         else:
             self._iv_txt = variables
@@ -1114,7 +1112,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(dv_syntax) != _types.ListType:
+        if not isinstance(dv_syntax, (list, tuple)):
             self._dv_txt = [dv_syntax]
         else:
             self._dv_txt = dv_syntax
@@ -1156,7 +1154,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(rule_syntax) != _types.ListType:
+        if not isinstance(rule_syntax, (tuple, list)):
             self._exclusions_txt = [rule_syntax]
         else:
             self._exclusions_txt = rule_syntax
@@ -1189,7 +1187,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(recoding_syntax) != _types.ListType:
+        if not issubclass(recoding_syntax (list, tuple)):
             self._recode_txt = [recoding_syntax]
         else:
             self._recode_txt = recoding_syntax
@@ -1214,7 +1212,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(variables) != _types.ListType:
+        if not isinstance(variables, (list, tuple)):
             self._subject_variables = [variables]
         else:
             self._subject_variables = variables
@@ -1247,7 +1245,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if type(compute_syntax) != _types.ListType:
+        if not issubclass(compute_syntax, (list, tuple)):
             self._computes_txt = [compute_syntax]
         else:
             self._computes_txt = compute_syntax
@@ -1283,15 +1281,15 @@ The Python package 'Numpy' is not installed."""
         self.set_independent_variables(variables)
         result, varnames = self.aggregate()
         for row in result:
-            print "Subject {0}".format(row[0])
+            print("Subject {0}".format(row[0]))
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
-                    if isinstance(row[cnt], unicode):
+                    if isinstance(row[cnt], str):
                         _row_data = _unicode2str(row[cnt])
                     else:
                         _row_data = row[cnt]
-                    print "\t{0}:\t{1}".format(var[4:], _row_data)
-        print "\n"
+                    print("\t{0}:\t{1}".format(var[4:], _row_data))
+        print("\n")
         self._dv = old_dv
         self._iv = old_iv
 
@@ -1340,7 +1338,7 @@ The Python package 'Numpy' is not installed."""
             for dv in self._dv:
                 for fac_cmb in combinations:
                     if fac_cmb == "total":
-                        idx = range(0, mtx.shape[0])
+                        idx = list(range(0, mtx.shape[0]))
                     else:
                         # find idx of combinations
                         idx = None

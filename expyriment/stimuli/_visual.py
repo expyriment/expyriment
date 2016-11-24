@@ -1,6 +1,9 @@
 """
 This module contains the base classes for visual stimuli.
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +16,6 @@ import tempfile
 import os
 import copy
 import random
-import types
 
 import pygame
 try:
@@ -23,12 +25,11 @@ except ImportError:
     oglu = None
     ogl = None
 
-import defaults
-import expyriment
-from _stimulus import Stimulus
-from expyriment.misc import geometry
-from expyriment.misc import unicode2str
-from expyriment.misc._timer import get_time
+from . import defaults
+from .. import _internals
+from ._stimulus import Stimulus
+from ..misc import geometry, unicode2byte
+from ..misc._timer import get_time
 
 random.seed()
 
@@ -53,7 +54,10 @@ class _LaminaPanelSurface(object):
         """
 
         self._txtr = Visual._load_texture(surface)
-        self._winsize = surface.get_size()
+        if isinstance(surface, pygame.Surface):
+            self._winsize = surface.get_size()
+        else:
+            self._winsize = (len(surface[0]), len(surface))
         self._position = position
         left, top, width, height = quadDims
         right, bottom = left + width, top - height
@@ -82,37 +86,37 @@ class _LaminaPanelSurface(object):
         """
 
         x0, y0 = pos
-        x = x0 / self._winsize[0] * self._qdims[2] + self._qdims[0]
-        y = y0 / self._winsize[1] * self._qdims[3] + self._qdims[1]
+        x = int(x0 / self._winsize[0] * self._qdims[2] + self._qdims[0])
+        y = int(y0 / self._winsize[1] * self._qdims[3] + self._qdims[1])
         return x, y
 
     def refresh_position(self):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
         screensize = pygame.display.get_surface().get_size()
-        bottomleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                       self._winsize[0] / 2 + \
+        bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                       self._winsize[0] // 2 + \
                                        self._position[0],
-                                       screensize[1] / 2 - \
+                                       screensize[1] // 2 - \
                                        int(round(self._winsize[1] / 2.0)) + \
                                        self._position[1], 0)
-        bottomright = oglu.gluUnProject(screensize[0] / 2 + \
+        bottomright = oglu.gluUnProject(screensize[0] // 2 + \
                                         int(round(self._winsize[0] / 2.0)) + \
                                         self._position[0],
-                                        screensize[1] / 2 - \
+                                        screensize[1] // 2 - \
                                         int(round(self._winsize[1] / 2.0)) + \
                                         self._position[1], 0)
-        topleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                    self._winsize[0] / 2 + \
+        topleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                    self._winsize[0] // 2 + \
                                     self._position[0],
-                                    screensize[1] / 2 + \
-                                    self._winsize[1] / 2 + \
+                                    screensize[1] // 2 + \
+                                    self._winsize[1] // 2 + \
                                     self._position[1], 0)
-        topright = oglu.gluUnProject(screensize[0] / 2 + \
+        topright = oglu.gluUnProject(screensize[0] // 2 + \
                                      int(round(self._winsize[0] / 2.0)) + \
                                      self._position[0],
-                                     screensize[1] / 2 + \
-                                     self._winsize[1] / 2 + \
+                                     screensize[1] // 2 + \
+                                     self._winsize[1] // 2 + \
                                      self._position[1], 0)
 
         self.dims = topleft, topright, bottomright, bottomleft
@@ -169,18 +173,27 @@ class Visual(Stimulus):
 
         Parameters
         ----------
-        surf : pygame.Surface object
+        surf : pygame.Surface or numpy.array object
             surface to make texture from
 
         """
 
         txtr = ogl.glGenTextures(1)
-        textureData = pygame.image.tostring(surf, "RGBA", 1)
+        if isinstance(surf, pygame.Surface):
+            textureData = pygame.image.tostring(surf, "RGBA", 1)
+            colours = ogl.GL_RGBA
+            width, height = surf.get_size()
+        else:
+            textureData = surf
+            if textureData.shape[2] == 3:
+                colours = ogl.GL_RGB
+            elif textureData.shape[2] == 4:
+                colours = ogl.GL_RGBA
+            width, height = len(surf[0]), len(surf)
         ogl.glEnable(ogl.GL_TEXTURE_2D)
         ogl.glBindTexture(ogl.GL_TEXTURE_2D, txtr)
-        width, height = surf.get_size()
-        ogl.glTexImage2D(ogl.GL_TEXTURE_2D, 0, ogl.GL_RGBA, width, height, 0,
-          ogl.GL_RGBA, ogl.GL_UNSIGNED_BYTE, textureData)
+        ogl.glTexImage2D(ogl.GL_TEXTURE_2D, 0, colours, width, height, 0,
+          colours, ogl.GL_UNSIGNED_BYTE, textureData)
         ogl.glTexParameterf(ogl.GL_TEXTURE_2D,
                             ogl.GL_TEXTURE_MAG_FILTER,
                             ogl.GL_NEAREST)
@@ -417,7 +430,7 @@ class Visual(Stimulus):
             rtn._is_compressed = False
             rtn._compression_filename = None
         if self.is_preloaded:
-            if expyriment._active_exp.screen.open_gl:
+            if _internals.active_exp.screen.open_gl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
@@ -532,15 +545,15 @@ class Visual(Stimulus):
         """
 
         if mode == "visible":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             other_size = stimulus.surface_size
             self_pos = (
-                self.position[0] + screen_size[0] / 2 - self_size[0] / 2,
-                - self.position[1] + screen_size[1] / 2 - self_size[1] / 2)
+                self.position[0] + screen_size[0] // 2 - self_size[0] // 2,
+                - self.position[1] + screen_size[1] // 2 - self_size[1] // 2)
             other_pos = (
-                stimulus.position[0] + screen_size[0] / 2 - other_size[0] / 2,
-                - stimulus.position[1] + screen_size[1] / 2 - other_size[1] / 2)
+                stimulus.position[0] + screen_size[0] // 2 - other_size[0] // 2,
+                - stimulus.position[1] + screen_size[1] // 2 - other_size[1] // 2)
             offset = (-self_pos[0] + other_pos[0], -self_pos[1] + other_pos[1])
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
@@ -551,13 +564,13 @@ class Visual(Stimulus):
                 return False
 
         elif mode == "surface":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
-            sx = self.absolute_position[0] + screen_size[0] / 2
-            sy = self.absolute_position[1] + screen_size[1] / 2
+            screen_size = _internals.active_exp.screen.surface.get_size()
+            sx = self.absolute_position[0] + screen_size[0] // 2
+            sy = self.absolute_position[1] + screen_size[1] // 2
             selfrect = pygame.Rect((0, 0), self.surface_size)
             selfrect.center = (sx, sy)
-            ox = stimulus.absolute_position[0] + screen_size[0] / 2
-            oy = stimulus.absolute_position[1] + screen_size[1] / 2
+            ox = stimulus.absolute_position[0] + screen_size[0] // 2
+            oy = stimulus.absolute_position[1] + screen_size[1] // 2
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
@@ -603,27 +616,27 @@ class Visual(Stimulus):
         """
 
         if mode == "visible":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             other_size = stimulus.surface_size
             if use_absolute_position:
-                self_pos = (self.absolute_position[0] + screen_size[0] / 2 -
-                            self_size[0] / 2,
-                            - self.absolute_position[1] + screen_size[1] / 2 -
+                self_pos = (self.absolute_position[0] + screen_size[0] // 2 -
+                            self_size[0] // 2,
+                            - self.absolute_position[1] + screen_size[1] // 2 -
                             self_size[1] / 2)
-                other_pos = (stimulus.absolute_position[0] + screen_size[0] / 2
-                             - other_size[0] / 2,
-                             - stimulus.absolute_position[1] + screen_size[1] /
-                             2 - other_size[1] / 2)
+                other_pos = (stimulus.absolute_position[0] + screen_size[0] // 2
+                             - other_size[0] // 2,
+                             - stimulus.absolute_position[1] + screen_size[1] //
+                             2 - other_size[1] // 2)
             else:
-                self_pos = (self.position[0] + screen_size[0] / 2 -
-                            self_size[0] / 2,
-                            - self.position[1] + screen_size[1] / 2 -
-                            self_size[1] / 2)
-                other_pos = (stimulus.position[0] + screen_size[0] / 2 -
-                             other_size[0] / 2,
-                             - stimulus.position[1] + screen_size[1] / 2 -
-                             other_size[1] / 2)
+                self_pos = (self.position[0] + screen_size[0] // 2 -
+                            self_size[0] // 2,
+                            - self.position[1] + screen_size[1] // 2 -
+                            self_size[1] // 2)
+                other_pos = (stimulus.position[0] + screen_size[0] // 2 -
+                             other_size[0] // 2,
+                             - stimulus.position[1] + screen_size[1] // 2 -
+                             other_size[1] // 2)
             offset = (-self_pos[0] + other_pos[0], -self_pos[1] + other_pos[1])
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
@@ -633,17 +646,17 @@ class Visual(Stimulus):
             else:
                 return False, overlap
         elif mode == "surface":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx = self.absolute_position[0] + screen_size[0] / 2
-                sy = self.absolute_position[1] + screen_size[1] / 2
-                ox = stimulus.absolute_position[0] + screen_size[0] / 2
-                oy = stimulus.absolute_position[1] + screen_size[1] / 2
+                sx = self.absolute_position[0] + screen_size[0] // 2
+                sy = self.absolute_position[1] + screen_size[1] // 2
+                ox = stimulus.absolute_position[0] + screen_size[0] // 2
+                oy = stimulus.absolute_position[1] + screen_size[1] // 2
             else:
-                sx = self.position[0] + screen_size[0] / 2
-                sy = self.position[1] + screen_size[1] / 2
-                ox = stimulus.position[0] + screen_size[0] / 2
-                oy = stimulus.position[1] + screen_size[1] / 2
+                sx = self.position[0] + screen_size[0] // 2
+                sy = self.position[1] + screen_size[1] // 2
+                ox = stimulus.position[0] + screen_size[0] // 2
+                oy = stimulus.position[1] + screen_size[1] // 2
             selfrect = pygame.Rect((0, 0), self.surface_size)
             selfrect.center = (sx, sy)
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
@@ -687,21 +700,20 @@ class Visual(Stimulus):
         """
 
         if mode == "visible":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             if use_absolute_position:
                 self_pos = (
-                    (self.absolute_position[0] + screen_size[0] / 2) -
-                    self_size[0] / 2,
-                    (-self.absolute_position[1] + screen_size[1] / 2) -
-                    self_size[1] / 2)
+                    (self.absolute_position[0] + screen_size[0] // 2) -
+                    self_size[0] // 2,
+                    (-self.absolute_position[1] + screen_size[1] // 2) -
+                    self_size[1] // 2)
             else:
                 self_pos = (
-                    (self.position[0] + screen_size[0] / 2) - self_size[0] / 2,
-                    (-self.position[1] + screen_size[1] / 2) - self_size[1] /
-                    2)
-            pos = (position[0] + screen_size[0] / 2,
-                   - position[1] + screen_size[1] / 2)
+                    (self.position[0] + screen_size[0] // 2) - self_size[0] // 2,
+                    (-self.position[1] + screen_size[1] // 2) - self_size[1] // 2)
+            pos = (position[0] + screen_size[0] // 2,
+                   - position[1] + screen_size[1] // 2)
             offset = (int(pos[0] - self_pos[0]), int(pos[1] - self_pos[1]))
             self_mask = pygame.mask.from_surface(self._get_surface())
             overlap = False
@@ -714,17 +726,17 @@ class Visual(Stimulus):
             return overlap
 
         elif mode == "surface":
-            screen_size = expyriment._active_exp.screen.surface.get_size()
+            screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx = self.absolute_position[0] + screen_size[0] / 2
-                sy = self.absolute_position[1] + screen_size[1] / 2
+                sx = self.absolute_position[0] + screen_size[0] // 2
+                sy = self.absolute_position[1] + screen_size[1] // 2
             else:
-                sx = self.position[0] + screen_size[0] / 2
-                sy = self.position[1] + screen_size[1] / 2
+                sx = self.position[0] + screen_size[0] // 2
+                sy = self.position[1] + screen_size[1] // 2
             selfrect = pygame.Rect((0, 0), self.surface_size)
             selfrect.center = (sx, sy)
-            p = (position[0] + screen_size[0] / 2,
-                 position[1] + screen_size[1] / 2)
+            p = (position[0] + screen_size[0] // 2,
+                 position[1] + screen_size[1] // 2)
             if selfrect.collidepoint(p):
                 return True
             else:
@@ -762,11 +774,11 @@ class Visual(Stimulus):
         self._parent = stimulus
         rect = pygame.Rect((0, 0), self.surface_size)
         stimulus_surface_size = stimulus.surface_size
-        rect.center = [self.position[0] + stimulus_surface_size[0] / 2,
-                       - self.position[1] + stimulus_surface_size[1] / 2]
+        rect.center = [self.position[0] + stimulus_surface_size[0] // 2,
+                       - self.position[1] + stimulus_surface_size[1] // 2]
         stimulus._get_surface().blit(self._get_surface(), rect)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,plotted,{0},{1}".format(self.id, stimulus.id), 2)
         return int((get_time() - start) * 1000)
 
@@ -796,7 +808,7 @@ class Visual(Stimulus):
         self._is_compressed = False
         self._set_surface(None)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                             "Stimulus,surface cleared,{0}".format(self.id), 2)
         return int((get_time() - start) * 1000)
 
@@ -829,7 +841,7 @@ class Visual(Stimulus):
             self._surface = None
 
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                                 "Stimulus,compressed,{0}".format(self.id), 2)
         return int((get_time() - start) * 1000)
 
@@ -855,7 +867,7 @@ class Visual(Stimulus):
             self._is_compressed = False
 
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                             "Stimulus,decompressed,{0}".format(self.id), 2)
         return int((get_time() - start) * 1000)
 
@@ -893,13 +905,13 @@ class Visual(Stimulus):
         """
 
         start = get_time()
-        if not expyriment._active_exp.is_initialized:
+        if not _internals.active_exp.is_initialized:
             message = "Can't preload stimulus. Expyriment needs to be " + \
                       "initilized before preloading a stimulus."
             raise RuntimeError(message)
         self._was_compressed_before_preload = self.is_compressed
         if not self.is_preloaded:
-            if expyriment._active_exp.screen.open_gl:
+            if _internals.active_exp.screen.open_gl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
@@ -910,7 +922,7 @@ class Visual(Stimulus):
                 self._set_surface(self._get_surface())
             self._is_preloaded = True
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                 "Stimulus,preloaded,{0}".format(self.id), 2)
 
         return int((get_time() - start) * 1000)
@@ -946,7 +958,7 @@ class Visual(Stimulus):
         """
 
         start = get_time()
-        if expyriment._active_exp.screen.open_gl:
+        if _internals.active_exp.screen.open_gl:
             self._ogl_screen = None
             if self.is_preloaded and not self._was_compressed_before_preload \
                 and keep_surface:
@@ -956,13 +968,13 @@ class Visual(Stimulus):
                 and keep_surface:
                 self.compress()
         if self.is_preloaded and self._logging:
-            expyriment._active_exp._event_file_log("Stimulus,unloaded,{0}"\
+            _internals.active_exp._event_file_log("Stimulus,unloaded,{0}"\
                                        .format(self.id), 2)
         if not keep_surface:
             self._is_compressed = False
             self._surface = None
             if self._logging:
-                expyriment._active_exp._event_file_log("Stimulus,surface cleared,{0}"\
+                _internals.active_exp._event_file_log("Stimulus,surface cleared,{0}"\
                                        .format(self.id), 2)
 
         self._is_preloaded = False
@@ -974,7 +986,7 @@ class Visual(Stimulus):
 
         return self._is_preloaded
 
-    def present(self, clear=True, update=True):
+    def present(self, clear=True, update=True, log_event_tag=None):
         """Present the stimulus on the screen.
 
         This clears and updates the screen automatically.
@@ -989,6 +1001,10 @@ class Visual(Stimulus):
         update : bool, optional
             if False the screen will be not be updated automatically
             (default = True)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
 
         Returns
         -------
@@ -997,34 +1013,35 @@ class Visual(Stimulus):
 
         """
 
-        if not expyriment._active_exp.is_initialized or\
-                             expyriment._active_exp.screen is None:
+        if not _internals.active_exp.is_initialized or\
+                             _internals.active_exp.screen is None:
             raise RuntimeError("Cannot not find a screen!")
 
         start = get_time()
         preloading_required = not(self.is_preloaded)
 
         if clear:
-            expyriment._active_exp.screen.clear()
+            _internals.active_exp.screen.clear()
         if preloading_required:
             # Check if stimulus has surface
             keep_surface = self.has_surface
             self.preload(inhibit_ogl_compress=True)
 
-        if expyriment._active_exp.screen.open_gl:
+        if _internals.active_exp.screen.open_gl:
             self._ogl_screen.display()
         else:
-            screen = expyriment._active_exp.screen.surface
+            screen = _internals.active_exp.screen.surface
             rect = pygame.Rect((0, 0), self.surface_size)
             screen_size = screen.get_size()
-            rect.center = [self.position[0] + screen_size[0] / 2,
-                           - self.position[1] + screen_size[1] / 2]
+            rect.center = [self.position[0] + screen_size[0] // 2,
+                           - self.position[1] + screen_size[1] // 2]
             screen.blit(self._get_surface(), rect)
         if self._logging:
-            expyriment._active_exp._event_file_log("Stimulus,presented,{0}"\
-                                   .format(self.id), 1)
+            _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
+                                   .format(self.id), 1,
+                                 log_event_tag=log_event_tag)
         if update:
-            expyriment._active_exp.screen.update()
+            _internals.active_exp.screen.update()
         if preloading_required:
             self.unload(keep_surface=keep_surface)
 
@@ -1052,7 +1069,7 @@ class Visual(Stimulus):
         else:
             parts.append("tga")
         filename = ".".join(parts)
-        pygame.image.save(self._get_surface(), unicode2str(filename))
+        pygame.image.save(self._get_surface(), unicode2byte(filename))
 
     def picture(self):
         """Return the stimulus as Picture stimulus.
@@ -1067,7 +1084,7 @@ class Visual(Stimulus):
 
         """
 
-        import _picture
+        from . import _picture
         fid, location = tempfile.mkstemp(dir=defaults.tempdir,
                                          suffix=".tga")
         os.close(fid)
@@ -1112,7 +1129,7 @@ class Visual(Stimulus):
             self._set_surface(pygame.transform.rotate(self._get_surface(),
                                                       degree))
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,rotated,{0}, degree={1}".format(self.id, degree))
         return int((get_time() - start) * 1000)
 
@@ -1149,7 +1166,7 @@ class Visual(Stimulus):
                 "scale()"))
         self.unload(keep_surface=True)
         flip = [False, False]
-        if type(factors) in [types.IntType, types.FloatType]:
+        if isinstance(factors, (int, float)):
             factors = [factors, factors]
         else:
             factors = list(factors)
@@ -1166,7 +1183,7 @@ class Visual(Stimulus):
         if True in flip:
             self.flip(flip)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,scaled,{0}, factors={1}".format(self.id, factors), 2)
         return int((get_time() - start) * 1000)
 
@@ -1200,7 +1217,7 @@ class Visual(Stimulus):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "scale_to_fullscreen()"))
         surface_size = self.surface_size
-        screen_size = expyriment._active_exp.screen.surface.get_size()
+        screen_size = _internals.active_exp.screen.surface.get_size()
         scale = (screen_size[0]/float(surface_size[0]),
                      screen_size[1]/float(surface_size[1]))
         if keep_aspect_ratio:
@@ -1238,7 +1255,7 @@ class Visual(Stimulus):
         self._set_surface(pygame.transform.flip(self._get_surface(),
                                                   booleans[0], booleans[1]))
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
             "Stimulus,flipped,{0}, booleans={1}".format(self.id, booleans), 2)
         return int((get_time() - start) * 1000)
 
@@ -1269,7 +1286,7 @@ class Visual(Stimulus):
         self.scale((1.0 / level, 1.0 / level))
         self.scale((level, level))
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "Stimulus,blured,{0}, level={1}".format(self.id, level), 2)
         return int((get_time() - start) * 1000)
 
@@ -1297,7 +1314,7 @@ class Visual(Stimulus):
         """
 
         start = get_time()
-        if type(grain_size) is int:
+        if isinstance(grain_size, int):
             grain_size = [grain_size, grain_size]
         # Make Rect list
         if not self._set_surface(self._get_surface()):
@@ -1305,8 +1322,8 @@ class Visual(Stimulus):
                 "scramble()"))
         s = self.surface_size
         source = []
-        for r in range(s[1] / int(grain_size[1])):
-            for c in range(s[0] / int(grain_size[0])):
+        for r in range(s[1] // int(grain_size[1])):
+            for c in range(s[0] // int(grain_size[0])):
                 xy = (c * int(grain_size[0]), r * int(grain_size[1]))
                 source.append(pygame.Rect(xy, grain_size))
         # Make copy and shuffle
@@ -1320,7 +1337,7 @@ class Visual(Stimulus):
         self._set_surface(tmp_surface)
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                             "Stimulus,scrambled,{0}, grain_size={1}".format(
                                      self.id, grain_size), 2)
         return int((get_time() - start) * 1000)
@@ -1350,28 +1367,28 @@ class Visual(Stimulus):
         to compute!
 
         """
-        import _rectangle
+        from . import _rectangle
         start = get_time()
         if not self._set_surface(self._get_surface()):
             raise RuntimeError(Visual._compression_exception_message.format(
                 "add_noise()"))
         self.unload(keep_surface=True)
-        number_of_pixel_x = int(self.surface_size[0] / grain_size) + 1
-        number_of_pixel_y = int(self.surface_size[1] / grain_size) + 1
-        seq = range(number_of_pixel_x * number_of_pixel_y)
+        number_of_pixel_x = int(self.surface_size[0] // grain_size) + 1
+        number_of_pixel_y = int(self.surface_size[1] // grain_size) + 1
+        seq = list(range(number_of_pixel_x * number_of_pixel_y))
         random.seed()
         random.shuffle(seq)
 
         for idx in seq[:int(len(seq) * (percentage) / 100.0)]:
             x = (idx % number_of_pixel_x) * grain_size
-            x = int(self.surface_size[0] / 2 - grain_size / 2 - x)
-            y = (idx / number_of_pixel_x) * grain_size
-            y = int(self.surface_size[1] / 2 - grain_size / 2 - y)
+            x = int(self.surface_size[0] // 2 - grain_size // 2 - x)
+            y = (idx // number_of_pixel_x) * grain_size
+            y = int(self.surface_size[1] // 2 - grain_size // 2 - y)
             dot = _rectangle.Rectangle(size=(grain_size, grain_size),
                             position=(x, y), colour=colour)
             dot.plot(self)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "Stimulus,noise added,{0}, grain_size={1}, percentage={2}"\
                         .format(self.id, grain_size, percentage))
         return int((get_time() - start) * 1000)

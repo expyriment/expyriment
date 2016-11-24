@@ -26,9 +26,9 @@ sys.path.insert(0, os.path.abspath('.'))
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = ['sphinx.ext.autodoc',
-             'sphinx.ext.doctest',
-             #'sphinx.ext.viewcode',
-             'numpydoc']
+              'sphinx.ext.doctest',
+              #'sphinx.ext.viewcode',
+              'numpydoc']
 
 # How to install numpydoc? --> sudo easy_install numpydoc
 
@@ -126,26 +126,26 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default' # 'default', 'sphinxdoc',  'haiku' 
+html_theme = 'sphinx_rtd_theme' # 'default', 'sphinxdoc',  'haiku' 
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    "sidebarbgcolor": "#222222",
-    "relbarbgcolor": "#222222",
-    "linkcolor": "#ff9632",
-    "visitedlinkcolor": "#ff9632",
-    "sidebarlinkcolor": "#ff9632",
-    "relbarlinkcolor": "#a046fa",
-    "sidebartextcolor": "#969696",
-    "relbartextcolor": "#a046fa",
-    "footerbgcolor": "#222222",
-    "footertextcolor": "#969696",
-    "headbgcolor": "#dddddd",
-    "headtextcolor": "black",
-
-}
+#html_theme_options = {
+#    "sidebarbgcolor": "#222222",
+#    "relbarbgcolor": "#222222",
+#    "linkcolor": "#ff9632",
+#    "visitedlinkcolor": "#ff9632",
+#    "sidebarlinkcolor": "#ff9632",
+#    "relbarlinkcolor": "#a046fa",
+#    "sidebartextcolor": "#969696",
+#    "relbartextcolor": "#a046fa",
+#    "footerbgcolor": "#222222",
+#    "footertextcolor": "#969696",
+#    "headbgcolor": "#dddddd",
+#    "headtextcolor": "black",
+#
+#}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []

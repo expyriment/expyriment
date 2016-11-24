@@ -6,6 +6,9 @@ An ellipse stimulus.
 This module contains a class implementing an ellipse stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,10 +19,9 @@ __date__ = ''
 
 import pygame
 
-import defaults
-from _visual import Visual
-import expyriment
-
+from . import defaults
+from ._visual import Visual
+from .. import _internals
 
 class Ellipse(Visual):
     """A class implementing a basic 2D ellipse."""
@@ -54,7 +56,7 @@ class Ellipse(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if line_width is None:
             line_width = defaults.ellipse_line_width
         elif line_width < 0 or line_width >= min(self._size):
@@ -179,9 +181,9 @@ class Ellipse(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
     ellipse.present()

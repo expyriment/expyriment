@@ -8,18 +8,20 @@ All Linux distributions
 
 1. Use your distribution's package manager to install
 
-  * Python 2
-  * pip
+  * Python or Python3
+  * pip or pip3
   * Pygame
 
-2. In a command line, run ::
+2. In a command line, run::
 
     sudo pip install --upgrade pip
     sudo pip install --upgrade expyriment
 
+Replace `pip` with `pip3` when using Python3.
+
 For the alternative packages (optional):
 
-3. Use your distribution's package manager to install
+1. Use your distribution's package manager to install
 
   * Numpy
   * PyParallel
@@ -40,8 +42,6 @@ please first uninstall the old version using the following command (replace *X*
 to match your Python version)::
 
     sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
-
-Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
 
 
 Notes

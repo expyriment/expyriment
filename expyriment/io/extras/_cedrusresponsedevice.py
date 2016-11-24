@@ -3,6 +3,8 @@
 This module contains a class implementing a Cedrus XID response device.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,15 +13,15 @@ __revision__ = ''
 __date__ = ''
 
 
-import types
+from types import ModuleType, FunctionType
 
 try:
     import pyxid as _pyxid
 except:
     _pyxid = None
 
-import expyriment
-from expyriment.io._input_output import Input
+from ...io._input_output import Input
+from ... import _internals, stimuli, misc
 
 
 class CedrusResponseDevice(Input):
@@ -65,7 +67,7 @@ class CedrusResponseDevice(Input):
         """
 
         Input.__init__(self)
-        if type(_pyxid) is not types.ModuleType:
+        if not isinstance(_pyxid, ModuleType):
             message = """CedrusDevice can not be initialized, because the Python package
             'pyxid' is not installed. See Expyriment online documentation."""
             raise ImportError(message)
@@ -82,19 +84,19 @@ class CedrusResponseDevice(Input):
                 else:
                     self._xid = devices[device_ID]
                     break
-            if error_screen and expyriment._active_exp.is_initialized:
-                expyriment.stimuli.TextScreen("Error", message +
+            if error_screen and _internals.active_exp.is_initialized:
+                stimuli.TextScreen("Error", message +
                         " Press a key to reconnect to the device.").present()
-                expyriment._active_exp.keyboard.wait()
-                expyriment.stimuli.BlankScreen().present()
-                expyriment._active_exp.clock.wait(300)
+                _internals.active_exp.keyboard.wait()
+                stimuli.BlankScreen().present()
+                _internals.active_exp.clock.wait(300)
             else:
                 raise IOError(message)
 
         self._xid.reset_base_timer()
         self._xid.reset_rt_timer()
         self._device_ID = device_ID
-        self._buffer = expyriment.misc.Buffer(name="Cedrus Device {0}".format(
+        self._buffer = misc.Buffer(name="Cedrus Device {0}".format(
                                                         device_ID))
 
 
@@ -142,7 +144,7 @@ class CedrusResponseDevice(Input):
                 response['key'] = 1000 + response['key']
             self._buffer.add_event(response['key'])
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                         "CedrusResponseDevice {0},received,{1},poll".format(
                         self._device_ID, response['key']), 2)
             self._xid.poll_for_response()
@@ -158,7 +160,7 @@ class CedrusResponseDevice(Input):
             self._xid.poll_for_response()
         self._buffer.clear()
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                         "CedrusResponseDevice,cleared", 2)
 
     def check(self, codes=None):
@@ -186,7 +188,7 @@ class CedrusResponseDevice(Input):
             if codes is None:
                 return self._buffer.memory[0]
             else:
-                if type(codes) is not types.ListType:
+                if not isinstance(codes, (tuple, list)):
                     codes = [codes]
                 for elem in self._buffer.memory:
                     if elem[0] in codes:
@@ -195,18 +197,12 @@ class CedrusResponseDevice(Input):
         return None
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
-             check_for_control_keys=True):
+             callback_function=None, process_control_events=True):
         """Wait for responses defined as codes.
 
         The functions returns the found key code and the reaction time, that
         is, the time relative to the called of wait. By default the buffer
         will be cleared() before waiting.
-
-        Notes
-        -----
-        The function checks for control keys (quit and pause) by default.
-        Thus, keyboard events will be cleared from the cue and cannot be
-        received by a Keyboard().check() anymore!
 
         Parameters
         ----------
@@ -217,8 +213,11 @@ class CedrusResponseDevice(Input):
         no_clear_buffer : bool, optional
             do not clear the buffer.  In this case RT could be negative,
             if the event is already in the buffer (default = False)
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default = True)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -227,21 +226,37 @@ class CedrusResponseDevice(Input):
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = self._buffer.clock.time
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
-                return rtn_callback
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, _internals.CallbackQuitEvent):
+                    return rtn_callback
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             if duration is not None:
                 if int(self._buffer.clock.time - start) > duration:
                     return (None, None)
@@ -249,15 +264,14 @@ class CedrusResponseDevice(Input):
             if found is not None:
                 found = (found[0], found[1] - start)
                 break
-            if check_for_control_keys:
-                if expyriment._active_exp.keyboard.process_control_keys():
-                    break
-        expyriment._active_exp._event_file_log(
-                            "CedrusResponseDevice,received,{0},wait".format(
-                                                                        found))
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                "CedrusResponseDevice,received,{0},wait".format(found))
+
         return found
 
-    if type(_pyxid) is types.ModuleType:
+    if isinstance(_pyxid, ModuleType):
         @staticmethod
         def _self_test(experiment):
             result = {}

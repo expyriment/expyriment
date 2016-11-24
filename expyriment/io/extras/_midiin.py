@@ -4,6 +4,8 @@
 This module contains a class implementing a MIDI input device.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,12 +13,14 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+from types import ModuleType, FunctionType
+from . import _midiin_defaults as defaults
+from ... import _internals
+from .._internals import CallbackQuitEvent
+from ...misc._timer import get_time
+from ...io._keyboard import Keyboard
+from ...io._input_output import Input
 
-import _midiin_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.io._keyboard import Keyboard
-from expyriment.io._input_output import Input
 
 import time
 
@@ -63,11 +67,10 @@ class MidiIn(Input):
 
         """
 
-        import types
-        if type(_midi) is not types.ModuleType:
+        if not isinstance(_midi, ModuleType):
             raise ImportError("""Sorry, MIDI input is not supported on this computer.""")
 
-        if not expyriment._active_exp.is_initialized:
+        if not _internals.active_exp.is_initialized:
             raise RuntimeError(
                 "Cannot create MidiIn before expyriment.initialize()!")
         _midi.init()
@@ -108,7 +111,7 @@ class MidiIn(Input):
 
         if self.input.poll():
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "MIDI In ({0}),received".format(self.id), 2)
             return self.input.read(num_events)
 
@@ -122,10 +125,11 @@ class MidiIn(Input):
         for _i in range(self._buffer_size):
             self.input.read(1)
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                 "MIDI In ({0}),cleared".format(self.id), 2)
 
-    def wait(self, events, duration=None):
+    def wait(self, events, duration=None, callback_function=None,
+             process_control_events=True):
         """Wait for (a) certain event(s).
 
         Events to wait for are in the form of a list with 4 elements and do
@@ -137,6 +141,11 @@ class MidiIn(Input):
             event(s) to wait for
         duration : int, optional
             maximal time to wait in ms
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -145,37 +154,52 @@ class MidiIn(Input):
         rt : int
             reaction time in ms
 
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
         See Also
         --------
         design.experiment.register_wait_callback_function
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None
         _event = None
         self.clear()
-        if type(events) is list and \
+        if isinstance(events, (list, tuple)) and \
            len(events) == 4 and \
-           type(events[0]) is int and \
-           type(events[1]) is int and \
-           type(events[2]) is int and \
-           type(events[3]) is int:
+           isinstance(events[0], int) and \
+           isinstance(events[1], int) and \
+           isinstance(events[2], int) and \
+           isinstance(events[3], int):
             events = [events]
         done = False
         while not done:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
-                return rtn_callback, int((get_time() - start) * 1000)
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    _event = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             event = self.read(1)
             if event is not None and event[0][0] in events:
                 rt = int((get_time() - start) * 1000)
                 _event = event[0][0]
-                done = True
-                break
-            if Keyboard.process_control_keys():
                 done = True
                 break
             if duration:
@@ -186,6 +210,6 @@ class MidiIn(Input):
             time.sleep(0.0005)
 
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                 "MIDI In ({0}),received,{1},wait".format(self.id, _event), 2)
         return _event, rt

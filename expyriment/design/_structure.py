@@ -4,6 +4,8 @@ The design._structure module of expyriment.
 This module contains a class implementing the experiment structure.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -18,22 +20,20 @@ try:
 except ImportError:
     locale = None  # Does not exist on Android
 import sys
-import types
+from types import FunctionType
 import codecs
 import re
 try:
     import csv
 except ImportError:
-    from expyriment.misc import _csv_reader_android as csv
+    from ..misc import _csv_reader_android as csv
 from copy import deepcopy
 
-import defaults
-import expyriment
-from expyriment.misc import constants
-from expyriment.misc import Clock
-from expyriment.misc import unicode2str, str2unicode
-import randomize
-import permute
+from . import defaults
+from .. import _internals
+from ..misc import constants, Clock, unicode2byte, byte2unicode
+from .randomize import rand_int, shuffle_list
+from . import permute
 
 
 class Experiment(object):
@@ -207,7 +207,7 @@ class Experiment(object):
         return self._is_initialized
 
     def __str__(self):
-        tmp_str = "Experiment: {0}\n".format(unicode2str(self.name))
+        tmp_str = "Experiment: {0}\n".format(self.name)
         if len(self.bws_factor_names) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
@@ -218,12 +218,12 @@ class Experiment(object):
                 tmp_str = tmp_str + "latin square)\n"
             for f in self.bws_factor_names:
                 _bws_factor = \
-                    [unicode2str(x) if isinstance(x, unicode) else
+                    [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
                 tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    unicode2str(f), ", ".join(_bws_factor))
+                    f, ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + "{0}\n".format(unicode2str(block.summary))
+            tmp_str = tmp_str + "{0}\n".format(block.summary)
         return tmp_str
 
     @property
@@ -283,7 +283,7 @@ class Experiment(object):
 
         if text is None:
             return
-        elif isinstance(text, types.StringTypes):
+        elif isinstance(text, str):
             text = [text]
         else:
             try:
@@ -399,7 +399,7 @@ class Experiment(object):
                         cond_idx = self._randomized_condition_for_subject[
                             factor_name][subject_id]
                     except:  # If not yet randomized for this subject, do it
-                        cond_idx = randomize.rand_int(
+                        cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
                         self._randomized_condition_for_subject[
                             factor_name][subject_id] = cond_idx
@@ -414,7 +414,7 @@ class Experiment(object):
                             break
                     if n_cond_lower_fac <= 0:
                         n_cond_lower_fac = 1
-                    cond_idx = ((subject_id - 1) / n_cond_lower_fac) % \
+                    cond_idx = ((subject_id - 1) // n_cond_lower_fac) % \
                         len(self.get_bws_factor(fac))
                 return self._bws_factors[factor_name][cond_idx]
 
@@ -493,9 +493,44 @@ class Experiment(object):
             self._blocks[-1]._id = self._block_id_counter
             self._block_id_counter += 1
 
-        expyriment._active_exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Experiment,block added,{0},{1}".format(
-                unicode2str(self.name), self._blocks[-1]._id), 2)
+                self.name, self._blocks[-1]._id), 2)
+
+    def add_blocks_full_factorial(self, design_dict, copies=1):
+        """Add blocks of all combinations of a full factorial design.
+
+        Factors will be defined according the design_dict parameter.
+        The design is specified by a dictionary. The keys of the dictionary
+        indicate the factor names. Each value of the dictionary has to be
+        a list of the factor levels.
+
+        Parameters
+        ----------
+        design_dict : dictionary
+            keys: factor names, values: lists of factor levels
+        copies : int, optional
+            number of copies to add (default = 1)
+
+        See Also
+        --------
+        Block.add_trials_full_factorial for an example
+
+        """
+
+        keys = design_dict.keys()
+        levels = list(map(lambda x: len(design_dict[x]), keys))
+        cnt = [0]*len(design_dict)
+
+        while cnt is not None:
+            bl = Block()
+            for i,k in enumerate(keys):
+                bl.set_factor(k, design_dict[ k ][ cnt[i] ])
+            self.add_block(bl, copies=copies)
+
+            cnt = _get_next_permutation(values=cnt, levels=levels)
+
+
 
     def remove_block(self, position):
         """Remove block from experiment.
@@ -511,8 +546,8 @@ class Experiment(object):
 
         block = self._blocks.pop(position)
 
-        expyriment._active_exp._event_file_log(
-            "Experiment,block removed,{0},{1}".format(unicode2str(self.name),
+        _internals.active_exp._event_file_log(
+            "Experiment,block removed,{0},{1}".format(self.name,
                                                       block.id), 2)
 
     def clear_blocks(self):
@@ -521,7 +556,7 @@ class Experiment(object):
         self._blocks = []
         self._block_id_counter = 0
 
-        expyriment._active_exp._event_file_log("Experiment,blocks cleared", 2)
+        _internals.active_exp._event_file_log("Experiment,blocks cleared", 2)
 
     def order_blocks(self, order):
         """Order the blocks.
@@ -591,7 +626,7 @@ class Experiment(object):
 
         """
 
-        return randomize.shuffle_list(self._blocks)
+        return shuffle_list(self._blocks)
 
     def permute_blocks(self, permutation_type, factor_names=None,
                        subject_id=None):
@@ -649,7 +684,7 @@ type".format(permutation_type))
             idx = (subject_id - 1) % len(permutation)
             permutation = permutation[idx]
         else:
-            randomize.shuffle_list(all_factor_combi)
+            shuffle_list(all_factor_combi)
             permutation = all_factor_combi
 
         tmp = self._blocks
@@ -784,14 +819,13 @@ type".format(permutation_type))
 
         """
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {0} -*-\n".format(
-                locale_enc)
-            f.write(header + unicode2str(self.design_as_text))
+            header = "# -*- coding: {0} -*-\n".format(locale_enc)
+            f.write(unicode2byte(header + self.design_as_text))
 
     def load_design(self, filename, encoding=None):
         """Load the design from a csv file containing list of trials.
@@ -832,7 +866,7 @@ type".format(permutation_type))
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as fl:
             for ln in fl:
-                ln = str2unicode(ln)
+                ln = byte2unicode(ln)
                 if ln[0] == "#":
                     if ln.startswith("#exp:"):
                         self._name = ln[6:].strip()
@@ -845,7 +879,7 @@ type".format(permutation_type))
                         self.bws_factor_randomized = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
-                        print tmp[1].strip().split(",")
+                        print(tmp[1].strip().split(","))
                         self.add_bws_factor(tmp[0], tmp[1].strip().split(","))
 
                 else:  # data line
@@ -862,13 +896,12 @@ type".format(permutation_type))
                             else:
                                 trial_factors[col] = var
 
-                        if not("cnt" in block_factors.values() and
-                               "id" in block_factors.values() and
-                               "cnt" in trial_factors.values() and
-                               "id" in trial_factors.values()):
+                        if not("cnt" in list(block_factors.values()) and
+                               "id" in list(block_factors.values()) and
+                               "cnt" in list(trial_factors.values()) and
+                               "id" in list(trial_factors.values())):
                             message = "Can't read design file. " + \
-                                "The file '{0}' ".format(
-                                    unicode2str(filename)) + \
+                                "The file '{0}' ".format(filename) + \
                                 "does not contain an Expyriment trial list."
                             raise IOError(message)
                     else:
@@ -915,14 +948,14 @@ type".format(permutation_type))
                                     self.blocks[block_cnt].trials[trial_cnt].\
                                         set_factor(trial_factors[col], val)
 
-    def _event_file_log(self, log_text, log_level=1):
+    def _event_file_log(self, log_text, log_level=1, log_event_tag=None):
         # log_level 1 = default, 2 = extensive, 0 or False = off
         """ Helper function to log event in the global experiment event file"""
         if self.is_initialized and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
-            self.events.log(log_text)
+            self.events.log(event=log_text, log_event_tag=log_event_tag)
 
     def _event_file_warn(self, warning, log_level=1):
         """ Helper function to log event in the global experiment event file"""
@@ -951,14 +984,12 @@ type".format(permutation_type))
         """
 
         if self.is_initialized and self.events is not None:
-            self.events.log("design,log,{0}".format(
-                unicode2str(additional_comment)))
+            self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    "design: {0}".format(unicode2str(ln)).replace(
-                        ":#", "-"))
+                    "design: {0}".format(ln).replace(":#", "-"))
             self.events.log("design,logged,{0}".format(
-                unicode2str(additional_comment)))
+                additional_comment))
 
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
@@ -1007,7 +1038,7 @@ type".format(permutation_type))
 
         """
 
-        if type(function) == types.FunctionType:
+        if isinstance(function, FunctionType):
             self._wait_callback_function = function
         else:
             raise AttributeError("register_wait_callback_function requires " +
@@ -1085,7 +1116,7 @@ class Block(object):
         return self._trials
 
     def __str__(self):
-        return unicode2str(self._get_summary(True))
+        return self._get_summary(True)
 
     @property
     def summary(self):
@@ -1117,7 +1148,7 @@ class Block(object):
                 if tf not in val:
                     val.append(tf)
             val.sort()
-            val = [repr(x) if type(x) not in [unicode, str]
+            val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(
                 f, ", ".join(val))
@@ -1154,8 +1185,7 @@ class Block(object):
 
         """
 
-        if type(value) in [types.StringType, types.UnicodeType, types.IntType,
-                           types.FloatType]:
+        if isinstance(value, (bytes, str, int, float)):
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \
@@ -1198,7 +1228,7 @@ class Block(object):
 
         """
 
-        return self._factors.keys()
+        return list(self._factors.keys())
 
     def compare(self, block):
         """Compares this block with another block and returns `True` if all
@@ -1234,7 +1264,7 @@ class Block(object):
 
         """
 
-        rnd = randomize.rand_int(0, len(self._trials) - 1)
+        rnd = rand_int(0, len(self._trials) - 1)
         return self._trials[rnd]
 
     def add_trial(self, trial, copies=1, random_position=False):
@@ -1254,18 +1284,18 @@ class Block(object):
 
         for _x in range(0, copies):
             if random_position:
-                pos = randomize.rand_int(0, len(self._trials))
+                pos = rand_int(0, len(self._trials))
                 self._trials.insert(pos, trial.copy())
             else:
                 self._trials.append(trial.copy())
             self._trials[-1]._id = self._trial_id_counter
             self._trial_id_counter += 1
 
-        log_txt = "Block,trial added,{0}, {1}".format(unicode2str(self.name),
+        log_txt = "Block,trial added,{0}, {1}".format(self.name,
                                                       self._trials[-1]._id)
         if random_position:
             log_txt = log_txt + ", random position"
-        expyriment._active_exp._event_file_log(log_txt, 2)
+        _internals.active_exp._event_file_log(log_txt, 2)
 
     def remove_trial(self, position):
         """Remove a trial.
@@ -1279,7 +1309,7 @@ class Block(object):
 
         trial = self._trials.pop(position)
 
-        expyriment._active_exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Block,trial removed,{0},{1}".format(self.id, trial.id), 2)
 
     def clear_trials(self):
@@ -1288,7 +1318,7 @@ class Block(object):
         self._trials = []
         self._trial_id_counter = 0
 
-        expyriment._active_exp._event_file_log("Block,trials cleared", 2)
+        _internals.active_exp._event_file_log("Block,trials cleared", 2)
 
     @property
     def n_trials(self):
@@ -1352,11 +1382,11 @@ class Block(object):
                                self._trial_id_variable_name)
         factors = self.trial_factor_names
         for f in factors:
-            rtn = rtn + ",{0}".format(unicode2str(f))
+            rtn = rtn + ",{0}".format(f)
         for cnt, tr in enumerate(self.trials):
             rtn = rtn + "\n{0},{1}".format(cnt, tr.id)
             for f in factors:
-                rtn = rtn + ",{0}".format(unicode2str(tr.get_factor(f)))
+                rtn = rtn + ",{0}".format(tr.get_factor(f))
         return rtn
 
     def save_design(self, filename):
@@ -1370,14 +1400,13 @@ class Block(object):
 
         """
 
-        with open(filename, 'w') as f:
+        with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
             except:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {0} -*-\n".format(
-                locale_enc)
-            f.write(header + unicode2str(self.design_as_text))
+            header = "# -*- coding: {0} -*-\n".format(locale_enc)
+            f.write(unicode2byte(header + self.design_as_text))
 
     def read_design(self, filename):
         """Reads a list of trials from a csv file and clears the old block
@@ -1454,13 +1483,53 @@ class Block(object):
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = map(lambda x: str2unicode(x), row)
+                    factor_names = [byte2unicode(x) for x in row]
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
-                        trial.set_factor(str2unicode(factor_names[c_cnt]),
-                                         str2unicode(row[c_cnt]))
+                        trial.set_factor(byte2unicode(factor_names[c_cnt]),
+                                         byte2unicode(row[c_cnt]))
                     self.add_trial(trial)
+
+
+    def add_trials_full_factorial(self, design_dict, copies=1):
+        """Add trials of all combinations of a full factorial design.
+
+         Factors will be defined according the design_dict parameter.
+         The design is specified by a dictionary. The keys of the dictionary
+         indicate the factor names. Each value of the dictionary has to be
+         a list of the factor levels.
+
+         Example
+         -------
+
+            bl = design.Block()
+            design = {
+                "target": ["left", "center", "right"],
+                "cue": [-300, 300],
+                "letter": ["H", "F"]}
+            bl.add_trials_full_factorial(design, copies=10)
+
+        Parameters
+        ----------
+        design_dict : dictionary
+            keys: factor names, values: lists of factor levels
+        copies : int, optional
+            number of copies to add (default = 1)
+
+        """
+
+        keys = design_dict.keys()
+        levels = list(map(lambda x: len(design_dict[x]), keys))
+        cnt = [0]*len(design_dict)
+
+        while cnt is not None:
+            tr = Trial()
+            for i,k in enumerate(keys):
+                tr.set_factor(k, design_dict[ k ][ cnt[i] ])
+            self.add_trial(tr, copies=copies)
+            cnt = _get_next_permutation(values=cnt, levels=levels)
+
 
     def order_trials(self, order):
         """Order the trials.
@@ -1580,12 +1649,12 @@ class Block(object):
                         if len(tmp)>0:
                             n_segments += 1
 
-        rtn = randomize.shuffle_list(self._trials,
+        rtn = shuffle_list(self._trials,
                                    max_repetitions=max_repetitions,
                                    n_segments=n_segments)
         if rtn == False:
-            print "Warning: Could not find an appropriate trial " + \
-                          "randomization!"
+            print("Warning: Could not find an appropriate trial " + \
+                          "randomization!")
         return rtn
 
     def sort_trials(self):
@@ -1676,8 +1745,7 @@ class Trial(object):
 
         """
 
-        if type(value) in [types.StringType, types.UnicodeType, types.IntType,
-                           types.LongType, types.FloatType]:
+        if isinstance(value, (bytes, str, int, float)):
             self._factors[name] = value
         else:
             message = "Factor values or factor conditions must to be a " + \
@@ -1720,7 +1788,7 @@ class Trial(object):
     def factor_names(self):
         """Getter for factors names."""
 
-        return self._factors.keys()
+        return list(self._factors.keys())
 
     @property
     def factors_as_text(self):
@@ -1728,7 +1796,7 @@ class Trial(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + "{0}={1}, ".format(
-                unicode2str(f), unicode2str(str(self.get_factor(f))))
+                unicode2byte(f), unicode2byte(str(self.get_factor(f))))
         return all_factors
 
     def compare(self, trial):
@@ -1764,7 +1832,7 @@ class Trial(object):
 
         self._stimuli.append(stimulus)
 
-        expyriment._active_exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Trial,stimulus added,{0},{1}".format(self.id, stimulus.id), 2)
 
     def remove_stimulus(self, position):
@@ -1779,7 +1847,7 @@ class Trial(object):
 
         stimulus = self._stimuli.pop(position)
 
-        expyriment._active_exp._event_file_log(
+        _internals.active_exp._event_file_log(
             "Trial,stimulus removed,{0},{1}".format(self.id, stimulus.id), 2)
 
     def order_stimuli(self, order):
@@ -1803,7 +1871,7 @@ class Trial(object):
         """Clear the stimuli."""
 
         self._stimuli = []
-        expyriment._active_exp._event_file_log("Trial,stimuli cleared", 2)
+        _internals.active_exp._event_file_log("Trial,stimuli cleared", 2)
 
     def swap_stimuli(self, position1, position2):
         """Swap two stimuli.
@@ -1846,7 +1914,7 @@ class Trial(object):
 
         """
 
-        return randomize.shuffle_list(self.stimuli,
+        return shuffle_list(self.stimuli,
                                max_repetitions=max_repetitions,
                                n_segments=n_segments)
 
@@ -1926,3 +1994,27 @@ class Trial(object):
         for stim in self._stimuli:
             stim.unload(keep_surface=keep_surface)
         return int((Clock._cpu_time() - start) * 1000)
+
+
+def _get_next_permutation(values, levels):
+    """helper function
+    count the array of values up,
+    levels define the max levels per unit.
+
+    Returns None is end reached
+    """
+
+    if values is None:
+        return [0]*len(levels)
+    p = 0
+    while True:
+        values[p] += 1
+        if values[p]>=levels[p]:
+            values[p] = 0
+            p  += 1
+            if p>=len(values):
+                return None
+        else:
+            return values
+
+

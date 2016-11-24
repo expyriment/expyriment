@@ -6,6 +6,10 @@ A Shape stimulus.
 This module contains a class implementing a shape stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+from past.builtins import cmp
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,10 +21,11 @@ import copy
 from math import sqrt
 import pygame
 
-import defaults
-from _visual import Visual
-import expyriment
-from expyriment.misc._timer import get_time
+from . import defaults
+from ._visual import Visual
+from .. import _internals
+from ..misc._timer import get_time
+from ..misc.geometry import XYPoint, lines_intersect
 
 class Shape(Visual):
     """A class implementing a shape."""
@@ -74,7 +79,7 @@ class Shape(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if line_width is not None:
             self._line_width = line_width
         else:
@@ -279,7 +284,7 @@ class Shape(Visual):
         """
 
         rtn = []
-        pos = expyriment.misc.geometry.XYPoint(xy=self.position)
+        pos = XYPoint(xy=self.position)
         for p in copy.deepcopy(self.xy_points):
             rtn.append(p.move(pos))
         return rtn
@@ -310,10 +315,10 @@ class Shape(Visual):
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
                 "add_vertices"))
-        if type(vertex_list) is not list:
+        if not isinstance(vertex_list, (list, tuple)):
             raise TypeError(type_error_message)
         for xy in vertex_list:
-            if type(xy) is not tuple and type(xy) is not list:
+            if not isinstance(xy, (list, tuple)):
                 raise TypeError(type_error_message)
             if len(xy) != 2:
                 raise TypeError(type_error_message)
@@ -356,7 +361,7 @@ class Shape(Visual):
 
         """
 
-        jitter = self._line_width / 2
+        jitter = self._line_width // 2
         return (int(point_xy[0] - self.rect[1] + jitter),
                 - 1 * int(point_xy[1] - self.rect[0] - jitter))
 
@@ -373,7 +378,7 @@ class Shape(Visual):
 
         """
 
-        pt = expyriment.misc.geometry.XYPoint(position)
+        pt = XYPoint(position)
         return pt.is_inside_polygon(self.xy_points_on_screen)
 
     def is_point_inside(self, point_xy):
@@ -415,7 +420,7 @@ class Shape(Visual):
             for to1 in range(from1 + 1, len(s1)):
                 for from2 in range(0, len(s2) - 1):
                     for to2 in range(0, len(s2)):
-                        if expyriment.misc.geometry.lines_intersect(s1[from1],
+                        if lines_intersect(s1[from1],
                                                 s1[to1], s2[from2], s2[to2]):
                             return True
         return False
@@ -464,7 +469,7 @@ class Shape(Visual):
 
         """
 
-        if type(factors) is not list and type(factors) is not tuple:
+        if not isinstance(factors, (list, tuple)):
             factors = [factors, factors]
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
@@ -552,11 +557,11 @@ class Shape(Visual):
             tmp_vtx.append(v)
 
         # Converts tmp_vtx to points in xy-coordinates
-        xy_p = [expyriment.misc.geometry.XYPoint(0, 0)]
+        xy_p = [XYPoint(0, 0)]
         for v in map(Shape._compensate_for_pygame_polygon_bug ,tmp_vtx):
             x = (v[0] + xy_p[-1].x)
             y = (v[1] + xy_p[-1].y)
-            xy_p.append(expyriment.misc.geometry.XYPoint(x, y))
+            xy_p.append(XYPoint(x, y))
 
         xy_p = self._center_points(xy_p)
         if self._native_rotation != 0:
@@ -591,7 +596,7 @@ class Shape(Visual):
         t, l, b, r = self._make_shape_rect(points)
 
         # Stimulus center
-        c = expyriment.misc.geometry.XYPoint(((r - l) / 2.0) - r,
+        c = XYPoint(((r - l) / 2.0) - r,
                                              ((t - b) / 2.0) - t)
         for x in range(0, len(points)): # Center points
             points[x].move(c)
@@ -634,14 +639,19 @@ class Shape(Visual):
         return surface
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        exp = control.initialize()
+        sh = Shape(position=(20, 200), colour=(255, 0, 255))
+        sh.add_vertex((0, 0))
+        sh.add_vertex((50, 50))
+        sh.add_vertex((0, 50))
+        sh.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from expyriment import control
-    control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
-    sh = Shape(position=(20, 200), colour=(255, 0, 255))
-    sh.add_vertex((0, 0))
-    sh.add_vertex((50, 50))
-    sh.add_vertex((0, 50))
-    sh.present()
-    exp.clock.wait(1000)
+    Shape._test()

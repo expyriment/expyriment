@@ -4,6 +4,8 @@ Input and output parallel port.
 This module contains a class implementing parallel port input/output.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,6 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 
+from types import ModuleType
 from sys import platform
 from os import listdir
 
@@ -20,8 +23,8 @@ try:
 except:
     parallel = None
 
-import expyriment
-from  expyriment.io._input_output  import Input, Output
+from ... import _internals
+from  ...io._input_output  import Input, Output
 
 
 class SimpleParallelPort(Input, Output):
@@ -44,8 +47,7 @@ class SimpleParallelPort(Input, Output):
 
         """
 
-        import types
-        if type(parallel) is not types.ModuleType:
+        if not isinstance(parallel, ModuleType):
             message = """SimpleParallelPort can not be initialized.
 The Python package 'pyParallel' is not installed."""
             raise ImportError(message)
@@ -110,7 +112,7 @@ The Python package 'pyParallel' is not installed."""
                                   int(self._parallel.getInSelected()))
         code = int(bits, 2)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                     "SimpleParallelPort,received,{0},poll".format(code), 2)
         return code
 
@@ -127,9 +129,7 @@ The Python package 'pyParallel' is not installed."""
 
         """
 
-        import types
-
-        if type(parallel) is not types.ModuleType:
+        if not isinstance(parallel, ModuleType):
             return None
         ports = []
         if platform.startswith("linux"): #for Linux operation systems
@@ -162,5 +162,5 @@ The Python package 'pyParallel' is not installed."""
 
         self.parallel.setData(data)
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                     "SimpleParallelPort,sent,{0}".format(data), 2)

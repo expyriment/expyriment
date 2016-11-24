@@ -1,13 +1,17 @@
 """
 Get System Information.
 """
+from __future__ import absolute_import, print_function, division
+from future import standard_library
+standard_library.install_aliases()
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
 __revision__ = ''
 __date__ = ''
-
 
 import sys
 import os
@@ -20,6 +24,7 @@ except ImportError:
     _ogl = None
 try:
     import serial as _serial
+    from serial.tools.list_ports import comports as _list_com_ports
 except ImportError:
     _serial = None
 try:
@@ -35,11 +40,14 @@ try:
 except:
     _pil = None
 import pygame
-import expyriment
 
+from .._internals import PYTHON3
 
 def _get_registry_value(key, subkey, value):
-    import _winreg
+    if PYTHON3:
+        import winreg as _winreg  # TODO check me on Windows
+    else:
+        import _winreg
     key = getattr(_winreg, key)
     handle = _winreg.OpenKey(key, subkey)
     (value, type) = _winreg.QueryValueEx(handle, value)
@@ -56,6 +64,9 @@ def get_system_info(as_string=False):
 
     """
 
+    from ..io import SerialPort, ParallelPort
+    from .._internals import get_settings_folder
+
     info = {}
 
     # Get platform specific info for Linux
@@ -63,9 +74,9 @@ def get_system_info(as_string=False):
         os_platform = "Linux"
         os_name = platform.linux_distribution()[0]
         details = []
-        if os.environ.has_key("XDG_CURRENT_DESKTOP"):
+        if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
-        if os.environ.has_key("DESKTOP_SESSION"):
+        if "DESKTOP_SESSION" in os.environ:
             details.append(os.environ["DESKTOP_SESSION"])
         if details != []:
             os_details = ", ".join(details)
@@ -87,16 +98,16 @@ def get_system_info(as_string=False):
                 for line in f:
                     if line.startswith("MemTotal"):
                         mem_total = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("MemFree"):
                         mem_free = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("Buffers"):
                         mem_buffers = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
                     if line.startswith("Cached"):
                         mem_cached = \
-                            int(line.split(":")[1].strip()[:-2].strip()) / 1024
+                            int(line.split(":")[1].strip()[:-2].strip()) // 1024
             hardware_memory_total = str(mem_total) + " MB"
             hardware_memory_free = str(mem_free + mem_buffers + mem_cached) + \
                                    " MB"
@@ -129,8 +140,8 @@ def get_system_info(as_string=False):
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
             s = os.statvfs(current_folder)
-            disk_total = int((s.f_frsize * s.f_blocks) / 1024 ** 2)
-            disk_free = int((s.f_frsize * s.f_bavail) / 1024 ** 2)
+            disk_total = int((s.f_frsize * s.f_blocks) // 1024 ** 2)
+            disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
         except:
@@ -184,8 +195,8 @@ def get_system_info(as_string=False):
 
             stat = MEMORYSTATUSEX()
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
-            hardware_memory_total = str(stat.ullTotalPhys / 1024 ** 2) + " MB"
-            hardware_memory_free = str(stat.ullAvailPhys / 1024 ** 2) + " MB"
+            hardware_memory_total = str(stat.ullTotalPhys // 1024 ** 2) + " MB"
+            hardware_memory_free = str(stat.ullAvailPhys // 1024 ** 2) + " MB"
         except:
             hardware_memory_total = ""
             hardware_memory_free = ""
@@ -195,10 +206,10 @@ def get_system_info(as_string=False):
             _, disk_total, disk_free = ctypes.c_int64(), ctypes.c_int64(), \
                                        ctypes.c_int64()
             ret = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-                unicode(current_folder), ctypes.byref(_),
+                str(current_folder), ctypes.byref(_),
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
-            hardware_disk_space_total = str(disk_total.value / 1024 ** 2) + " MB"
-            hardware_disk_space_free = str(disk_free.value / 1024 ** 2) + " MB"
+            hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
+            hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
         except:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
@@ -235,7 +246,7 @@ def get_system_info(as_string=False):
             proc = subprocess.Popen(['sysctl', '-a', 'hw.memsize'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            mem_total = int(proc.stdout.readline().split(":")[1].strip()) / 1024 ** 2
+            mem_total = int(proc.stdout.readline().split(":")[1].strip()) // 1024 ** 2
             hardware_memory_total = str(mem_total) + " MB"
         except:
             hardware_memory_total = ""
@@ -255,7 +266,7 @@ def get_system_info(as_string=False):
                 if y > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     page = int(non_decimal.sub('', item).strip("."))
-            hardware_memory_free = str(mem_total - (active * page) / 1024 ** 2) + " MB"
+            hardware_memory_free = str(mem_total - (active * page) // 1024 ** 2) + " MB"
 
         except:
             hardware_memory_free = ""
@@ -263,8 +274,8 @@ def get_system_info(as_string=False):
         try:
             current_folder = os.path.split(os.path.realpath(sys.argv[0]))[0]
             s = os.statvfs(current_folder)
-            disk_total = int((s.f_frsize * s.f_blocks) / 1024 ** 2)
-            disk_free = int((s.f_frsize * s.f_bavail) / 1024 ** 2)
+            disk_total = int((s.f_frsize * s.f_blocks) // 1024 ** 2)
+            disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
         except:
@@ -300,7 +311,7 @@ def get_system_info(as_string=False):
     info["os_platform"] = os_platform
     info["os_release"] = platform.release()
     info["os_version"] = os_version
-    info["settings_folder"] = expyriment._importer_functions.get_settings_folder()
+    info["settings_folder"] = get_settings_folder()
     info["python_expyriment_build_date"] = __date__
     info["python_expyriment_revision"] = __revision__
     info["python_expyriment_version"] = __version__
@@ -349,17 +360,17 @@ def get_system_info(as_string=False):
     info["hardware_memory_total"] = hardware_memory_total
     info["hardware_memory_free"] = hardware_memory_free
     info["hardware_ports_parallel"] = \
-            expyriment.io.ParallelPort.get_available_ports()
+            ParallelPort.get_available_ports()
     info["hardware_ports_serial"] = \
-            expyriment.io.SerialPort.get_available_ports()
+            _list_com_ports()
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:
-        sorted_keys = info.keys()
+        sorted_keys = list(info.keys())
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) / 8))
+            tabs = "\t" * (4 - int((len(key) + 1) // 8))
             try:
                 rtn += key + ":" + tabs + info[key] + "\n"
             except TypeError:

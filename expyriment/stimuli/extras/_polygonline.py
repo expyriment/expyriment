@@ -6,6 +6,9 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,11 +18,11 @@ __date__ = ''
 
 
 import math
-import defaults
+from . import defaults
 
-from _polygonrectangle import PolygonRectangle
-import expyriment
-from expyriment import misc
+from ._polygonrectangle import PolygonRectangle
+from ... import _internals
+from ... import misc
 
 
 class PolygonLine(PolygonRectangle):
@@ -47,7 +50,7 @@ class PolygonLine(PolygonRectangle):
         if colour is None:
             colour = defaults.polygonline_colour
         if colour is None:
-            colour = expyriment._active_exp.foreground_colour
+            colour = _internals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.polygonline_anti_aliasing
 
@@ -57,14 +60,14 @@ class PolygonLine(PolygonRectangle):
         PolygonRectangle.__init__(self, size=(f.distance(t), line_width),
                                   colour=colour, anti_aliasing=anti_aliasing)
         self.native_rotate(math.atan2(d.y, d.x) * 180 / math.pi)
-        self.position[0] = f.x + (d.x / 2)
-        self.position[1] = f.y + (d.y / 2)
+        self.position[0] = f.x + (d.x // 2)
+        self.position[1] = f.y + (d.y // 2)
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     p1 = (-180, 15)
     p2 = (200, 0)

@@ -4,6 +4,9 @@ This module contains a class implementing a network interface for Turbo-Satori
 (see www.brainvoyager.com/products/turbosatori.html).
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,12 +17,11 @@ __date__ = ''
 
 import struct
 
-import _turbosatorinetworkinterface_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import str2unicode
-from expyriment.io._input_output import Input, Output
-from expyriment.io.extras._tcpclient import TcpClient
+from . import _turbosatorinetworkinterface_defaults as defaults
+from ...misc._timer import get_time
+from ...misc._miscellaneous import byte2unicode
+from ...io._input_output import Input, Output
+from ...io.extras._tcpclient import TcpClient
 
 
 class TurbosatoriNetworkInterface(Input, Output):
@@ -141,7 +143,7 @@ class TurbosatoriNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _globals.active_exp._event_file_log(
                     "TurbosatoriNetworkInterface,connected,{0}:{1}".format(
                         self._host, self._port))
 
@@ -264,7 +266,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_images_feedback_folder(self):
         """Get the feedback folder for the images.
@@ -284,7 +286,7 @@ class TurbosatoriNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_nr_of_selected_channels(self):
         """Get the number of selected channels.
@@ -325,7 +327,7 @@ class TurbosatoriNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!i', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)
 
     def get_raw_data_scale_factor(self):
         """Get the scale factor set in the GUI for raw data.

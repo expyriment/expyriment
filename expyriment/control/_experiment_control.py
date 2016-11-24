@@ -2,6 +2,9 @@
 The control._experiment_control module of expyriment.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,23 +16,17 @@ import sys
 import os
 import pygame
 try:
-    import android
-except ImportError:
-    android = None
-try:
     import android.mixer as mixer
 except ImportError:
     import pygame.mixer as mixer
 
-import defaults
-import expyriment
-from expyriment import design, stimuli, misc
-from expyriment.io import DataFile, EventFile, TextInput, Keyboard, Mouse
-from expyriment.io import _keyboard, TouchScreenButtonBox
-from expyriment.io._screen import Screen
-from _miscellaneous import _set_stdout_logging, is_idle_running, \
-                is_interactive_mode
-from expyriment.misc import unicode2str, constants
+from . import defaults
+from ._miscellaneous import _set_stdout_logging
+from .._internals import get_version, android
+from .. import design, stimuli, misc, _internals
+from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
+                _keyboard, TouchScreenButtonBox
+from ..io._screen import Screen
 
 
 def start(experiment=None, auto_create_subject_id=None, subject_id=None,
@@ -68,8 +65,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     """
 
     if experiment is None:
-        experiment = expyriment._active_exp
-    if experiment != expyriment._active_exp:
+        experiment = _internals.active_exp
+    if experiment != _internals.active_exp:
         raise Exception("Experiment is not the currently initialized " +
                         "experiment!")
     if experiment.is_started:
@@ -106,7 +103,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
             fields[1].scale((0.25, 0.25))
             plusminus = [
                 stimuli.TextLine("Subject Number:", text_size=24,
-                                 text_colour=constants.C_EXPYRIMENT_PURPLE,
+                                 text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                                  position=(-182, 0)),
                 stimuli.FixCross(size=(15, 15), position=(0, 70),
                                  colour=(0, 0, 0), line_width=2),
@@ -119,7 +116,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 text = stimuli.TextLine(
                     text="{0}".format(subject_id),
                     text_size=28,
-                    text_colour=constants.C_EXPYRIMENT_ORANGE)
+                    text_colour=misc.constants.C_EXPYRIMENT_ORANGE)
                 btn = TouchScreenButtonBox(
                     button_fields=fields,
                     stimuli=plusminus+[text],
@@ -171,17 +168,17 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        if isinstance(_permuted_bws_factor_condition, unicode):
+        if isinstance(_permuted_bws_factor_condition, str):
             _permuted_bws_factor_condition = \
-                unicode2str(_permuted_bws_factor_condition)
+                misc.unicode2byte(_permuted_bws_factor_condition)
         experiment.data.add_subject_info("{0} = {1}".format(
-            unicode2str(f), _permuted_bws_factor_condition))
+            misc.unicode2byte(f), _permuted_bws_factor_condition))
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp
         experiment.events.rename(experiment.events.standard_file_name)
 
-    number = defaults.initialize_delay - int(experiment.clock.time / 1000)
+    number = defaults.initialize_delay - int(experiment.clock.time // 1000)
     if number > 0:
         text = stimuli.TextLine("Initializing, please wait...",
                                 text_size=24,
@@ -233,9 +230,9 @@ def pause():
 
     """
 
-    if not expyriment._active_exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
         raise Exception("Experiment is not initialized!")
-    experiment = expyriment._active_exp
+    experiment = _internals.active_exp
     experiment._event_file_log("Experiment,paused")
     screen_colour = experiment.screen.colour
     experiment._screen.colour = [0, 0, 0]
@@ -260,7 +257,7 @@ def pause():
 
 
 def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
-        fast_quit=None, system_exit=False):
+        fast_quit=None, system_exit=False, pre_quit_function=None):
     """End expyriment.
 
     Parameters
@@ -276,6 +273,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         (default = None)
     system_exit : bool, optional
         call Python's sys.exit() method when ending expyriment (default = False)
+    pre_quit_function : function, optional
+        function to be called before quitting Pygame
 
     Returns
     -------
@@ -284,12 +283,14 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     """
 
-    if not expyriment._active_exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
+        if pre_quit_function is not None:
+            pre_quit_function()
         pygame.quit()
         if system_exit:
             sys.exit()
         return True
-    experiment = expyriment._active_exp
+    experiment = _internals.active_exp
     if confirmation:
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
@@ -302,7 +303,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                          text_size=24).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        char = Keyboard().wait_char(["y", "n"], check_for_control_keys=False)
+        char = Keyboard().wait_char(["y", "n"], process_control_events=False)
         if char[0] == "n":
             experiment._screen.colour = screen_colour
             experiment._event_file_log("Experiment,resumed")
@@ -331,10 +332,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         stimuli._stimulus.Stimulus._id_counter -= 1
     except:
         pass
-    
+
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
-    expyriment._active_exp = design.Experiment("None")
+    _internals.active_exp = design.Experiment("None")
+    if pre_quit_function is not None:
+        pre_quit_function()
     pygame.quit()
     return True
 
@@ -377,19 +380,19 @@ def initialize(experiment=None):
     if experiment.log_level is None:
         experiment.set_log_level(defaults.event_logging)
 
-    if is_interactive_mode() and not expyriment.control.defaults.window_mode \
+    if misc.is_interactive_mode() and not defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
-        print """
+        print("""
 Python is running in an interactive shell but Expyriment wants to initialize a
-fullscreen."""
+fullscreen.""")
         quest = "Do you want to switch to windows mode?"
-        ans = raw_input(quest + " (Y/n) ").strip().lower()
+        ans = input(quest + " (Y/n) ").strip().lower()
         if ans=="" or ans=="y" or ans=="yes":
-            print "Switched to windows mode"
-            expyriment.control.defaults.window_mode = True
+            print("Switched to windows mode")
+            defaults.window_mode = True
 
     stdout_logging = defaults.stdout_logging
-    expyriment._active_exp = experiment
+    _internals.active_exp = experiment
     old_logging = experiment.log_level
     experiment.set_log_level(0)  # switch off for the first screens
 
@@ -413,7 +416,7 @@ fullscreen."""
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
-    if is_idle_running() and sys.argv[0] != "":
+    if misc.is_idle_running() and sys.argv[0] != "":
         try:
             import idlelib.run
 
@@ -444,7 +447,7 @@ fullscreen."""
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
     logo.scale((0.7, 0.7))
-    text = stimuli.TextLine("Version {0}".format(expyriment.get_version()),
+    text = stimuli.TextLine("Version {0}".format(get_version()),
                             text_size=14,
                             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                             background_colour=(0, 0, 0),
@@ -453,12 +456,12 @@ fullscreen."""
     canvas2 = stimuli.Canvas((600, 300), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
-    hash_ = expyriment.get_experiment_secure_hash()
+    hash_ = misc.get_experiment_secure_hash()
     if hash_ is not None:
         txt = "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_)
-        if len(expyriment._secure_hash.module_hashes_as_string())>0:
+        if len(misc.module_hashes_as_string())>0:
             txt += ", {0}".format(
-                        expyriment._secure_hash.module_hashes_as_string())
+                        misc.module_hashes_as_string())
         text2 = stimuli.TextLine(txt,
             text_size=14,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,

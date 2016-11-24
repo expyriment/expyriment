@@ -8,15 +8,17 @@ The latest release of Expyriment can be found at the `release page`_. Note, that
 Expyriment depends on the following software packages that have to be installed 
 on your system:
 
-* `Python 2`_ (>=2.6)
+* `Python`_ (2.7 or 3.5)
 * Pygame_ (>=1.9)
 * PyOpenGL_ (>=3.0)
+* NumPy_ (>=1.6)
+* sounddevice_ (>=0.3)
+* mediadecoder_ (>=0.1)
 
 Additional packages, which are optional and only required for some features of 
 Expyriment are:
 
-* Numpy_ (>=1.6) (to use data preprocessing)
-* PySerial_ (>=2.5) (to use serial port communication)
+* PySerial_ (>=3.0) (to use serial port communication)
 * PyParallel_ (>=0.2) (to use parallel port communication on Linux)
 * Inpout32_ or dlportio_ (to use parallel port communication on Windows)
 
@@ -35,9 +37,11 @@ Expyriment here:
    Android <Installation.Android>
 
 
-.. _`Python 2`: http://www.python.org/
+.. _`Python`: http://www.python.org/
 .. _Pygame: http://www.pygame.org/
 .. _PyOpenGl: http://www.pyopengl.sourceforge.net
+.. _sounddevice: http://python-sounddevice.readthedocs.io/en/0.3.3/
+.. _mediadecoder: http://dschreij.github.io/python-mediadecoder/
    
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html

@@ -6,6 +6,12 @@ A text line stimulus.
 This module contains a class implementing a text line stimulus.
 
 """
+from __future__ import absolute_import, division, print_function
+from builtins import (ascii, bytes, chr, dict, filter, hex, input,
+                      int, map, next, oct, pow, range, round,
+                      str, super, zip) # without open, because
+                      # pygame.font.Font needs old file object under PY2
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,15 +19,19 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-
 import os
 
 import pygame
 
-import defaults
-from _visual import Visual
-from expyriment.misc import find_font, unicode2str, str2unicode
-import expyriment
+from . import defaults
+from ._visual import Visual
+from ..misc import find_font, unicode2byte, byte2unicode
+from .. import _internals
+
+
+# Keep track of open file handles and previously loaded font objects
+open_filehandles = []
+fonts = {}
 
 
 class TextLine(Visual):
@@ -78,17 +88,16 @@ class TextLine(Visual):
         if text_size is not None:
             self._text_size = text_size
         else:
-            self._text_size = expyriment._active_exp.text_size
+            self._text_size = _internals.active_exp.text_size
         if text_font is None:
             text_font = defaults.textline_text_font
         if text_font is not None:
             self._text_font = find_font(text_font)
         else:
-            self._text_font = find_font(expyriment._active_exp.text_font)
+            self._text_font = find_font(_internals.active_exp.text_font)
         try:
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
-                                     10)
-            _font = None
+            with open(self._text_font, 'rb') as f:
+                pygame.font.Font(f, 10)
         except:
             raise IOError("Font '{0}' not found!".format(text_font))
         if text_bold is not None:
@@ -108,7 +117,7 @@ class TextLine(Visual):
         if text_colour is not None:
             self._text_colour = text_colour
         else:
-            self._text_colour = expyriment._active_exp.foreground_colour
+            self._text_colour = _internals.active_exp.foreground_colour
         if background_colour is not None:
             self._background_colour = background_colour
         else:
@@ -248,18 +257,28 @@ class TextLine(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
+        # Due to a bug in handling file names in PyGame 1.9.2, we pass a file
+        # handle to PyGame. See also:
+        # https://github.com/expyriment/expyriment/issues/81
         if os.path.isfile(self._text_font):
-            _font = pygame.font.Font(unicode2str(self._text_font, fse=True),
-                                     self._text_size)
+            # We preserve previously created fonts, so that we don't open the
+            # same font over and over again.
+            if (self._text_font, self._text_size) in fonts:
+                _font = fonts[(self._text_font, self._text_size)]
+            else:
+                f = open(self._text_font, 'rb')
+                open_filehandles.append(f)
+                _font = pygame.font.Font(f, self._text_size)
+                fonts[(self._text_font, self._text_size)] = _font
         else:
             _font = pygame.font.Font(self._text_font, self._text_size)
 
         _font.set_bold(self.text_bold)
         _font.set_italic(self.text_italic)
         _font.set_underline(self.text_underline)
-        if type(self.text) is not unicode:
+        if not _internals.is_unicode_string(self.text):
             # Pygame wants latin-1 encoding here for character strings
-            _text = str2unicode(self.text).encode('latin-1')
+            _text = byte2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         if self.background_colour:
@@ -269,7 +288,7 @@ class TextLine(Visual):
             surface = _font.render(_text, True, self.text_colour)
         surface = surface.convert_alpha()
 
-        if self._max_width > 0 and surface.get_size()[0] > self._max_width:
+        if self._max_width is not None and self._max_width > 0 and surface.get_size()[0] > self._max_width:
             # trim too long text lines
             self._text = self._text[:-2] + "~"
             surface = self._create_surface() # recursion
@@ -277,13 +296,18 @@ class TextLine(Visual):
         return surface
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        exp = control.initialize()
+        textline = TextLine("abcde fghijk lmnopqrstuvwxyz 12 348 56789",
+                            text_font="Helvetica",
+                            text_size=20, text_bold=False)
+        textline.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from expyriment import control
-    control.set_develop_mode(True)
-    defaults.event_logging = 0
-    exp = control.initialize()
-    textline = TextLine("abcde fghijk lmnopqrstuvwxyz 12 348 56789",
-                        text_font="Helvetica",
-                        text_size=20, text_bold=False)
-    textline.present()
-    exp.clock.wait(1000)
+    TextLine._test()
