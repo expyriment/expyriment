@@ -382,41 +382,40 @@ class Experiment(object):
 
         """
 
+        if self.get_bws_factor(factor_name) is None:
+            return None  # Factor not defined
+
         if subject_id is None:
             if self.subject is None:  # No current subject id defined
                 return None
             else:  # Use current subject
-                return self.get_permuted_bws_factor_condition(
-                    factor_name, subject_id=self.subject)
-        else:
-            conditions = self.get_bws_factor(factor_name)
-            if conditions is None:
-                return None  # Factor not defined
-            else:
-                cond_idx = 0
-                if self.bws_factor_randomized:
-                    try:
-                        cond_idx = self._randomized_condition_for_subject[
-                            factor_name][subject_id]
-                    except:  # If not yet randomized for this subject, do it
-                        cond_idx = randomize.rand_int(
-                            0, len(self._bws_factors[factor_name]) - 1)
-                        self._randomized_condition_for_subject[
-                            factor_name][subject_id] = cond_idx
+                subject_id = self.subject
 
-                else:  # Permutation
-                    # (n_cond_lower_fac) total number of conditions for all
-                    # hierarchically lower factors
-                    n_cond_lower_fac = self.n_bws_factor_conditions
-                    for fac in self.bws_factor_names:
-                        n_cond_lower_fac -= len(self.get_bws_factor(fac))
-                        if fac is factor_name:
-                            break
-                    if n_cond_lower_fac <= 0:
-                        n_cond_lower_fac = 1
-                    cond_idx = ((subject_id - 1) / n_cond_lower_fac) % \
-                        len(self.get_bws_factor(fac))
-                return self._bws_factors[factor_name][cond_idx]
+        cond_idx = 0
+        if self.bws_factor_randomized:
+            try:
+                cond_idx = self._randomized_condition_for_subject[
+                    factor_name][subject_id]
+            except:  # If not yet randomized for this subject, do it
+                cond_idx = randomize.rand_int(
+                    0, len(self._bws_factors[factor_name]) - 1)
+                self._randomized_condition_for_subject[
+                    factor_name][subject_id] = cond_idx
+
+        else:  # Permutation
+            # (n_cond_lower_fac) total number of conditions for all
+            # hierarchically lower factors
+            n_cond_lower_fac = self.n_bws_factor_conditions
+            for fac in self.bws_factor_names:
+                n_cond_lower_fac -= len(self.get_bws_factor(fac))
+                if fac is factor_name:
+                    break
+            if n_cond_lower_fac <= 0:
+                n_cond_lower_fac = 1
+            cond_idx = ((subject_id - 1) / n_cond_lower_fac) % \
+                len(self.get_bws_factor(fac))
+
+        return self._bws_factors[factor_name][cond_idx]
 
     def clear_bws_factors(self):
         """Remove all between subject factors from design."""
