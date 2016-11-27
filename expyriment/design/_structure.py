@@ -293,7 +293,7 @@ class Experiment(object):
             self.data.add_experiment_info(text)
 
     def get_bws_factor_type(self, factor_name):
-        """Gets type of a factor.
+        """Gets type of a bws factor.
 
         Parameters
         ----------
@@ -321,7 +321,7 @@ class Experiment(object):
         return self._bws_factor_type[factor_name]
 
     def set_bws_factor_type(self, factor_name, factor_type):
-        """Sets type of a factor.
+        """Sets type of a bws factor.
 
         Parameters
         ----------
@@ -331,21 +331,15 @@ class Experiment(object):
             desired type of the factor. Either "balanced", "unbalanced" or
             "random"
 
-        Returns
-        -------
-        factor_type : str
-            type of the factor
-
         Notes
         -----
         This functions sets the type of a factor. Type means whether a
         factor is cross-balanced between all other cross-balanced factors
-        (latin-square), just balanced over itself or fully randomized. Return
-        values may be "balanced" (latin-square), "unbalanced" or "random".
+        (latin-square), just balanced over itself or fully randomized. 
 
         See Also
         --------
-        set_bws_factor_type
+        get_bws_factor_type
 
         """
 
@@ -423,7 +417,7 @@ class Experiment(object):
 
         Returns
         -------
-        cond : str
+        cond : list item
             condition for the current subject
 
         Notes
@@ -433,8 +427,8 @@ class Experiment(object):
         If the function is called with a subject_id, the condition for this
         particular subject will be returned.
 
-        The return factor condition depends on factor type. See add_bws_factor
-        for more information on that.
+        The returned factor condition depends on factor type. See
+        add_bws_factor for more information on that.
 
         See Also
         --------
