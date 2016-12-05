@@ -216,9 +216,10 @@ class Experiment(object):
                 _bws_factor = \
                     [unicode2str(x) if isinstance(x, unicode) else
                      repr(x) for x in self._bws_factors[f]]
-                _bws_factor = _bws_factor + "(" + self._bws_factor_type + ")"
-                tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    unicode2str(f), ", ".join(_bws_factor))
+                tmp_str = tmp_str + "    {0} ({1}) = [{2}]\n".format(
+                    unicode2str(f), 
+                    unicode2str(self._bws_factors_type[f]), 
+                    ", ".join(_bws_factor))
         for block in self.blocks:
             tmp_str = tmp_str + "{0}\n".format(unicode2str(block.summary))
         return tmp_str
@@ -318,7 +319,7 @@ class Experiment(object):
 
         """
 
-        return self._bws_factor_type[factor_name]
+        return self._bws_factors_type[factor_name]
 
     def set_bws_factor_type(self, factor_name, factor_type):
         """Sets type of a bws factor.
@@ -458,15 +459,14 @@ class Experiment(object):
         elif self._bws_factors_type[factor_name] == "balanced":
             # (n_cond_lower) total number of conditions for all
             # hierarchically lower factors
-            n_cond_lower = self.n_bws_factor_conditions(factor_type="balanced")
-            for fac in self.bws_factor_names(factor_type="balanced"):
-                n_cond_lower -= len(self.get_bws_factor(fac))
-                if fac is factor_name:
-                    break
+            mylist = self.bws_factor_names(factor_type="balanced")
+            n_cond_lower = 0
+            for f in mylist[(mylist.index(factor_name)+1):len(mylist)]:
+                n_cond_lower += len(self.get_bws_factor(f))
             if n_cond_lower <= 0:
                 n_cond_lower = 1
             cond_idx = ((subject_id - 1) / n_cond_lower) % \
-                len(self.get_bws_factor(fac))
+                len(self.get_bws_factor(factor_name))
         elif self._bws_factors_type[factor_name] == "unbalanced":
             cond_idx = (subject_id - 1) % len(self.get_bws_factor(factor_name))
 
@@ -514,32 +514,6 @@ class Experiment(object):
                 names.append(i)
 
         return names
-
-    def n_bws_factor_conditions(self, factor_type=None):
-        """Returns the number of all factors
-
-        Parameters
-        ----------
-        factor_type : str, optional
-            (default=None)
-
-        Returns
-        -------
-        n : int
-            number of all factor conditions
-
-        Notes
-        -----
-        This function returns the sum of all between subject factor conditions. If
-        factor_type is not given all factors are considered. If a specific
-        factor_type is given only factors of this type are considered.
-
-        """
-
-        n = 0
-        for fn in self.bws_factor_names(factor_type):
-            n += len(self.get_bws_factor(fn))
-        return n
 
     def set_log_level(self, loglevel):
         """Set the log level of the current experiment
