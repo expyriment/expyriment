@@ -208,20 +208,18 @@ class Experiment(object):
 
     def __str__(self):
         tmp_str = "Experiment: {0}\n".format(self.name)
-        if len(self.bws_factor_names) <= 0:
+        if len(self.bws_factor_names()) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
-            tmp_str = tmp_str + "between subject factors (permutation type: "
-            if self.bws_factor_randomized:
-                tmp_str = tmp_str + "random)\n"
-            else:
-                tmp_str = tmp_str + "latin square)\n"
-            for f in self.bws_factor_names:
+            tmp_str = tmp_str + "between subject factors"
+            for f in self.bws_factor_names():
                 _bws_factor = \
                     [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
-                tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    f, ", ".join(_bws_factor))
+                tmp_str = tmp_str + "    {0} ({1}) = [{2}]\n".format(
+                        f,
+                        self._bws_factors_type[f],
+                        ", ".join(_bws_factor))
         for block in self.blocks:
             tmp_str = tmp_str + "{0}\n".format(block.summary)
         return tmp_str
@@ -295,29 +293,67 @@ class Experiment(object):
         if self.data is not None:
             self.data.add_experiment_info(text)
 
-    @property
-    def bws_factor_randomized(self):
-        """Getter for bws_factor_randomized.
+    def get_bws_factor_type(self, factor_name):
+        """Gets type of a bws factor.
+
+        Parameters
+        ----------
+        factor_name: str
+            the name of the between subject factor
+
+        Returns
+        -------
+        factor_type : str
+            type of the factor
 
         Notes
         -----
-        Is between subject factor randomized? (True/False).
+        This functions returns the type of a factor. Type means whether a
+        factor is cross-balanced between all other cross-balanced factors
+        (latin-square), just balanced over itself or fully randomized. Return
+        values may be "balanced" (latin-square), "unbalanced" or "random".
 
-        If True conditions will be assigned randomized
-        otherwise (default) conditions will be systematically permuted across
-        subjects.
+        See Also
+        --------
+        set_bws_factor_type
 
         """
 
-        return self._bws_factor_randomized
+        return self._bws_factors_type[factor_name]
 
-    @bws_factor_randomized.setter
-    def bws_factor_randomized(self, value):
-        """Setter for bws_factor_randomized."""
+    def set_bws_factor_type(self, factor_name, factor_type):
+        """Sets type of a bws factor.
 
-        self._bws_factor_randomized = value
+        Parameters
+        ----------
+        factor_name: str
+            the name of the between subject factor
+        factor_type: str
+            desired type of the factor. Either "balanced", "unbalanced" or
+            "random"
 
-    def add_bws_factor(self, factor_name, conditions):
+        Notes
+        -----
+        This functions sets the type of a factor. Type means whether a
+        factor is cross-balanced between all other cross-balanced factors
+        (latin-square), just balanced over itself or fully randomized. 
+
+        See Also
+        --------
+        get_bws_factor_type
+
+        """
+
+        if not factor_name in self._bws_factors:
+            raise ValueError("Factor not known.")
+
+        if factor_type in ["random", "balanced", "unbalanced"]:
+            self._bws_factors_type[factor_name] = factor_type
+        else:
+            raise ValueError("Factor type has to be one" + 
+                    "of \"random\", \"balanced\" or \"unbalanced\".")
+
+    def add_bws_factor(self, factor_name, conditions, factor_type="balanced"):
         """Add a between subject factor.
 
         Parameters
@@ -326,17 +362,25 @@ class Experiment(object):
             the name of the between subject factor
         conditions : list
             possible conditions of the between subject factor
+        factor_type : str
+            type of the factor (default: "balanced")
 
         Notes
         -----
-        The defined between subject factor conditions will be permuted across
-        the subjects when 'using get_permuted_bws_factor_condition'.
-        Factors that are added first are treated as hierarchically higher
-        factors while permutation.
+        This functions adds a new between subject factor with the given
+        conditions to the experiment. Type of a factor determines
+        how a factor is randomized between subjects. Type "balanced" means
+        that factor conditions will be permuted across all other balanced
+        factors (latin-square). Factors that are added first are treated as
+        hierarchically higher factors while permutation.
+        Type "unbalanced" means that factor conditions will be permuted
+        regardless of other factors.
+        A "random" factor will be fully randomized and not permuted. See
+        get_bws_factor_condition for getting a factor condition.
 
         See Also
         --------
-        get_permuted_bws_factor_condition
+        get_bws_factor_condition
 
         """
 
@@ -344,6 +388,13 @@ class Experiment(object):
             conditions = list(conditions)
         except:
             conditions = [conditions]
+
+        if factor_type in ["random", "balanced", "unbalanced"]:
+            self._bws_factors_type[factor_name] = factor_type
+        else:
+            raise ValueError("Factor type has to be one" + 
+                    "of \"random\", \"balanced\" or \"unbalanced\".")
+
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
         self._randomized_condition_for_subject[factor_name] = {}
@@ -352,18 +403,12 @@ class Experiment(object):
         """Return all conditions of this between subject factor."""
 
         try:
-            cond = self._bws_factors[factor_name]
+            return self._bws_factors[factor_name]
         except:
             return None
-        return cond
 
-    def get_permuted_bws_factor_condition(self, factor_name, subject_id=None):
+    def get_bws_factor_condition(self, factor_name, subject_id=None):
         """Get the between subject factor condition for a subject.
-
-        The condition for the current subject will be returned, if expyriment
-        is running and the function is called without a subject_id.
-        If the function is called with a subject_id, the condition for this
-        particular subject will be returned.
 
         Parameters
         ----------
@@ -373,50 +418,59 @@ class Experiment(object):
 
         Returns
         -------
-        cond : str
+        cond : list item
             condition for the current subject
 
         Notes
         -----
-        see add_bws_factor
+        The condition for the current subject will be returned, if expyriment
+        is running and the function is called without a subject_id.
+        If the function is called with a subject_id, the condition for this
+        particular subject will be returned.
+
+        The returned factor condition depends on factor type. See
+        add_bws_factor for more information on that.
+
+        See Also
+        --------
+        add_bws_factor
 
         """
+
+        if self.get_bws_factor(factor_name) is None:
+            return None  # Factor not defined
 
         if subject_id is None:
             if self.subject is None:  # No current subject id defined
                 return None
             else:  # Use current subject
-                return self.get_permuted_bws_factor_condition(
-                    factor_name, subject_id=self.subject)
-        else:
-            conditions = self.get_bws_factor(factor_name)
-            if conditions is None:
-                return None  # Factor not defined
-            else:
-                cond_idx = 0
-                if self.bws_factor_randomized:
-                    try:
-                        cond_idx = self._randomized_condition_for_subject[
-                            factor_name][subject_id]
-                    except:  # If not yet randomized for this subject, do it
-                        cond_idx = rand_int(
-                            0, len(self._bws_factors[factor_name]) - 1)
-                        self._randomized_condition_for_subject[
-                            factor_name][subject_id] = cond_idx
+                subject_id = self.subject
 
-                else:  # Permutation
-                    # (n_cond_lower_fac) total number of conditions for all
-                    # hierarchically lower factors
-                    n_cond_lower_fac = self.n_bws_factor_conditions
-                    for fac in self.bws_factor_names:
-                        n_cond_lower_fac -= len(self.get_bws_factor(fac))
-                        if fac is factor_name:
-                            break
-                    if n_cond_lower_fac <= 0:
-                        n_cond_lower_fac = 1
-                    cond_idx = ((subject_id - 1) // n_cond_lower_fac) % \
-                        len(self.get_bws_factor(fac))
-                return self._bws_factors[factor_name][cond_idx]
+        cond_idx = 0
+        if self._bws_factors_type[factor_name] == "random":
+            try:
+                cond_idx = self._randomized_condition_for_subject[
+                    factor_name][subject_id]
+            except:  # If not yet randomized for this subject, do it
+                cond_idx = randomize.rand_int(
+                    0, len(self._bws_factors[factor_name]) - 1)
+                self._randomized_condition_for_subject[
+                    factor_name][subject_id] = cond_idx
+        elif self._bws_factors_type[factor_name] == "balanced":
+            # (n_cond_lower) total number of conditions for all
+            # hierarchically lower factors
+            mylist = self.bws_factor_names(factor_type="balanced")
+            n_cond_lower = 0
+            for f in mylist[(mylist.index(factor_name)+1):len(mylist)]:
+                n_cond_lower += len(self.get_bws_factor(f))
+            if n_cond_lower <= 0:
+                n_cond_lower = 1
+            cond_idx = ((subject_id - 1) / n_cond_lower) % \
+                len(self.get_bws_factor(factor_name))
+        elif self._bws_factors_type[factor_name] == "unbalanced":
+            cond_idx = (subject_id - 1) % len(self.get_bws_factor(factor_name))
+
+        return self._bws_factors[factor_name][cond_idx]
 
     def clear_bws_factors(self):
         """Remove all between subject factors from design."""
@@ -426,26 +480,40 @@ class Experiment(object):
         # Can't use dict_keys, because dicts don't keep the order
         self._bws_factors_names = []
 
+        self._bws_factors_type = {}
+
         self._randomized_condition_for_subject = {}
-        self.bws_factor_randomized = False
 
-    @property
-    def bws_factor_names(self):
-        """Getter for factors keys."""
-        return self._bws_factors_names
+    def bws_factor_names(self, factor_type=None):
+        """Returns names of between subject factors
 
-    @property
-    def n_bws_factor_conditions(self):
-        """Getter for n_bws_factor_conditions.
+        Parameters
+        ----------
+        factor_type : str, optional
+            (default=None)
 
-        Total number of conditions in all bws_factors.
+        Returns
+        -------
+        names : list
+            list of names (str)
+
+        Notes
+        -----
+        This function returns the names of between subject factors. If
+        factor_type is not given all factor names are returned. If a specific
+        factor_type is given only factor names with this type are returned.
 
         """
 
-        n = 0
-        for fn in self.bws_factor_names:
-            n += len(self.get_bws_factor(fn))
-        return n
+        if factor_type is None:
+            return self._bws_factors_names
+
+        names = []
+        for i in self._bws_factors_names:
+            if factor_type == self._bws_factors_type[i]:
+                names.append(i)
+
+        return names
 
     def set_log_level(self, loglevel):
         """Set the log level of the current experiment
@@ -768,13 +836,12 @@ type".format(permutation_type))
         if len(self.experiment_info) > 0:
             for txt in self.experiment_info:
                 rtn += u"#xpi: {0}\n".format(txt)
-        if len(self.bws_factor_names) > 0:
-            for factor_name in self.bws_factor_names:
+        if len(self.bws_factor_names()) > 0:
+            for factor_name in self.bws_factor_names():
                 rtn += u"#bws: {0}=".format(factor_name)
                 for txt in self.get_bws_factor(factor_name):
                     rtn += u"{0},".format(txt)
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += u"#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
         if len(self.data_variable_names) > 0:
             rtn += "#dvn: "
             for txt in self.data_variable_names:
@@ -875,8 +942,6 @@ type".format(permutation_type))
                     elif ln.startswith("#dvn:"):
                         for tmp in ln[6:].split(","):
                             self.add_data_variable_names(tmp.strip())
-                    elif ln.startswith("#bws-rand:"):
-                        self.bws_factor_randomized = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
                         print(tmp[1].strip().split(","))

@@ -165,14 +165,14 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for line in experiment.__str__().splitlines():
         experiment.data.add_experiment_info(line)
 
-    for f in experiment.bws_factor_names:
-        _permuted_bws_factor_condition = \
-            experiment.get_permuted_bws_factor_condition(f)
-        if isinstance(_permuted_bws_factor_condition, str):
-            _permuted_bws_factor_condition = \
-                misc.unicode2byte(_permuted_bws_factor_condition)
+    for f in experiment.bws_factor_names():
+        _bws_factor_condition = \
+            experiment.get_bws_factor_condition(f)
+        if isinstance(_bws_factor_condition, str):
+            _bws_factor_condition = \
+                misc.unicode2byte(_bws_factor_condition)
         experiment.data.add_subject_info("{0} = {1}".format(
-            misc.unicode2byte(f), _permuted_bws_factor_condition))
+            misc.unicode2byte(f), _bws_factor_condition))
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp
