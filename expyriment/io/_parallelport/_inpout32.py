@@ -29,7 +29,10 @@ class PParallelInpOut32(object):
             self.base = int(address, 16)
         else:
             self.base = address
-        self.port = windll.inpout32
+        try:
+            self.port = windll.inpout32
+        except:
+            self.port = windll.inpoutx64
 
         #BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)
         BYTEMODEMASK = (1 << 5 | 1 << 6 | 1 << 7) & 255
