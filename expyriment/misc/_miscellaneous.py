@@ -185,9 +185,18 @@ def add_fonts(folder):
     """
 
     pygame.font.init()
-    if pygame.sysfont.get_fonts() == [None]:
-        print("Initializing system fonts. This might take a couple of minutes...")
-    pygame.sysfont.initsysfonts()
+
+    # If font cache has to be (re-)created, initializing system fonts can take
+    # a while. By running this in a seperate process, we can check if this is
+    # the case and notify the user accordingly.
+    import multiprocessing
+    p = multiprocessing.Process(target=pygame.sysfont.initsysfonts)
+    p.start()
+    p.join(1)  # wait one second
+    if p.is_alive():  # if process still active, notify user
+        m = "Initializing system fonts. This might take a couple of minutes..."
+        print(m)
+        p.join()
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
