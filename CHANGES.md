@@ -2,7 +2,7 @@
 Expyriment Release Notes
 ========================
 
-Version 0.9.0b1 (10 Oct 2016)
+Coming up
 -----------------------------
 New Features:
 - Python 3 compatibility
@@ -24,6 +24,7 @@ New Features:
 - All present methods have an optional log_event_tag that will be passed
   to Eventfile.log (see above)
 - New method: misc.has_internet_connection()
+- Notify when initializing system fonts takes longer
 
 Changed:
 - all wait methods (io and Clock) now
@@ -54,6 +55,7 @@ Fixed:
 - Cli: -0 option was not recognized
 - Correct anti-aliasing for Circle/Ellipse (now works on every background)
 - compatibility with pyserial version 3.0
+- ParallelPort: inpoutx64 should now work correctly
 
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
