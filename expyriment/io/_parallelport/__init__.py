@@ -268,7 +268,7 @@ class ParallelPort(Input, Output):
         """Poll the parallel port.
 
         This will read the status pins (11, 10, 12, 13, 15), the data pins (2-9),
-        and status pins (1, 14, 16, 17).
+        and control pins (1, 14, 16, 17).
 
         The received data is encoded in 17 bits, corresponding to the 17 pins::
 
