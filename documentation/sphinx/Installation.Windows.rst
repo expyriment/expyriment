@@ -13,17 +13,15 @@ Python 2 (recommended)
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 2.7.12`_ (during installation, also select "Add python.exe to Path"!)
+1. Install `Python 2.7.13`_ (during installation, also select "Add python.exe to Path"!)
 
-2. Install Pygame_
+2. In a command prompt, run::
 
-3. In a command prompt, run::
-
-    python -m pip install --upgrade expyriment[optional]
+    python -m pip install -U expyriment[optional]
 
    (Ommit ``[optional]`` to install without additional packages)
 
-4. To use parallel port communication, install Inpout32_ or dlportio_
+3. To use parallel port communication, install Inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
@@ -34,43 +32,39 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.12`_ to ``Expyriment_Installation``
+2. Download `Python 2.7.13`_ to ``Expyriment_Installation``
 
-3. Download Pygame_ to ``Expyriment_Installation``
-
-4. In a command prompt, run::
+3. In a command prompt, run::
 
     python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[optional]
     
    (Ommit ``[optional]`` to install without additional packages)
 
-5. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
+4. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-6. To use parallel port communication, download Inpout32_ or dlportio_ to ``Expyriment_Installation``
+5. To use parallel port communication, download Inpout32_ or dlportio_ to ``Expyriment_Installation``
    (according to the instructions given at each link)
 
-7. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+6. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 **On the target PC**
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation\python-2.7.12.msi``
+2. Install ``Expyriment_Installation\python-2.7.13.msi``
 
-3. Install ``Expyriment_Installation\pygame-1.9.1.win32-py2.7.msi``
+3. In a command prompt, run::
 
-4. In a command prompt, run::
-
-    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[optional]
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation -U expyriment[optional]
     
    (Ommit ``[optional]`` to install without additional packages)
 
-5. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
+4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
    `add it to the environment variable PATH`_!)
 
-6. To use parallel port communication, install the downloaded Inpout32_ or dlportio_
+5. To use parallel port communication, install the downloaded Inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
@@ -80,11 +74,11 @@ Python 3
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 3.5.2`_ (during installation, also select "Add python.exe to Path"!)
+1. Install `Python 3.6.0`_ (during installation, also select "Add python.exe to Path"!)
 
 2. In a command prompt, run::
 
-    python3 -m pip install --upgrade expyriment[optional]
+    python3 -m pip install -U expyriment[optional]
     
    (Ommit ``[optional]`` to install without additional packages)
 
@@ -99,7 +93,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.5.2`_ to ``Expyriment_Installation``
+2. Download `Python 3.6.0`_ to ``Expyriment_Installation``
 
 3. In a command prompt, run::
 
@@ -119,7 +113,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation\python-3.5.2.exe``
+2. Install ``Expyriment_Installation\python-3.6.0.exe``
 
 3. In a command prompt, run::
 
@@ -155,9 +149,8 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
-.. _`Python 2.7.12`: https://www.python.org/ftp/python/2.7.12/python-2.7.12.msi
-.. _`Python 3.5.2`: https://www.python.org/ftp/python/3.5.2/python-3.5.2.exe
-.. _Pygame: http://pygame.org/ftp/pygame-1.9.1.win32-py2.7.msi
+.. _`Python 2.7.13`: https://www.python.org/ftp/python/2.7.13/python-2.7.13.msi
+.. _`Python 3.6.0`: https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
