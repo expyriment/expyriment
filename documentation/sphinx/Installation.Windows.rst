@@ -7,8 +7,8 @@ active internet connection. If you need to install Expyriment on a computer that
 has no internet connection (like lab PCs), please use the alternative method. 
 
 
-Python 2 (recommended)
-----------------------
+Python 2
+--------
 
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
