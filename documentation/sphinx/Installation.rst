@@ -1,28 +1,44 @@
 Installation
 ============
 
-How to install Expyriment?
---------------------------
+Expyriment works with `Python`_ 2 and 3.
 
-Expyriment works with all current `Python`_ versions (2.7 or 3.5).
-The latest release of Expyriment can be found at the `release page`_. Note, that
-Expyriment depends on the following Python packages that have to be installed 
-on your system:
+
+Dependencies
+------------
+
+Expyriment depends on the following Python packages:
 
 * Future_ (>=0.15)
 * Pygame_ (>=1.9)
 * PyOpenGL_ (>=3.0)
 
-Additional packages, which are optional and only required for some features of 
+Additional Python packages, which are optional and only required for some features of 
 Expyriment are:
 
-* NumPy_ (>=1.6)
-* sounddevice_ (>=0.3)
-* mediadecoder_ (>=0.1)
+* NumPy_ (>=1.6) (to use data preprocessing)
+* mediadecoder_ (>=0.1) (to use enhanced video playback)
+* sounddevice_ (>=0.3) (to use enhanced video playback with audio)
 * PySerial_ (>=3.0) (to use serial port communication)
-* PyParallel_ (>=0.2) (to use parallel port communication)
+* PyParallel_ (>=0.2) (to use parallel port communication on Linux)
 
-Please be aware that Expyriment plugins (extras) might have additional dependencies.
+Please be aware that Expyriment plugins (extras) might have further dependencies.
+
+
+Installing with ``pip``
+-----------------------
+
+Expyriment (and its dependencies) can be installed with ``pip``::
+
+    pip install expyriment[optional]
+
+Omit ``[optional]`` to install without additional packages.
+
+Replace ``pip`` with ``pip3`` when using Python3.
+
+
+Platform-specific instructions
+------------------------------
 
 We provide more detailed platform-specific instructions for installing 
 Expyriment here:
