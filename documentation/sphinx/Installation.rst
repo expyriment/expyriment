@@ -34,7 +34,7 @@ Expyriment (and its dependencies) can be installed with ``pip``::
 
 Omit ``[optional]`` to install without additional packages.
 
-Replace ``pip`` with ``pip3`` when using Python3.
+Replace ``pip`` with ``pip3`` when using Python 3.
 
 
 Platform-specific instructions
