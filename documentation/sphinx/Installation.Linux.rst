@@ -20,9 +20,7 @@ All Linux distributions (recommended)
     sudo pip install -U pip
     sudo pip install -U expyriment[optional]
     
-   (Omit ``[optional]`` to install without additional packages)
-
-   (Replace ``pip`` with ``pip3`` when using Python3)
+   (Omit ``[optional]`` to install without additional packages; replace ``pip`` with ``pip3`` when using Python3)
 
 For example, in Debian run::
 
