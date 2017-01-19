@@ -10,7 +10,6 @@ All Linux distributions (recommended)
 
   * Python or Python3
   * pip or pip3
-  * Pygame
   * build-essential (or equivalent)
   * libffi-dev
   * python-dev
@@ -18,18 +17,18 @@ All Linux distributions (recommended)
 
 2. In a command line, run::
 
-    sudo pip install --upgrade pip
-    sudo pip install --upgrade expyriment[optional]
+    sudo pip install -U pip
+    sudo pip install -U expyriment[optional]
     
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
 
-   Replace ``pip`` with ``pip3`` when using Python3
+   (Replace ``pip`` with ``pip3`` when using Python3)
 
 For example, in Debian run::
 
-    sudo apt-get install python python-pip python-pygame build-essential libffi-dev python-dev libportaudio2
-    sudo pip install --upgrade pip
-    sudo pip install --upgrade expyriment[optional]
+    sudo apt-get install python python-pip build-essential libffi-dev python-dev libportaudio2
+    sudo pip install -U pip
+    sudo pip install -U expyriment[optional]
     
      
 Debian, Ubuntu and derivatives
