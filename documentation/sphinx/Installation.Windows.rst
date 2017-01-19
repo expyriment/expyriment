@@ -19,7 +19,7 @@ Default installation (online)
 
     python -m pip install -U expyriment[optional]
 
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
 
 3. To use parallel port communication, install Inpout32_ or dlportio_
    (according to the instructions given at each link)
@@ -38,7 +38,7 @@ Alternative installation (offline)
 
     python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[optional]
     
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
 
 4. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
@@ -58,7 +58,7 @@ Alternative installation (offline)
 
     python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation -U expyriment[optional]
     
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
 
 4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
@@ -80,7 +80,7 @@ Default installation (online)
 
     python3 -m pip install -U expyriment[optional]
     
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
 
 3. To use parallel port communication, install Inpout32_ or dlportio_
    (according to the instructions given at each link)
@@ -99,7 +99,7 @@ Alternative installation (offline)
 
     python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[optional]
 
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
    
 4. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
@@ -119,7 +119,7 @@ Alternative installation (offline)
 
     python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[optional]
 
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
    
 4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
