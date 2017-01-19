@@ -29,10 +29,10 @@ Default installation (online)
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew tap Homebrew/python
     brew update
-    brew install python pygame
+    brew install python
     sudo /usr/local/bin/python -m pip install --upgrade expyriment[optional]
 
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
    
 4. To make the Homebrew Python the one that is called when typing "python", in a
    terminal, add the following to ``~/.bash_profile``::
@@ -47,48 +47,44 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.12`_ to ``Expyriment_Installation``
+2. Download `Python 2.7.13`_ to ``Expyriment_Installation``
 
 3. Download Tcl_ to ``Expyriment_Installation``
 
 4. Download XQuartz_ to ``Expyriment_Installation``
 
-5. Download Pygame_ to ``Expyriment_Installation``
-
-6. In a terminal, run::
+5. In a terminal, run::
 
     sudo python -m pip download -d ~/Desktop/Expyriment_Installation expyriment[optional]
     
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
  
-7. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
+6. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-8. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
+7. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
 
 
 **On the target PC**
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation/python-2.7.12-macosx10.5.pkg``
+2. Install ``Expyriment_Installation/python-2.7.13-macosx10.5.pkg``
 
 3. Install ``Expyriment_Installation/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg``
 
 4. Install ``Expyriment_Installation/XQuartz-2.7.9.dmg``
 
-5. Install ``Expyriment_Installation/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg``
-
-6. In a command prompt, run::
+5. In a command prompt, run::
 
     python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
 
-   (Ommit ``[optional]`` to install without additional packages)
+   (Omit ``[optional]`` to install without additional packages)
    
-7. To use enhanced video playback, run::
+6. To use enhanced video playback, run::
 
     mkdir -p ~/.local/bin
     cd ~/Desktop/Expyriment_Installation
-    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
+    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
     mv ffmpeg ffprobe ffserver ~/.local/bin
     echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
     source ~/.bash_profile
@@ -111,11 +107,11 @@ Default installation (online)
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     brew tap Homebrew/python
     brew update
-    brew install python3 pygame
+    brew install python3
     brew install pygame --without-python
     sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[optional]
    
-  (Ommit ``[optional]`` to install without additional packages)
+  (Omit ``[optional]`` to install without additional packages)
 
 4. To make the Homebrew Python the one that is called when typing "python", in a
    terminal, add the following to ``~/.bash_profile``::
@@ -130,7 +126,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.5.2`_ to  ``Expyriment_Installation``
+2. Download `Python 3.6.0`_ to  ``Expyriment_Installation``
 
 3. Download Tcl_ to ``Expyriment_Installation``
 
@@ -149,7 +145,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation/python-3.5.2-macosx10.5.pkg``
+2. Install ``Expyriment_Installation/python-3.6.0-macosx10.5.pkg``
 
 3. Install ``Expyriment_Installation/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg``
 
@@ -159,13 +155,13 @@ Alternative installation (offline)
 
     python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
     
-   (Ommit `[optional]` to install without additional packages)
+   (Omit `[optional]` to install without additional packages)
 
 6. To use enhanced video playback, run::
 
     mkdir -p ~/.local/bin
     cd ~/Desktop/Expyriment_Installation
-    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
+    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
     mv ffmpeg ffprobe ffserver ~/.local/bin
     echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
     source ~/.bash_profile
@@ -194,9 +190,8 @@ Notes
     line when testing participants.
 
 
-.. _`Python 2.7.12`: https://www.python.org/ftp/python/2.7.12/python-2.7.12-macosx10.5.pkg
-.. _`Python 3.5.2`: https://www.python.org/ftp/python/3.5.2/python-3.5.2-macosx10.5.pkg
+.. _`Python 2.7.13`: https://www.python.org/ftp/python/2.7.13/python-2.7.13-macosx10.5.pkg
+.. _`Python 3.6.0`: https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg
 .. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
 .. _XQuartz: https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.9.dmg
-.. _Pygame: http://pygame.org/ftp/pygame-1.9.1release-python.org-32bit-py2.7-macosx10.3.dmg
-.. _ffmpeg: http://www.ffmpegmac.net/resources/Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_04.10.2016.zip
+.. _ffmpeg: http://www.ffmpegmac.net/resources/Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
