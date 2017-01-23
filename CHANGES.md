@@ -25,6 +25,7 @@ New Features:
   to Eventfile.log (see above)
 - New method: misc.has_internet_connection()
 - Notify when initializing system fonts takes longer
+- io.ParallelPort: new method get_driver()
 
 Changed:
 - all wait methods (io and Clock) now
