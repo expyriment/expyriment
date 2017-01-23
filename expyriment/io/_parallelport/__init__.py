@@ -39,16 +39,19 @@ if sys.platform.startswith('linux'):
     try:
         from ._linux import PParallelLinux
         _ParallelPort = PParallelLinux
+        _ParallelPort._driver = "pyparallel"
     except:
         _ParallelPort = None
 elif sys.platform == 'win32':
     try:
         from ._inpout32 import PParallelInpOut32
         _ParallelPort = PParallelInpOut32
+        _ParallelPort._driver = _ParallelPort.port._name
     except:
         try:
             from ._dlportio import PParallelDLPortIO
             _ParallelPort = PParallelDLPortIO
+            _ParallelPort._driver = _ParallelPort.port._name
         except:
             _ParallelPort = None
 else: # MAC
