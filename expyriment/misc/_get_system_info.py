@@ -383,6 +383,11 @@ def get_system_info(as_string=False):
     info["hardware_memory_free"] = hardware_memory_free
     info["hardware_ports_parallel"] = \
             ParallelPort.get_available_ports()
+    if ParallelPort is not None:
+        parallel_driver = ParallelPort.get_driver()
+    else:
+        parallel_driver = ""
+    info["hardware_ports_parallel_driver"] = parallel_driver
     info["hardware_ports_serial"] = _com_port_list
     info["hardware_video_card"] = hardware_video_card
 
