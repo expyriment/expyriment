@@ -92,8 +92,6 @@ class ParallelPort(Input, Output):
     (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
 
     """
-
-    _driver = _ParallelPort._driver
     
     def __init__(self, address, reverse=False):
         """Create a parallel port input and output.
@@ -418,6 +416,21 @@ class ParallelPort(Input, Output):
 
         self._parallel.setPin(pin, int(state))
 
+    @staticmethod
+    def get_driver():
+        """Return the driver used for interacting with parallel ports.
+        
+        On Windows, one of the following parallel port drivers needs to
+        be installed: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or
+        'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/).
+        On Linux, the Python package 'PyParallel'
+        (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
+    
+        """
+        
+        if _ParallelPort is not None:
+            return _ParallelPort._driver
+        
     @staticmethod
     def get_available_ports():
         """Return an array of strings representing available parallel ports.
