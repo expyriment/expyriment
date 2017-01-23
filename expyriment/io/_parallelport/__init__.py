@@ -93,6 +93,8 @@ class ParallelPort(Input, Output):
 
     """
 
+    _driver = _ParallelPort._driver
+    
     def __init__(self, address, reverse=False):
         """Create a parallel port input and output.
 
