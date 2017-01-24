@@ -187,12 +187,12 @@ def add_fonts(folder):
     # If font cache has to be (re-)created, initializing system fonts can take
     # a while. By running this in a seperate process, we can check if this is
     # the case and notify the user accordingly.
-    def tmp():
+    def init_sysfonts_process():
         pygame.font.init()
         pygame.sysfont.initsysfonts()
     
     import multiprocessing
-    p = multiprocessing.Process(target=tmp)
+    p = multiprocessing.Process(target=init_sysfonts_process)
     p.start()
     p.join(1)  # wait one second
     if p.is_alive():  # if process still active, notify user
