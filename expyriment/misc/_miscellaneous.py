@@ -199,7 +199,7 @@ def add_fonts(folder):
         m = "Initializing system fonts. This might take a couple of minutes..."
         print(m)
         p.join()
-    tmp()
+    pygame.font.init()
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
