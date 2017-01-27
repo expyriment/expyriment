@@ -63,11 +63,16 @@ install_requires = ["future>=0.15,<1",
                     "pyopengl>=3.0,<4"]
 
 extras_require = {
-        'optional': ["numpy>=1.6,<2",
-                     "pyserial>=3,<4",
-                     "pyparallel>=0.2,<1",
-                     "sounddevice>=0.3,<1",
-                     "mediadecoder>=0.1,<1"],
+    'data_preprocessing': ["numpy>=1.6,<2"],
+    'serialport':         ["pyserial>=3,<4"],
+    'parallelport_linux': ["pyparallel>=0.2,<1"],
+    'video':              ["sounddevice>=0.3,<1",
+                           "mediadecoder>=0.1,<1"],
+    'all':                ["numpy>=1.6,<2",
+                           "pyserial>=3,<4",
+                           "pyparallel>=0.2,<1",
+                           "sounddevice>=0.3,<1",
+                           "mediadecoder>=0.1,<1"],
     }
 
 # Clear old installation when installing
