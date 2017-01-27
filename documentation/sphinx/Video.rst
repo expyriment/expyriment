@@ -84,4 +84,4 @@ If key presses (other than the control keys) need to be checked during the video
         v.update()
     v.stop()
     
- **NOTE**: Do not infer reaction times from this!
+**NOTE**: Do not infer reaction times from this!
