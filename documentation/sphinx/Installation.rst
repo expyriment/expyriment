@@ -32,7 +32,7 @@ Expyriment (and its dependencies) can be installed with pip_::
 
     pip install expyriment
 
-To install with additional optional features, use
+To install with additional optional features, use ::
 
     pip install expyriment[FEATURE]
 
