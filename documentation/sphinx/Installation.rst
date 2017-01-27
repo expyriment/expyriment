@@ -39,7 +39,7 @@ To install with additional optional features, use ::
 where ``FEATURE`` is one (or several, separated by commas) of:
 
 ``data_preprocessing``
-    `Data preprocessing and exporting`_ <DataPreprocessing>
+    <DataPreprocessing>
 ``serialport``
     `Serial port`_ <expyriment.io.SerialPort> communication
 ``parallel_port_linux``
@@ -79,5 +79,6 @@ Expyriment here:
 .. _Numpy: http://numpy.org/
 .. _`release page`: https://github.com/expyriment/expyriment/releases
 .. _pip: https://en.wikipedia.org/wiki/Pip_(package_manager)
+..  _`Data preprocessing and exporting`: <DataPreprocessing>
 .. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
 .. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
