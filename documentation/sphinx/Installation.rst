@@ -43,12 +43,12 @@ where ``FEATURE`` is one (or several, separated by commas) of:
 <DataPreprocessing>
 ``serialport``
     `Serial port <expyriment.io.SerialPort>`_ communication
-``parallel_port_linux``
-    `Parallel port <expyriment.io.ParallelPort>`_ communication on Linux (for Windows, please install one of the following parallel port drivers instead: input32_ or dlportio_)
+``parallelport_linux``
+    `Parallel port <expyriment.io.ParallelPort>`_ communication on Linux (for Windows, please install one of the following parallel port drivers instead: inpout32_ or dlportio_)
 ``video``
     Enhanced `video playback <Video>`_ with support for various formats
 ``all``
-    all of the above
+    All of the above
 
 Replace ``pip`` with ``pip3`` when using Python 3.
 
