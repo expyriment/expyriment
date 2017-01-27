@@ -29,7 +29,7 @@ Usage
 
 4. To actually present the video on screen, understanding the various methods of the video object is crucial:
 
-   ``play()``
+    ``play()``
        will simply start video (and audio) playback in the background. This has no effect on the screen, no frames from the video are presented automatically.
 
     ``present()``
