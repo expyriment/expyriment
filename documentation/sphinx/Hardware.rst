@@ -30,8 +30,8 @@ performance of your specific configuration!**
 External devices
 ----------------
 
-Besides standard serial and parallel port communication, there is special 
-support for:
+Besides standard `serial <expyriment.io.SerialPort>`_ and `parallel <expyriment.io.ParallelPort>`_ port communication,
+there is special support for:
 
 * `Event button box`_
 * `Streaming button box`_
