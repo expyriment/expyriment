@@ -30,9 +30,9 @@ Default installation (online)
     brew tap Homebrew/python
     brew update
     brew install python
-    sudo /usr/local/bin/python -m pip install --upgrade expyriment[optional]
+    sudo /usr/local/bin/python -m pip install --upgrade expyriment[all]
 
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
    
 4. To make the Homebrew Python the one that is called when typing "python", in a
    terminal, add the following to ``~/.bash_profile``::
@@ -55,9 +55,9 @@ Alternative installation (offline)
 
 5. In a terminal, run::
 
-    sudo python -m pip download -d ~/Desktop/Expyriment_Installation expyriment[optional]
+    sudo python -m pip download -d ~/Desktop/Expyriment_Installation expyriment[all]
     
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
  
 6. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
@@ -76,9 +76,9 @@ Alternative installation (offline)
 
 5. In a command prompt, run::
 
-    python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
+    python -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[all]
 
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
    
 6. To use enhanced video playback, run::
 
@@ -109,9 +109,9 @@ Default installation (online)
     brew update
     brew install python3
     brew install pygame --without-python
-    sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[optional]
+    sudo /usr/local/bin/python3 -m pip install --upgrade expyriment[all]
    
-  (Omit ``[optional]`` to install without additional packages)
+  (Omit ``[all]`` to install without additional optional features)
 
 4. To make the Homebrew Python the one that is called when typing "python", in a
    terminal, add the following to ``~/.bash_profile``::
@@ -134,7 +134,9 @@ Alternative installation (offline)
 
 5. In a terminal, run::
 
-    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation expyriment[optional]
+    sudo python3 -m pip download -d ~/Desktop/Expyriment_Installation expyriment[all]
+   
+   (Omit ``[all]`` to install without additional optional features)
  
 6. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
@@ -153,9 +155,9 @@ Alternative installation (offline)
 
 5. In a command prompt, run::
 
-    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[optional]
+    python3 -m pip install --no-index --find-links ~/Desktop/Expyriment_Installation --upgrade expyriment[all]
     
-   (Omit `[optional]` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
 
 6. To use enhanced video playback, run::
 
