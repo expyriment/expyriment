@@ -58,7 +58,7 @@ in predefined intervals (e.g. each 1 ms). Button press (or release) events (if
 present) are added to the baseline.
 
 Streaming button boxes can be used by initializing an  
-:doc:`expyriment.io.StreamingButtonBox` object::
+`<expyriment.io.StreamingButtonBox>`_ object::
 
     bb = expyriment.io.StreamingButtonBox(expyriment.io.SerialPort("COM1"),
                                 baseline=128)
@@ -78,7 +78,7 @@ button box::
 It is important to notice that operating systems only buffer a certain amount 
 of bytes (usually 4096). To prevent an overflow of this buffer, the button box 
 has to be checked regularly. Additionally, an ``input_history`` can be used on 
-the :doc:`expyriment.io.SerialPort` object which is automatically updated 
+the `<expyriment.io.SerialPort>`_ object which is automatically updated 
 whenever the serial port is polled or cleared. By setting the 
 ``os_buffer_size`` correctly, a warning will be logged whenever the amount of 
 bytes in the OS serial port buffer reaches maximum capacity. **The important 
@@ -109,7 +109,7 @@ scanner.
 When updated regularly, Expyriment can also keep track of the amount of 
 triggers that have been received. Importantly, this has to be done manually
 
-Trigger inputs can be used by initializing an :doc:`expyriment.io.TriggerInput` 
+Trigger inputs can be used by initializing an `<expyriment.io.TriggerInput>`_ 
 object.
 
 **Basic usage**
@@ -125,7 +125,7 @@ is received::
 
 In some cases, code blocking might not be a solution, since a trial has to 
 continue while waiting for the trigger. For instance, in an fMRI study, a trial 
-might consist of several components and span several TR.  One way to solve this 
+might consist of several components and span several TR. One way to solve this 
 would be logging constantly all input events in a separate thread.  However, 
 this will introduce timing uncertainties, since the operating system is in 
 charge of how and when threads communicate. We thus decided against an 
@@ -141,7 +141,7 @@ two conditions:
    does not overflow. (Most implementations use an OS buffer of 4096 bytes).
 
 If those two conditions are met, an ``input_history`` can be used on the 
-:doc:`expyriment.io.SerialPort` object which is automatically updated whenever 
+`<expyriment.io.SerialPort>`_ object which is automatically updated whenever 
 the serial port is polled or cleared. By setting the ``os_buffer_size`` 
 correctly, a warning will be logged whenever the amount of bytes in the OS 
 serial port buffer reaches maximum capacity. **The important part now is to 
@@ -164,7 +164,7 @@ Marker output
 Expyriment can send markers to external devices, like for instance EEG 
 computers.
 
-Marker outputs can be used by creating an :doc:`expyriment.io.MarkerOutput` 
+Marker outputs can be used by creating an `<expyriment.io.MarkerOutput>`_ 
 object.
 
 **Basic usage**
@@ -181,7 +181,7 @@ Cedrus response devices
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Expyriment comes with a high-level wrapper for Cedrus response devices 
-:doc:`expyriment.io.extras.CedrusResponseDevice`, which allows you to easily 
+`<expyriment.io.extras.CedrusResponseDevice>`_, which allows you to easily 
 use all Cedrus response devices.
 
 To use these devices, however, the third-party Python package pyxid_ needs to 
