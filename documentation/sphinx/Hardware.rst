@@ -45,7 +45,7 @@ An event button box is a simple device which sends out values (bytes) whenever
 a button is pressed (or released).
 
 Event button boxes can be used by initializing an 
-:doc:`expyriment.io.EventButtonBox`
+`<expyriment.io.EventButtonBox>`_
 object::
 
     bb = expyriment.io.EventButtonBox(expyriment.io.SerialPort("COM1"))
