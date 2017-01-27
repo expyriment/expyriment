@@ -17,11 +17,11 @@ Default installation (online)
 
 2. In a command prompt, run::
 
-    python -m pip install -U expyriment[optional]
+    python -m pip install -U expyriment[all]
 
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
 
-3. To use parallel port communication, install Inpout32_ or dlportio_
+3. To use parallel port communication, install inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
@@ -36,13 +36,13 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[optional]
+    python -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[all]
     
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
 
 4. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-5. To use parallel port communication, download Inpout32_ or dlportio_ to ``Expyriment_Installation``
+5. To use parallel port communication, download inpout32_ or dlportio_ to ``Expyriment_Installation``
    (according to the instructions given at each link)
 
 6. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
@@ -56,15 +56,15 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation -U expyriment[optional]
+    python -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation -U expyriment[all]
     
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
 
 4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
    `add it to the environment variable PATH`_!)
 
-5. To use parallel port communication, install the downloaded Inpout32_ or dlportio_
+5. To use parallel port communication, install the downloaded inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
@@ -78,11 +78,11 @@ Default installation (online)
 
 2. In a command prompt, run::
 
-    python3 -m pip install -U expyriment[optional]
+    python3 -m pip install -U expyriment[all]
     
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
 
-3. To use parallel port communication, install Inpout32_ or dlportio_
+3. To use parallel port communication, install inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
@@ -97,13 +97,13 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[optional]
+    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[all]
 
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
    
 4. To use enhanced video playback, download ffmpeg_ to ``Expyriment_Installation``
 
-5. To use parallel port communication, download Inpout32_ or dlportio_ to ``Expyriment_Installation``
+5. To use parallel port communication, download inpout32_ or dlportio_ to ``Expyriment_Installation``
    (according to the instructions given at each link)
 
 6. Copy the directory ``Expyriment_Installation`` from the Desktop to a portable storage device
@@ -117,15 +117,15 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[optional]
+    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[all]
 
-   (Omit ``[optional]`` to install without additional packages)
+   (Omit ``[all]`` to install without additional optional features)
    
 4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
    `add it to the environment variable PATH`_!)
 
-5. To use parallel port communication, install Inpout32_ or dlportio_
+5. To use parallel port communication, install inpout32_ or dlportio_
    (according to the instructions given at each link)
 
 
