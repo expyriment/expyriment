@@ -40,7 +40,6 @@ where ``FEATURE`` is one (or several, separated by commas) of:
 
 ``data_preprocessing``
     `Data preprocessing and exporting <DataPreprocessing>`_
-<DataPreprocessing>
 ``serialport``
     `Serial port <expyriment.io.SerialPort>`_ communication
 ``parallelport_linux``
