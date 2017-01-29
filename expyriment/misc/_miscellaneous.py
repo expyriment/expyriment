@@ -38,7 +38,12 @@ FS_ENC = sys.getfilesystemencoding()
 if FS_ENC is None:
     FS_ENC = 'utf-8'
 
+    
+def _init_sysfonts_process():
+        pygame.font.init()
+        pygame.sysfont.initsysfonts()
 
+        
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -187,12 +192,9 @@ def add_fonts(folder):
     # If font cache has to be (re-)created, initializing system fonts can take
     # a while. By running this in a seperate process, we can check if this is
     # the case and notify the user accordingly.
-    def init_sysfonts_process():
-        pygame.font.init()
-        pygame.sysfont.initsysfonts()
-    
+
     import multiprocessing
-    p = multiprocessing.Process(target=init_sysfonts_process)
+    p = multiprocessing.Process(target=_init_sysfonts_process)
     p.start()
     p.join(1)  # wait one second
     if p.is_alive():  # if process still active, notify user
