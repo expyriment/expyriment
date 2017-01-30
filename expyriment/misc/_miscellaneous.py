@@ -193,14 +193,19 @@ def add_fonts(folder):
     # a while. By running this in a seperate process, we can check if this is
     # the case and notify the user accordingly.
 
-    import multiprocessing
-    p = multiprocessing.Process(target=_init_sysfonts_process)
-    p.start()
-    p.join(1)  # wait one second
-    if p.is_alive():  # if process still active, notify user
-        m = "Initializing system fonts. This might take a couple of minutes..."
-        print(m)
-        p.join()
+    try:
+        import multiprocessing
+        multiprocessing.freeze_support()
+        p = multiprocessing.Process(target=_init_sysfonts_process)
+        p.start()
+        p.join(1)  # wait one second
+        if p.is_alive():  # if process still active, notify user
+            m = "Initializing system fonts. This might take a couple of minutes..."
+            print(m)
+            p.join()
+    except:
+        _init_sysfonts_process
+
     pygame.font.init()
 
     for font in glob.glob(os.path.join(folder, "*")):
