@@ -2,7 +2,7 @@
 Expyriment Release Notes
 ========================
 
-0.9.0rc1 (27 Jan 2017)
+0.9.0rc2 (31 Jan 2017)
 ----------------------
 New Features:
 - Python 3 compatibility
