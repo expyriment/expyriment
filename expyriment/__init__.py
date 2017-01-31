@@ -35,6 +35,15 @@ __revision__ = ''
 __date__ = ''
 
 
+# Check for local 'test.py{c|o|d}' as those might break 'future'
+import os
+cur_dir = os.path.abspath(os.path.curdir)
+for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
+    if os.path.exists(os.path.join(cur_dir, f)):
+        m = "Expyriment cannot be imported where a file '{0}' exists! "
+        m += "Please remove or rename that file and try again."
+        raise ImportError(m.format(f))
+
 import sys as _sys
 from ._internals import get_version
 from ._internals import PYTHON3 as _PYTHON3
