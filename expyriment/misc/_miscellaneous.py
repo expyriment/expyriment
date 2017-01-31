@@ -39,11 +39,6 @@ if FS_ENC is None:
     FS_ENC = 'utf-8'
 
     
-def _init_sysfonts_process():
-        pygame.font.init()
-        pygame.sysfont.initsysfonts()
-
-        
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -190,23 +185,25 @@ def add_fonts(folder):
     """
 
     # If font cache has to be (re-)created, initializing system fonts can take
-    # a while. By running this in a seperate process, we can check if this is
-    # the case and notify the user accordingly.
+    # a while. By having a watchdog thread, we can check if this is the case
+    # and notify the user accordingly.
 
-    try:
-        import multiprocessing
-        multiprocessing.freeze_support()
-        p = multiprocessing.Process(target=_init_sysfonts_process)
-        p.start()
-        p.join(1)  # wait one second
-        if p.is_alive():  # if process still active, notify user
+    import time
+    import threading
+
+    def watchdog_timer(state):
+        time.sleep(1)
+        if not state['completed']:
             m = "Initializing system fonts. This might take a couple of minutes..."
-            print(m)
-            p.join()
-    except:
-        _init_sysfonts_process
+            sys.stdout.write(m + '\n')
 
+    state = {'completed': False}
+    watchdog = threading.Thread(target=watchdog_timer, args=(state,))
+    watchdog.daemon = True
+    watchdog.start()
     pygame.font.init()
+    pygame.sysfont.initsysfonts()
+    state['completed'] = True
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
