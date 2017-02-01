@@ -40,9 +40,10 @@ import os
 cur_dir = os.path.abspath(os.path.curdir)
 for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
     if os.path.exists(os.path.join(cur_dir, f)):
-        m = "Expyriment cannot be imported where a file '{0}' exists! "
-        m += "Please remove or rename that file and try again."
-        raise ImportError(m.format(f))
+        m = "Expyriment cannot be imported where a file '{0}' exists!\n".format(f)
+        m += "Please remove or rename that file in the directory\n'{0}' ".format(cur_dir)
+        m += "and try again."
+        raise ImportError(m)
 
 import sys as _sys
 from ._internals import get_version
