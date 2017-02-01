@@ -44,8 +44,7 @@ try:
         if _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
             m = "Expyriment cannot be imported where a file '{0}' exists!\n"
             m += "Please remove or rename '{1}' and try again."
-            m = m.format(f, tf)
-            raise ImportError(m)
+            raise ImportError(m.format(f, tf))
 except:
     pass
 
