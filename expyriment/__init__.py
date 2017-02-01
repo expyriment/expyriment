@@ -36,14 +36,18 @@ __date__ = ''
 
 
 # Check if local 'test.py{c|o|d}' shadows 'test' module of standard library
-import os as _os
-import test as _test
-for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-    if _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
-        tf = _os.path.abspath(_os.path.split(_os.path.abspath(_test.__file__))[1])
-        m = "Expyriment cannot be imported where a file '{0}' exists!\n".format(f)
-        m += "Please remove or rename '{0}' and try again.' ".format(tf)
-        raise ImportError(m)
+try:
+    import os as _os
+    import test as _test
+    tf = _os.path.abspath(_test.__file__)
+    for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
+        if _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
+            m = "Expyriment cannot be imported where a file '{0}' exists!\n"
+            m += "Please remove or rename '{1}' and try again."
+            m = m.format(f, tf)
+            raise ImportError(m)
+except:
+    pass
 
 import sys as _sys
 from ._internals import get_version
