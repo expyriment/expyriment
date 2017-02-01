@@ -46,12 +46,12 @@ elif sys.platform == 'win32':
     try:
         from ._inpout32 import PParallelInpOut32
         _ParallelPort = PParallelInpOut32
-        _ParallelPort._driver = _ParallelPort.port._name
+        _ParallelPort._driver = "inpout32"
     except:
         try:
             from ._dlportio import PParallelDLPortIO
             _ParallelPort = PParallelDLPortIO
-            _ParallelPort._driver = _ParallelPort.port._name
+            _ParallelPort._driver = "dlportio"
         except:
             _ParallelPort = None
 else: # MAC
