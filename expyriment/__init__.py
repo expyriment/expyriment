@@ -39,13 +39,10 @@ __date__ = ''
 import os as _os
 import test as _test
 for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-    if __file__ in f or _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
-        if __file__ in f:
-            _file = __file__
-        else:
-            _file = _os.path.split(_os.path.abspath(_test.__file__))[1]
+    if _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
+        tf = _os.path.abspath(_os.path.split(_os.path.abspath(_test.__file__))[1])
         m = "Expyriment cannot be imported where a file '{0}' exists!\n".format(f)
-        m += "Please remove or rename {0} and try again.' ".format(_file)
+        m += "Please remove or rename '{0}' and try again.' ".format(tf)
         raise ImportError(m)
 
 import sys as _sys
