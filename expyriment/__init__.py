@@ -42,7 +42,7 @@ for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
     test_file = _os.path.abspath(_test.__file__)
     if _os.path.split(test_file)[1] in f:
         m = "Expyriment cannot be imported where a file '{0}' exists!\n".format(f)
-        m += "Please remove or rename {0} and try again'{0}' ".format(test_file)
+        m += "Please remove or rename {0} and try again.' ".format(test_file)
         raise ImportError(m)
 
 import sys as _sys
