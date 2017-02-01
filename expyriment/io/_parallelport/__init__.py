@@ -128,7 +128,7 @@ class ParallelPort(Input, Output):
                 _message = "Please install the Python package 'PyParallel'."
             else:
                 _message = "Not available on your computer."
-            message = "ParallelPort can not be initialized! {0}".format(
+            message = "ParallelPort cannot be initialized! {0}".format(
                 _message)
             raise ImportError(message)
 
@@ -478,7 +478,7 @@ class ParallelPort(Input, Output):
                 _message = "Not available on your computer."
 
             stimuli.TextScreen(
-                "ParallelPort can not be initialized!",
+                "ParallelPort cannot be initialized!",
                 _message + "\n\n[Press RETURN to continue]").present()
             exp.keyboard.wait(misc.constants.K_RETURN)
             return result
