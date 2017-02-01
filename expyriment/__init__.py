@@ -35,14 +35,14 @@ __revision__ = ''
 __date__ = ''
 
 
-# Check for local 'test.py{c|o|d}' as those might break 'future'
-import os
-cur_dir = os.path.abspath(os.path.curdir)
+# Check if local 'test.py{c|o|d}' shadows 'test' module of standard library
+import os as _os
+import test as _test
 for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-    if os.path.exists(os.path.join(cur_dir, f)):
+    test_file = _os.path.abspath(_test.__file__)
+    if _os.path.split(test_file)[1] in f:
         m = "Expyriment cannot be imported where a file '{0}' exists!\n".format(f)
-        m += "Please remove or rename that file in the directory\n'{0}' ".format(cur_dir)
-        m += "and try again."
+        m += "Please remove or rename {0} and try again'{0}' ".format(test_file)
         raise ImportError(m)
 
 import sys as _sys
