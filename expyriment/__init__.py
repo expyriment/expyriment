@@ -40,7 +40,7 @@ import os as _os
 import test as _test
 for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
     if __file__ in f or _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
-        if __file__in f:
+        if __file__ in f:
             _file = __file__
         else:
             _file = _os.path.split(_os.path.abspath(_test.__file__))[1]
