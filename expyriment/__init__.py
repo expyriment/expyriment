@@ -35,18 +35,19 @@ __revision__ = ''
 __date__ = ''
 
 
-# Check if local 'test.py{c|o|d}' shadows 'test' module of standard library
+# Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
 try:
+    import imp as _imp
     import os as _os
-    import test as _test
-    tf = _os.path.abspath(_test.__file__)
+    _tf = _os.path.abspath(_imp.find_module("test")[1])
     for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-        if _os.path.split(_os.path.abspath(_test.__file__))[1] in f:
-            m = "Expyriment cannot be imported where a file '{0}' exists!\n"
-            m += "Please remove or rename '{1}' and try again."
-            raise ImportError(m.format(f, tf))
+        if _os.path.split(_tf)[1] in f:
+            _m = "Expyriment cannot be imported where a file '{0}' exists!\n"
+            _m += "Please remove or rename '{1}' and try again."
 except:
     pass
+else:
+    raise ImportError(_m.format(f, _tf))
 
 import sys as _sys
 from ._internals import get_version
