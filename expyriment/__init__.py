@@ -41,7 +41,7 @@ try:
     import os as _os
     _tf = _os.path.abspath(_imp.find_module("test")[1])
     for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-        if _os.path.split(_tf)[1] in f:
+        if _os.path.split(_tf)[1] == f:
             _m = "Expyriment cannot be imported where a file '{0}' exists!\n"
             _m += "Please remove or rename '{1}' and try again."
             break
