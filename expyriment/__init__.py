@@ -44,6 +44,7 @@ try:
         if _os.path.split(_tf)[1] in f:
             _m = "Expyriment cannot be imported where a file '{0}' exists!\n"
             _m += "Please remove or rename '{1}' and try again."
+            break
 except:
     pass
 else:
