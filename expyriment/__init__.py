@@ -38,17 +38,18 @@ __date__ = ''
 # Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
 try:
     import imp as _imp
+    _imp.find_module("test")
+except:
+    pass
+else:
+    import imp as _imp
     import os as _os
     _tf = _os.path.abspath(_imp.find_module("test")[1])
     for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
         if _os.path.split(_tf)[1] == f:
             _m = "Expyriment cannot be imported where a file '{0}' exists!\n"
             _m += "Please remove or rename '{1}' and try again."
-            break
-except:
-    pass
-else:
-    raise ImportError(_m.format(f, _tf))
+            raise ImportError(_m.format(f, _tf))
 
 import sys as _sys
 from ._internals import get_version
