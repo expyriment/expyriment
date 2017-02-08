@@ -6,6 +6,8 @@ A Gabor patch stimulus.
 This module contains a class implementing a Gabor patch stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,11 +17,11 @@ __date__ = ''
 
 import os
 import tempfile
+from types import ModuleType
 
-import pygame
-import expyriment
-from expyriment.stimuli._picture import Picture
-import defaults
+from ...stimuli._picture import Picture
+from ... import stimuli
+from . import defaults
 
 try:
     import numpy as np
@@ -63,13 +65,12 @@ class GaborPatch(Picture):
 
         # Parts of the code has be ported from http://www.icn.ucl.ac.uk/courses/MATLAB-Tutorials/Elliot_Freeman/html/gabor_tutorial.html
 
-        import types
-        if type(np) is not types.ModuleType:
+        if not isinstance(np, ModuleType):
             message = """GaborPatch can not be initialized.
 The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
-        if type(pyplot) is not types.ModuleType:
+        if not isinstance(pyplot, ModuleType):
             message = """GaborPatch can not be initialized.
 The Python package 'Matplotlib' is not installed."""
             raise ImportError(message)
@@ -88,13 +89,13 @@ The Python package 'Matplotlib' is not installed."""
             phase = defaults.gaborpatch_phase
 
         fid, filename = tempfile.mkstemp(
-                    dir=expyriment.stimuli.defaults.tempdir,
+                    dir=stimuli.defaults.tempdir,
                     suffix=".png")
         os.close(fid)
         Picture.__init__(self, filename, position)
 
         # make linear ramp
-        X0 = (np.linspace(1, size, size) / size) - .5
+        X0 = (np.linspace(1, size, size) // size) - .5
         # Set wavelength and phase
         freq = size / float(lambda_)
         phaseRad = phase * 2 * np.pi
@@ -124,7 +125,7 @@ The Python package 'Matplotlib' is not installed."""
         norm = pyplot.normalize(vmin = np.min(self._pixel_array),
                                 vmax = np.max(self._pixel_array))
         bgc = color_map(norm(0))
-        self._background_colour = map(lambda x:int(x*255), bgc[:3])
+        self._background_colour = [int(x*255) for x in bgc[:3]]
 
     @property
     def background_colour(self):
@@ -140,9 +141,9 @@ The Python package 'Matplotlib' is not installed."""
         return self._pixel_array
 
 if __name__ == "__main__":
-    from expyriment import control, design, misc
+    from .. import control, design, misc
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     garbor = GaborPatch(size=200, lambda_=10, theta=15,
                 sigma=20, phase=0.25)
     exp = design.Experiment(background_colour=garbor.background_colour)

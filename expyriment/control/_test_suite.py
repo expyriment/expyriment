@@ -5,6 +5,9 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,13 +24,13 @@ try:
 except:
     ogl = None
 
-import defaults
-
+from . import defaults, initialize, end
+from .. import stimuli, io, _internals, design
 import expyriment
-from expyriment import stimuli, io
-from expyriment.misc import constants, statistics
-from expyriment.misc._timer import get_time
-from expyriment.design import randomize
+
+from ..misc import constants, statistics, list_fonts, unicode2byte
+from ..misc._timer import get_time
+from ..design import randomize
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -35,8 +38,8 @@ def _make_graph(x, y, colour):
     graph = stimuli.Canvas(size=(max(x) * 3 + 10, max(y) * 3 + 10))
     for counter in range(len(x)):
         dot = stimuli.Dot(radius=1, colour=colour)
-        dot.position = (x[counter] * 3 - graph.size[0] / 2 + 5,
-                        y[counter] * 3 - graph.size[1] / 2 + 5)
+        dot.position = (x[counter] * 3 - graph.size[0] // 2 + 5,
+                        y[counter] * 3 - graph.size[1] // 2 + 5)
         dot.plot(graph)
     return graph
 
@@ -49,7 +52,7 @@ def _histogram(data):
     hist = {}
     for x in data: # make histogram
         x = int(x)
-        if hist.has_key(x):
+        if x in hist:
             hist[x] += 1
         else:
             hist[x] = 1
@@ -62,7 +65,7 @@ def _histogram(data):
             str1 = "dRT: "
             str2 = "  n: "
         str1 += "%4d" % x
-        if hist.has_key(x):
+        if x in hist:
             value = hist[x]
         else:
             value = 0
@@ -126,7 +129,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         s2 = stimuli.Circle(1, colour=exp.background_colour)
         s1.preload()
         s2.preload()
-        todo_time = range(0, 60) * 3
+        todo_time = list(range(0, 60)) * 3
         randomize.shuffle_list(todo_time)
         actual_time = []
         for x in todo_time:
@@ -135,7 +138,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             exp.clock.wait(x)
             s2.present(clear=False)
             actual_time.append((get_time() - start) * 1000)
-            exp.clock.wait(expyriment.design.randomize.rand_int(30, 60))
+            exp.clock.wait(randomize.rand_int(30, 60))
 
         # determine refresh_rate
         tmp = []
@@ -146,7 +149,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             start = get_time()
             s2.present(clear=False)
             tmp.append(get_time() - start)
-        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
+        refresh_rate = 1000 // (statistics.mean(tmp) * 1000)
 
         #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         #graph = _make_graph(todo_time, actual_time, [150, 150, 150])
@@ -180,36 +183,41 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = 1000.0/refresh_rate
+            refresh_time = old_div(1000.0, refresh_rate)
             return refresh_time - (presentation_time % refresh_time)
         # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
-        unexplained_delay = map(lambda x: x[1]- x[0] - expected_delay(x[0], refresh_rate),
-                                zip(todo_time, actual_time))
+        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(todo_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
-        for key in hist.keys():
-            inaccuracies.extend([key % (1000 / refresh_rate)] * hist[key])
+        for key in list(hist.keys()):
+            inaccuracies.extend([key % (1000 // refresh_rate)] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(round(sum(inaccuracies)/float(len(inaccuracies))))
+        inaccuracy = int(round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
         delayed = round(100 * delayed_presentations/180.0, 2)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
                     constants.K_0:0, constants.K_1:1, constants.K_2:2}
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
-            "[Press 0 (or f1), 1 (or f2), 2 (or f3)]")
+            "[Press 0 (or F1), 1 (or F2), 2 (or F3)]")
         text.present()
         key, _rt = exp.keyboard.wait(respkeys)
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
+        if int(round(refresh_rate))  < 50 or int(round(refresh_rate)) > 120:
+            results1_colour = [255, 0, 0]
+        elif int(round(refresh_rate)) != 60:
+            results1_colour = [255, 255, 0]
+        else:
+            results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(round(refresh_rate)), int(1000.0 / refresh_rate)),
+                        int(round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
                     text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, position=(0, 40))
+                    text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
                     "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
                     text_font="freemono", text_size = 16, text_bold=True,
@@ -373,7 +381,7 @@ def _audio_playback(exp):
     return response
 
 def _font_viewer(exp):
-    all_fonts = expyriment.misc.list_fonts().keys()
+    all_fonts = list(list_fonts().keys())
 
     def info_screen():
         stimuli.TextScreen(heading="Expyriment Font Viewer",
@@ -409,15 +417,15 @@ abcdefghijklmnopqrstuvwxyz äöü
     quest = io.TextInput(message="Please enter text: (Keep empty for default text)", length=35)
     mouse = io.Mouse(show_cursor=True)
 
-    bs = (exp.screen.size[0] / 3.5, exp.screen.size[1] / 3.5)
+    bs = (exp.screen.size[0] // 3.5, exp.screen.size[1] // 3.5)
 
     # rects center, left, right, top, button]
     cl = (20, 20, 20)
     rects = [stimuli.Rectangle(size=bs, position=[0, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[(bs[0] - exp.screen.size[0]) / 2.2, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[(exp.screen.size[0] - bs[0]) / 2.2, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, (bs[1] - exp.screen.size[1]) / 2.2], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, (exp.screen.size[1] - bs [1]) / 2.2], colour=cl)]
+             stimuli.Rectangle(size=bs, position=[old_div((bs[0] - exp.screen.size[0]), 2.2), 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[old_div((exp.screen.size[0] - bs[0]), 2.2), 0], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, old_div((bs[1] - exp.screen.size[1]), 2.2)], colour=cl),
+             stimuli.Rectangle(size=bs, position=[0, old_div((exp.screen.size[1] - bs [1]), 2.2)], colour=cl)]
     rect_key_mapping = [constants.K_RETURN, constants.K_LEFT, constants.K_RIGHT,
                         constants.K_UP, constants.K_DOWN]
 
@@ -489,19 +497,19 @@ abcdefghijklmnopqrstuvwxyz äöü
 def _write_protocol(exp, results):
     """Write a protocol with all test results."""
 
-    sorted_keys = results.keys()
+    sorted_keys = list(results.keys())
     sorted_keys.sort()
     rtn = ""
     for key in sorted_keys:
-        tabs = "\t" * (4 - int((len(key) + 1) / 8)) + "\t"
+        tabs = "\t" * (4 - int((len(key) + 1) // 8)) + "\t"
         try:
             rtn += key + ":" + tabs + results[key] + "\n"
         except TypeError:
             rtn += key + ":" + tabs + repr(results[key]) + "\n"
 
     filename = os.path.join(os.getcwd(), "test_suite_protocol.xpp")
-    with open(filename, 'w') as f:
-        f.write(rtn)
+    with open(filename, 'wb') as f:
+        f.write(unicode2byte(rtn))
     text = stimuli.TextScreen(
         "Saved as",
         '"' + filename + '"' + "\n\n[Press RETURN to continue]")
@@ -513,33 +521,38 @@ def _find_self_tests():
     classes = []
     method = []
     rtn = []
+    namesspace = {}
+    namesspace["expyriment"] = expyriment
     for module in ["expyriment.io", "expyriment.io.extras"]:
-        exec("classes = dir({0})".format(module))
-        for cl in classes:
-            if not cl.startswith("_"):
-                exec("method = dir({0}.{1})".format(module, cl))
-                if "_self_test" in method:
+        exec("classes = dir({0})".format(module), namesspace)
+        for cl in namesspace['classes']:
+            if not cl.startswith("_") and not cl in ["False", "None", "True"]:
+                exec("method = dir({0}.{1})".format(module, cl), namesspace)
+                if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
     return rtn
 
 def run_test_suite():
     """Run the Expyriment test suite."""
 
-    import expyriment.design.extras
-    import expyriment.stimuli.extras
-    import expyriment.io.extras
-    import expyriment.misc.extras
+    # test imports
+    from ..design import extras as _test1
+    from ..stimuli import extras as _test2
+    from ..io import extras as _test3
+    from ..misc import extras as _test4
+    from ..misc import get_system_info
+    from .._internals import get_version
 
     quit_experiment = False
-    if not expyriment._active_exp.is_initialized:
+    if not _internals.active_exp.is_initialized:
         defaults.initialize_delay = 0
         defaults.event_logging = 0
-        exp = expyriment.design.Experiment()
+        exp = design.Experiment()
         exp.testsuite = True
-        expyriment.control.initialize(exp)
+        initialize(exp)
         quit_experiment = True
     else:
-        exp = expyriment._active_exp
+        exp = _internals.active_exp
 
     # make menu and code for test functions
     test_functions = ['', '', '']
@@ -556,15 +569,19 @@ def run_test_suite():
                             'go_on=False;rtn=[];'])
 
     background = stimuli.Canvas(size=[400, 600])
-    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 200))
-    pict.scale(0.5)
+    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 255))
+    pict.scale(0.35)
     pict.plot(background)
-
-    results = expyriment.get_system_info()
+    
+    v = stimuli.TextLine("Version {0}".format(get_version()), text_size=10,
+            text_colour=constants.C_EXPYRIMENT_PURPLE)
+    v.move((0, 205))
+    v.plot(background)
+    results = get_system_info()
 
     try:
         import android
-        mouse = expyriment.io.Mouse(show_cursor=False)
+        mouse = io.Mouse(show_cursor=False)
     except ImportError:
         android = None
         mouse = None
@@ -572,8 +589,8 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = expyriment.io.TextMenu(
-            "Test suite", menu, width=350, justification=0,
+        select = io.TextMenu("Test suite",
+            menu, width=350, justification=0, text_size=18,
             background_stimulus=background, mouse=mouse).get(preselected_item)
 
         if select == 0:
@@ -584,15 +601,15 @@ def run_test_suite():
             results["testsuite_visual_timing_inaccuracy"] = str(rtn[3]) + " ms"
             results["testsuite_visual_timing_delayed"] = str(rtn[4]) + " %"
             results["testsuite_visual_flipping_user"] = rtn[5]
-            delay = map(lambda x:x[1]-x[0],
-                           zip(results["testsuite_visual_timing_todo"],
-                               results["testsuite_visual_timing_actual"]))
+            delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_todo"],
+                               results["testsuite_visual_timing_actual"])]
             results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
+            results["testsuite_visual_opengl"] = exp.screen.open_gl
             if ogl is not None and exp.screen.open_gl:
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
                 results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
                 results["testsuite_visual_opengl_version"] = ogl.glGetString(ogl.GL_VERSION)
-                extensions = ogl.glGetString(ogl.GL_EXTENSIONS).split(" ")
+                extensions = ogl.glGetString(ogl.GL_EXTENSIONS).decode().split(" ")
                 if extensions[-1] == "":
                     extensions = extensions[:-1]
                 results["testsuite_visual_opengl_extensions"] = extensions
@@ -620,9 +637,16 @@ def run_test_suite():
             _font_viewer(exp)
             preselected_item = select + 1
         else:
-            exec(test_functions[select])
+            namesspace = {}
+            namesspace.update(globals())
+            namesspace.update(locals())
+            exec(test_functions[select], namesspace)
+            rtn = namesspace['rtn']
             results.update(rtn)
+            if 'go_on' in namesspace:
+                go_on = namesspace['go_on']
             preselected_item = select + 1
+            namesspace = None
 
     if quit_experiment:
-        expyriment.control.end(goodbye_delay=0, goodbye_text="Quitting test suite")
+        end(goodbye_delay=0, goodbye_text="Quitting test suite")

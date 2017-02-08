@@ -3,33 +3,36 @@
 Platform-specific instructions: Linux
 =====================================
 
-All Linux distributions
------------------------
+All Linux distributions (recommended)
+-------------------------------------
 
 1. Use your distribution's package manager to install
 
-  * Python 2
-  * pip
-  * Pygame
+  * Python or Python3
+  * pip or pip3
+  * build-essential (or equivalent)
+  * libffi-dev
+  * python-dev
+  * PortAudio
 
-2. In a command line, run ::
+2. In a command line, run::
 
-    sudo pip install --upgrade pip
-    sudo pip install --upgrade expyriment
+    sudo pip install -U pip
+    sudo pip install -U expyriment[all]
+    
+   (Omit ``[all]`` to install without additional optional features; replace ``pip`` with ``pip3`` when using Python 3)
 
-For the alternative packages (optional):
+For example, in Debian run::
 
-3. Use your distribution's package manager to install
-
-  * Numpy
-  * PyParallel
-  * PySerial
-
-
+    sudo apt-get install python python-pip build-essential libffi-dev python-dev libportaudio2
+    sudo pip install -U pip
+    sudo pip install -U expyriment[optional]
+    
+     
 Debian, Ubuntu and derivatives
 ------------------------------
 
-We provide a `Debian`_ packages for Expyriment (``python-expyriment``).  We 
+We also provide `Debian`_ packages for Expyriment (``python-expyriment``).  We 
 suggest to install ``python-expyriment`` via `NeuroDebian`_, a platform
 providing a large collection of neuroscience research software. For detailed
 instructions see:
@@ -40,8 +43,6 @@ please first uninstall the old version using the following command (replace *X*
 to match your Python version)::
 
     sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
-
-Unstable pre-releases of Expyriment for Ubuntu can be found in our `Expyriment PPA <https://launchpad.net/~lindemann09/+archive/expyriment>`_.
 
 
 Notes

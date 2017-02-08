@@ -4,6 +4,8 @@ A Trigger input
 This module contains a class implementing a trigger input.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,12 +14,15 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-import expyriment
-from expyriment.misc import compare_codes
-from expyriment.misc._timer import get_time
-from _keyboard import Keyboard
-from  _input_output import Input
+from types import FunctionType
+
+from . import defaults
+from .. import _internals
+from ..misc import compare_codes
+from .._internals import CallbackQuitEvent
+from ..misc._timer import get_time
+from ._keyboard import Keyboard
+from  ._input_output import Input
 
 
 class TriggerInput(Input):
@@ -27,9 +32,11 @@ class TriggerInput(Input):
         """Create a trigger input.
 
         Parameters
-        interface    -- the interface to use (expyrment.io.SerialPort or
-                        expyriment.io.ParallelPort object)
-        default_code -- the default code of the trigger (int) (optional)
+        ----------
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
+        default_code : int, optional
+            the default code of the trigger
 
         """
 
@@ -55,7 +62,8 @@ class TriggerInput(Input):
         """Getter for default_code"""
         self._default_code = value
 
-    def wait(self, code=None, bitwise_comparison=False):
+    def wait(self, code=None, bitwise_comparison=False, callback_function=None,
+             process_control_events=True):
         """Wait for a trigger.
 
         Returns the code received and the reaction time [code, rt].
@@ -65,8 +73,22 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to wait for (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to wait for
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
+        function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
 
         See Also
         --------
@@ -74,7 +96,7 @@ class TriggerInput(Input):
 
        """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         found = None
@@ -83,9 +105,19 @@ class TriggerInput(Input):
             code = self._default_code
         self.interface.clear()
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
-                return rtn_callback, int((get_time() - start) * 1000)
+            if isinstance(callback_function, FunctionType):
+                callback_function()
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    return rtn_callback, int((get_time() - start) * 1000)
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             read = self.interface.poll()
             if read is not None:
                 if code is None: #return for every event
@@ -99,7 +131,7 @@ class TriggerInput(Input):
             if Keyboard.process_control_keys():
                     break
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                             "TriggerInput,received,{0},wait".format(found))
         return found, rt
 
@@ -115,8 +147,11 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to get (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to get
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
 
         """
 
@@ -147,8 +182,11 @@ class TriggerInput(Input):
         until a certain bit pattern is set.
 
         Parameters
-        code -- a specific code to count (int) (optional)
-        bitwise_comparison -- make a bitwise comparison (default=False)
+        ----------
+        code : int, optional
+            a specific code to count
+        bitwise_comparison : bool, optional
+            make a bitwise comparison (default = False)
 
         """
 

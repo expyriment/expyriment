@@ -26,6 +26,17 @@ experience.
   <http://www.psych.uni-potsdam.de/people/lindemann/index-e.html>`_, University 
   of Potsdam, Germany
 
+
+Publications & citation
+-----------------------
+If you have used Expyriment in your work, please cite the follwing 
+publication:
+
+    Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for
+    cognitive and neuroscientific experiments. *Behavior Research Methods*, 46(2),
+    416-428. `doi:10.3758/s13428-013-0390-6 <http://dx.doi.org/10.3758/s13428-013-0390-6>`_
+
+
 Main features
 -------------
 * Easy syntax, very readable (due to Python)
@@ -83,30 +94,28 @@ Public Licence <http://www.gnu.org/copyleft/gpl.html>`_ of the Free Software
 Foundation.
 
 
-Publications & citation
------------------------
-If you have used Expyriment in your work, please cite the follwing 
-publication:
-    
-Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive 
-and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.  
-`doi:10.3758/s13428-013-0390-6 <http://dx.doi.org/10.3758/s13428-013-0390-6>`_
-
-
 Source code repository
 ----------------------
 The `Expyriment source code repository
 <https://github.com/expyriment/expyriment>`_ is currently hosted on 
 GitHub. Get a local copy of this repository with this command::
 
-    git clone https://github.com/expyriment/expyriment.git
-    
+    git clone https://github.com/expyriment/expyriment.git    
+
+
+Suggestions and bug tracking
+----------------------------
+If you want to make suggestions to improve Expyriment or you found a bug, 
+please post your comments to the `Expyriment issues page 
+<https://github.com/expyriment/expyriment/issues>`_ or contact us directly by 
+sending an email to info@expyriment.org.
+
 
 Mailing lists
 -------------
-**Expyriment newletter**: All users of Expyriment should subscribe to the 
+**Expyriment newsletter**: All users of Expyriment should subscribe to the 
 Expyriment newsletter, since the project is still under development. All 
-modifications and new versions will be announce via this mailing list. (Visit 
+modifications and new versions will be announced via this mailing list. (Visit 
 `website <http://groups.google.com/group/expyriment>`_ or send an email 
 to expyriment+subscribe@googlegroups.com). 
     
@@ -118,17 +127,14 @@ expyriment-users+subscribe@googlegroups.com) or contact us directly by sending
 an email to info@expyriment.org.  
 
 
-Suggestions and bug tracking
-----------------------------
-If you want to make suggestions to improve Expyriment or you found a bug, 
-please post your comments to the `Expyriment issues page 
-<https://github.com/expyriment/expyriment/issues>`_ or contact us directly by 
-sending an email to info@expyriment.org.
+Forum
+-----
+The new official Expyriment support forum can be found at http://forum.expyriment.org.
 
 
-IRC channel
------------
-To ask questions or to have real-time discussions with other users and the developers. ::
+Matrix/IRC channel
+------------------
+To ask questions or to have real-time discussions with other users and the developers you can also use our `Matrix chat <https://riot.im/app/#/room/#expyriment:matrix.org>`_. The room is also accesible from IRC::
 
     Server: irc.freenode.org
     Channel: #expyriment

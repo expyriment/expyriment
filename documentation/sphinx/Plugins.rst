@@ -6,11 +6,12 @@ Usage
 The design, stimuli, io and misc packages can be extended with plugins
 (additional classes) that can be accessed via the 'extras' namespace of each
 package. There are two locations Expyriment will look for installed plugins:
-    1. In the ``extras`` directories of the corresponding packages of the
-       Expyriment installation.
-    2. In the ``design``, ``stmuli``, ``io`` and ``misc`` directories within a
-       ``.expyriment`` or ``~expyriment`` directory located in the current user's
-       home directory
+
+1. In the ``extras`` directories of the corresponding packages of the
+   Expyriment installation.
+2. In the ``design``, ``stmuli``, ``io`` and ``misc`` directories within a
+   ``.expyriment`` or ``~expyriment`` directory located in the current user's
+   home directory
 
 In both cases, plugins will be integrated into the *.extras* namespace of each
 package (e.g. ``expyriment.stimuli.extras.DotCloud``).

@@ -36,73 +36,47 @@ __date__ = ''
 
 
 import sys as _sys
-import os as _os
+from ._internals import get_version
+from ._internals import PYTHON3 as _PYTHON3
 
-class _Expyriment_object(object):
-    """A class implementing a general Expyriment object.
-       Parent of all stimuli and IO objects
-
-    """
-
-    def __init__(self):
-        """Create an Expyriment object."""
-        self._logging = True
-
-    def set_logging(self, onoff):
-        """Set logging of this object on or off
-
-        Parameters
-        ----------
-        onoff : bool
-            set logging on (True) or off (False)
-
-        Notes
-        -----
-        See also design.experiment.set_log_level fur further information about
-        event logging.
-
-    """
-
-        self._logging = onoff
-
-    @property
-    def logging(self):
-        """Getter for logging."""
-
-        return self._logging
-
-
-def get_version():
-    """
-    Return version information about Expyriment and Python.
-
-    Returns
-    -------
-    version_info : str
-
-    Notes
-    -----
-    For more detailed information see expyriment.get_system_info().
-
-    """
-
-    pv = "{0}.{1}.{2}".format(_sys.version_info[0],
-                              _sys.version_info[1],
-                              _sys.version_info[2])
-            #no use of .major, .minor to ensure MacOS compatibility
-    return "{0} (Python {1})".format(__version__, pv)
-
-
-
-if not(_sys.version_info[0] == 2 and (_sys.version_info[1] == 6 or
-                                         _sys.version_info[1] == 7)):
+if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
+        (_PYTHON3 and _sys.version_info[1] >= 3) ):
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\nPlease use Python 2.6 or Python 2.7.")
+                      "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))
+
+# Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
+try:
+    import imp as _imp
+    import os as _os
+    import sys as _sys
+    for package in ["test"]:
+        _tf = _os.path.abspath(_imp.find_module(package)[1])
+        _mf = _os.path.abspath(_os.path.abspath(_sys.argv[0]))
+        if _os.path.split(_tf)[0] == _os.path.split(_mf)[0] or \
+                _os.path.split(_tf)[0] == _os.path.abspath(_os.path.curdir):
+                    _m = "Warning: "
+                    _m += "'{0}' is shadowing package '{1}'!"
+                    print(_m.format(_tf, package))
+except:
+    pass
+
+try:
+    import future as _future
+    if int(_future.__version__.split(".")[1]) < 15:
+      raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Future {0}".format(
+                        _future.__version__) +
+                      "\nPlease install Future >= 0.15.")
+except ImportError:
+    raise ImportError("Expyriment {0} ".format(__version__) +
+                      "needs the package 'Future')." +
+                      "\nPlease install Future >= 0.15.")
+
 try:
     import pygame as _pygame
     if _pygame.vernum < (1, 9, 1):
@@ -131,22 +105,15 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-import design
-_active_exp = design.Experiment("None")
-import control
-import stimuli
-import io
-import misc
-misc.add_fonts(misc.str2unicode(_os.path.abspath(
-    _os.path.join(_os.path.dirname(__file__),
-                  "_fonts"))))
+from . import _internals
+from . import design
+from . import misc
+from . import stimuli
+from . import io
+from . import control
 
-try:
-    import android
-except ImportError:
-    from _api_reference_tool import show_documentation
-from _get_system_info import get_system_info
-import _importer_functions
-from _secure_hash import get_experiment_secure_hash, get_module_hash_dictionary
+if not misc.is_android_running():
+    from ._api_reference_tool import show_documentation
 
-exec(_importer_functions.post_import_hook())
+exec(_internals.post_import_hook())
+

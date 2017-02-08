@@ -3,6 +3,8 @@
 This module contains various functions for randomizing data
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
@@ -13,7 +15,6 @@ __date__ = ''
 
 from copy import copy as _copy
 import random as _random
-import _structure
 
 _random.seed()
 
@@ -35,7 +36,7 @@ def rand_int_sequence(first_elem, last_elem):
 
     """
 
-    list_ = range(first_elem, last_elem + 1)
+    list_ = list(range(first_elem, last_elem + 1))
     _random.shuffle(list_)
     return list_
 
@@ -72,6 +73,7 @@ def rand_element(list_):
 
     """
 
+    list_ = list(list_)
     return list_[_random.randint(0, len(list_) - 1)]
 
 
@@ -116,9 +118,9 @@ def rand_norm(a, b, mu=None, sigma=None):
     """
 
     if mu is None:
-        mu = a + (b-a)/2.0
+        mu = a + (b-a) / 2.0
     if sigma is None:
-        sigma = (b-a)/6.0
+        sigma = (b-a) / 6.0
 
     r = _random.normalvariate(mu=mu, sigma=sigma)
     if r < a or r > b:
@@ -129,30 +131,31 @@ def rand_norm(a, b, mu=None, sigma=None):
 
 def _compare_items(a, b):
     """Helper function for `shuffle_list` to compare two elements of a list"""
-    if (isinstance(a, _structure.Trial) and isinstance(b, _structure.Trial)) or\
-       (isinstance(a, _structure.Block) and isinstance(b, _structure.Block)):
+    from ._structure import Trial, Block # needs to be imported here because of circular dependency
+    if (isinstance(a, Trial) and isinstance(b, Trial)) or\
+       (isinstance(a, Block) and isinstance(b, Block)):
         return a.compare(b)
     else:
         return a == b
 
 
-def shuffle_list(list_, max_repetitions=None, n_segments=None):
+def shuffle_list(list_, max_repetitions=-1, n_segments=0):
     """Shuffle any list of objects. In place randomization of the list.
 
     Parameters
     ----------
-    list_ : int
-        list to shuffle
+    list_ : list
+        the list to shuffle; if not a list, TypeError is raised
     max_repetitions : int, optional
         maximum number of allowed repetitions of one identical items; if no
         solution can be found (i.e., Python's recursion limit is reached), the
         function returns `False` and the list will be randomized without
-        constrains (see Notes); default = None
+        constrains (see Notes); default = -1
     n_segments : int, optional
         randomize list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
-        randomized; if n_segments is None or < 2, this parameter has no effect;
-        default = None
+        randomized; if n_segments is < 2, this parameter has no effect;
+        default = 0
 
     Returns
     -------
@@ -168,8 +171,16 @@ def shuffle_list(list_, max_repetitions=None, n_segments=None):
 
     """
 
+    if not isinstance(list_, list):
+        raise TypeError("The parameter 'list_' is a {0}, but has to be list. ".format(type(list_).__name__))
+
+    if n_segments is None:
+        n_segments = 0
+    if max_repetitions is None:
+        max_repetitions = -1
+
     if n_segments > 1:
-        l = 1 + (len(list_) - 1) / int(n_segments)
+        l = 1 + (len(list_) - 1) // int(n_segments)
         for x in range(n_segments):
             t = (x + 1) * l
             if t > len(list_):
@@ -215,8 +226,9 @@ def make_multiplied_shuffled_list(list_, xtimes):
     """
 
     newlist = []
-    tmp = _copy(list_)
+    tmp = _copy(list(list_))
     for _i in range(0, xtimes):
         _random.shuffle(tmp)
         newlist.extend(tmp)
     return newlist
+

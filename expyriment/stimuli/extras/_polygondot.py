@@ -6,6 +6,9 @@ A dot stimulus.
 This module contains a class implementing a dot stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,8 +17,8 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-from expyriment.stimuli.extras._polygonellipse import PolygonEllipse
+from . import defaults
+from ...stimuli.extras._polygonellipse import PolygonEllipse
 
 class PolygonDot(PolygonEllipse):
     """A class implementing a dot as a child of PolygonEllipse."""
@@ -60,7 +63,7 @@ class PolygonDot(PolygonEllipse):
     @property
     def radius(self):
         """Getter for radius."""
-        return self.ellipse_size[0] / 2
+        return self.ellipse_size[0] // 2
 
     def is_center_inside(self, other):
         """Return True if the center is inside another dot.
@@ -99,9 +102,9 @@ class PolygonDot(PolygonEllipse):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     dot = PolygonDot(radius=100)
     dot.present()

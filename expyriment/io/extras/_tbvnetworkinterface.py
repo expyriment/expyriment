@@ -4,6 +4,8 @@ This module contains a class implementing a network interface for Turbo Brain
 Voyager (see www.brainvoyager.com/products/turbobrainvoyager.html).
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,12 +16,13 @@ __date__ = ''
 
 import struct
 
-import _tbvnetworkinterface_defaults as defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc._miscellaneous import str2unicode
-from expyriment.io._input_output import Input, Output
-from expyriment.io.extras._tcpclient import TcpClient
+from . import _tbvnetworkinterface_defaults as defaults
+
+from ... import _internals
+from ...misc._timer import get_time
+from ...misc._miscellaneous import byte2unicode
+from ...io._input_output import Input, Output
+from ...io.extras._tcpclient import TcpClient
 
 
 class TbvNetworkInterface(Input, Output):
@@ -33,8 +36,8 @@ class TbvNetworkInterface(Input, Output):
     def __init__(self, host, port, timeout=None, connect=None):
         """Create a TbvNetworkInterface.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         host : str
             The hostname or IPv4 address of the TBV server to connect to.
         port : int
@@ -140,7 +143,7 @@ class TbvNetworkInterface(Input, Output):
                 raise RuntimeError("Requesting a socket failed!")
             self._is_connected = True
             if self._logging:
-                expyriment._active_exp._event_file_log(
+                _internals.active_exp._event_file_log(
                     "TbvNetworkInterface,connected,{0}:{1}".format(self._host,
                                                                    self._port))
 
@@ -173,13 +176,13 @@ class TbvNetworkInterface(Input, Output):
     def request_data(self, request, *args):
         """Request data from Turbo Brain Voyager.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         request : str
             The request to be sent to Turbo Brain Voyager.
 
-        Returns:
-        --------
+        Returns
+        -------
         data : str
             The byte string of the received data.
         rt : int
@@ -208,8 +211,8 @@ class TbvNetworkInterface(Input, Output):
     def get_current_time_point(self):
         """Get the current time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         data : int
             The current time point.
         rt : int
@@ -228,8 +231,8 @@ class TbvNetworkInterface(Input, Output):
     def get_expected_nr_of_time_points(self):
         """Get the expected number of time points.
 
-        Returns:
-        --------
+        Returns
+        -------
         data : int
             The expected number of time points.
         rt : int
@@ -248,8 +251,8 @@ class TbvNetworkInterface(Input, Output):
     def get_dims_of_functional_data(self):
         """Get the dimensions of the functional data.
 
-        Returns:
-        --------
+        Returns
+        -------
         dims : list
             The dimension of the functional volume.
             [x, y, z]
@@ -271,8 +274,8 @@ class TbvNetworkInterface(Input, Output):
     def get_project_name(self):
         """Get the project name.
 
-        Returns:
-        --------
+        Returns
+        -------
         name : str
             The project name.
         rt : int
@@ -286,13 +289,13 @@ class TbvNetworkInterface(Input, Output):
         elif name[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(name[19:-1]))
         else:
-            return str2unicode(name[4:-1]), rt
+            return byte2unicode(name[4:-1]), rt
 
     def get_watch_folder(self):
         """Get the watch folder.
 
-        Returns:
-        --------
+        Returns
+        -------
         folder : str
             The watch folder.
         rt : int
@@ -306,13 +309,13 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_target_folder(self):
         """Get the target folder.
 
-        Returns:
-        --------
+        Returns
+        -------
         folder : str
             The target folder.
         rt : int
@@ -326,13 +329,13 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:]-1))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     def get_feedback_folder(self):
         """Get the feedback folder.
 
-        Returns:
-        --------
+        Returns
+        -------
         folder : str
             The feedback folder.
         rt : int
@@ -346,14 +349,14 @@ class TbvNetworkInterface(Input, Output):
         elif folder[:14] == "Wrong request!":
             raise Exception("Wrong request!: '{0}'".format(folder[19:-1]))
         else:
-            return str2unicode(folder[4:-1]), rt
+            return byte2unicode(folder[4:-1]), rt
 
     # Protocol, DM, GLM Queries
     def get_current_protocol_condition(self):
         """Get the current protocol condition.
 
-        Returns:
-        --------
+        Returns
+        -------
         condition_nr : int
             The current protocol condition.
         rt : int
@@ -372,8 +375,8 @@ class TbvNetworkInterface(Input, Output):
     def get_full_nr_of_predictors(self):
         """Get the full number of predictors.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_predictors : int
             The number of predictors.
         rt : int
@@ -392,8 +395,8 @@ class TbvNetworkInterface(Input, Output):
     def get_current_nr_of_predictors(self):
         """Get the current number of predictors.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_predictors : int
             The number of predictors.
         rt : int
@@ -412,8 +415,8 @@ class TbvNetworkInterface(Input, Output):
     def get_nr_of_confound_predictors(self):
         """Get the number of confound predictors.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_predictors : int
             The number of predictors.
         rt : int
@@ -432,15 +435,15 @@ class TbvNetworkInterface(Input, Output):
     def get_value_of_design_matrix(self, pred, time_point):
         """Get the value of the design matrix.
 
-        Parameters:
+        Parameters
         ----------
         pred : int
             The predictor.
         time_point : int
             The time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         value : float
             The design matrix value.
         rt : int
@@ -462,8 +465,8 @@ class TbvNetworkInterface(Input, Output):
     def get_nr_of_contrasts(self):
         """Get the number of contrasts.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_contrasts : int
             The number of contrasts.
         rt : int
@@ -483,8 +486,8 @@ class TbvNetworkInterface(Input, Output):
     def get_nr_of_rois(self):
         """Get the number of ROIs.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_rois : int
             The number of ROIs.
         rt : int
@@ -503,13 +506,13 @@ class TbvNetworkInterface(Input, Output):
     def get_mean_of_roi(self, roi):
         """Get the mean of a ROI.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         roi : int
             The ROI.
 
-        Returns:
-        --------
+        Returns
+        -------
         mean : float
             The mean of the ROI.
         rt : int
@@ -530,15 +533,15 @@ class TbvNetworkInterface(Input, Output):
     def get_existing_means_of_roi(self, roi, to_time_point):
         """Get the existing means of a ROI.
 
-        Parameters:
+        Parameters
         ----------
         roi : int
             The ROI.
         to_time_point : int
             Get all the means up to this point.
 
-        Returns:
-        --------
+        Returns
+        -------
         means : list
             The means of the ROI.
         rt : int
@@ -556,20 +559,20 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[8 + x * 4:8 + x * 4 + 4])[0]
-                     for x in range(0, len(data[8:]) / 4)], rt)
+                     for x in range(0, len(data[8:]) // 4)], rt)
 
     def get_mean_of_roi_at_time_point(self, roi, time_point):
         """Get the mean of a ROI at a time point.
 
-        Parameters:
+        Parameters
         ----------
         roi : int
             The ROI.
         time_point : int
             The time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         mean : float
             The mean of the ROI.
         rt : int
@@ -592,13 +595,13 @@ class TbvNetworkInterface(Input, Output):
     def get_nr_of_voxels_of_roi(self, roi):
         """Get the number of voxels of a ROI.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
         roi : int
             The ROI.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_voxels : int
             The number of voxels of the ROI.
         rt : int
@@ -619,15 +622,15 @@ class TbvNetworkInterface(Input, Output):
     def get_beta_of_roi(self, roi, beta):
         """Get the value of a beta of a ROI.
 
-        Parameters:
+        Parameters
         ----------
         roi : int
             The ROI.
         beta : int
             The beta.
 
-        Returns:
-        --------
+        Returns
+        -------
         value : float
             The value of the beta of the ROI.
         rt : int
@@ -649,15 +652,15 @@ class TbvNetworkInterface(Input, Output):
     def get_coord_of_voxel_of_roi(self, roi, voxel):  # TODO: Return as one list?
         """Get the coordinates of a voxel of a ROI.
 
-        Parameters:
+        Parameters
         ----------
         roi : int
             The ROI.
         voxel : int
             The voxel.
 
-        Returns:
-        --------
+        Returns
+        -------
         coords : list
             The coordinates of the voxel.
             [x, y, z]
@@ -682,13 +685,13 @@ class TbvNetworkInterface(Input, Output):
     def get_all_coords_of_voxels_of_roi(self, roi):  # TODO: Put into lists?
         """Get coordinates for all voxels for a ROI.
 
-        Parameters:
+        Parameters
         ----------
         roi : int
             The ROI.
 
-        Returns:
-        --------
+        Returns
+        -------
         coords : list
             The coordinates of all voxels of the ROI.
             [[v1_x, v1_y, v1_z], [v2_x, v2_z, v2_y], ..., [vn_x, vn_y, _vn_z]]
@@ -706,14 +709,14 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             _all = [struct.unpack('!i', data[4 + x * 4:4 + x * 4 + 4])[0]
-                    for x in range(0, len(data[4:]) / 4)]
+                    for x in range(0, len(data[4:]) // 4)]
             return [_all[x:x+3] for x in range(0, len(_all), 3)], rt
 
     # Volume Data Access Queries
     def get_value_of_voxel_at_time(self, coords, time_point):
         """Get the value of a voxel at a certain time point.
 
-        Parameters:
+        Parameters
         ----------
         coords : list
             The coordinates of the voxel.
@@ -721,8 +724,8 @@ class TbvNetworkInterface(Input, Output):
         time_point : int
             The time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         value : float
             The voxel value.
         rt : int
@@ -746,13 +749,13 @@ class TbvNetworkInterface(Input, Output):
     def get_value_of_all_voxels_at_time(self, time_point):
         """Get the value of all voxels at a certain time point.
 
-        Parameters:
+        Parameters
         ----------
         time_point : int
             The time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         voxels : list
             The data of all voxel values.
             [x1_y1_z1, ..., xn_y1_y1, ..., xn_yn_z1, ..., xn_yn_zn]
@@ -772,18 +775,18 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_raw_value_of_all_voxels_at_time(self, time_point):
         """Get the raw value of all voxels at a certain time point.
 
-        Parameters:
+        Parameters
         ----------
         time_point : int
             The time point.
 
-        Returns:
-        --------
+        Returns
+        -------
         voxels : list
             The data of all raw voxel values.
             [x1_y1_z1, ..., xn_y1_y1, ..., xn_yn_z1, ..., xn_yn_zn]
@@ -803,12 +806,12 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!h', data[4 + x * 2:4 + x * 2 + 2])[0]
-                     for x in range(0, len(data[4:]) / 2)], rt)
+                     for x in range(0, len(data[4:]) // 2)], rt)
 
     def get_beta_of_voxel(self, beta, coords):
         """Get a specific beta value of a voxel.
 
-        Parameters:
+        Parameters
         ----------
         beta : int
             The beta.
@@ -816,8 +819,8 @@ class TbvNetworkInterface(Input, Output):
             The coordinates of the voxel.
             [x, y, z]
 
-        Returns:
-        --------
+        Returns
+        -------
         value : double
             The beta value.
         rt : int
@@ -841,8 +844,8 @@ class TbvNetworkInterface(Input, Output):
     def get_beta_maps(self):
         """Get the beta maps.
 
-        Returns:
-        --------
+        Returns
+        -------
         beta_maps : list
             The data of all raw voxel values.
                 [x1_y1_z_p1, ..., xn_y1_y1_p1, ..., xn_yn_z1_p1, ..., xn_yn_zn_p1, ..., xn_yn_zn_pn]
@@ -861,12 +864,12 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!d', data[x * 8:x * 8 + 8])[0]
-                     for x in range(0, len(data) / 8)], rt)
+                     for x in range(0, len(data) // 8)], rt)
 
     def get_map_value_of_voxel(self, map, coords):
         """Get a specific map value of a voxel.
 
-        Parameters:
+        Parameters
         ----------
         map : int
             The map.
@@ -874,8 +877,8 @@ class TbvNetworkInterface(Input, Output):
             The coordinates of the voxel.
             [x, y, z]
 
-        Returns:
-        --------
+        Returns
+        -------
         value : float
             The map value.
         rt : int
@@ -899,8 +902,8 @@ class TbvNetworkInterface(Input, Output):
     def get_contrast_maps(self):
         """Get the contrast maps.
 
-        Returns:
-        --------
+        Returns
+        -------
         contrast_maps : list
             The data of all contrast maps values.
                 [x1_y1_z_c1, ..., xn_y1_y1_c1, ..., xn_yn_z1_c1, ..., xn_yn_zn_cn]
@@ -920,14 +923,14 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)
 
     # SVM Access Functions
     def get_number_of_classes(self):
         """Get the number of classes.
 
-        Returns:
-        --------
+        Returns
+        -------
         nr_classes : int
             The number of classes.
         rt : int
@@ -946,8 +949,8 @@ class TbvNetworkInterface(Input, Output):
     def get_current_classifier_output(self):  # TODO: Needs testing!
         """Get the current classifier output.
 
-        Returns:
-        --------
+        Returns
+        -------
         output : list
             The current classifier output.
             NOTE: Output is 1-based!
@@ -964,4 +967,4 @@ class TbvNetworkInterface(Input, Output):
             raise Exception("Wrong request!: '{0}'".format(data[19:-1]))
         else:
             return ([struct.unpack('!f', data[x * 4:x * 4 + 4])[0]
-                     for x in range(0, len(data) / 4)], rt)
+                     for x in range(0, len(data) // 4)], rt)

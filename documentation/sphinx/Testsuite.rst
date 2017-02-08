@@ -23,11 +23,11 @@ suite, just call::
     expyriment.control.run_test_suite()
 
 Alternatively, you can start the test suite from the command line using the 
-:doc:`command line interface <CommandLineInterface>`::
+:doc:`Command line interface <CommandLineInterface>`::
 
    $ python -m expyriment.cli -T 
 
-**Please note that all changes to the** Defaults_ **prior to starting the test suite apply!**
+**Please note that all changes to the** :doc:`Defaults` **prior to starting the test suite apply!**
 
 Menu overview
 ~~~~~~~~~~~~~
@@ -39,7 +39,10 @@ Here is a brief explanation of the available options:
 
  The following results will be reported:
   * *Estimated Screen Refresh Rate*: The refresh rate of the screen in Hz and
-    the approximated time of a single refresh in milliseconds
+    the approximated time of a single refresh in milliseconds. The most common refresh
+    rate is arguably 60Hz (marked green), but specialised displays might also have
+    refresh rates between 50 and 120 Hz (marked orange). Reported refresh rates outside
+    of this range (marged red) are most probably erroneous.
   * *Detected Framebuffer Pages*: The amount of buffers used for drawing to the
     screen; if only one buffer is used, new stimuli will be drawn directly to the
     screen; if two buffers (double buffer) are used, new stimuli will be drawn to

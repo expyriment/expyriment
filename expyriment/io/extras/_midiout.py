@@ -3,6 +3,8 @@
 This module contains a class implementing a MIDI output device.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,9 +13,10 @@ __revision__ = ''
 __date__ = ''
 
 
-import _midiout_defaults as defaults
-import expyriment
-from expyriment.io._input_output import Output
+from types import ModuleType
+from . import _midiout_defaults as defaults
+from ... import _internals
+from ...io._input_output import Output
 
 try:
     from pygame import midi as _midi
@@ -60,11 +63,10 @@ class MidiOut(Output):
 
         """
 
-        import types
-        if type(_midi) is not types.ModuleType:
+        if not isinstance(_midi,ModuleType):
             raise ImportError("""Sorry, MIDI output is not supported on this computer.""")
 
-        if not expyriment._active_exp.is_initialized:
+        if not _internals.active_exp.is_initialized:
             raise RuntimeError(
                 "Cannot create MidiOut before expyriment.initialize()!")
         _midi.init()

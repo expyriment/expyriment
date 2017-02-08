@@ -4,6 +4,8 @@ A streaming button box.
 This module contains a class implementing a streaming button box.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -11,12 +13,15 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-import defaults
-import expyriment
-from expyriment.misc import compare_codes
-from expyriment.misc._timer import get_time
-from _keyboard import Keyboard
-from _input_output import Input, Output
+
+from types import FunctionType
+
+from . import defaults
+from .. import _internals
+from ..misc import compare_codes
+from .._internals import CallbackQuitEvent, skip_wait_methods
+from ..misc._timer import get_time
+from ._input_output import Input, Output
 
 
 class StreamingButtonBox(Input, Output):
@@ -27,8 +32,8 @@ class StreamingButtonBox(Input, Output):
 
         Parameters
         ----------
-        interface : io.SerialPort or io.ParallelPort
-            an interface object
+        interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
+            the interface to use
         baseline : int
             code that is sent when nothing is pressed (int)
 
@@ -62,7 +67,7 @@ class StreamingButtonBox(Input, Output):
 
         self._interface.clear()
         if self._logging:
-            expyriment._active_exp._event_file_log("{0},cleared".format(
+            _internals.active_exp._event_file_log("{0},cleared".format(
             self.__class__.__name__), 2)
 
     def check(self, codes=None, bitwise_comparison=False):
@@ -92,14 +97,14 @@ class StreamingButtonBox(Input, Output):
             if read is not None:
                 if codes is None and read != self._baseline:
                     if self._logging:
-                        expyriment._active_exp._event_file_log(
+                        _internals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read), 2)
                     return read
                 elif compare_codes(read, codes, bitwise_comparison):
                     if self._logging:
-                        expyriment._active_exp._event_file_log(
+                        _internals.active_exp._event_file_log(
                         "{0},received,{1},check".format(
                             self.__class__.__name__,
                             read))
@@ -108,18 +113,13 @@ class StreamingButtonBox(Input, Output):
                 return None
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
-             bitwise_comparison=False, check_for_control_keys=True):
+             bitwise_comparison=False, callback_function=None,
+             process_control_events=True):
         """Wait for responses defined as codes.
 
-        Notes
-        -----
-        If bitwise_comparision = True, the function performs a bitwise
+        If bitwise_comparison = True, the function performs a bitwise
         comparison (logical and) between codes and received input and waits
         until a certain bit pattern is set.
-
-        This will also by default check for control keys (quit and pause).
-        Thus, keyboard events will be cleared from the cue and cannot be
-        received by a Keyboard().check() anymore!
 
         Parameters
         ----------
@@ -133,15 +133,24 @@ class StreamingButtonBox(Input, Output):
             do not clear the buffer (default = False)
         bitwise_comparison : bool, optional
             make a bitwise comparison (default = False)
-        check_for_control_keys : bool, optional
-            checks if control key has been pressed (default=True)
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
         key : int
-            key code (or None) that quitted waiting
+            key code (or None) that quited waiting
         rt : int
             reaction time
+
+        Notes
+        -----
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
 
         See Also
         --------
@@ -149,18 +158,32 @@ class StreamingButtonBox(Input, Output):
 
         """
 
-        if expyriment.control.defaults._skip_wait_functions:
+        if _internals.skip_wait_methods:
             return None, None
         start = get_time()
         rt = None
         if not no_clear_buffer:
             self.clear()
         while True:
-            rtn_callback = expyriment._active_exp._execute_wait_callback()
-            if isinstance(rtn_callback, expyriment.control.CallbackQuitEvent):
-                found = rtn_callback
-                rt = int((get_time() - start) * 1000)
-                break
+            if isinstance(callback_function, FunctionType):
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    found = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+            if _internals.active_exp is not None and \
+               _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    found = rtn_callback
+                    rt = int((get_time() - start) * 1000)
+                    break
+                if process_control_events:
+                    if _internals.active_exp.mouse.process_quit_event() or \
+                       _internals.active_exp.keyboard.process_control_keys():
+                        break
+                else:
+                    _internals.pump_pygame_events()
             if duration is not None:
                 if int((get_time() - start) * 1000) > duration:
                     return None, None
@@ -168,11 +191,9 @@ class StreamingButtonBox(Input, Output):
             if found is not None:
                 rt = int((get_time() - start) * 1000)
                 break
-            if check_for_control_keys:
-                if Keyboard.process_control_keys():
-                    break
+
         if self._logging:
-            expyriment._active_exp._event_file_log(
+            _internals.active_exp._event_file_log(
                                 "{0},received,{1},wait".format(
                                                 self.__class__.__name__,
                                                 found))

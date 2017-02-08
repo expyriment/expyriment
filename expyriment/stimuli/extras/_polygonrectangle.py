@@ -6,6 +6,8 @@ A Rectangle stimulus.
 This module contains a class implementing a rectangle stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,9 +16,9 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-from expyriment.stimuli._shape import Shape
-import expyriment
+from . import defaults
+from ...stimuli._shape import Shape
+from ... import _internals
 
 class PolygonRectangle(Shape):
     """A class implementing a rectangle stimulus."""
@@ -42,7 +44,7 @@ class PolygonRectangle(Shape):
         if colour is None:
             colour = defaults.polygonrectangle_colour
         if colour is None:
-            colour = expyriment._active_exp.foreground_colour
+            colour = _internals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.polygonrectangle_anti_aliasing
 
@@ -54,10 +56,10 @@ class PolygonRectangle(Shape):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control, stimuli
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
-    cnvs = Rectangle((20, 200), colour=(255, 0, 255))
+    cnvs = stimuli.Rectangle((20, 200), colour=(255, 0, 255))
     cnvs.present()
     exp.clock.wait(1000)

@@ -5,22 +5,6 @@ Here are some current problems and limitations of Expyriment you should be
 aware of. Where possible, we include suggestions on how to deal with or work 
 around the issue.
 
-MPEG-1 video playback only
---------------------------
-At the moment, only MPEG-1 video files can be played back.
-
-This is a limitation of the underlying video system of Pygame. On the long run, 
-we are planning to move to a different Python video package.
-
-However, ffmpeg can be used to convert videos into the supported format::
-
-    ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
-
-The -qscale option is the quality setting. It can take values from 1 to 31.
-1 is the best quality, but big file size. 31 is the worst quality, but
-small file size. Play around with this setting to get a good balance
-between quality and file size.
-
 No native 3D stimuli
 --------------------
 Right now Expyriment only offers static 2D visual stimuli.

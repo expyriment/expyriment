@@ -4,6 +4,8 @@ An event buffer.
 This module contains a class implementing an event buffer.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -12,8 +14,8 @@ __revision__ = ''
 __date__ = ''
 
 
-import expyriment
-from _clock import Clock
+from ._clock import Clock
+from .. import _internals
 
 
 class Buffer(object):
@@ -35,8 +37,8 @@ class Buffer(object):
         if clock is not None:
             self._clock = clock
         else:
-            if expyriment._active_exp.is_initialized:
-                self._clock = expyriment._active_exp.clock
+            if _internals.active_exp.is_initialized:
+                self._clock = _internals.active_exp.clock
             else:
                 self._clock = Clock()
         self._memory = []
@@ -81,7 +83,7 @@ class Buffer(object):
 
         """
         ts = [self._clock.time] * len(events)
-        self._memory.extend(zip(events, ts))
+        self._memory.extend(list(zip(events, ts)))
 
     def get_size(self):
         """Return the number of elements in the buffer.

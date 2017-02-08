@@ -144,6 +144,8 @@ Default settings for the control package. ::
         the size of the window when running in window mode
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -152,7 +154,7 @@ __revision__ = ''
 __date__ = ''
 
 
-from expyriment.misc import constants as _constants
+from ..misc import constants as _constants
 
 
 initialize_delay = 10  # After approximately 10 seconds Python is timecritical
@@ -178,4 +180,4 @@ audiosystem_channels = 2
 audiosystem_buffer_size = 2048
 
 _mode_settings = None
-_skip_wait_functions = False
+

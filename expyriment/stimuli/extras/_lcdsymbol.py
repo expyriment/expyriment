@@ -6,6 +6,9 @@ A LCD symbol.
 This module contains a class implementing a LCD symbol.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -19,10 +22,10 @@ import copy
 
 import pygame
 
-import defaults
-import expyriment
-from expyriment.stimuli._visual import Visual
-from expyriment.stimuli.extras._polygondot import PolygonDot
+from . import defaults
+from ... import _internals, stimuli
+from ...stimuli._visual import Visual
+from ...stimuli.extras._polygondot import PolygonDot
 
 
 class LcdSymbol(Visual):
@@ -30,14 +33,15 @@ class LcdSymbol(Visual):
 
     IDs for points and line ::
 
-    Point=      Lines =
-    0---1         X-0-X
-    |   |         1   2
-    2---3         X-3-X
-    |   |         4   5
-    4---5         X-6-X
+        Point=      Lines =
+        0---1         X-0-X
+        |   |         1   2
+        2---3         X-3-X
+        |   |         4   5
+        4---5         X-6-X
 
-    Valid shapes are:
+    Valid shapes are::
+
         '0','1','2','3','4','5','6','7','8','9'
         'A','C','E','F','U','H','L','P','h'
 
@@ -105,7 +109,7 @@ class LcdSymbol(Visual):
             size = defaults.lcdsymbol_size
             if size is None:
                 try:
-                    size = expyriment._active_exp.screen.surface.get_size()
+                    size = _internals.active_exp.screen.surface.get_size()
                 except:
                     raise RuntimeError("Could not get size of screen!")
             self._width = size[0]
@@ -115,7 +119,7 @@ class LcdSymbol(Visual):
         if colour is not None:
             self._colour = colour
         else:
-            self._colour = expyriment._active_exp.foreground_colour
+            self._colour = _internals.active_exp.foreground_colour
         if inactive_colour is not None:
             self._inactive_colour = inactive_colour
         else:
@@ -150,7 +154,7 @@ class LcdSymbol(Visual):
                         PolygonDot(radius=0, position=(x, self._height - x)), \
                         PolygonDot(radius=0,
                             position=(self._width - x, self._height - x)))
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 6
+        stimuli._stimulus.Stimulus._id_counter -= 6
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -197,7 +201,7 @@ class LcdSymbol(Visual):
                                          math.floor(self._height / 2))),
                            PolygonDot(radius=0, position=(0, self._height)),
                            PolygonDot(radius=0, position=(self._width, self._height)))
-            expyriment.stimuli._stimulus.Stimulus._id_counter -= 6
+            stimuli._stimulus.Stimulus._id_counter -= 6
 
     @property
     def colour(self):
@@ -399,7 +403,7 @@ class LcdSymbol(Visual):
         poly = []
         poly.append(copy.copy(start.position))
         p = PolygonDot(radius=0, position=(0, 0))
-        expyriment.stimuli._stimulus.Stimulus._id_counter -= 1
+        stimuli._stimulus.Stimulus._id_counter -= 1
         if horizontal:
             p.position[0] = start.position[0] + self.gap
             p.position[1] = start.position[1] - w2
@@ -433,9 +437,9 @@ class LcdSymbol(Visual):
 
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     lcdsymbol = LcdSymbol("A", size=(100, 100))
     lcdsymbol.present()

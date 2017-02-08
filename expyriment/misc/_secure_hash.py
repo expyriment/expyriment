@@ -1,6 +1,8 @@
 """
 Secure hashes from files
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,6 +15,7 @@ from os.path import sep
 from re import split
 from hashlib import sha1
 from copy import copy
+from ._miscellaneous import is_interactive_mode
 
 def _make_secure_hash(filename):
     """returns secure hash from file or None, if not possile"""
@@ -43,7 +46,7 @@ def get_experiment_secure_hash():
 
     """
 
-    if secure_hashes.has_key(main_file):
+    if main_file in secure_hashes:
         return secure_hashes[main_file]
     else:
         return None
@@ -64,7 +67,7 @@ def get_module_hash_dictionary():
     secure hashes.
 
     """
-    if secure_hashes.has_key(main_file):
+    if main_file in secure_hashes:
         rtn = copy(secure_hashes)
         rtn.pop(main_file)
         return rtn
@@ -84,11 +87,11 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                 else:
                     modules = []
 
-                modules = map(lambda x:x.replace(".", sep), modules)
+                modules = [x.replace(".", sep) for x in modules]
 
                 for module in modules:
                     pyfile = module + ".py"
-                    if not hash_dict.has_key(pyfile):
+                    if pyfile not in hash_dict:
                         sha = _make_secure_hash(pyfile)
                         if sha is not None:
                             hash_dict[pyfile] = sha
@@ -102,7 +105,7 @@ def module_hashes_as_string():
     """helper function that converts dict to str"""
     if len(secure_hashes)>1:
         txt = ""
-        for fl, sha in get_module_hash_dictionary().iteritems():
+        for fl, sha in get_module_hash_dictionary().items():
             txt += "{0} ({1}), ".format(fl, sha)
         return txt[:-2]
     else:
@@ -114,13 +117,14 @@ def cout_hashes():
         print("Main file: {0} ({1})".format(main_file,
                             get_experiment_secure_hash()))
         if len(secure_hashes)>1:
-            print "Modules: " + module_hashes_as_string()
+            print("Modules: " + module_hashes_as_string())
 
 # print hash information when imported
-if not hasattr(sys, "ps2"): # ps2 is only defined in interactive mode
+if not is_interactive_mode():
     main_file = sys.argv[0]
 else:
     main_file = ""
 secure_hashes = {main_file : _make_secure_hash(main_file)}
 secure_hashes = _append_hashes_from_imported_modules(secure_hashes, main_file)
 cout_hashes()
+print(main_file)

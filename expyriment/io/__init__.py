@@ -14,18 +14,18 @@ __revision__ = ''
 __date__ = ''
 
 
-import defaults
-from _screen import Screen
-from _keyboard import Keyboard
-from _mouse import Mouse
-from _files import InputFile, OutputFile, DataFile, EventFile
-from _parallelport import ParallelPort
-from _serialport import SerialPort
-from _gamepad import GamePad
-from _eventbuttonbox import EventButtonBox
-from _streamingbuttonbox import StreamingButtonBox
-from _triggerinput import TriggerInput
-from _markeroutput import MarkerOutput
-from _textinput import TextInput
-from _textmenu import TextMenu
-from _touchscreenbuttonbox import TouchScreenButtonBox
+from . import defaults
+from ._screen import Screen
+from ._keyboard import Keyboard
+from ._mouse import Mouse
+from ._files import InputFile, OutputFile, DataFile, EventFile
+from ._parallelport import ParallelPort
+from ._serialport import SerialPort
+from ._gamepad import GamePad
+from ._eventbuttonbox import EventButtonBox
+from ._streamingbuttonbox import StreamingButtonBox
+from ._triggerinput import TriggerInput
+from ._markeroutput import MarkerOutput
+from ._textinput import TextInput
+from ._textmenu import TextMenu
+from ._touchscreenbuttonbox import TouchScreenButtonBox

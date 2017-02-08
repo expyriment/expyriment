@@ -1,3 +1,6 @@
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 # We deliberately delay importing the inpout32 module until we try
 # to use it - this allows us to import the class on machines
 # which don't have it and then worry about dealing with
@@ -22,11 +25,14 @@ class PParallelInpOut32(object):
         #from numpy import uint8
         from ctypes import windll
 
-        if isinstance(address, basestring) and address.startswith('0x'): #convert u"0x0378" into 0x0378
+        if isinstance(address, str) and address.startswith('0x'): #convert u"0x0378" into 0x0378
             self.base = int(address, 16)
         else:
             self.base = address
-        self.port = windll.inpout32
+        try:
+            self.port = windll.inpout32
+        except:
+            self.port = windll.inpoutx64
 
         #BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)
         BYTEMODEMASK = (1 << 5 | 1 << 6 | 1 << 7) & 255
@@ -143,4 +149,4 @@ class PParallelInpOut32(object):
         elif pinNumber==17:
             return (self.port.Inp32( self.base + 2 ) >> 3) & 1 # 0 = Select Printer
         else:
-            print 'Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber)
+            print('Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber))

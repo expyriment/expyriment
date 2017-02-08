@@ -6,6 +6,9 @@ A random dot kinematogram (stimulus-like).
 This module contains a class implementing a random dot kinematogram.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -17,12 +20,12 @@ __date__ = ''
 import math
 import random
 
-import defaults
+from . import defaults
 
-from expyriment.io import Keyboard
-from expyriment.stimuli import Canvas, Circle
-from expyriment.stimuli._stimulus import Stimulus
-from expyriment.misc import Clock
+from ...io import Keyboard
+from ...stimuli import Canvas, Circle
+from ...stimuli._stimulus import Stimulus
+from ...misc import Clock
 
 
 
@@ -115,7 +118,7 @@ class RandomDotKinematogram(Stimulus):
 
         """
         self.target_direction = target_direction
-        self.dots = map(lambda x : self._make_random_dot(direction=None), range(n_dots))
+        self.dots = [self._make_random_dot(direction=None) for x in range(n_dots)]
         self.target_dot_ratio = target_dot_ratio
 
     def reset_all_ages(self, randomize_ages=False):
@@ -145,7 +148,7 @@ class RandomDotKinematogram(Stimulus):
 
     @property
     def n_target_dots(self):
-        return sum(map(lambda x: int(x.is_target), self.dots))
+        return sum([int(x.is_target) for x in self.dots])
 
     @property
     def target_dot_ratio(self):
@@ -235,7 +238,7 @@ class RandomDotKinematogram(Stimulus):
             Circle(position = d.position, radius=self.dot_radius,
                         colour=self.dot_colour).plot(self._canvas)
             return d
-        self.dots = map(_process_dot, self.dots)
+        self.dots = list(map(_process_dot, self.dots))
         return self._canvas
 
     def present_and_wait_keyboard(self, background_stimulus=None,
@@ -262,10 +265,10 @@ class RandomDotKinematogram(Stimulus):
             (e.g. io.StreamingButtonBox)
 
         """
-        from expyriment import _active_exp
+        from ... import _internals
         RT = Clock()
         if button_box is None:
-            button_box = _active_exp.keyboard
+            button_box = _internals.active_exp.keyboard
         button_box.clear()
         self.reset_all_ages(randomize_ages=True)
         last_change_time = RT.stopwatch_time
@@ -280,7 +283,7 @@ class RandomDotKinematogram(Stimulus):
             if isinstance(button_box, Keyboard):
                 key = button_box.check(keys=check_keys)
             else:
-                _active_exp.keyboard.process_control_keys()
+                _internals.active_exp.keyboard.process_control_keys()
                 key = button_box.check(codes=check_keys)
 
             if key is not None:
@@ -393,15 +396,15 @@ class MovingPosition(object):
             direction = 450 - self._direction
         else:
             direction = self._direction
-        angle = direction * (math.pi)/180
-        speed = self._speed/float(1000)
+        angle = direction * math.pi / 180.0
+        speed = self._speed / 1000.0
         self._movement_vector = (speed * math.cos(angle),
                                  speed * math.sin(angle))
 
 
 
 if __name__ == "__main__":
-    from expyriment import control, design
+    from .. import control, design
     control.set_develop_mode(True)
     exp = control.initialize()
     direction = design.randomize.rand_int(0, 360)
@@ -420,4 +423,4 @@ if __name__ == "__main__":
           dot_speed = 80, dot_lifetime = 600,
           dot_colour = None)
     key, rt = rdk.present_and_wait_keyboard()
-    print direction
+    print(direction)

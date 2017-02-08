@@ -2,6 +2,9 @@
 The control._miscellaneous module of expyriment.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -10,11 +13,14 @@ __revision__ = ''
 __date__ = ''
 
 import sys
+from types import FunctionType
+
 import pygame
 
-import defaults
-import expyriment
-from expyriment.control import defaults as control_defaults
+from . import defaults
+from .. import _internals
+from .._internals import CallbackQuitEvent
+from ..misc import is_idle_running, is_ipython_running
 
 
 def start_audiosystem():
@@ -62,7 +68,8 @@ def get_audiosystem_is_playing(channel=None):
     return rtn
 
 
-def wait_end_audiosystem(channel=None):
+def wait_end_audiosystem(channel=None, callback_function=None,
+                         process_control_events=True):
     """Wait until audiosystem has ended playing sounds.
 
     Blocks until the audiosystem is not busy anymore and only returns then.
@@ -71,22 +78,71 @@ def wait_end_audiosystem(channel=None):
     ----------
     channel : pygame.mixer.Channel, optional
         specific channel to wait for end of playing
+    callback_function : function, optional
+        function to repeatedly execute during waiting loop
+    process_control_events : bool, optional
+        process ``io.Keyboard.process_control_keys()`` and
+        ``io.Mouse.process_quit_event()`` (default = True)
+
+    Notes
+    ------
+    This will also by default process control events (quit and pause).
+    Thus, keyboard events will be cleared from the cue and cannot be
+    received by a Keyboard().check() anymore!
 
     """
 
+    from .. import io
     while get_audiosystem_is_playing(channel):
-            for event in pygame.event.get(pygame.KEYDOWN):
-                if event.type == pygame.KEYDOWN and \
-                        (event.key == expyriment.io.Keyboard.get_quit_key() or
-                         event.key == expyriment.io.Keyboard.get_pause_key()):
+        if _internals.skip_wait_methods:
+            break
+        if isinstance(callback_function, FunctionType):
+            rtn_callback = callback_function()
+            if isinstance(rtn_callback, CallbackQuitEvent):
+                if channel is None:
+                    pygame.mixer.stop()
+                else:
+                    channel.stop()
+                return rtn_callback
+        if _internals.active_exp is not None and \
+           _internals.active_exp.is_initialized:
+            rtn_callback = _internals.active_exp._execute_wait_callback()
+            if isinstance(rtn_callback, CallbackQuitEvent):
+                if channel is None:
+                    pygame.mixer.stop()
+                else:
+                    channel.stop()
+                return rtn_callback
+            if process_control_events:
+                if _internals.active_exp.mouse.process_quit_event() or \
+                   _internals.active_exp.keyboard.process_control_keys():
                     if channel is None:
                         pygame.mixer.stop()
                     else:
                         channel.stop()
-                    expyriment.io.Keyboard.process_control_keys(event)
+                    break
+            else:
+                pygame.event.pump()
 
 
-def set_develop_mode(onoff, intensive_logging=False):
+def set_skip_wait_methods(on=True):
+    """Skip all wait methods.
+
+    Parameters
+    ----------
+    on : bool, optional
+        If True, all wait methods in the experiment (i.e. all wait functions
+        in ``expyriment.io`` and the clock) will be ommited (default = True)
+
+    """
+
+    if on:
+        _internals.skip_wait_methods = True
+    else:
+        _internals.skip_wait_methods = False
+
+
+def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
     """Set defaults for a more convenient develop mode.
 
     Notes
@@ -101,70 +157,61 @@ def set_develop_mode(onoff, intensive_logging=False):
 
     Parameters
     ----------
-    onoff : bool
+    on : bool, optional
         set develop_mode on (True) or off (False)
     intensive_logging : bool, optional
         True sets expyriment.io.defaults.event_logging=2
         (default = False)
+    skip_wait_methods : bool, optional
+        If True, all wait functions in the experiment (i.e. all wait functions
+        in ``expyriment.io`` and the clock) will be ommited (default = False)
 
     """
 
-    if onoff:
+    from .. import io
+    if on:
         defaults._mode_settings = [defaults.initialize_delay,
                                    defaults.window_mode,
                                    defaults.fast_quit,
-                                   expyriment.io.defaults.outputfile_time_stamp,
+                                   io.defaults.outputfile_time_stamp,
                                    defaults.auto_create_subject_id]
-
-        print "*** DEVELOP MODE ***"
+        if intensive_logging:
+                defaults._mode_settings.append(defaults.event_logging)
+                defaults.event_logging = 2
+        if skip_wait_methods:
+            set_skip_wait_methods(True)
+        print("*** DEVELOP MODE ***")
         defaults.initialize_delay = 0
         defaults.window_mode = True
         defaults.fast_quit = True
-        expyriment.io.defaults.outputfile_time_stamp = False
+        io.defaults.outputfile_time_stamp = False
         defaults.auto_create_subject_id = True
     else:
-        print "*** NORMAL MODE ***"
+        print("*** NORMAL MODE ***")
         if defaults._mode_settings is not None:
             defaults.initialize_delay = defaults._mode_settings[0]
             defaults.window_mode = defaults._mode_settings[1]
             defaults.fast_quit = defaults._mode_settings[2]
-            expyriment.io.defaults.outputfile_time_stamp = \
+            io.defaults.outputfile_time_stamp = \
                 defaults._mode_settings[3]
             defaults.auto_create_subject_id = defaults._mode_settings[4]
             defaults._mode_settings = None
-
+            try:
+                defaults.event_logging = defaults._mode_settings[5]
+            except:
+                pass
+            set_skip_wait_methods(False)
         else:
             pass  # Nothing to do
 
-    if intensive_logging:
-        expyriment.control.defaults.event_logging = 2
-
-def set_skip_wait_functions(onoff):
-    """Switch on/off skip wait function.
-    If skip-wait-functions is switch on (True) all wait functions in the
-    experiment (i.e.  all wait function in expyriment.io and the clock) will
-    be omitted.
-
-    Notes
-    -----
-    CAUTION!: This functions is only usefull for experiment test runs. Do not use
-    skip-wait-function while real experiments.
-
-    Parameters
-    ----------
-    onoff : bool
-        set skip-wait-function on (True) or off (False)
-
-    """
-
-    control_defaults._skip_wait_functions = onoff
 
 def _get_module_values(goal_dict, module):
     value = None
+    namespace = locals()
     for var in dir(module):
         if not var.startswith("_"):
-            exec("value = {0}.{1}".format(module.__name__, var))
-            goal_dict["{0}.{1}".format(module.__name__, var)] = value
+            exec("value = {0}.{1}".format(module.__name__, var), namespace)
+            goal_dict["{0}.{1}".format(module.__name__, var)] = namespace['value']
     return goal_dict
 
 
@@ -181,33 +228,34 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
-    import expyriment.io.extras
-    import expyriment.design.extras
-    import expyriment.stimuli.extras
-    import expyriment.misc.extras
+    from .. import design,stimuli, io, control,misc
+    from ..io import extras as ioextras
+    from ..design import extras as designextras
+    from ..stimuli import extras as stimuliextras
+    from ..misc import extras as miscextras
 
     defaults = {}
-    defaults = _get_module_values(defaults, expyriment.design.defaults)
-    defaults = _get_module_values(defaults, expyriment.control.defaults)
-    defaults = _get_module_values(defaults, expyriment.stimuli.defaults)
-    defaults = _get_module_values(defaults, expyriment.io.defaults)
-    defaults = _get_module_values(defaults, expyriment.misc.defaults)
-    defaults = _get_module_values(defaults, expyriment.design.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.stimuli.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.io.extras.defaults)
-    defaults = _get_module_values(defaults, expyriment.misc.extras.defaults)
+    defaults = _get_module_values(defaults, design.defaults)
+    defaults = _get_module_values(defaults, control.defaults)
+    defaults = _get_module_values(defaults, stimuli.defaults)
+    defaults = _get_module_values(defaults, io.defaults)
+    defaults = _get_module_values(defaults, misc.defaults)
+    defaults = _get_module_values(defaults, designextras.defaults)
+    defaults = _get_module_values(defaults, stimuliextras.defaults)
+    defaults = _get_module_values(defaults, ioextras.defaults)
+    defaults = _get_module_values(defaults, miscextras.defaults)
     if len(search_str) >= 0:
         tmp = {}
-        for key in defaults.keys():
+        for key in list(defaults.keys()):
             if key.lower().find(search_str.lower()) >= 0:
                 tmp[key] = defaults[key]
         defaults = tmp
     if as_string:
-        sorted_keys = defaults.keys()
+        sorted_keys = list(defaults.keys())
         sorted_keys.sort()
         rtn = ""
         for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) / 8))
+            tabs = "\t" * (4 - int((len(key) + 1) // 8))
             rtn += key + ":" + tabs + repr(defaults[key]) + "\n"
     else:
         rtn = defaults
@@ -261,7 +309,7 @@ def register_wait_callback_function(function, exp=None):
     if exp is not None:
         exp.register_wait_callback_function(function)
     else:
-        expyriment._active_exp.register_wait_callback_function(function)
+        _internals.active_exp.register_wait_callback_function(function)
 
 
 def unregister_wait_callback_function(exp=None):
@@ -282,70 +330,7 @@ def unregister_wait_callback_function(exp=None):
     if exp is not None:
         exp.unregister_wait_callback_function()
     else:
-        expyriment._active_exp.unregister_wait_callback_function()
-
-class CallbackQuitEvent():
-    """A CallbackQuitEvent
-
-    If a callback function returns a CallbackQuitEvent object the currently processed
-    the wait or event loop function will be quited.
-    """
-
-    def __init__(self, data=None):
-        """Init CallbackQuitEvent
-
-        Parameter
-        ---------
-        data: any data type, optional
-            You might use this variable to return data or values from your callback
-            function to your main function, since the quited wait or event loop function
-            will return this CallbackQuitEvent.
-
-        See Also
-        --------
-        experiment.register_wait_callback_function()
-
-        """
-
-        self.data = data
-
-    def __str__(self):
-        return "CallbackQuitEvent: data={0}".format(self.data)
-
-def is_ipython_running():
-    """Return True if IPython is running."""
-
-    try:
-        __IPYTHON__
-        return True
-    except NameError:
-        return False
-
-def is_idle_running():
-    """Return True if IDLE is running."""
-
-    return "idlelib.run" in sys.modules
-
-def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDLE or
-    IPthon)
-
-    Returns
-    -------
-        interactive_mode : boolean
-    """
-
-    # ps2 is only defined in interactive mode
-    return hasattr(sys, "ps2") or is_idle_running() or is_ipython_running()
-
-def is_android_running():
-    """Return True if Exypriment runs on Android."""
-
-    try:
-        import android
-    except ImportError:
-        return False
-    return True
+        _internals.active_exp.unregister_wait_callback_function()
 
 def _set_stdout_logging(event_file):
     """Set logging of stdout and stderr to event file.
@@ -380,9 +365,9 @@ def _set_stdout_logging(event_file):
             pass
 
     if is_ipython_running():
-        print "Standard output and error logging is switched off under IPython."
+        print("Standard output and error logging is switched off under IPython.")
     elif is_idle_running():
-        print "Standard output and error logging is switched off under IDLE."
+        print("Standard output and error logging is switched off under IDLE.")
     else:
         sys.stderr = Logger(event_file, "stderr")
         sys.stdout = Logger(event_file, "stdout")

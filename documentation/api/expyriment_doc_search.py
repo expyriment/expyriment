@@ -1,3 +1,4 @@
+from __future__ import print_function
 import expyriment
 from pydoc import getdoc
 x = None
@@ -27,10 +28,10 @@ def search_doc(search_str, doc_dict):
     for k in doc_dict.keys():
         if k.lower().find(search_str.lower()) > 0 or\
             doc_dict[k].lower().find(search_str.lower()) > 0:
-            print "\n-------------------------------------------------------------------------------"
-            print "[ {0} ]\n".format(k)
+            print("\n-------------------------------------------------------------------------------")
+            print("[ {0} ]\n".format(k))
             #print "-------------------------------------------------------------------------------"
-            print "{0}".format(doc_dict[k])
+            print("{0}".format(doc_dict[k]))
 
 
 
@@ -46,5 +47,5 @@ while True:
         break
     else:
         search_doc(search, doc_dict)
-        print "\n"
+        print("\n")
 

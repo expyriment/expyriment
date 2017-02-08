@@ -6,6 +6,8 @@ A circle stimulus.
 This module contains a class implementing a circle stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -16,8 +18,8 @@ __date__ = ''
 
 import math
 
-import defaults
-from _ellipse import Ellipse
+from . import defaults
+from ._ellipse import Ellipse
 
 
 class Circle(Ellipse):
@@ -155,9 +157,9 @@ class Circle(Ellipse):
         return (d <= other._radius - self._radius)
 
 if __name__ == "__main__":
-    from expyriment import control
+    from .. import control
     control.set_develop_mode(True)
-    defaults.event_logging = 0
+    control.defaults.event_logging = 0
     exp = control.initialize()
     dot = Circle(radius=100, anti_aliasing=10)
     dot.present()

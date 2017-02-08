@@ -5,6 +5,8 @@ This module contains default values for all optional arguments in the init
 function of all classes in this package.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -105,6 +107,7 @@ picture_position = (0, 0)
 
 # Video
 video_position = [0, 0]
+video_backend = "mediadecoder"  # 'mediadecoder' or 'pygame'
 
 # Tone
 tone_frequency = 440

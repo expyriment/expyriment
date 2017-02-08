@@ -9,6 +9,9 @@ Credits and references:
       http://stackoverflow.com/questions/1824399/get-mach-absolute-time-uptime-in-nanoseconds-in-python
       https://mail.python.org/pipermail/python-dev/2009-October/093173.html
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -88,7 +91,7 @@ elif platform == 'win32':
         def get_time():
             """Get high-resolution monotonic time stamp (float) """
             _winQPC(ctypes.byref(_fcounter))
-            return  _fcounter.value/_qpfreq
+            return  _fcounter.value / _qpfreq
         get_time()
     except:
         _use_time_module = True
@@ -111,4 +114,4 @@ if _use_time_module:
             return time.time()
 
 if __name__ == "__main__":
-    print get_time()
+    print(get_time())

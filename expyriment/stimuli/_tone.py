@@ -6,6 +6,9 @@ The tone stimulus module.
 This module contains a class implementing a tone stimulus.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
+
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,8 +25,8 @@ import itertools
 import tempfile
 import shutil
 
-import defaults
-from _audio import Audio
+from . import defaults
+from ._audio import Audio
 
 
 class Tone(Audio):
@@ -81,7 +84,7 @@ class Tone(Audio):
             raise AttributeError(Audio._getter_exception_message.format(
                 "duration"))
         else:
-            self._duration = value / 1000
+            self._duration = value / 1000.0
             self._filename = self._create_sine_wave()
 
     @property
@@ -156,7 +159,7 @@ class Tone(Audio):
         """Write in chunks."""
 
         args = [iter(iterable)] * n
-        return itertools.izip_longest(fillvalue=fillvalue, *args)
+        return itertools.zip_longest(fillvalue=fillvalue, *args)
 
     def _create_sine_wave(self):
         """Create the sine wave."""
@@ -165,12 +168,12 @@ class Tone(Audio):
         lookup_table = [float(self._amplitude) * \
                         math.sin(2.0 * math.pi * float(self._frequency) * \
                                  (float(i % period) / float(self._samplerate))) \
-                        for i in xrange(period)]
+                        for i in range(period)]
         sine = (lookup_table[i % period] for i in itertools.count(0))
         channels = ((sine,),)
-        n_samples = self._duration * self._samplerate
-        samples = itertools.islice(itertools.izip(
-            *(itertools.imap(sum, itertools.izip(*channel)) \
+        n_samples = int(self._duration * self._samplerate)
+        samples = itertools.islice(zip(
+            *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
         fid, filename = tempfile.mkstemp(dir=defaults.tempdir,
                         prefix="freq{0}_dur{1}_".format(self.frequency,
@@ -178,12 +181,12 @@ class Tone(Audio):
                         suffix=".wav")
         os.close(fid)
         w = wave.open(filename, 'w')
-        w.setparams((1, self._bitdepth / 8, self._samplerate, n_samples, 'NONE',
+        w.setparams((1, self._bitdepth // 8, self._samplerate, n_samples, 'NONE',
                      'not compressed'))
         max_amplitude = float(int((2 ** (self._bitdepth)) / 2) - 1)
         for chunk in self._grouper(2048, samples):
-            frames = ''.join(''.join(struct.pack(
-                'h', int(max_amplitude * sample)) for sample in channels) \
+            frames = b''.join(b''.join(struct.pack(
+                b'h', int(max_amplitude * sample)) for sample in channels) \
                 for channels in chunk if channels is not None)
             w.writeframesraw(frames)
         w.close()
@@ -202,12 +205,17 @@ class Tone(Audio):
         shutil.copy(self._filename, filename)
 
 
+    @staticmethod
+    def _test():
+        from .. import control
+        control.set_develop_mode(True)
+        control.defaults.event_logging = 0
+        control.start_audiosystem()
+        exp = control.initialize()
+        sine = Tone(duration=1000)
+        sine.present()
+        exp.clock.wait(1000)
+
+
 if __name__ == "__main__":
-    from expyriment import control
-    control.set_develop_mode(True)
-    defaults.event_logging = 0
-    control.start_audiosystem()
-    exp = control.initialize()
-    sine = Tone(duration=1000)
-    sine.present()
-    exp.clock.wait(1000)
+    Tone._test()

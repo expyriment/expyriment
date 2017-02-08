@@ -4,6 +4,8 @@ File input and output.
 This module contains classes implementing file input and output.
 
 """
+from __future__ import absolute_import, print_function, division
+from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,18 +23,19 @@ except ImportError:
     locale = None  # Does not exist on Android
 import codecs
 import re
-import types
 import sys
 import uuid
 import time
 from time import strftime
 from platform import uname
+from itertools import combinations
 
-import defaults
-import expyriment
-from expyriment.misc._timer import get_time
-from expyriment.misc import unicode2str, str2unicode
-from _input_output import Input, Output
+from . import defaults
+from .. import _internals
+from ..misc._timer import get_time
+from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
+from ..misc import statistics
+from ._input_output import Input, Output
 
 
 class InputFile(Input):
@@ -59,7 +62,7 @@ class InputFile(Input):
         self._lines = []
         if not(os.path.isfile(self._filename)):
             raise IOError("The input file '{0}' does not exist.".format(
-                unicode2str(self._filename)))
+                unicode2byte(self._filename)))
 
         if encoding is None:
             with open(filename, 'r') as fl:
@@ -76,7 +79,7 @@ class InputFile(Input):
         with codecs.open(self._filename, 'rb', encoding[0],
                          errors='replace') as f:
             for line in f:
-                self._lines.append(str2unicode(line.rstrip('\r\n')))
+                self._lines.append(byte2unicode(line).rstrip('\r\n'))
 
     @property
     def filename(self):
@@ -120,7 +123,7 @@ class InputFile(Input):
 
         """
 
-        if line is not None and line < 1 or line > len(self._lines):
+        if line is not None and (line < 1 or line > len(self._lines)):
             return None
 
         if line is not None:
@@ -182,12 +185,12 @@ class OutputFile(Output):
         except:
             locale_enc = "UTF-8"
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
-            expyriment.get_version(), self._suffix,
+            _internals.get_version(), self._suffix,
             locale_enc))
-        if expyriment._active_exp.is_initialized:
+        if _internals.active_exp.is_initialized:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
-                               expyriment._active_exp.clock.init_localtime)))
+                               _internals.active_exp.clock.init_localtime)))
 
     @property
     def fullpath(self):
@@ -223,11 +226,11 @@ class OutputFile(Output):
         """
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
-        if expyriment._active_exp.is_started:
-            rtn = rtn + '_' + repr(expyriment._active_exp.subject).zfill(2)
+        if _internals.active_exp.is_started:
+            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(2)
         if self._time_stamp:
             rtn = rtn + '_' + strftime(
-                "%Y%m%d%H%M", expyriment._active_exp.clock.init_localtime)
+                "%Y%m%d%H%M", _internals.active_exp.clock.init_localtime)
         return rtn + self.suffix
 
     def save(self):
@@ -235,8 +238,8 @@ class OutputFile(Output):
 
         start = get_time()
         if self._buffer != []:
-            with open(self._fullpath, 'a') as f:
-                f.write("".join(self._buffer))
+            with open(self._fullpath, 'ab') as f:
+                f.write(unicode2byte("".join(self._buffer)))
             self._buffer = []
         return int((get_time() - start) * 1000)
 
@@ -250,10 +253,10 @@ class OutputFile(Output):
 
         """
 
-        if type(content) is unicode:
-            self._buffer.append(unicode2str(content))
-        else:
-            self._buffer.append(str(content))
+        # NOTE: Do not print here recursion due to std_out logging
+
+        self._buffer.append(str(content))
+
 
     def write_line(self, content):
         """Write a text line to files.
@@ -265,7 +268,7 @@ class OutputFile(Output):
 
         """
         self.write(content)
-        self.write(unicode2str(defaults.outputfile_eol))
+        self.write(defaults.outputfile_eol)
 
     def write_list(self, list_):
         """Write a list in a row. Data are separated by a delimiter.
@@ -280,7 +283,7 @@ class OutputFile(Output):
         for elem in list:
             self.write(elem)
             self.write(',')
-        self.write(unicode2str(defaults.outputfile_eol))
+        self.write(defaults.outputfile_eol)
         # self.write_line(repr(list_)[1:-1].replace(" ", ""))
 
     def write_comment(self, comment):
@@ -295,7 +298,7 @@ class OutputFile(Output):
 
         """
 
-        self.write(unicode2str(self.comment_char))
+        self.write(self.comment_char)
         self.write_line(comment)
 
     def rename(self, new_filename):
@@ -332,8 +335,8 @@ class DataFile(OutputFile):
 
         """
 
-        if expyriment._active_exp.is_initialized:
-            self._subject = expyriment._active_exp.subject
+        if _internals.active_exp.is_initialized:
+            self._subject = _internals.active_exp.subject
         else:
             self._subject = None
         if directory is None:
@@ -359,13 +362,13 @@ class DataFile(OutputFile):
                                                     sys.argv[0])[1]))
 
         self.write_comment("e sha1: {0}".format(
-                                    expyriment.get_experiment_secure_hash()))
+                                    get_experiment_secure_hash()))
         self.write_comment("e modules: {0}".format(
-                            expyriment._secure_hash.module_hashes_as_string()))
+                            module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
         self.write_comment("s id: {0}".format(self._subject))
-        self.write_line(self.variable_names)
-        self._variable_names_changed = False
+        self.write_comment("#")
+        self._variable_names_changed = True
         self.save()
 
     @property
@@ -374,19 +377,18 @@ class DataFile(OutputFile):
         return self._delimiter
 
     @staticmethod
-    def _typecheck_and_cast2str(data):
+    def _typecheck_and_cast2str(data): # TODO is that function still needed?
         """Check if data are string or numeric and cast to string"""
         if data is None:
             data = "None"
-        if isinstance(data, types.UnicodeType):
-            return unicode2str(data)
-        elif isinstance(data, types.StringType):
+        if isinstance(data, str):
+            return unicode2byte(data)
+        elif isinstance(data, bytes):
             return str(data)
-        elif type(data) in [types.IntType, types.LongType, types.FloatType,
-                            types.BooleanType]:
+        elif isinstance(data(int, int, float,bool)):
             return repr(data)
         else:
-            message = "Data to be added must to be " + \
+            message = "Data to be added must be " + \
                 "booleans, strings, numerics (i.e. floats or integers) " + \
                 "or None.\n {0} is not allowed.".format(type(data))
             raise TypeError(message)
@@ -402,15 +404,15 @@ class DataFile(OutputFile):
         """
 
         self.write(str(self._subject) + self.delimiter)
-        if type(data) is list or type(data) is tuple:
+        if isinstance(data, (list, tuple)):
             line = ""
             for counter, elem in enumerate(data):
                 if counter > 0:
                     line = line + self.delimiter
-                line = line + DataFile._typecheck_and_cast2str(elem)
+                line = line + str(elem)
             self.write_line(line)
         else:
-            self.write_line(DataFile._typecheck_and_cast2str(data))
+            self.write_line(str(data))
 
     def add_subject_info(self, text):
         """Adds a text the subject info header.
@@ -423,7 +425,7 @@ class DataFile(OutputFile):
         Parameters
         ----------
         text : str
-            subject infomation to be add to the file header
+            subject information to be added to the file header
 
         Notes
         -----
@@ -433,11 +435,15 @@ class DataFile(OutputFile):
         """
 
         self._subject_info.append("{0}s {1}{2}".format(
-            unicode2str(self.comment_char), unicode2str(text),
-            unicode2str(defaults.outputfile_eol)))
+            self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
         """Adds a text the subject info header.
+
+        Parameters
+        ----------
+        text : str
+            experiment information to be added to the file header
 
         Notes
         -----
@@ -445,21 +451,16 @@ class DataFile(OutputFile):
 
         """
 
-        if isinstance(text, types.UnicodeType):
-            text = "{0}".format(unicode2str(text))
-        elif type(text) is not str:
-            text = "{0}".format(text)
         for line in text.splitlines():
             self._experiment_info.append("{0}e {1}{2}".format(
-                unicode2str(self.comment_char), line,
-                unicode2str(defaults.outputfile_eol)))
+                self.comment_char, line, defaults.outputfile_eol))
 
     @property
     def variable_names(self):
         """Getter for variable_names."""
 
         vn = self.delimiter.join(self._variable_names)
-        return u"subject_id,{0}".format(vn)
+        return "subject_id,{0}".format(vn)
 
     def clear_variable_names(self):
         """Remove all variable names from data file.
@@ -506,13 +507,14 @@ class DataFile(OutputFile):
 
         """
 
+
         start = get_time()
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                 or self._variable_names_changed:
             # Re-write header and varnames
             tmpfile_name = "{0}{1}{2}".format(self.directory, os.path.sep, uuid.uuid4())
             os.rename(self._fullpath, tmpfile_name)
-            fl = open(self._fullpath, 'w+')
+            fl = open(self._fullpath, 'wb+')
             tmpfl = open(tmpfile_name, 'r')
             section = None
             while True:
@@ -526,21 +528,21 @@ class DataFile(OutputFile):
                 else:
                     if section == "e":  # Previous line was last #e
                         if len(self._experiment_info) > 0:
-                            fl.write("".join(self._experiment_info))
+                            fl.write(unicode2byte("".join(self._experiment_info)))
                             self._experiment_info = []
                         section = None
                     elif section == "s":  # Previous line was last #s
                         if len(self._subject_info) > 0:
-                            fl.write("".join(self._subject_info))
+                            fl.write(unicode2byte("".join(self._subject_info)))
                             self._subject_info = []
                         section = None
 
                         # Re-write variable names after #s-section
-                        fl.write(unicode2str(
+                        fl.write(unicode2byte(
                             self.variable_names + defaults.outputfile_eol))
                         self._variable_names_changed = False
                         line = ''  # Skip old varnames
-                fl.write(line)
+                fl.write(unicode2byte(line))
             tmpfl.close()
             fl.close()
 
@@ -551,7 +553,7 @@ class DataFile(OutputFile):
         if self._buffer != []:
             OutputFile.save(self)
             if self._logging:
-                expyriment._active_exp._event_file_log("Data,saved")
+                _internals.active_exp._event_file_log("Data,saved")
 
         return int((get_time() - start) * 1000)
 
@@ -620,30 +622,33 @@ class EventFile(OutputFile):
         if clock is not None:
             self._clock = clock
         else:
-            if not expyriment._active_exp.is_initialized:
+            if not _internals.active_exp.is_initialized:
                 raise RuntimeError(
                     "Cannot find a clock. Initialize Expyriment!")
-            self._clock = expyriment._active_exp.clock
+            self._clock = _internals.active_exp.clock
 
         try:
-            display = repr(expyriment._active_exp.screen.window_size)
-            window_mode = repr(expyriment._active_exp.screen.window_mode)
-            open_gl = repr(expyriment._active_exp.screen.open_gl)
+            display = repr(_internals.active_exp.screen.window_size)
+            window_mode = repr(_internals.active_exp.screen.window_mode)
+            open_gl = repr(_internals.active_exp.screen.open_gl)
         except:
             display = "unknown"
             window_mode = "unknown"
             open_gl = "unknown"
 
         self.write_comment("sha1: {0}".format(
-                                    expyriment.get_experiment_secure_hash()))
+                                    get_experiment_secure_hash()))
         self.write_comment("modules: {0}".format(
-                            expyriment._secure_hash.module_hashes_as_string()))
+                            module_hashes_as_string()))
         self.write_comment("display: size={0}, window_mode={1}, open_gl={2}".format(
             display, window_mode, open_gl))
         self.write_comment("os: {0}".format(uname()))
 
         self.write_line("Time,Type,Event,Value,Detail,Detail2")
         self.save()
+
+        self._inter_event_intervall_log = _InterEventIntervallLog()
+        atexit.register(self._write_inter_event_intervall_summary)
 
     @property
     def clock(self):
@@ -655,20 +660,29 @@ class EventFile(OutputFile):
         """Getter for delimiter"""
         return self._delimiter
 
-    def log(self, event):
+    def log(self, event, log_event_tag=None):
         """Log an event.
 
         Parameters
         ----------
         event : anything
             the event to be logged (anything, will be casted to str)
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined, event file logs the inter-event-intervalls
+            and adds a summary of the intervalls at the end of the file
+
+        Returns
+        -------
+        log_time : int
+            the time of logging
 
         """
 
-        if isinstance(event, types.UnicodeType):
-            event = unicode2str(event)
-        line = repr(self._clock.time) + self.delimiter + str(event)
-        self.write_line(line)
+        log_time = self._clock.time
+        self.write_line(repr(log_time) + self.delimiter + str(event))
+        if log_event_tag is not None:
+            self._inter_event_intervall_log.add_event(log_event_tag, log_time)
+        return log_time
 
     def warn(self, message):
         """Log a warning message.
@@ -682,3 +696,81 @@ class EventFile(OutputFile):
 
         line = "WARNING: " + message
         self.write_line(line)
+
+    def _write_inter_event_intervall_summary(self):
+        """appending the inter event intervall summary to event file, if log_event_tag have been set while presentation
+        this function will be called at exit"""
+
+        for l in self._inter_event_intervall_log.summary():
+            self.write_comment(l)
+
+
+
+class _InterEventIntervallLog():
+    """This class is used to log the intervalls of tagged events to get a
+    summary of the timing at the end of the event file
+    """
+
+    def __init__(self):
+        self.clear()
+
+
+    def clear(self):
+        """clear logging queue"""
+        self.log_dict = {}
+
+
+    def add_event(self, event_tag, time):
+        """add event for logging"""
+
+        try:
+            self.log_dict[event_tag].append(time)
+        except:
+            self.log_dict[event_tag] = [time]
+
+
+    def _get_iei_intervalls(self, from_tag, to_tag):
+        """helper function: get the intervalls between two events"""
+
+        rtn = []
+        try:
+            time_from = sorted(self.log_dict[from_tag])
+            time_to = sorted(self.log_dict[to_tag])
+        except:
+            return rtn
+
+        for f in time_from:
+            # find first larger to time and add different to list
+            for t in time_to:
+                if t>=f:
+                    rtn.append(t-f)
+                    break
+        return rtn
+
+
+    def summary(self):
+        """The summary as string array
+
+        Returns
+        -------
+        txt : string array
+
+        """
+
+        rtn = []
+        for a, b in combinations(self.log_dict.keys(), 2):
+            for reverse in [False, True]:
+                if reverse:
+                    tmp = b
+                    b = a
+                    a = tmp
+                iei = self._get_iei_intervalls(a, b)
+                txt = "{0} --> {1}: n={2}".format(a,b, len(iei))
+                if len(iei)>0:
+                    txt += ", mean={0}, median={1}, std={2}".format(
+                                round(statistics.mean(iei),2),
+                                round(statistics.median(iei),2),
+                                round(statistics.std(iei),2),
+                                )
+                rtn.append(txt)
+        return rtn

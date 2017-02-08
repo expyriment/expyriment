@@ -2,28 +2,61 @@
 Expyriment Release Notes
 ========================
 
-upcoming
---------
+0.9.0rc3 (01 Feb 2017)
+----------------------
 New Features:
+- Python 3 compatibility
+- New Video stimulus implementation that supports a large range of formats
+- new global boolean constant expyriment.PYTHON3 indicates Python version
 - new io device: io.extras.TcpServer
+- new method to add full factorial designs:
+  Block.add_trials_full_factorial & Experiment.add_blocks_full_factorial
 - Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
 - rotate() method of stimuli applies filtering on the content now
 - randomize.coin_flip() with bias parameter ("unfair coins")
 - randomize.rand_norm() normally distributed random numbers
+- statistics module: std & variance
+- Eventfile.log has an optional log_event_tag for the logging of
+  inter-event-intervalls. If this is defined a summary of the intervalls
+  will be added to the event file.
+- All present methods have an optional log_event_tag that will be passed
+  to Eventfile.log (see above)
+- New method: misc.has_internet_connection()
+- Notify when initializing system fonts takes longer
+- io.ParallelPort: new method get_driver()
 
 Changed:
+- all wait methods (io and Clock) now
+    (1) have process_control_events attribute to check for quit events from
+        keyboard and mouse
+    (2) have function attribute (callback_function) to repeatedly run a
+        specific function in every loop iteration
+    (3) pump the pygame event queue to (hopefully) prevent the OS to think the
+        window is "not responding"
+- control.set_develop_mode: new skip_wait_methods attribute to ommit all wait 
+  functions in the experiment (for testing)
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
+- move set_skip_wait_functions from misc to io
+- move is_idle_running, is_interactive_mode, is_android_running
+  from control to misc
+- move get_module_hash_dictionary, get_experiment_secure_hash,
+  module_hashes_as_string and get_system_info from expyriment to misc
+- Testsuite: Visual test will now colour code reported refresh rates
 
 Fixed:
+- unicode bug on Windows for font files
+- unicode bug on Windows for Audio and Picture
 - bug fix in unicode2str
 - bug fix Experiment.add_experiment_info
 - bug: issue #65, tempfolder at multiuser systems
 - minor bug fixes in _secure_hash.py, _files.py
 - Cli: -0 option was not recognized
 - Correct anti-aliasing for Circle/Ellipse (now works on every background)
+- compatibility with pyserial version 3.0
+- ParallelPort: inpoutx64 should now work correctly
 
 Version 0.8.0 (30 Jun 2015)
 ---------------------------
