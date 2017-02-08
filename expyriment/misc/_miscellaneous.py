@@ -332,7 +332,8 @@ def has_internet_connection():
     """Return True if computer is connected to internet."""
     try:
         import socket
-        socket.gethostbyname("google.com")
+        host = socket.gethostbyname("google.com")
+        socket.create_connection((host, 80), 2)
         return True
     except:
         return False
