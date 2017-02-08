@@ -27,7 +27,7 @@ except:
 
 from . import defaults
 from . import _visual
-from ..misc import unicode2byte, Clock
+from ..misc import unicode2byte, Clock, has_internet_connection
 from .._internals import CallbackQuitEvent
 from .. import _internals
 
@@ -114,6 +114,10 @@ class Video(_visual.Stimulus):
             
         if self._backend == "mediadecoder":
             try:
+                if not has_internet_connection():
+                    os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
+                else:
+                    os.environ['IMAGEIO_NO_INTERNET'] = 'no'
                 import mediadecoder as _mediadecoder
             except ImportError:
                 message = """Video cannot be initialized with backend
