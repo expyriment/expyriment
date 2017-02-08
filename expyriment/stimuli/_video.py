@@ -114,10 +114,11 @@ class Video(_visual.Stimulus):
             
         if self._backend == "mediadecoder":
             try:
-                if not has_internet_connection():
-                    os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
-                else:
-                    os.environ['IMAGEIO_NO_INTERNET'] = 'no'
+                k = 'IMAGEIO_NO_INTERNET'
+                v = ['yes', 'true', '1']
+                if not (os.environ.has_key(k) and os.environ[k] in v):
+                    if not has_internet_connection():
+                        os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
                 import mediadecoder as _mediadecoder
             except ImportError:
                 message = """Video cannot be initialized with backend
