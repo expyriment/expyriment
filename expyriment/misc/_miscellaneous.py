@@ -331,6 +331,7 @@ def is_android_running():
 def has_internet_connection():
     """Return True if computer is connected to internet."""
     try:
+        import socket
         socket.gethostbyname("google.com")
         return True
     except:
