@@ -35,22 +35,6 @@ __revision__ = ''
 __date__ = ''
 
 
-# Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
-try:
-    import imp as _imp
-    _imp.find_module("test")
-except:
-    pass
-else:
-    import imp as _imp
-    import os as _os
-    _tf = _os.path.abspath(_imp.find_module("test")[1])
-    for f in ['test.py', 'test.pyc', 'test.pyo', 'test.pyd']:
-        if _os.path.split(_tf)[1] == f:
-            _m = "Expyriment cannot be imported where a file '{0}' exists!\n"
-            _m += "Please remove or rename '{1}' and try again."
-            raise ImportError(_m.format(f, _tf))
-
 import sys as _sys
 from ._internals import get_version
 from ._internals import PYTHON3 as _PYTHON3
@@ -64,6 +48,22 @@ if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
                       "\nPlease use Python 2.6+ or Python 3.3+.")
 else:
     print("Expyriment {0} ".format(get_version()))
+
+# Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
+try:
+    import imp as _imp
+    import os as _os
+    import sys as _sys
+    for package in ["test"]:
+        _tf = _os.path.abspath(_imp.find_module(package)[1])
+        _mf = _os.path.abspath(_os.path.abspath(_sys.argv[0]))
+        if _os.path.split(_tf)[0] == _os.path.split(_mf)[0] or \
+                _os.path.split(_tf)[0] == _os.path.abspath(_os.path.curdir):
+                    _m = "Warning: "
+                    _m += "'{0}' is shadowing package '{1}'!"
+                    print(_m.format(_tf, package))
+except:
+    pass
 
 try:
     import future as _future
