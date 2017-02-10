@@ -46,11 +46,19 @@ elif sys.platform == 'win32':
     try:
         from ._inpout32 import PParallelInpOut32
         _ParallelPort = PParallelInpOut32
-        _ParallelPort._driver = "inpout32"
+        from ctypes import windll
+        try:
+            windll.inpout32
+            _ParallelPort._driver = "inpout32"
+        except:
+            windll.inpoutx64
+            _ParallelPort._driver = "inpoutx64"
     except:
         try:
             from ._dlportio import PParallelDLPortIO
             _ParallelPort = PParallelDLPortIO
+            from ctypes import windll
+            windll.dlportio
             _ParallelPort._driver = "dlportio"
         except:
             _ParallelPort = None
@@ -470,7 +478,7 @@ class ParallelPort(Input, Output):
         if _ParallelPort is None:
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
-"drivers: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
+"drivers: 'inpout32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
 "'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/)."
             elif sys.platform.startswith("linux"):
                 _message = "Please install the Python package 'PyParallel'."
