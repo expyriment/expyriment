@@ -39,12 +39,10 @@ For online documentation see: http://docs.expyriment.org
 
 Examples
 ========
-Examples can be found in the directory "examples".
-For online examples see: http://docs.expyriment.org/Examples.html
+For online examples see: http://stash.expyriment.org/examples
 
 Installation
 ============
-
 The latest stable release of Expyriment can be found at Github:
 https://github.com/expyriment/expyriment/releases/latest 
 For detailed installation instructions, please see the online documentation: 
