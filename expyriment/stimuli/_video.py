@@ -270,6 +270,10 @@ class Video(_visual.Stimulus):
         """
 
         if not self._is_preloaded:
+            if not _internals.active_exp.is_initialized:
+                message = "Can't preload video. Expyriment needs to be " + \
+                          "initilized before preloading a video."
+                raise RuntimeError(message)
             if self._backend == "pygame":
                 self._file = pygame.movie.Movie(unicode2byte(self._filename,
                                                              fse=True))
@@ -468,6 +472,8 @@ class Video(_visual.Stimulus):
     def update(self):
         """Update the screen."""
 
+        if not self.is_playing:
+            return
         start = Clock.monotonic_time()
         self._surface_locked = True
         if not _internals.active_exp._screen.open_gl:
