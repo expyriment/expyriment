@@ -179,8 +179,8 @@ class Video(_visual.Stimulus):
         else:
             self._filename = value
             if not(os.path.isfile(self._filename)):
-            raise IOError("The video file {0} does not exists".format(
-                unicode2byte(self._filename)))
+                raise IOError("The video file {0} does not exists".format(
+                              unicode2byte(self._filename)))
 
     @property
     def is_playing(self):
