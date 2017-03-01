@@ -27,7 +27,7 @@ except:
 
 from . import defaults
 from . import _visual
-from ..misc import unicode2byte, Clock, has_internet_connection
+from ..misc import unicode2byte, Clock, has_internet_connection, which
 from .._internals import CallbackQuitEvent
 from .. import _internals
 
