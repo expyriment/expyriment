@@ -34,7 +34,7 @@ from .. import _internals
 try:
     k = 'IMAGEIO_NO_INTERNET'
     v = ['yes', 'true', '1']
-    if not (os.environ.has_key(k) and os.environ[k] in v):
+    if not (k in os.environ and os.environ[k] in v):
         if not has_internet_connection():
             os.environ[k] = 'yes'
     import mediadecoder as _mediadecoder
