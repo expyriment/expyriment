@@ -112,6 +112,8 @@ from . import stimuli
 from . import io
 from . import control
 
+stimuli.Video.get_ffmpeg_binary()  # in case it needs to be downloaded
+
 if not misc.is_android_running():
     from ._api_reference_tool import show_documentation
 
