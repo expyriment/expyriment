@@ -31,6 +31,16 @@ from ..misc import unicode2byte, Clock, has_internet_connection
 from .._internals import CallbackQuitEvent
 from .. import _internals
 
+try:
+    k = 'IMAGEIO_NO_INTERNET'
+    v = ['yes', 'true', '1']
+    if not (os.environ.has_key(k) and os.environ[k] in v):
+        if not has_internet_connection():
+            os.environ[k] = 'yes'
+    import mediadecoder as _mediadecoder
+except ImportError:
+    _mediadecoder = None
+
 
 class Video(_visual.Stimulus):
     """A class implementing a general video stimulus.
@@ -113,23 +123,16 @@ class Video(_visual.Stimulus):
                 unicode2byte(self._filename)))
             
         if self._backend == "mediadecoder":
-            try:
-                k = 'IMAGEIO_NO_INTERNET'
-                v = ['yes', 'true', '1']
-                if not (os.environ.has_key(k) and os.environ[k] in v):
-                    if not has_internet_connection():
-                        os.environ[k] = 'yes'
-                import mediadecoder as _mediadecoder
-            except ImportError:
-                message = """Video cannot be initialized with backend
-"mediadecoder". The Python package 'mediadecoder' is not installed."""
-                raise ImportError(message)
-
+            if _mediadecoder is None:
+                print("Warning: Package 'mediadecoder' not installed!\n" +
+                      "Video backend will be set to 'pygame'.")
+                self._backend = "pygame"
+                
             try:
                 import sounddevice as _sounddevice
             except ImportError:
                 print("Warning: Package 'sounddevice' not installed!\n" +
-                      "Audio will be played back using 'Pygame' backend.")
+                      "Audio will be played back using Pygame audiosystem.")
 
 
     def __del__(self):
