@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-upcoming version
-----------------
+Version 0.9.0rc5 (1 Mar 2017)
+-----------------------------
 New Features:
 - Python 3 compatibility
 - New Video stimulus implementation that supports a large range of formats
@@ -23,10 +23,10 @@ New Features:
   will be added to the event file.
 - All present methods have an optional log_event_tag that will be passed
   to Eventfile.log (see above)
-- New method: misc.has_internet_connection()
+- New function: misc.has_internet_connection()
 - Notify when initializing system fonts takes longer
 - io.ParallelPort: new method get_driver()
-- misc.which() to locate programme files in user's path
+- New function: misc.which()
 
 Changed:
 - all wait methods (io and Clock) now
