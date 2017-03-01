@@ -131,7 +131,9 @@ class Video(_visual.Stimulus):
                 unicode2byte(self._filename)))
             
         if self._backend == "mediadecoder":
-            if _mediadecoder is None:
+            try:
+                import mediadecoder as _mediadecoder
+            except ImportError:
                 print("Warning: Package 'mediadecoder' not installed!\n" +
                       "Video backend will be set to 'pygame'.")
                 self._backend = "pygame"
