@@ -383,14 +383,14 @@ def which(programme):
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
-    fpath, fname = os.path.split(program)
+    fpath, fname = os.path.split(programme)
     if fpath:
-        if is_exe(program):
-            return program
+        if is_exe(programme):
+            return programme
     else:
         for path in os.environ["PATH"].split(os.pathsep):
             path = path.strip('"')
-            exe_file = os.path.join(path, program)
+            exe_file = os.path.join(path, programme)
             if is_exe(exe_file):
                 return exe_file
 
