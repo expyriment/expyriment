@@ -361,3 +361,37 @@ def create_colours(amount):
         s = (90 + random.random() * 10) / 100
         colours.append([int(x * 255) for x in colorsys.hls_to_rgb(h, l, s)])
     return colours
+
+
+def which(programme):
+    """Locate a programme file in the user's path.
+    
+    This mimics behaviour of UNIC 'which' command.
+    
+    Parameters
+    ----------
+    programme : str
+        the programme to file to locate
+    
+    Returns
+    -------
+    path : str or None
+        the full path to the programme file or None if not found
+        
+    """
+    
+    def is_exe(fpath):
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    fpath, fname = os.path.split(program)
+    if fpath:
+        if is_exe(program):
+            return program
+    else:
+        for path in os.environ["PATH"].split(os.pathsep):
+            path = path.strip('"')
+            exe_file = os.path.join(path, program)
+            if is_exe(exe_file):
+                return exe_file
+
+    return None
