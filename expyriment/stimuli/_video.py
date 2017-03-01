@@ -30,7 +30,7 @@ from . import _visual
 from ..misc import unicode2byte, Clock, has_internet_connection
 from .._internals import CallbackQuitEvent
 from .. import _internals
-
+ 
 try:
     k = 'IMAGEIO_NO_INTERNET'
     v = ['yes', 'true', '1']
@@ -176,6 +176,9 @@ class Video(_visual.Stimulus):
                 "filename"))
         else:
             self._filename = value
+            if not(os.path.isfile(self._filename)):
+            raise IOError("The video file {0} does not exists".format(
+                unicode2byte(self._filename)))
 
     @property
     def is_playing(self):
