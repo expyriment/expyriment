@@ -30,22 +30,6 @@ from . import _visual
 from ..misc import unicode2byte, Clock, has_internet_connection
 from .._internals import CallbackQuitEvent
 from .. import _internals
- 
-try:
-    k = 'IMAGEIO_NO_INTERNET'
-    v = ['yes', 'true', '1']
-    if not (k in os.environ and os.environ[k] in v):
-        import imageio
-        try:
-            imageio.plugins.ffmpeg.get_exe()
-        except imageio.core.NeedDownloadError:
-            if has_internet_connection():
-                imageio.plugins.ffmpeg.download()
-            else:
-                os.environ[k] = 'yes'
-    import mediadecoder as _mediadecoder
-except ImportError:
-    _mediadecoder = None
 
 
 class Video(_visual.Stimulus):
@@ -78,6 +62,24 @@ class Video(_visual.Stimulus):
 
     """
 
+    @staticmethod
+    def get_ffmpeg_binary():
+        try:
+            import imageio
+            try:
+                ffmpeg_binary = imageio.plugins.ffmpeg.get_exe()
+                if ffmpeg_binary == "ffmpeg":
+                    ffmpeg_binary = which(ffmpeg_binary)
+                return ffmpeg_binary
+            except imageio.core.NeedDownloadError:
+                if has_internet_connection():
+                    imageio.plugins.ffmpeg.download()
+                    return imageio.plugins.ffmpeg.get_exe()
+                else:
+                    os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
+        except ImportError:
+            pass
+    
     def __init__(self, filename, backend=None, position=None):
         """Create a video stimulus.
 
@@ -291,6 +293,8 @@ class Video(_visual.Stimulus):
                                                              fse=True))
                 size = self._file.get_size()
             elif self._backend == "mediadecoder":
+                if self.get_ffmpeg_binary() is None:
+                    raise RuntimeError("'ffmpeg' not found!")
                 from mediadecoder.states import PLAYING
                 from mediadecoder.decoder import Decoder
                 self._file = Decoder(mediafile=unicode2byte(self._filename),
