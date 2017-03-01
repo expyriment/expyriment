@@ -15,7 +15,7 @@ __date__ = ''
 from . import defaults
 from ._audio import Audio
 from ._video import Video
-Video.get_ffpmeg_binary()
+Video.get_ffmpeg_binary()
 from ._canvas import Canvas
 from ._circle import Circle
 from ._rectangle import Rectangle
