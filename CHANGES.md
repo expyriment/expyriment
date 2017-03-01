@@ -26,6 +26,7 @@ New Features:
 - New method: misc.has_internet_connection()
 - Notify when initializing system fonts takes longer
 - io.ParallelPort: new method get_driver()
+- misc.which() to locate programme files in user's path
 
 Changed:
 - all wait methods (io and Clock) now
