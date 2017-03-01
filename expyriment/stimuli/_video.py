@@ -35,11 +35,14 @@ try:
     k = 'IMAGEIO_NO_INTERNET'
     v = ['yes', 'true', '1']
     if not (k in os.environ and os.environ[k] in v):
-        if has_internet_connection():
-            import imageio
-            imageio.plugins.ffmpeg.download()
-        else:
-            os.environ[k] = 'yes'
+        import imageio
+        try:
+            imageio.plugins.ffmpeg.get_exe()
+        except imageio.core.NeedDownloadError:
+            if has_internet_connection():
+                imageio.plugins.ffmpeg.download()
+            else:
+                os.environ[k] = 'yes'
     import mediadecoder as _mediadecoder
 except ImportError:
     _mediadecoder = None
