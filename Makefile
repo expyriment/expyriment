@@ -18,10 +18,10 @@ tarball: dist build/wheel_version
 		mkdir -p build/tmp ;\
 		unzip dist/* -d build/tmp ;\
 		mv build/tmp/expyriment build/$$DIR ;\
-		rm -rf build/tmp ;\
-		rm build/$$DIR/expyriment/_fonts -rf ;\
-		cp -ra documentation build/$$DIR ;\
-		rm build/$$DIR/documentation/sphinx/_build -r ;\
+		rm -Rf build/tmp ;\
+		rm build/$$DIR/expyriment/_fonts -Rf ;\
+		cp -Ra documentation build/$$DIR ;\
+		rm build/$$DIR/documentation/sphinx/_build -R ;\
 		cp -at build/$$DIR  CHANGES.md COPYING.txt README.md ;\
 		cp -at build/$$DIR setup.py ;\
 		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
@@ -29,7 +29,7 @@ tarball: dist build/wheel_version
 		cd build ;\
 		rm -f $$TAR;\
 		tar cfz $$TAR $$DIR;\
-		rm -rf $$DIR;\
+		rm -Rf $$DIR;\
 		mv $$TAR ../dist/
 
 dist:
