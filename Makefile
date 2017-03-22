@@ -30,7 +30,6 @@ tarball: dist build/wheel_version
 		rm -f $$TAR;\
 		tar cfz $$TAR $$DIR;\
 		rm -rf $$DIR;\
-		sha1sum $$TAR;\
 		mv $$TAR ../dist/
 
 dist:
