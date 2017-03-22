@@ -12,8 +12,9 @@ wheel: dist build/wheel_version
 
 tarball: dist build/wheel_version
 	@VER=$$(cat build/wheel_version);\
-		DIR=python-expyriment-$$VER;\
-		TAR=python-expyriment_$$VER.orig.tar.gz;\
+		DIR=expyriment-$$VER;\
+		TAR=expyriment_$$VER.tar.gz;\
+		ZIP=expyriment_$$VER.zip;\
 		mkdir -p build/$$DIR ;\
 		mkdir -p build/tmp ;\
 		unzip dist/* -d build/tmp ;\
@@ -31,8 +32,9 @@ tarball: dist build/wheel_version
 		cd build ;\
 		rm -f $$TAR;\
 		tar cfz $$TAR $$DIR;\
-		rm -Rf $$DIR;\
-		mv $$TAR ../dist/
+		zip -r $$ZIP $$DIR;\
+		mv $$TAR ../dist/;\
+		mv $$ZIP ../dist/
 
 dist:
 	mkdir -p build
