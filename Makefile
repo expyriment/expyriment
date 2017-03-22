@@ -22,8 +22,10 @@ tarball: dist build/wheel_version
 		rm build/$$DIR/expyriment/_fonts -Rf ;\
 		cp -Ra documentation build/$$DIR ;\
 		rm build/$$DIR/documentation/sphinx/_build -R ;\
-		cp -at build/$$DIR  CHANGES.md COPYING.txt README.md ;\
-		cp -at build/$$DIR setup.py ;\
+		cp -a CHANGES.md build/$$DIR ;\
+		cp -a COPYING.txt build/$$DIR ;\
+		cp -a README.md build/$$DIR ;\
+		cp -a setup.py build/$$DIR ;\
 		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
 		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f ;\
 		cd build ;\
