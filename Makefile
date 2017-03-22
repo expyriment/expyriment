@@ -39,9 +39,8 @@ dist:
 	python setup.py bdist_wheel --universal | tee build/wheel.log
 
 build/wheel_version: dist 
-	@grep "Expyriment Version:" build/wheel.log | sed  \
-				-e 's/.*\(\[.\+\]\).*/\1/g'  \
-				-e "s/\]//" -e "s/\[//" > build/wheel_version 
+	@grep "Expyriment Version:" build/wheel.log | awk -F'[' '{print $$2}' \
+				| awk -F']' '{print $$1}' > build/wheel_version 
 
 install:
 	python setup.py install
