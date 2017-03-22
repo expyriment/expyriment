@@ -19,9 +19,9 @@ tarball: dist build/wheel_version
 		unzip dist/* -d build/tmp ;\
 		mv build/tmp/expyriment build/$$DIR ;\
 		rm -Rf build/tmp ;\
-		rm build/$$DIR/expyriment/_fonts -Rf ;\
+		rm -Rf build/$$DIR/expyriment/_fonts ;\
 		cp -Ra documentation build/$$DIR ;\
-		rm build/$$DIR/documentation/sphinx/_build -R ;\
+		rm -R build/$$DIR/documentation/sphinx/_build  ;\
 		cp -a CHANGES.md build/$$DIR ;\
 		cp -a COPYING.txt build/$$DIR ;\
 		cp -a README.md build/$$DIR ;\
