@@ -155,10 +155,13 @@ class TouchScreenButtonBox(Input):
         """
 
         self._canvas = self._background_stimulus.copy()
+        print(self._canvas)
         if len(self._button_fields) < 1:
             raise RuntimeError("No button field defined!")
-        map(lambda x:x.plot(self._canvas), self._button_fields)
-        map(lambda x:x.plot(self._canvas), self._stimuli)
+        for x in self._button_fields:
+            x.plot(self._canvas)
+        for x in self._stimuli:
+            x.plot(self._canvas)
         self._canvas.preload()
 
     def destroy(self):
