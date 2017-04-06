@@ -2,6 +2,13 @@
 Expyriment Release Notes
 ========================
 
+upcoming version
+-----------------
+
+Fixed:
+- Adding Field bug in TouchscreenButtonBox 
+
+
 Version 0.9.0 (9 Mar 2017)
 ---------------------------
 New Features:
