@@ -83,7 +83,6 @@ class TouchScreenButtonBox(Input):
 
         """
 
-        print("HH")
         if not isinstance(button_field, stimuli._visual.Visual):
             raise TypeError("Button field has to be a visual Expyriment stimulus")
         self._button_fields.append(button_field)
