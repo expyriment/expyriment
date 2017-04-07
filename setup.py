@@ -264,7 +264,7 @@ def get_version_info_from_release_info():
         else:
             version_nr = ""
     revision_nr = lines[1].strip()[:7]
-    date = lines[2]
+    date = lines[2].strip()
     # GitHub source archive (snapshot, no tag)
     if version_nr == "":
         with open("CHANGES.md") as f:
