@@ -253,7 +253,7 @@ class XYPoint(object):
 
         dx = self._x - p._x
         dy = self._y - p._y
-        return _math.sqrt((dx * dx) + (dy * dy))
+        return _math.hypot(dx, dy)
 
     def rotate(self, degree, rotation_centre=(0, 0)):
         """Rotate the point counterclockwise in degree around rotation_centre.
@@ -270,7 +270,7 @@ class XYPoint(object):
         p = XYPoint(self._x - rotation_centre[0], self._y - rotation_centre[1])
         #cart -> polar
         ang = _math.atan2(p._x, p._y)
-        r = _math.sqrt((p._x * p._x) + (p._y * p._y))
+        r = _math.hypot(p._x, p._y)
         ang = ang - ((degree / 180.0) * _math.pi);
         #polar -> cart
         self._x = r * _math.sin(ang) + rotation_centre[0]
