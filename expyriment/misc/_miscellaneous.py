@@ -366,7 +366,7 @@ def create_colours(amount):
 def which(programme):
     """Locate a programme file in the user's path.
     
-    This mimics behaviour of UNIC 'which' command.
+    This mimics behaviour of UNIX's 'which' command.
     
     Parameters
     ----------
