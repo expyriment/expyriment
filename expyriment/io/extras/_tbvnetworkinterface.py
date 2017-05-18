@@ -153,8 +153,8 @@ class TbvNetworkInterface(Input, Output):
         if len(args) > 0:
             for arg in args:
                 arg_length += len(arg)
-        data = struct.pack('!q', length + 5 + arg_length) + \
-            b"\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+        data = byte2unicode(struct.pack('!q', length + 5 + arg_length)) + \
+            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
         if len(args) > 0:
             for arg in args:
                 data += arg
