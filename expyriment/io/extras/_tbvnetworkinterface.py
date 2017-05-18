@@ -164,12 +164,12 @@ class TbvNetworkInterface(Input, Output):
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
-                                     check_control_events=False)
+                                     process_control_events=False)
         data = None
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
             data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
-                                      check_control_events=False)
+                                      process_control_events=False)
         if receive is None or data is None:
             return None
         else:
