@@ -20,7 +20,7 @@ from . import _tbvnetworkinterface_defaults as defaults
 
 from ... import _internals
 from ...misc._timer import get_time
-from ...misc._miscellaneous import byte2unicode
+from ...misc._miscellaneous import byte2unicode, unicode2byte
 from ...io._input_output import Input, Output
 from ...io.extras._tcpclient import TcpClient
 
