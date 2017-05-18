@@ -20,7 +20,7 @@ from . import _tbvnetworkinterface_defaults as defaults
 
 from ... import _internals
 from ...misc._timer import get_time
-from ...misc._miscellaneous import byte2unicode, unicode2byte
+from ...misc._miscellaneous import byte2unicode
 from ...io._input_output import Input, Output
 from ...io.extras._tcpclient import TcpClient
 
@@ -154,13 +154,11 @@ class TbvNetworkInterface(Input, Output):
             for arg in args:
                 arg_length += len(arg)
         data = struct.pack('!q', length + 5 + arg_length) + \
-            b"".join([b"\x00\x00\x00", unicode2byte(chr(length+1)),
-                      unicode2byte(message), b"x00"])
-            #"\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
         if len(args) > 0:
             for arg in args:
                 data += arg
-        self._tcp.send(unicode2byte(data))
+        self._tcp.send(data)
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
@@ -198,7 +196,7 @@ class TbvNetworkInterface(Input, Output):
         data = self._wait()
         if data is None:
             return None, None
-        elif data[0:len(request)] != unicode2byte(request):
+        elif data[0:len(request)] != request:
             return data, None
         else:
             return data[len(request) + 1:], int((get_time() - start) * 1000)
