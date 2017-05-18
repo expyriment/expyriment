@@ -154,7 +154,7 @@ class TbvNetworkInterface(Input, Output):
             for arg in args:
                 arg_length += len(arg)
         data = struct.pack('!q', length + 5 + arg_length) + \
-            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+            b"\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
         if len(args) > 0:
             for arg in args:
                 data += arg
@@ -162,12 +162,12 @@ class TbvNetworkInterface(Input, Output):
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
-                                     check_control_keys=False)
+                                     check_control_events=False)
         data = None
         if receive is not None:
             length = struct.unpack('!q', receive)[0]
             data, rt = self._tcp.wait(package_size=length, duration=self._timeout,
-                                      check_control_keys=False)
+                                      check_control_events=False)
         if receive is None or data is None:
             return None
         else:
