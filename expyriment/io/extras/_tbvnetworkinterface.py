@@ -153,12 +153,13 @@ class TbvNetworkInterface(Input, Output):
         if len(args) > 0:
             for arg in args:
                 arg_length += len(arg)
-        data = byte2unicode(struct.pack('!q', length + 5 + arg_length)) + \
-            "\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
+        data = struct.pack('!q', length + 5 + arg_length) + \
+            b"".join(["\x00\x00\x00, unicode2byte(chr(length+1)), unicode2byte(message), x00"])
+            #"\x00\x00\x00{0}{1}\x00".format(chr(length + 1), message)
         if len(args) > 0:
             for arg in args:
                 data += arg
-        self._tcp.send(data)
+        self._tcp.send(unicode2byte(data))
 
     def _wait(self):
         receive, rt = self._tcp.wait(package_size=8, duration=self.timeout,
