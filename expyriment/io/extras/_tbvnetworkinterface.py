@@ -198,7 +198,7 @@ class TbvNetworkInterface(Input, Output):
         data = self._wait()
         if data is None:
             return None, None
-        elif data[0:len(request)] != request:
+        elif data[0:len(request)] != unicode2byte(request):
             return data, None
         else:
             return data[len(request) + 1:], int((get_time() - start) * 1000)
