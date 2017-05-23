@@ -140,9 +140,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                     message="Subject Number:",
                     position=position,
                     message_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                    message_text_size=24,
                     user_text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                    user_text_size=20,
                     background_colour=(0, 0, 0),
                     frame_colour=(70, 70, 70),
                     ascii_filter=misc.constants.K_ALL_DIGITS)
@@ -181,18 +179,18 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     number = defaults.initialize_delay - int(experiment.clock.time // 1000)
     if number > 0:
         text = stimuli.TextLine("Initializing, please wait...",
-                                text_size=24,
                                 text_colour=(160, 70, 250),
                                 position=(0, 0))
         stimuli._stimulus.Stimulus._id_counter -= 1
         text.present()
         text.present()  # for flipping with double buffer
         text.present()  # for flipping with tripple buffer
+    default_textline_size = stimuli.TextLine(text="").text_size
     while number > 0:
         counter = stimuli.TextLine(
             "{num:02d}".format(num=number),
+            text_size= int(default_textline_size * 0.8),
             text_font='FreeMono',
-            text_size=18,
             text_bold=True,
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             position=(0, -50),
@@ -208,7 +206,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
 
     position = (0, 0)
     if not skip_ready_screen:
-        stimuli.TextLine("Ready", position=position, text_size=24,
+        stimuli.TextLine("Ready", position=position,
                      text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
         if android is None:
@@ -243,8 +241,7 @@ def pause():
     else:
         position = (0, 0)
     stimuli.TextLine("Paused", position=position,
-                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                     text_size=24).present()
+                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
@@ -300,8 +297,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         else:
             position = (0, 0)
         stimuli.TextLine("Quitting Experiment? (y/n)", position=position,
-                         text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                         text_size=24).present()
+                         text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
         char = Keyboard().wait_char(["y", "n"], process_control_events=False)
         if char[0] == "n":
@@ -327,8 +323,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     try:
         experiment._screen.colour = [0, 0, 0]
         stimuli.TextLine(goodbye_text, position=(0, 0),
-                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
-                         text_size=24).present()
+                         text_colour=misc.constants.C_EXPYRIMENT_PURPLE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
     except:
         pass
@@ -443,12 +438,12 @@ fullscreen.""")
         experiment._events = None
     experiment._keyboard = Keyboard()
     experiment._mouse = Mouse(show_cursor=False)
-
+    default_textline_size = stimuli.TextLine(text="").text_size
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
     logo.scale((0.7, 0.7))
     text = stimuli.TextLine("Version {0}".format(get_version()),
-                            text_size=20,
+                            text_size= int(default_textline_size * 0.8),
                             text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
                             position=(0, -5))
@@ -463,7 +458,7 @@ fullscreen.""")
             txt += ", {0}".format(
                         misc.module_hashes_as_string())
         text2 = stimuli.TextLine(txt,
-            text_size=14,
+            text_size= int(default_textline_size * 0.5),
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),
             position=(0, -50))
