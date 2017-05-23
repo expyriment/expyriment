@@ -34,7 +34,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size):
+    def __init__(self, colour, open_gl, window_mode, window_size, no_frame=True):
         """Create and set up a screen output.
 
         Notes
@@ -55,6 +55,9 @@ class Screen(Output):
         window_size : (int, int)
             size of the window in window_mode,
             full screen mode if size of window_mode[0]<=0
+        no_frame : bool (default=False)
+            set True for windows (in window mode) with no frame
+            This parameter does not affect fullscreen mode
 
         """
 
@@ -94,19 +97,22 @@ OpenGL will be deactivated!"
             else:
                 self._surface = pygame.display.set_mode(self._window_size)
                 pygame.display.set_caption('Expyriment')
+
         else:
             try:
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
             except:
                 pass
+
+            pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
             if self._fullscreen:
                 self._surface = pygame.display.set_mode(
-                    self._window_size,
-                    pygame.DOUBLEBUF | pygame.OPENGL | pygame.FULLSCREEN)
+                    self._window_size, pygame_mode | pygame.FULLSCREEN)
             else:
+                if no_frame:
+                    pygame_mode = pygame_mode | pygame.NOFRAME
                 self._surface = pygame.display.set_mode(
-                    self._window_size,
-                    pygame.DOUBLEBUF | pygame.OPENGL)
+                    self._window_size, pygame_mode)
                 pygame.display.set_caption('Expyriment')
 
             ogl_version = ogl.glGetString(ogl.GL_VERSION)

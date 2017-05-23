@@ -151,6 +151,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
 
     >>> expyriment.control.defaults.initialize_delay = 0
     >>> expyriment.control.defaults.window_mode = True
+    >>> expyriment.control.defaults.no_frame_windows = False
     >>> expyriment.control.defaults.fast_quit = True
     >>> expyriment.control.defaults.auto_create_subject_id = True
     >>> expyriment.io.defaults.outputfile_time_stamp = False
@@ -183,6 +184,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
         print("*** DEVELOP MODE ***")
         defaults.initialize_delay = 0
         defaults.window_mode = True
+        defaults.no_frame_windows = False
         defaults.fast_quit = True
         io.defaults.outputfile_time_stamp = False
         defaults.auto_create_subject_id = True

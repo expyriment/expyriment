@@ -143,6 +143,10 @@ Default settings for the control package. ::
     window_size : (int, int)
         the size of the window when running in window mode
 
+    no_frame_windows : bool
+        if True windows in window mode will be displayed without a frame
+        This parameter does not affect fullscreen mode
+
 """
 from __future__ import absolute_import, print_function, division
 from builtins import *
@@ -168,6 +172,7 @@ refresh_key = None # TODO: not yet documented, because this feature is experimen
 
 open_gl = 2
 window_mode = False
+no_frame_windows = False
 window_size = (800, 600)
 
 event_logging = 1  # 1 = default, 2 = extensive, 0 or False = off
