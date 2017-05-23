@@ -317,7 +317,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         fast_quit = defaults.fast_quit
     if fast_quit and experiment.is_started:
         if experiment.screen.window_mode:
-            if defaults.no_frame_windows:
+            if expyriment.screen.window_no_frame:
                 pygame.display.set_mode(experiment.screen._window_size, pygame.NOFRAME)
             else:
                 pygame.display.set_mode(experiment.screen._window_size)
@@ -413,7 +413,7 @@ fullscreen.""")
                                 open_gl=defaults.open_gl,
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size,
-                                no_frame = defaults.no_frame_windows)
+                                no_frame = defaults.windows_no_frame)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
     if misc.is_idle_running() and sys.argv[0] != "":
         try:
