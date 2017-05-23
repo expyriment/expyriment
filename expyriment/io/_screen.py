@@ -34,7 +34,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size, no_frame=True):
+    def __init__(self, colour, open_gl, window_mode, window_size, no_frame=False):
         """Create and set up a screen output.
 
         Notes
