@@ -34,7 +34,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size, no_frame=False):
+    def __init__(self, colour, open_gl, window_mode, window_size, no_frame):
         """Create and set up a screen output.
 
         Notes
@@ -55,9 +55,9 @@ class Screen(Output):
         window_size : (int, int)
             size of the window in window_mode,
             full screen mode if size of window_mode[0]<=0
-        no_frame : bool (default=False)
-            set True for windows (in window mode) with no frame
-            This parameter does not affect fullscreen mode
+        no_frame : bool
+            set True for windows (in window mode) with no frame;
+            this parameter does not affect fullscreen mode
 
         """
 
