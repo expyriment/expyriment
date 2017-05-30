@@ -23,6 +23,8 @@ script file, the following three conditions have to be met:
    For example::
 
      # -*- coding: utf-8 -*-
+     
+  (In Python 3, you can skip this, if and only if you use utf-8 encoding.)
 
 Non-English characters in other text files (e.g. stimuli lists)
 ---------------------------------------------------------------
