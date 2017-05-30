@@ -54,14 +54,14 @@ try:
     import imp as _imp
     import os as _os
     import sys as _sys
-    for package in ["test"]:
-        _tf = _os.path.abspath(_imp.find_module(package)[1])
+    for _package in ["test"]:
+        _tf = _os.path.abspath(_imp.find_module(_package)[1])
         _mf = _os.path.abspath(_os.path.abspath(_sys.argv[0]))
         if _os.path.split(_tf)[0] == _os.path.split(_mf)[0] or \
                 _os.path.split(_tf)[0] == _os.path.abspath(_os.path.curdir):
                     _m = "Warning: "
                     _m += "'{0}' is shadowing package '{1}'!"
-                    print(_m.format(_tf, package))
+                    print(_m.format(_tf, _package))
 except:
     pass
 
