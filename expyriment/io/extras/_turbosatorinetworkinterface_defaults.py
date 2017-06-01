@@ -1,3 +1,0 @@
-# TurbosatoriNetworkInterface defaults
-turbosatorinetworkinterface_timeout = 2000
-turbosatorinetworkinterface_connect = True

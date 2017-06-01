@@ -16,9 +16,5 @@ __date__ = ''
 
 
 from ... import _internals
-
-
-for _plugins in [_internals.import_plugin_defaults(__file__),
-                _internals.import_plugin_defaults_from_home(__file__)]:
-    for _defaults in _plugins:
-        exec(_defaults)
+for code in _internals.import_plugins_defaults_code("io"):
+    exec(code)

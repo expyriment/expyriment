@@ -1,1 +1,0 @@
-#CedrusDevice defautls
