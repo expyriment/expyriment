@@ -322,7 +322,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         fast_quit = defaults.fast_quit
     if fast_quit and experiment.is_started:
         if experiment.screen.window_mode:
-            if expyriment.screen.window_no_frame:
+            if experiment.screen.no_frame:
                 pygame.display.set_mode(experiment.screen._window_size, pygame.NOFRAME)
             else:
                 pygame.display.set_mode(experiment.screen._window_size)
