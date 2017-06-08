@@ -4,7 +4,12 @@ Expyriment Release Notes
 
 upcoming version
 -----------------
-
+New Feature:
+- download plugins from stash: misc.download_from_stash()
+Changed:
+- extras ned to be explicitly imported
+- extras and plugins are not anymore part of expyriment package and can be instead download
+  from the expyriment stash
 Fixed:
 - Adding Field bug in TouchscreenButtonBox 
 
