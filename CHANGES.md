@@ -4,6 +4,9 @@ Expyriment Release Notes
 
 upcoming version
 -----------------
+New Features:
+- Expyriment windows with no frame. Just set default.window_no_frame=True
+  before initialize
 
 Fixed:
 - Adding Field bug in TouchscreenButtonBox 
