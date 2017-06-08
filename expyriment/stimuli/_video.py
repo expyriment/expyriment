@@ -79,7 +79,7 @@ class Video(_visual.Stimulus):
                     os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
         except ImportError:
             pass
-    
+
     def __init__(self, filename, backend=None, position=None):
         """Create a video stimulus.
 
@@ -117,6 +117,7 @@ class Video(_visual.Stimulus):
         self._frame = 0
         self._new_frame_available = False
         self._surface_locked = False
+        self._audio_started = False
         if backend:
             self._backend = backend
         else:
@@ -129,7 +130,7 @@ class Video(_visual.Stimulus):
         if not(os.path.isfile(self._filename)):
             raise IOError("The video file {0} does not exists".format(
                 unicode2byte(self._filename)))
-            
+
         if self._backend == "mediadecoder":
             try:
                 import mediadecoder as _mediadecoder
@@ -137,7 +138,7 @@ class Video(_visual.Stimulus):
                 print("Warning: Package 'mediadecoder' not installed!\n" +
                       "Video backend will be set to 'pygame'.")
                 self._backend = "pygame"
-                
+
             try:
                 import sounddevice as _sounddevice
             except ImportError:
@@ -345,7 +346,7 @@ class Video(_visual.Stimulus):
             self._surface = None
             self._is_preloaded = False
 
-    def play(self, loop=False, log_event_tag=None):
+    def play(self, loop=False, log_event_tag=None, audio=True):
         """Play the video stimulus from the current position.
 
         Parameters
@@ -356,6 +357,8 @@ class Video(_visual.Stimulus):
             if log_event_tag is defined and if logging is switched on for this
             stimulus (default), a summary of the inter-event-intervalls are
             appended at the end of the event file
+        audio : bool, optional
+            whether audio of video (if present) should be played (default=True)
 
         Note
         ----
@@ -372,6 +375,12 @@ class Video(_visual.Stimulus):
         """
 
         if self._is_paused:
+            if audio and not self._audio_started:
+                self._audio.stream.start()
+                self._audio_started = True
+            elif not audio and self._audio_started:
+                self._audio.stream.stop()
+                self._audio_started = False
             self.pause()
         else:
             if self._backend == "pygame" and mixer.get_init() is not None:
@@ -388,8 +397,9 @@ class Video(_visual.Stimulus):
                 _internals.active_exp._event_file_log(
                     "Video,playing,{0}".format(unicode2byte(self._filename)),
                     log_level=1, log_event_tag=log_event_tag)
-            if self._backend == "mediadecoder" and self._file.audioformat:
+            if self._backend == "mediadecoder" and self._file.audioformat and audio:
                 self._audio.start()
+                self._audio_started = True
             self._file.loop = loop
             self._file.play()
 
