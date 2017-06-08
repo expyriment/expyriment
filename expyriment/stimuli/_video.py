@@ -292,15 +292,14 @@ class Video(_visual.Stimulus):
                           "initilized before preloading a video."
                 raise RuntimeError(message)
             if self._backend == "pygame":
-                self._file = pygame.movie.Movie(unicode2byte(self._filename,
-                                                             fse=True))
+                self._file = pygame.movie.Movie(self._filename)
                 size = self._file.get_size()
             elif self._backend == "mediadecoder":
                 if self.get_ffmpeg_binary() is None:
                     raise RuntimeError("'ffmpeg' not found!")
                 from mediadecoder.states import PLAYING
                 from mediadecoder.decoder import Decoder
-                self._file = Decoder(mediafile=unicode2byte(self._filename),
+                self._file = Decoder(mediafile=self._filename,
                                      videorenderfunc=self._update_surface)
                 if _internals.active_exp._screen.open_gl:
                     import moviepy.video.fx.all as vfx
