@@ -70,6 +70,7 @@ class Screen(Output):
         self._open_gl = open_gl
         self._fullscreen = not window_mode
         self._window_size = window_size
+        self._no_frame = no_frame
 
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
@@ -147,6 +148,12 @@ machine!")
         """Getter for open_gl."""
 
         return self._open_gl
+
+    @property
+    def no_frame(self):
+        """Getter for no_frame boolean"""
+
+        return self._no_frame
 
     @property
     def window_mode(self):

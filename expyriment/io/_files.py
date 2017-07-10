@@ -238,8 +238,9 @@ class OutputFile(Output):
 
         start = get_time()
         if self._buffer != []:
+            buffer = [unicode2byte(x) for x in self._buffer]
             with open(self._fullpath, 'ab') as f:
-                f.write(unicode2byte("".join(self._buffer)))
+                f.write(b"".join(buffer))
             self._buffer = []
         return int((get_time() - start) * 1000)
 
@@ -255,7 +256,9 @@ class OutputFile(Output):
 
         # NOTE: Do not print here recursion due to std_out logging
 
-        self._buffer.append(str(content))
+        if not _internals.is_base_string(content):
+            content = str(content)
+        self._buffer.append(content)
 
 
     def write_line(self, content):
@@ -376,23 +379,6 @@ class DataFile(OutputFile):
         """Getter for delimiter"""
         return self._delimiter
 
-    @staticmethod
-    def _typecheck_and_cast2str(data): # TODO is that function still needed?
-        """Check if data are string or numeric and cast to string"""
-        if data is None:
-            data = "None"
-        if isinstance(data, str):
-            return unicode2byte(data)
-        elif isinstance(data, bytes):
-            return str(data)
-        elif isinstance(data(int, int, float,bool)):
-            return repr(data)
-        else:
-            message = "Data to be added must be " + \
-                "booleans, strings, numerics (i.e. floats or integers) " + \
-                "or None.\n {0} is not allowed.".format(type(data))
-            raise TypeError(message)
-
     def add(self, data):
         """Add data.
 
@@ -409,10 +395,18 @@ class DataFile(OutputFile):
             for counter, elem in enumerate(data):
                 if counter > 0:
                     line = line + self.delimiter
-                line = line + str(elem)
+                if not _internals.is_base_string(elem):
+                    elem = str(elem)
+                if '"' in byte2unicode(elem):
+                    elem = byte2unicode(elem).replace('"', '""')
+                if ',' in byte2unicode(elem):
+                    elem = '"{0}"'.format(byte2unicode(elem))
+                line = line + elem
             self.write_line(line)
         else:
-            self.write_line(str(data))
+            if not _internals.is_base_string(data):
+                data = str(data)
+            self.write_line(data)
 
     def add_subject_info(self, text):
         """Adds a text the subject info header.
@@ -679,7 +673,9 @@ class EventFile(OutputFile):
         """
 
         log_time = self._clock.time
-        self.write_line(repr(log_time) + self.delimiter + str(event))
+        if not _internals.is_base_string(event):
+            event = str(event)
+        self.write_line(repr(log_time) + self.delimiter + event)
         if log_event_tag is not None:
             self._inter_event_intervall_log.add_event(log_event_tag, log_time)
         return log_time

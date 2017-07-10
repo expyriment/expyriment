@@ -5,7 +5,7 @@ Expyriment Release Notes
 upcoming version
 -----------------
 New Features:
-- Expyriment window with no frame. Just set default.window_no_frame=True
+- Expyriment windows with no frame. Just set default.window_no_frame=True
   before initialize
 - download plugins from stash: misc.download_from_stash()
 Changed:
