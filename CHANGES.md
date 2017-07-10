@@ -9,9 +9,13 @@ New Features:
   before initialize
 - download plugins from stash: misc.download_from_stash()
 Changed:
-- extras ned to be explicitly imported
-- extras and plugins are not anymore part of expyriment package and can be instead download
-  from the expyriment stash
+- extras
+    - extras need to be explicitly imported
+    - extras and plugins are not anymore part of expyriment package and can
+      be instead download from the expyriment stash (see
+      misc.download_from_stash())
+    - All installed extras will be installed in the local settings folder
+      (typically .expyriment of the $HOME directory)
 Fixed:
 - Adding Field bug in TouchscreenButtonBox 
 

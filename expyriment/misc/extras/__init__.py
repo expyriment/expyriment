@@ -15,7 +15,6 @@ __revision__ = ''
 __date__ = ''
 
 
-from . import defaults
 from ... import _internals
 
 print("Misc plugins:")
@@ -26,3 +25,8 @@ for name, code in _internals.import_plugins_code("misc").items():
     except Exception as err:
         print("Warning: Could not import {0}".format(name))
         print(" {0}".format(err))
+
+try:
+    del (name, code)
+except:
+    pass

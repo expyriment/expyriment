@@ -15,7 +15,6 @@ __date__ = ''
 
 import sys
 import os
-
 import pygame
 
 try:
@@ -176,14 +175,14 @@ def get_plugins_folder():
         return None
 
 
-def import_plugins_code(submodule):
+def import_plugins_code(package):
     """Return the code to import all plugins from the settings folder as dict.
 
     Includes the module folder in $home to the path.
 
     Parameters
     ----------
-    submodule : submodule name
+    package : submodule name
 
     Returns
     -------
@@ -195,55 +194,33 @@ def import_plugins_code(submodule):
     extras_folder = get_plugins_folder()
     if extras_folder is None:
         return code
-    module_folder = os.path.abspath(os.path.join(extras_folder, submodule))
+    package = package + "_extras"
+    module_folder = os.path.abspath(os.path.join(extras_folder, package))
 
     if os.path.isdir(module_folder):
-        sys.path.append(get_settings_folder())
-        for filename in os.listdir(module_folder):
-            if filename.endswith(".py") and\
-                                not (filename.startswith("__") or\
-                                filename.endswith("defaults.py")):
-                f = open(os.path.join(module_folder, filename))
-                try:
-                    for line in f:
-                        if line[0:6] == "class ":
-                            tmp = line[6:].lstrip()
-                            name = tmp[:len(filename[:-4])]
-                            break
-                    code[name] = "from extras.{0}.{1} import {2}\n".format(submodule,
-                                                            filename[:-3], name)
-                except:
-                    print("Could not find a class in {0} !".format(
-                                        os.path.join(module_folder, filename)))
-    if len(code) >0:
-        txt = "Plugins " + submodule + ": "
-        for x in code.keys():
-            txt += x + ", "
+        for entry in os.listdir(module_folder):
+            init_file = os.path.join(module_folder, entry, "__init__.py")
+            if os.path.isfile(init_file):
+                # find name of first class --> class_name
+                class_name = None
+                with open(init_file) as init_fl:
+                    for l in init_fl:
+                        if l.strip().startswith("class "):
+                            l = l[(l.find("class ")+6):]
+                            e = (l.find("("), l.find(":"))
+                            if e[1]>1:
+                                if e[0]>1:
+                                    e = min(e)
+                                else:
+                                    e = e[1]
+                                class_name = l[:e]
+                                break # file loop (for..)
+
+                if class_name is not None:
+                    code[class_name] = "from {0}.{1} import {2}\n".format(package,
+                                                                          entry, class_name)
     return code
 
-def import_plugins_defaults_code(submodule):
-    """Return the code to import all defaults of extra package as list.
-
-    Parameters
-    ----------
-    submodule : submodule name
-
-     Returns
-    -------
-    out : string
-
-    """
-
-    code = []
-    extras_folder = get_plugins_folder()
-    if extras_folder is None:
-        return code
-    module_folder = os.path.abspath(os.path.join(extras_folder, submodule))
-    if os.path.isdir(module_folder):
-        for filename in os.listdir(module_folder):
-            if filename.endswith("_defaults.py"):
-                code.append(run_py_file_command(os.path.join(module_folder, filename)))
-    return code
 
 def post_import_hook():
     """Execute post import file."""

@@ -117,5 +117,10 @@ stimuli.Video.get_ffmpeg_binary()  # in case it needs to be downloaded
 if not misc.is_android_running():
     from ._api_reference_tool import show_documentation
 
+# add extras folder if it exists
+if _internals.get_plugins_folder() is not None:
+    _sys.path.append(_internals.get_plugins_folder())
+
+# post import hook
 exec(_internals.post_import_hook())
 
