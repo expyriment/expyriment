@@ -194,7 +194,7 @@ def import_plugins_code(package):
     extras_folder = get_plugins_folder()
     if extras_folder is None:
         return code
-    package = package + "_extras"
+    package = "expyriment_" + package + "_extras"
     module_folder = os.path.abspath(os.path.join(extras_folder, package))
 
     if os.path.isdir(module_folder):
