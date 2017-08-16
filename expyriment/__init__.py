@@ -36,7 +36,7 @@ __date__ = ''
 
 
 import sys as _sys
-from ._internals import get_version
+from ._internals import get_version, import_all_extras
 from ._internals import PYTHON3 as _PYTHON3
 
 if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or

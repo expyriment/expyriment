@@ -147,7 +147,6 @@ def run_py_file_command(path):
     else:
         return "execfile(r'{0}')\n".format(path)
 
-
 def get_settings_folder():
     """Return for expyriment setting folder in $HOME"""
     home = os.getenv('USERPROFILE')
@@ -173,7 +172,6 @@ def get_plugins_folder():
         return path
     else:
         return None
-
 
 def import_plugins_code(package):
     """Return the code to import all plugins from the settings folder as dict.
@@ -221,7 +219,6 @@ def import_plugins_code(package):
                                                                           entry, class_name)
     return code
 
-
 def post_import_hook():
     """Execute post import file."""
 
@@ -236,3 +233,10 @@ def post_import_hook():
     else:
         return ""
 
+def import_all_extras():
+    """Import all extra plugins."""
+
+    from .design import extras
+    from .misc import extras
+    from .io import extras
+    from .stimuli import extras

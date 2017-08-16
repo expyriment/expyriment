@@ -16,7 +16,7 @@ __date__ = ''
 
 from ... import _internals
 
-print("stimuli plugins:")
+print("Stimuli plugins:")
 for name, code in _internals.import_plugins_code("stimuli").items():
     print(" " + name)
     try:
