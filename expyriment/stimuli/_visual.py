@@ -623,7 +623,7 @@ class Visual(Stimulus):
                 self_pos = (self.absolute_position[0] + screen_size[0] // 2 -
                             self_size[0] // 2,
                             - self.absolute_position[1] + screen_size[1] // 2 -
-                            self_size[1] / 2)
+                            self_size[1] // 2)
                 other_pos = (stimulus.absolute_position[0] + screen_size[0] // 2
                              - other_size[0] // 2,
                              - stimulus.absolute_position[1] + screen_size[1] //
