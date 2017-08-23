@@ -421,7 +421,11 @@ def download_from_stash(content="all", branch="master"):
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()
 
-    import requests
+    try:
+        import requests
+    except ImportError:
+        raise ImportError("""Cannot download from Expyriment stash.
+The Python package 'requests' is not installed.""")
 
     api_url = "https://api.github.com/repos/expyriment/expyriment-stash/{0}/{1}"
     download_url = "https://raw.githubusercontent.com/expyriment/expyriment-stash/{0}/{1}"
