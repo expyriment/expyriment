@@ -425,7 +425,7 @@ def download_from_stash(content="all", branch="master"):
         import requests
     except ImportError:
         raise ImportError("""Cannot download from Expyriment stash.
-The Python package 'requests' is not installed.""")
+The Python package 'Requests' is not installed.""")
 
     api_url = "https://api.github.com/repos/expyriment/expyriment-stash/{0}/{1}"
     download_url = "https://raw.githubusercontent.com/expyriment/expyriment-stash/{0}/{1}"
