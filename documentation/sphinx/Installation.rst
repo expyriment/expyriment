@@ -47,7 +47,7 @@ where ``FEATURE`` is one (or several, separated by commas) of:
     `Parallel port <expyriment.io.ParallelPort>`_ communication on Linux (for Windows, please install one of the following parallel port drivers instead: inpout32_ or dlportio_)
 ``video``
     Enhanced `video playback <Video>`_ with support for various formats
-``download_from_stash``
+``stash``
     Download content from Expyriment stash
 ``all``
     All of the above
