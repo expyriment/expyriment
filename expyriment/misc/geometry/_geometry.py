@@ -14,7 +14,7 @@ __revision__ = ''
 __date__ = ''
 
 import math as _math
-from .. import _internals
+from ... import _internals
 
 
 def coordinates2position(coordinate):

@@ -200,3 +200,4 @@ def std(data):
     """
 
     return _math.sqrt(variance(data))
+
