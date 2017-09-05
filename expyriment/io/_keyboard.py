@@ -241,7 +241,7 @@ class Keyboard(Input):
 
         Notes
         -----
-        Keys are defined my keyboard constants (please use see misc.constants)
+        Keys are defined by keyboard constants (please use see misc.constants)
 
         See Also
         --------
