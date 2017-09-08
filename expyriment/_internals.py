@@ -15,7 +15,6 @@ __date__ = ''
 
 import sys
 import os
-
 import pygame
 
 try:
@@ -141,68 +140,12 @@ class CallbackQuitEvent(object):
 
 # IMPORTER FUNCTIONS
 
-def import_command(path):
+def run_py_file_command(path):
     # helper function to generate import command for extras that is Python2/3 compatible
     if PYTHON3:
         return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
     else:
         return "execfile(r'{0}')\n".format(path)
-
-
-def import_plugins(init_filename):
-    """Return the code to import all plugins of extra package as dict.
-
-    Parameters
-    ----------
-    init_filename : string
-        fullpath to the __init__ file of the particular extra package
-
-    Returns
-    -------
-    out : string
-
-    """
-
-    code = {}
-    for filename in os.listdir(os.path.dirname(init_filename)):
-        if filename.endswith(".py") and not (filename.startswith("__") or\
-                                             filename.endswith("defaults.py")):
-            f = open(os.path.dirname(init_filename) + os.sep + filename)
-            try:
-                for line in f:
-                    if line[0:6] == "class ":
-                        tmp = line[6:].lstrip()
-                        name = tmp[:len(filename[:-4])]
-                        break
-                code[filename] = "from .{0} import {1}\n".format(filename[:-3],
-                                                                name)
-            except:
-                print("Warning: Could not import {0}!".format(
-                    os.path.dirname(init_filename) + os.sep + filename))
-    return code
-
-def import_plugin_defaults(init_filename):
-    """Return the code to import all defaults of extra package as list.
-
-    Parameters
-    ----------
-    init_filename : string
-        fullpath to the __init__ file of the particular extra package
-
-    Returns
-    -------
-    out : string
-
-    """
-
-    # extra defaults
-    code = []
-    folder = os.path.dirname(init_filename)
-    for _filename in os.listdir(folder):
-        if _filename.endswith("_defaults.py"):
-            code.append( import_command(folder + os.sep +  _filename) )
-    return code
-
 
 def get_settings_folder():
     """Return for expyriment setting folder in $HOME"""
@@ -218,10 +161,26 @@ def get_settings_folder():
             return path
     return None
 
-def import_plugins_from_settings_folder(init_filename):
+def get_plugins_folder():
+    """Return for expyriment plugin folder in $HOME if it exists"""
+
+    settings_folder = get_settings_folder()
+    if settings_folder is None:
+        return None
+    path = os.path.join(settings_folder, "extras")
+    if os.path.isdir(path):
+        return path
+    else:
+        return None
+
+def import_plugins_code(package):
     """Return the code to import all plugins from the settings folder as dict.
 
     Includes the module folder in $home to the path.
+
+    Parameters
+    ----------
+    package : submodule name
 
     Returns
     -------
@@ -229,60 +188,35 @@ def import_plugins_from_settings_folder(init_filename):
 
     """
 
-    module = init_filename.split(os.sep)[1]
-    folder = get_settings_folder()
-    if folder is None:
-        return ""
-
-    folder = folder + os.sep + module + os.sep
     code = {}
-    sys.path.append(folder)
-    try:
-        for filename in os.listdir(os.path.dirname(folder)):
-            if filename.endswith(".py") and\
-                                not (filename.startswith("__") or\
-                                filename.endswith("defaults.py")):
-                f = open(os.path.dirname(folder) + os.sep + filename)
-                try:
-                    for line in f:
-                        if line[0:6] == "class ":
-                            tmp = line[6:].lstrip()
-                            name = tmp[:len(filename[:-4])]
-                            break
-                    code[filename] = "from .{0} import {1}\n".format(filename[:-3],
-                                                                    name)
-                    print("import .{0}.extras.{1} (from homefolder)".format(
-                                                        module, name))
-                except:
-                    print("Could not import {0}!".format(
-                        os.path.dirname(folder) + os.sep + filename))
-    except:
-        pass
-    return code
+    extras_folder = get_plugins_folder()
+    if extras_folder is None:
+        return code
+    package = "expyriment_" + package + "_extras"
+    module_folder = os.path.abspath(os.path.join(extras_folder, package))
 
-def import_plugin_defaults_from_home(init_filename):
-    """Return the code to import all defaults of extra package as list.
+    if os.path.isdir(module_folder):
+        for entry in os.listdir(module_folder):
+            init_file = os.path.join(module_folder, entry, "__init__.py")
+            if os.path.isfile(init_file):
+                # find name of first class --> class_name
+                class_name = None
+                with open(init_file) as init_fl:
+                    for l in init_fl:
+                        if l.strip().startswith("class "):
+                            l = l[(l.find("class ")+6):]
+                            e = (l.find("("), l.find(":"))
+                            if e[1]>1:
+                                if e[0]>1:
+                                    e = min(e)
+                                else:
+                                    e = e[1]
+                                class_name = l[:e]
+                                break # file loop (for..)
 
-    Parameters
-    ----------
-    init_filename : string
-        fullpath to the __init__ file of the particular extra package
-
-    """
-
-    module = init_filename.split(os.sep)[1]
-    folder = get_settings_folder()
-    if folder is None:
-        return ""
-
-    folder = folder + os.sep + module + os.sep
-    code = []
-    try:
-        for _filename in os.listdir(os.path.dirname(folder)):
-            if _filename.endswith("_defaults.py"):
-                code.append( import_command(folder + os.sep + _filename) )
-    except:
-        pass
+                if class_name is not None:
+                    code[class_name] = "from {0}.{1} import {2}\n".format(package,
+                                                                          entry, class_name)
     return code
 
 def post_import_hook():
@@ -295,7 +229,14 @@ def post_import_hook():
     filename = home + os.sep + "post_import.py"
     if os.path.isfile(filename):
         print("process {0}".format(filename))
-        return import_command(filename)
+        return run_py_file_command(filename)
     else:
         return ""
 
+def import_all_extras():
+    """Import all extra plugins."""
+
+    from .design import extras
+    from .misc import extras
+    from .io import extras
+    from .stimuli import extras

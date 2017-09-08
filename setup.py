@@ -78,11 +78,13 @@ extras_require = {
     'parallelport_linux': ["pyparallel>=0.2,<1"],
     'video':              ["sounddevice>=0.3,<1",
                            "mediadecoder>=0.1,<1"],
+    'stash':              ["requests>=2,<3"],
     'all':                ["numpy>=1.6,<2",
                            "pyserial>=3,<4",
                            "pyparallel>=0.2,<1",
                            "sounddevice>=0.3,<1",
-                           "mediadecoder>=0.1,<1"],
+                           "mediadecoder>=0.1,<1",
+                           "requests>=2,<3"],
     }
 
 

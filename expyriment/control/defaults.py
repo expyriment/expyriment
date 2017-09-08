@@ -148,8 +148,6 @@ Default settings for the control package. ::
         this parameter does not affect fullscreen mode
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'

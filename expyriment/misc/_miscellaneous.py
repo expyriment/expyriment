@@ -23,7 +23,7 @@ import colorsys
 
 import pygame
 
-from .._internals import PYTHON3, android
+from .._internals import PYTHON3, android, get_settings_folder
 
 try:
     from locale import getdefaultlocale
@@ -38,7 +38,7 @@ FS_ENC = sys.getfilesystemencoding()
 if FS_ENC is None:
     FS_ENC = 'utf-8'
 
-    
+
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -315,7 +315,7 @@ def is_interactive_mode():
     Returns
     -------
     interactive_mode : boolean
-    
+
     """
 
     # ps2 is only defined in interactive mode
@@ -341,19 +341,19 @@ def has_internet_connection():
 
 def create_colours(amount):
     """Create different and equally spaced RGB colours.
-    
+
     Parameters
     ----------
     amount : int
         the number of colours to create
-        
+
     Returns
     -------
     colours : list
         a list of colours, each in the form [r, g, b]
-        
+
     """
-    
+
     colours = []
     for i in range(0, 360, 360/amount):
         h = i / 360.0
@@ -365,21 +365,21 @@ def create_colours(amount):
 
 def which(programme):
     """Locate a programme file in the user's path.
-    
+
     This mimics behaviour of UNIX's 'which' command.
-    
+
     Parameters
     ----------
     programme : str
         the programme to file to locate
-    
+
     Returns
     -------
     path : str or None
         the full path to the programme file or None if not found
-        
+
     """
-    
+
     def is_exe(fpath):
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
@@ -395,3 +395,70 @@ def which(programme):
                 return exe_file
 
     return None
+
+
+def download_from_stash(content="all", branch="master"):
+    """Download content from the Expyriment stash.
+
+    Content will be stored in a Expyriment settings diretory (`.expyriment` or
+    `~expyriment`, located in the current user's home directory).
+
+    Parameters
+    ----------
+    content : str, optional
+        the content to download ("examples", "extras" or "tools", "all")
+        (default="all")
+    branch : str, optional
+        the branch to get the content from (default="master")
+
+    """
+
+    def show_progress(count, total, status=''):
+        bar_len = 50
+        filled_len = int(round(bar_len * count / float(total)))
+        percents = round(100.0 * count / float(total), 1)
+        bar = '=' * filled_len + ' ' * (bar_len - filled_len)
+        sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
+        sys.stdout.flush()
+
+    try:
+        import requests
+    except ImportError:
+        raise ImportError("""Cannot download from Expyriment stash.
+The Python package 'Requests' is not installed.""")
+
+    api_url = "https://api.github.com/repos/expyriment/expyriment-stash/{0}/{1}"
+    download_url = "https://raw.githubusercontent.com/expyriment/expyriment-stash/{0}/{1}"
+    if get_settings_folder() is None:
+        os.makedirs(os.path.join(os.path.expanduser("~"), ".expyriment"))
+    path = get_settings_folder()
+
+    # Request branch
+    response = requests.get(api_url.format("branches",  branch))
+    if not response.ok:
+        raise RuntimeError("Could not retrieve branch!")
+
+    # Request recursive tree
+    response = requests.get(api_url.format(
+        "git/trees", response.json()["commit"]["sha"] + "?recursive=1"))
+    if not response.ok:
+        raise RuntimeError("Could not retrieve file list!")
+    if response.json()["truncated"]:
+        raise RuntimeError("Retrieved incomplete file list!")
+
+    # For each file in tree, request it and write it to settings dir
+    blobs = [x for x in response.json()["tree"] if x["type"] == "blob"]
+    if content != "all":
+        blobs = [x for x in blobs if x["path"].startswith(content)]
+    for counter, blob in enumerate(blobs):
+        data = requests.get(download_url.format(branch, blob["path"]))
+        if not data.ok:
+            raise RuntimeError("Could not retrieve {0}!".format(
+                download_url.format(branch, blob["path"])))
+        filename = os.path.join(path, blob["path"])
+        if not os.path.exists(os.path.split(filename)[0]):
+            os.makedirs(os.path.split(filename)[0])
+        with open(filename, 'wb') as f:
+            f.write(data.content)
+        show_progress(counter+1, len(blobs), "{0} ({1})".format(content, branch))
+    print("")
