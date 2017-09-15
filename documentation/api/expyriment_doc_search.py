@@ -30,7 +30,6 @@ def search_doc(search_str, doc_dict):
             doc_dict[k].lower().find(search_str.lower()) > 0:
             print("\n-------------------------------------------------------------------------------")
             print("[ {0} ]\n".format(k))
-            #print "-------------------------------------------------------------------------------"
             print("{0}".format(doc_dict[k]))
 
 
