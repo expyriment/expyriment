@@ -355,7 +355,7 @@ def create_colours(amount):
     """
 
     colours = []
-    for i in range(0, 360, 360/amount):
+    for i in range(0, 360, 360//amount):
         h = i / 360.0
         l = (50 + random.random() * 10) / 100
         s = (90 + random.random() * 10) / 100
