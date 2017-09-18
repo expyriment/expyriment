@@ -293,7 +293,8 @@ class Experiment(object):
 
         self._experiment_info.extend(text)
         if self.data is not None:
-            self.data.add_experiment_info(text)
+            for elem in text:
+                self.data.add_experiment_info(elem)
 
     @property
     def bws_factor_randomized(self):
