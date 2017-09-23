@@ -94,29 +94,29 @@ class _LaminaPanelSurface(object):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
         screensize = pygame.display.get_surface().get_size()
-        bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                       self._winsize[0] // 2 + \
+        bottomleft = oglu.gluUnProject(screensize[0] / 2 - \
+                                       self._winsize[0] / 2 + \
                                        self._position[0],
-                                       screensize[1] // 2 - \
+                                       screensize[1] / 2 - \
                                        int(round(self._winsize[1] / 2.0)) + \
                                        self._position[1], 0)
-        bottomright = oglu.gluUnProject(screensize[0] // 2 + \
+        bottomright = oglu.gluUnProject(screensize[0] / 2 + \
                                         int(round(self._winsize[0] / 2.0)) + \
                                         self._position[0],
-                                        screensize[1] // 2 - \
+                                        screensize[1] / 2 - \
                                         int(round(self._winsize[1] / 2.0)) + \
                                         self._position[1], 0)
-        topleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                    self._winsize[0] // 2 + \
+        topleft = oglu.gluUnProject(screensize[0] / 2 - \
+                                    self._winsize[0] / 2 + \
                                     self._position[0],
-                                    screensize[1] // 2 + \
-                                    self._winsize[1] // 2 + \
+                                    screensize[1] / 2 + \
+                                    self._winsize[1] / 2 + \
                                     self._position[1], 0)
-        topright = oglu.gluUnProject(screensize[0] // 2 + \
+        topright = oglu.gluUnProject(screensize[0] / 2 + \
                                      int(round(self._winsize[0] / 2.0)) + \
                                      self._position[0],
-                                     screensize[1] // 2 + \
-                                     self._winsize[1] // 2 + \
+                                     screensize[1] / 2 + \
+                                     self._winsize[1] / 2 + \
                                      self._position[1], 0)
 
         self.dims = topleft, topright, bottomright, bottomleft
