@@ -78,7 +78,7 @@ Default installation (online)
 
 2. In a command prompt, run::
 
-    python3 -m pip install -U expyriment[all]
+    py -3 -m pip install -U expyriment[all]
     
    (Omit ``[all]`` to install without additional optional features)
 
@@ -97,7 +97,7 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[all]
+    py -3 -m pip download -d %userprofile%/Desktop/Expyriment_Installation expyriment[all]
 
    (Omit ``[all]`` to install without additional optional features)
    
@@ -117,7 +117,7 @@ Alternative installation (offline)
 
 3. In a command prompt, run::
 
-    python3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[all]
+    py -3 -m pip install --no-index --find-links %userprofile%/Desktop/Expyriment_Installation --upgrade expyriment[all]
 
    (Omit ``[all]`` to install without additional optional features)
    
