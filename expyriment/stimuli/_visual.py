@@ -24,7 +24,11 @@ try:
 except ImportError:
     oglu = None
     ogl = None
-
+try:
+    import numpy as np
+except ImportError:
+    np = None
+    
 from . import defaults
 from .. import _internals
 from ._stimulus import Stimulus
@@ -316,13 +320,19 @@ class Visual(Stimulus):
 
         return self._get_surface().copy()
 
-    def get_pixel_array(self):
-        """Returns a PixelArray representation of surface of the stimulus
+    def get_pixel_array(self, numpy=False):
+        """Return a 2D array presentation of the surface pixel data.
 
+        Parameters
+        ----------
+        numpy : bool (optional)
+            if True, return Numpy array instead of pygame.PixelArray
+            (default=False)
+        
         Returns
         -------
-        pixel_array: Pygame.PixelArray
-            a copy of the PixelArray is returned
+        pixel_array: Pygame.PixelArray or numpy.ndarray
+            a 2D array representing the surface pixel data
 
         Notes
         -----
@@ -330,17 +340,41 @@ class Visual(Stimulus):
 
         """
 
-        return pygame.PixelArray(self.get_surface_copy())
+        if numpy:
+            if not isinstance(np, ModuleType):
+                message = """get_pixel_array can not be used with numpy=True.
+The Python package 'Numpy' is not installed."""
+                raise ImportError(message)
+            else:
+                return pygame.surfarray.array2d(self.get_surface_copy())
+        else:
+            return pygame.PixelArray(self.get_surface_copy())
+    
+    def get_surface_array(self):
+        """Get a 3D array representation of the surface pixel data.
+        
+        Returns
+        -------
+        surface_array : numpy.ndarray
+            a 3D array representing the surface pixel data
+            
+        """
+        if not isinstance(np, ModuleType):
+                message = """get_surface_array can not be used.
+The Python package 'Numpy' is not installed."""
+                raise ImportError(message)
+        else:
+            return pygame.surfarray.array3d(self.get_surface_copy())
 
     def set_surface(self, surface):
         """Set the surface of the stimulus
 
         This method overwrites the surface of the stimulus. It can also handle
-        surfaces in form of pygame.PixelArray representations.
+        surfaces in form of pygame.PixelArray or Numpy 3D array representations.
 
         Parameters
         ----------
-        surface: pygame.Surface or pygame.PixelArray
+        surface: pygame.Surface or pygame.PixelArray or numpy.ndarray
             a representation of the new surface
 
         Returns
@@ -360,6 +394,8 @@ class Visual(Stimulus):
 
         if isinstance(surface, pygame.PixelArray):
             return self._set_surface(surface.make_surface())
+        elif isinstance(surface, numpy.ndarray):
+            return self._set_surface(pygame.surfarray.make_surface(surface))
         elif isinstance(surface, pygame.Surface):
             return self._set_surface(surface)
         else:
