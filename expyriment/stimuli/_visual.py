@@ -336,27 +336,57 @@ class Visual(Stimulus):
 
         return pygame.PixelArray(self.get_surface_copy())
     
-    def get_surface_array(self):
+
+    def get_rgb_array(self):
         """Get a 3D array containing the surface pixel data.
-        
+
         Returns
         -------
         surface_array : numpy.ndarray
             a 3D array containing the surface pixel data
-            
+
+        TODO
         """
         if np is None:
-                message = """get_surface_array can not be used.
-The Python package 'Numpy' is not installed."""
-                raise ImportError(message)
-        else:
-            return pygame.surfarray.array3d(self.get_surface_copy())
+            message = """get_rgb_array can not be used.
+        The Python package 'Numpy' is not installed."""
+            raise ImportError(message)
+
+        surface = self.get_surface_copy()
+        rtn = pygame.surfarray.array3d(surface)
+        alpha = pygame.surfarray.pixels_alpha(surface) / 255.0
+        rtn = rtn.T * alpha.T
+        return rtn.T
+
+    def get_rgba_array(self):
+        """Get a 3D array containing the surface pixel data.
+
+        Returns
+        -------
+        surface_array : numpy.ndarray
+            a 3D array containing the surface pixel data
+
+        TODO
+        """
+
+        if np is None:
+            message = """get_rgba_array can not be used.
+        The Python package 'Numpy' is not installed."""
+            raise ImportError(message)
+
+        surface = self.get_surface_copy()
+        s = surface.get_size()
+        rtn = np.empty((s[0], s[1], 4), dtype=np.int)
+        rtn[:, :, 0:3] = pygame.surfarray.array3d(surface)
+        rtn[:, :, 3] = pygame.surfarray.pixels_alpha(surface)
+        return rtn
 
     def set_surface(self, surface):
         """Set the surface of the stimulus
 
         This method overwrites the surface of the stimulus. It can also handle
-        surfaces in form of pygame.PixelArray or Numpy 3D array representations.
+        surfaces in form of pygame.PixelArray or Numpy 3D array (RGB or RGBA)
+        representations.
 
         Parameters
         ----------
@@ -381,7 +411,23 @@ The Python package 'Numpy' is not installed."""
         if isinstance(surface, pygame.PixelArray):
             return self._set_surface(surface.make_surface())
         elif np is not None and isinstance(surface, np.ndarray):
-            return self._set_surface(pygame.surfarray.make_surface(surface))
+            if surface.shape[2] == 3: # RGB
+                return self._set_surface(pygame.surfarray.make_surface(surface))
+
+            elif surface.shape[2] == 4: # RGBA
+                size = surface.shape[0:2]
+                new_surface = pygame.Surface(size)
+                new_surface = new_surface.convert_alpha()
+                for x in range(size[0]):
+                    for y in range(size[1]):
+                        new_surface.set_at((x, y), pygame.Color(surface[x, y, 0],
+                                                                surface[x, y, 1],
+                                                                surface[x, y, 2],
+                                                                surface[x, y, 3]))
+                return self._set_surface(new_surface)
+
+            else:
+                return False
         elif isinstance(surface, pygame.Surface):
             return self._set_surface(surface)
         else:
