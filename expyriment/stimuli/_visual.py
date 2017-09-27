@@ -28,7 +28,7 @@ try:
     import numpy as np
 except ImportError:
     np = None
-    
+
 from . import defaults
 from .. import _internals
 from ._stimulus import Stimulus
@@ -380,7 +380,7 @@ The Python package 'Numpy' is not installed."""
 
         if isinstance(surface, pygame.PixelArray):
             return self._set_surface(surface.make_surface())
-        elif isinstance(surface, np.ndarray):
+        elif np is not None and isinstance(surface, np.ndarray):
             return self._set_surface(pygame.surfarray.make_surface(surface))
         elif isinstance(surface, pygame.Surface):
             return self._set_surface(surface)
@@ -1141,7 +1141,7 @@ The Python package 'Numpy' is not installed."""
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._compression_exception_message.format( #FIXME exception also raised if preloaded!
                 "rotate()"))
         self.unload(keep_surface=True)
         if filter:
