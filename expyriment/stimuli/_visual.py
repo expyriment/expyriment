@@ -320,19 +320,13 @@ class Visual(Stimulus):
 
         return self._get_surface().copy()
 
-    def get_pixel_array(self, numpy=False):
-        """Return a 2D array presentation of the surface pixel data.
-
-        Parameters
-        ----------
-        numpy : bool (optional)
-            if True, return Numpy array instead of pygame.PixelArray
-            (default=False)
+    def get_pixel_array(self):
+        """Return a 2D array referencing the surface pixel data.
         
         Returns
         -------
-        pixel_array: Pygame.PixelArray or numpy.ndarray
-            a 2D array representing the surface pixel data
+        pixel_array: Pygame.PixelArray
+            a 2D array referencing the surface pixel data
 
         Notes
         -----
@@ -340,23 +334,15 @@ class Visual(Stimulus):
 
         """
 
-        if numpy:
-            if np is None:
-                message = """get_pixel_array can not be used with numpy=True.
-The Python package 'Numpy' is not installed."""
-                raise ImportError(message)
-            else:
-                return pygame.surfarray.array2d(self.get_surface_copy())
-        else:
-            return pygame.PixelArray(self.get_surface_copy())
+        return pygame.PixelArray(self.get_surface_copy())
     
     def get_surface_array(self):
-        """Get a 3D array representation of the surface pixel data.
+        """Get a 3D array containing the surface pixel data.
         
         Returns
         -------
         surface_array : numpy.ndarray
-            a 3D array representing the surface pixel data
+            a 3D array containing the surface pixel data
             
         """
         if np is None:
