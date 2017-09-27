@@ -394,7 +394,7 @@ The Python package 'Numpy' is not installed."""
 
         if isinstance(surface, pygame.PixelArray):
             return self._set_surface(surface.make_surface())
-        elif isinstance(surface, numpy.ndarray):
+        elif isinstance(surface, np.ndarray):
             return self._set_surface(pygame.surfarray.make_surface(surface))
         elif isinstance(surface, pygame.Surface):
             return self._set_surface(surface)
