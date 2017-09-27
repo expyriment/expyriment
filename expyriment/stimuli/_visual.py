@@ -341,7 +341,7 @@ class Visual(Stimulus):
         """
 
         if numpy:
-            if not isinstance(np, ModuleType):
+            if np is None:
                 message = """get_pixel_array can not be used with numpy=True.
 The Python package 'Numpy' is not installed."""
                 raise ImportError(message)
@@ -359,7 +359,7 @@ The Python package 'Numpy' is not installed."""
             a 3D array representing the surface pixel data
             
         """
-        if not isinstance(np, ModuleType):
+        if np is None:
                 message = """get_surface_array can not be used.
 The Python package 'Numpy' is not installed."""
                 raise ImportError(message)
