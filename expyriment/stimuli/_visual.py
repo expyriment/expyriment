@@ -344,8 +344,8 @@ class Visual(Stimulus):
         -------
         surface_array : numpy.ndarray
             a 3D array containing the surface pixel data
+            using RGBA coding.
 
-        TODO
         """
 
         if np is None:
@@ -357,16 +357,17 @@ class Visual(Stimulus):
         s = surface.get_size()
         pixel = pygame.surfarray.pixels3d(surface)
         alpha = pygame.surfarray.pixels_alpha(surface)
+        rtn = np.empty((s[0], s[1], 4), dtype=np.int)
         if replace_transparent_with_colour is None:
-            rtn = np.empty((s[0], s[1], 4), dtype=np.int)
             rtn[:, :, 0:3] = pixel
             rtn[:, :, 3] = alpha
-            return rtn
         else:
             alpha = alpha.T / 255.0
-            background = (np.ones(pixel.shape) * replace_transparent_with_colour )
-            rtn = pixel.T * alpha + background.T * (1-alpha)
-            return rtn.T
+            background = (np.ones(pixel.shape) * replace_transparent_with_colour)
+            tmp = pixel.T * alpha + background.T * (1-alpha)
+            rtn[:, :, 0:3] = tmp.T
+            rtn[:, :, 3] = 255
+        return rtn
 
 
     def set_surface(self, surface):
