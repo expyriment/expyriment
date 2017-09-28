@@ -337,29 +337,7 @@ class Visual(Stimulus):
 
         return pygame.PixelArray(self.get_surface_copy())
     
-
-    def get_rgb_array(self):
-        """Get a 3D array containing the surface pixel data.
-
-        Returns
-        -------
-        surface_array : numpy.ndarray
-            a 3D array containing the surface pixel data
-
-        TODO
-        """
-        if np is None:
-            message = """get_rgb_array can not be used.
-        The Python package 'Numpy' is not installed."""
-            raise ImportError(message)
-
-        surface = self.get_surface_copy()
-        pixel = pygame.surfarray.pixels3d(surface)
-        alpha = pygame.surfarray.pixels_alpha(surface) / 255.0
-        rtn = pixel.T * alpha.T
-        return rtn.T
-
-    def get_rgba_array(self):
+    def get_surface_array(self, replace_transparent_pixels_with=None):
         """Get a 3D array containing the surface pixel data.
 
         Returns
@@ -377,10 +355,18 @@ class Visual(Stimulus):
 
         surface = self.get_surface_copy()
         s = surface.get_size()
-        rtn = np.empty((s[0], s[1], 4), dtype=np.int)
-        rtn[:, :, 0:3] = pygame.surfarray.array3d(surface)
-        rtn[:, :, 3] = pygame.surfarray.array_alpha(surface)
-        return rtn
+        pixel = pygame.surfarray.pixels3d(surface)
+        alpha = pygame.surfarray.pixels_alpha(surface)
+        if replace_transparent_pixels_with is None:
+            rtn = np.empty((s[0], s[1], 4), dtype=np.int)
+            rtn[:, :, 0:3] = pixel
+            rtn[:, :, 3] = alpha
+            return rtn
+        else:
+            alpha = alpha/255.0
+            rtn = pixel.T * alpha.T # FIXME: integration missing " + (1-aplha) * background_colour"
+            return rtn.T
+
 
     def set_surface(self, surface):
         """Set the surface of the stimulus
