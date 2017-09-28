@@ -16,6 +16,7 @@ import tempfile
 import os
 import copy
 import random
+import itertools
 
 import pygame
 try:
@@ -353,9 +354,9 @@ class Visual(Stimulus):
             raise ImportError(message)
 
         surface = self.get_surface_copy()
-        rtn = pygame.surfarray.array3d(surface)
+        pixel = pygame.surfarray.pixels3d(surface)
         alpha = pygame.surfarray.pixels_alpha(surface) / 255.0
-        rtn = rtn.T * alpha.T
+        rtn = pixel.T * alpha.T
         return rtn.T
 
     def get_rgba_array(self):
@@ -378,7 +379,7 @@ class Visual(Stimulus):
         s = surface.get_size()
         rtn = np.empty((s[0], s[1], 4), dtype=np.int)
         rtn[:, :, 0:3] = pygame.surfarray.array3d(surface)
-        rtn[:, :, 3] = pygame.surfarray.pixels_alpha(surface)
+        rtn[:, :, 3] = pygame.surfarray.array_alpha(surface)
         return rtn
 
     def set_surface(self, surface):
@@ -418,12 +419,8 @@ class Visual(Stimulus):
                 size = surface.shape[0:2]
                 new_surface = pygame.Surface(size)
                 new_surface = new_surface.convert_alpha()
-                for x in range(size[0]):
-                    for y in range(size[1]):
-                        new_surface.set_at((x, y), pygame.Color(surface[x, y, 0],
-                                                                surface[x, y, 1],
-                                                                surface[x, y, 2],
-                                                                surface[x, y, 3]))
+                [new_surface.set_at((x, y), surface[x,y,:]) \
+                                for x,y in itertools.product(range(size[0]), range(size[1])) ]
                 return self._set_surface(new_surface)
 
             else:
