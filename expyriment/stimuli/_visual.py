@@ -337,7 +337,7 @@ class Visual(Stimulus):
 
         return pygame.PixelArray(self.get_surface_copy())
     
-    def get_surface_array(self, replace_transparent_pixels_with=None):
+    def get_surface_array(self, replace_transparent_with_colour=None):
         """Get a 3D array containing the surface pixel data.
 
         Returns
@@ -357,14 +357,15 @@ class Visual(Stimulus):
         s = surface.get_size()
         pixel = pygame.surfarray.pixels3d(surface)
         alpha = pygame.surfarray.pixels_alpha(surface)
-        if replace_transparent_pixels_with is None:
+        if replace_transparent_with_colour is None:
             rtn = np.empty((s[0], s[1], 4), dtype=np.int)
             rtn[:, :, 0:3] = pixel
             rtn[:, :, 3] = alpha
             return rtn
         else:
-            alpha = alpha/255.0
-            rtn = pixel.T * alpha.T # FIXME: integration missing " + (1-aplha) * background_colour"
+            alpha = alpha.T / 255.0
+            background = (np.ones(pixel.shape) * replace_transparent_with_colour )
+            rtn = pixel.T * alpha + background.T * (1-alpha)
             return rtn.T
 
 
