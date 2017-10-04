@@ -8,6 +8,8 @@ New Features:
 - Expyriment windows with no frame. Just set default.window_no_frame=True
   before initialize
 - download plugins from stash: misc.download_from_stash()
+- stimuli.Shape: A vertex list can be added when creating a shape object
+  using the optional vertex_list parameter
 Changed:
 - extras
     - extras need to be explicitly imported

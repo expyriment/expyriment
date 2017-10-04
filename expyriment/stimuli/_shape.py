@@ -31,7 +31,8 @@ class Shape(Visual):
     """A class implementing a shape."""
 
     def __init__(self, position=None, colour=None, line_width=None,
-                 anti_aliasing=None):
+                 anti_aliasing=None,
+                 vertex_list=None):
         """Create a shape.
 
         A shape is an object described by vertices. For more details about
@@ -68,6 +69,8 @@ class Shape(Visual):
             as does a value < 0 or >= min(size) (optional)
         anti_aliasing : int, optional
             anti aliasing parameter (good anti_aliasing with 10)
+        vertex_list : (int, int)
+            list of vertices (int, int)
 
         """
 
@@ -97,6 +100,9 @@ class Shape(Visual):
         self._native_rotation_centre = (0, 0)
         self._rotation_centre_display_colour = None
         self._update_points()
+
+        if vertex_list is not None:
+            self.add_vertices(vertex_list=vertex_list)
 
     _getter_exception_message = "Cannot perform {0} if surface exists!"
 
