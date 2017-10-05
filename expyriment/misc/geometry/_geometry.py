@@ -33,13 +33,18 @@ def coordinate2position(coordinate):
 
     Returns
     -------
-    coordinate : (int, int)
+    coordinate : [int, int]
 
     """
 
     screen_size = _internals.active_exp.screen.surface.get_size()
-    return (coordinate[0] - screen_size[0] // 2,
-            - coordinate[1] + screen_size[1] // 2)
+    rtn = [coordinate[0] - screen_size[0] // 2,
+            - coordinate[1] + screen_size[1] // 2]
+    if (screen_size[0] % 2) == 0: #even
+        rtn[0] += 1
+    if (screen_size[1] % 2) == 0:
+        rtn[1] -= 1
+    return rtn
 
 def position2coordinate(position):
     """Convert an expyriment position to a coordinate on screen.
@@ -51,14 +56,18 @@ def position2coordinate(position):
 
     Returns
     -------
-    coordinate : (int, int)
+    coordinate : [int, int]
 
     """
 
     screen_size = _internals.active_exp.screen.surface.get_size()
-    return (position[0] + screen_size[0] // 2,
-            - position[1] + screen_size[1] // 2)
-
+    rtn = [position[0] + screen_size[0] // 2,
+            - position[1] + screen_size[1] // 2]
+    if (screen_size[0] % 2) == 0: #even
+        rtn[0] -= 1
+    if (screen_size[1] % 2) == 0:
+        rtn[1] -= 1
+    return rtn
 
 def position2visual_angle(position, viewing_distance, monitor_size):
     """Convert an expyriment position (pixel) to a visual angle from center.

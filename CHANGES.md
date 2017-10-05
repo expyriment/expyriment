@@ -21,7 +21,9 @@ Changed:
 - coordinates2position in misc.geometry has been renamed to
   coordinate2position
 Fixed:
-- Adding Field bug in TouchscreenButtonBox 
+- Adding Field bug in TouchscreenButtonBox
+- fixed 1-pixel bug when converting Exyriemnt positions to screen (Pygame)
+  positions: position2coordinate & coordinate2position
 
 
 Version 0.9.0 (9 Mar 2017)
