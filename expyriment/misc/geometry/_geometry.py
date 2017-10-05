@@ -18,6 +18,12 @@ from ... import _internals
 
 
 def coordinates2position(coordinate):
+    """"OBSOLETE METHOD: Please use 'coordinate2position'."""
+
+    raise DeprecationWarning("coordinates2position is an obsolete method. Please use coordinate2position")
+
+
+def coordinate2position(coordinate):
     """Convert a coordinate on the screen to an expyriment position.
 
     Parameters

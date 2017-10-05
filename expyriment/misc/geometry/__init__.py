@@ -12,6 +12,6 @@ __revision__ = ''
 __date__ = ''
 
 
-from ._geometry import coordinates2position, position2coordinate
+from ._geometry import coordinate2position, position2coordinate, coordinates2position
 from ._geometry import position2visual_angle, visual_angle2position
 from ._geometry import points_to_vertices, lines_intersect, XYPoint

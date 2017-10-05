@@ -18,6 +18,8 @@ Changed:
       misc.download_from_stash())
     - All installed extras will be installed in the local settings folder
       (typically .expyriment of the $HOME directory)
+- coordinates2position in misc.geometry has been renamed to
+  coordinate2position
 Fixed:
 - Adding Field bug in TouchscreenButtonBox 
 
