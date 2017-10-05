@@ -10,6 +10,8 @@ New Features:
 - download plugins from stash: misc.download_from_stash()
 - stimuli.Shape: A vertex list can be added when creating a shape object
   using the optional vertex_list parameter
+- visual.get_surface_array & set_surface_arry for direct pixel manipultions
+  with numpy
 - all visual stimuli have a getter and setter for the position in polar
   coordinates: polar_coordiante
 - cartesian2polar & polar2cartesian in misc.geometry
