@@ -10,6 +10,7 @@ New Features:
 - download plugins from stash: misc.download_from_stash()
 - stimuli.Shape: A vertex list can be added when creating a shape object
   using the optional vertex_list parameter
+
 Changed:
 - extras
     - extras need to be explicitly imported
@@ -20,10 +21,14 @@ Changed:
       (typically .expyriment of the $HOME directory)
 - coordinates2position in misc.geometry has been renamed to
   coordinate2position
+- position2coordinate & coordinate2position have a new optional argument to
+  calculate positions relative to a surfaces
+
 Fixed:
 - Adding Field bug in TouchscreenButtonBox
 - fixed 1-pixel bug when converting Exyriemnt positions to screen (Pygame)
   positions: position2coordinate & coordinate2position
+
 
 
 Version 0.9.0 (9 Mar 2017)

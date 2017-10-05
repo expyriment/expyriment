@@ -17,19 +17,24 @@ import math as _math
 from ... import _internals
 
 
-def coordinates2position(coordinate):
+def coordinates2position(coordinate, surface_size=None):
     """"OBSOLETE METHOD: Please use 'coordinate2position'."""
 
     raise DeprecationWarning("coordinates2position is an obsolete method. Please use coordinate2position")
 
 
-def coordinate2position(coordinate):
-    """Convert a coordinate on the screen to an expyriment position.
+def coordinate2position(coordinate, surface_size=None):
+    """Convert a coordinate on the screen or surface to an
+    Expyriment position.
 
     Parameters
     ----------
     coordinate : (int, int)
         coordinate (x,y) to convert
+    surface_size: (int, int), optional
+        size of the surface one which position is defined
+        if None (default), the position will be calculated relative
+        to the screen
 
     Returns
     -------
@@ -37,22 +42,29 @@ def coordinate2position(coordinate):
 
     """
 
-    screen_size = _internals.active_exp.screen.surface.get_size()
-    rtn = [coordinate[0] - screen_size[0] // 2,
-            - coordinate[1] + screen_size[1] // 2]
-    if (screen_size[0] % 2) == 0: #even
+    if surface_size is None:
+        surface_size = _internals.active_exp.screen.surface.get_size()
+
+    rtn = [coordinate[0] - surface_size[0] // 2,
+            - coordinate[1] + surface_size[1] // 2]
+    if (surface_size[0] % 2) == 0: #even
         rtn[0] += 1
-    if (screen_size[1] % 2) == 0:
+    if (surface_size[1] % 2) == 0:
         rtn[1] -= 1
     return rtn
 
-def position2coordinate(position):
-    """Convert an expyriment position to a coordinate on screen.
+def position2coordinate(position, surface_size=None):
+    """Convert an Expyriment position to a coordinate on the
+    screen or surface.
 
     Parameters
     ----------
     coordinate : (int, int)
         coordinate (x,y) to convert
+    surface_size: (int, int), optional
+        size of the surface one which position should be calculated
+        if None (default), the position will be calculated relative
+        to the screen
 
     Returns
     -------
@@ -60,12 +72,14 @@ def position2coordinate(position):
 
     """
 
-    screen_size = _internals.active_exp.screen.surface.get_size()
-    rtn = [position[0] + screen_size[0] // 2,
-            - position[1] + screen_size[1] // 2]
-    if (screen_size[0] % 2) == 0: #even
+    if surface_size is None:
+        surface_size = _internals.active_exp.screen.surface.get_size()
+
+    rtn = [position[0] + surface_size[0] // 2,
+            - position[1] + surface_size[1] // 2]
+    if (surface_size[0] % 2) == 0: #even
         rtn[0] -= 1
-    if (screen_size[1] % 2) == 0:
+    if (surface_size[1] % 2) == 0:
         rtn[1] -= 1
     return rtn
 
