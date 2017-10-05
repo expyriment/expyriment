@@ -187,7 +187,7 @@ def lines_intersect(pa, pb, pc, pd):
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
 
 
-def cartesian2polar(xy):
+def cartesian2polar(xy, radians=False):
     """Convert a cartesian coordinate (x,y) to a polar coordinate
     (radial, angle[degrees]).
 
@@ -195,6 +195,8 @@ def cartesian2polar(xy):
     ----------
     xy : (float, float)
         cartesian coordinate (x,y)
+    radians : boolean
+        use radians instead of degrees for the angle
 
     Returns
     ----------
@@ -203,10 +205,16 @@ def cartesian2polar(xy):
 
     """
 
-    return (_math.hypot(xy[0], xy[1]), _math.degrees(_math.atan2(xy[1], xy[0])))
+    ang = _math.atan2(xy[1], xy[0])
+    radial =_math.hypot(xy[0], xy[1])
+    if radians:
+        return (radial, ang)
+    else:
+        return (radial, _math.degrees(ang))
 
 
-def polar2cartesian(polar):
+
+def polar2cartesian(polar, radians=False):
     """Convert a polar coordinate (radial, angle[degrees])
      to a polar coordinate (x, y)
 
@@ -215,6 +223,8 @@ def polar2cartesian(polar):
     ----------
     polar : (float, float)
         polar coordinate (radial, angle[degrees])
+    radians : boolean
+        use radians instead of degrees for the angle
 
     Returns
     ----------
@@ -223,7 +233,10 @@ def polar2cartesian(polar):
 
     """
 
-    a = _math.radians(polar[1])
+    if radians:
+        a = polar[1]
+    else:
+        a = _math.radians(polar[1])
     return (polar[0]*_math.cos(a), polar[0]*_math.sin(a))
 
 
@@ -342,10 +355,10 @@ class XYPoint(object):
 
         """
 
-        p = XYPoint(self._x - rotation_centre[0], self._y - rotation_centre[1])
         #cart -> polar
-        ang = _math.atan2(p._x, p._y)
-        r = _math.hypot(p._x, p._y)
+        r, ang = cartesian2polar(xy = (self._x - rotation_centre[0],
+                                       self._y - rotation_centre[1]),
+                                 radians=True)
         ang -= _math.radians(degree)
         #polar -> cart
         self._x = r * _math.sin(ang) + rotation_centre[0]
