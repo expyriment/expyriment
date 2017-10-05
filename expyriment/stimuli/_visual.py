@@ -264,6 +264,23 @@ class Visual(Stimulus):
         self.reposition(value)
 
     @property
+    def polar_position(self):
+        """Getter for the position in polar coordinates (radial, angle[degrees])"""
+
+        return geometry.cartesian2polar(self._position)
+
+    @property
+    def polar_position(self, value):
+        """Setter for the position in polar coordinates (radial, angle[degrees])
+
+        When using OpenGL, this can take longer then 1ms!
+
+        """
+
+        pos = geometry.polar2cartesian(value)
+        self.reposition((int(round(pos[0])), int(round(pos[1]))))
+
+    @property
     def absolute_position(self):
         """Getter for absolute_position.
         

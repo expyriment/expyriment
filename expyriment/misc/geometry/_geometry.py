@@ -186,6 +186,47 @@ def lines_intersect(pa, pb, pc, pd):
 
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
 
+
+def cartesian2polar(xy):
+    """Convert a cartesian coordinate (x,y) to a polar coordinate
+    (radial, angle[degrees]).
+
+    Parameters
+    ----------
+    xy : (float, float)
+        cartesian coordinate (x,y)
+
+    Returns
+    ----------
+    polar : (float, float)
+        polar coordinate (radial, angle[degrees])
+
+    """
+
+    return (_math.hypot(xy[0], xy[1]), _math.degrees(_math.atan2(xy[1], xy[0])))
+
+
+def polar2cartesian(polar):
+    """Convert a polar coordinate (radial, angle[degrees])
+     to a polar coordinate (x, y)
+
+
+    Parameters
+    ----------
+    polar : (float, float)
+        polar coordinate (radial, angle[degrees])
+
+    Returns
+    ----------
+    xy : (float, float)
+        cartesian coordinate (x,y)
+
+    """
+
+    a = _math.radians(polar[1])
+    return (polar[0]*_math.cos(a), polar[0]*_math.sin(a))
+
+
 class XYPoint(object):
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
@@ -250,6 +291,11 @@ class XYPoint(object):
     def tuple(self, xy_tuple):
         self._x = xy_tuple[0]
         self._y = xy_tuple[1]
+
+
+    @property
+    def polar(self):
+        return cartesian2polar((self._x, self._y))
 
     def move(self, v):
         """Move the point along the coodinates specified by the vector v.

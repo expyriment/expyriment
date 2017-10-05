@@ -10,6 +10,9 @@ New Features:
 - download plugins from stash: misc.download_from_stash()
 - stimuli.Shape: A vertex list can be added when creating a shape object
   using the optional vertex_list parameter
+- all visual stimuli have a getter and setter for the position in polar
+  coordinates: polar_coordiante
+- cartesian2polar & polar2cartesian in misc.geometry
 
 Changed:
 - extras
@@ -23,6 +26,8 @@ Changed:
   coordinate2position
 - position2coordinate & coordinate2position have a new optional argument to
   calculate positions relative to a surfaces
+- Circle.get_polar_coordiantes & Circle.set_polar_coordiantes are obsolete
+  use circle.polar_coordiante
 
 Fixed:
 - Adding Field bug in TouchscreenButtonBox
