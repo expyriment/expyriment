@@ -346,11 +346,10 @@ class XYPoint(object):
         #cart -> polar
         ang = _math.atan2(p._x, p._y)
         r = _math.hypot(p._x, p._y)
-        ang = ang - ((degree / 180.0) * _math.pi)
+        ang -= _math.radians(degree)
         #polar -> cart
         self._x = r * _math.sin(ang) + rotation_centre[0]
         self._y = r * _math.cos(ang) + rotation_centre[1]
-        return self
 
 
     def is_inside_polygon(self, point_list):

@@ -269,7 +269,7 @@ class Visual(Stimulus):
 
         return geometry.cartesian2polar(self._position)
 
-    @property
+    @polar_position.setter
     def polar_position(self, value):
         """Setter for the position in polar coordinates (radial, angle[degrees])
 
