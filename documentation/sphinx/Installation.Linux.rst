@@ -3,8 +3,8 @@
 Platform-specific instructions: Linux
 =====================================
 
-All Linux distributions (recommended)
--------------------------------------
+All Linux distributions
+-----------------------
 
 1. Use your distribution's package manager to install
 
@@ -28,22 +28,6 @@ For example, in Debian run::
     sudo pip install -U pip
     sudo pip install -U expyriment[optional]
     
-     
-Debian, Ubuntu and derivatives
-------------------------------
-
-We also provide `Debian`_ packages for Expyriment (``python-expyriment``).  We 
-suggest to install ``python-expyriment`` via `NeuroDebian`_, a platform
-providing a large collection of neuroscience research software. For detailed
-instructions see:
-`Installing Expyriment via Neurodebian <http://neuro.debian.net/pkgs/python-expyriment.html>`_
-
-*Note*: If you have a previous version of Expyriment installed from source,
-please first uninstall the old version using the following command (replace *X*
-to match your Python version)::
-
-    sudo rm /usr/local/lib/python2.X/dist-packages/expyriment
-
 
 Notes
 -----
@@ -55,5 +39,3 @@ Notes
     manager!
 
 .. _`release page`: http://github.com/expyriment/expyriment/releases/latest
-.. _`Debian`: https://www.debian.org/
-.. _`NeuroDebian`: http://neuro.debian.net/
