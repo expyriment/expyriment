@@ -16,6 +16,7 @@ import tempfile
 import os
 import copy
 import random
+import itertools
 
 import pygame
 try:
@@ -24,6 +25,10 @@ try:
 except ImportError:
     oglu = None
     ogl = None
+try:
+    import numpy as np
+except ImportError:
+    np = None
 
 from . import defaults
 from .. import _internals
@@ -317,12 +322,12 @@ class Visual(Stimulus):
         return self._get_surface().copy()
 
     def get_pixel_array(self):
-        """Returns a PixelArray representation of surface of the stimulus
-
+        """Return a 2D array referencing the surface pixel data.
+        
         Returns
         -------
         pixel_array: Pygame.PixelArray
-            a copy of the PixelArray is returned
+            a 2D array referencing the surface pixel data
 
         Notes
         -----
@@ -331,16 +336,50 @@ class Visual(Stimulus):
         """
 
         return pygame.PixelArray(self.get_surface_copy())
+    
+    def get_surface_array(self, replace_transparent_with_colour=None):
+        """Get a 3D array containing the surface pixel data.
+
+        Returns
+        -------
+        surface_array : numpy.ndarray
+            a 3D array containing the surface pixel data
+            using RGBA coding.
+
+        """
+
+        if np is None:
+            message = """get_rgba_array can not be used.
+        The Python package 'Numpy' is not installed."""
+            raise ImportError(message)
+
+        surface = self.get_surface_copy()
+        s = surface.get_size()
+        pixel = pygame.surfarray.pixels3d(surface)
+        alpha = pygame.surfarray.pixels_alpha(surface)
+        rtn = np.empty((s[0], s[1], 4), dtype=np.int)
+        if replace_transparent_with_colour is None:
+            rtn[:, :, 0:3] = pixel
+            rtn[:, :, 3] = alpha
+        else:
+            alpha = alpha.T / 255.0
+            background = (np.ones(pixel.shape) * replace_transparent_with_colour)
+            tmp = pixel.T * alpha + background.T * (1-alpha)
+            rtn[:, :, 0:3] = tmp.T
+            rtn[:, :, 3] = 255
+        return rtn
+
 
     def set_surface(self, surface):
         """Set the surface of the stimulus
 
         This method overwrites the surface of the stimulus. It can also handle
-        surfaces in form of pygame.PixelArray representations.
+        surfaces in form of pygame.PixelArray or Numpy 3D array (RGB or RGBA)
+        representations.
 
         Parameters
         ----------
-        surface: pygame.Surface or pygame.PixelArray
+        surface: pygame.Surface or pygame.PixelArray or numpy.ndarray
             a representation of the new surface
 
         Returns
@@ -360,6 +399,20 @@ class Visual(Stimulus):
 
         if isinstance(surface, pygame.PixelArray):
             return self._set_surface(surface.make_surface())
+        elif np is not None and isinstance(surface, np.ndarray):
+            if surface.shape[2] == 3: # RGB
+                return self._set_surface(pygame.surfarray.make_surface(surface))
+
+            elif surface.shape[2] == 4: # RGBA
+                size = surface.shape[0:2]
+                new_surface = pygame.Surface(size)
+                new_surface = new_surface.convert_alpha()
+                [new_surface.set_at((x, y), surface[x,y,:]) \
+                                for x,y in itertools.product(range(size[0]), range(size[1])) ]
+                return self._set_surface(new_surface)
+
+            else:
+                return False
         elif isinstance(surface, pygame.Surface):
             return self._set_surface(surface)
         else:
@@ -1119,7 +1172,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._compression_exception_message.format( #FIXME exception also raised if preloaded!
                 "rotate()"))
         self.unload(keep_surface=True)
         if filter:
