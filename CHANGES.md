@@ -26,7 +26,7 @@ Changed:
 
 Fixed:
 - Adding Field bug in TouchscreenButtonBox
-- fixed 1-pixel bug when converting Exyriemnt positions to screen (Pygame)
+- 1-pixel bug when converting Expyriment positions to screen (Pygame)
   positions: position2coordinate & coordinate2position
 
 
