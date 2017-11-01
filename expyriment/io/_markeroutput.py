@@ -115,7 +115,7 @@ class MarkerOutput(Output):
             start = get_time()
             while (get_time() - start) * 1000 < duration:
                 pass
-        self._interface.send(0)
+            self._interface.send(0)
         if self._logging:
             _internals.active_exp._event_file_log(
                                         "MarkerOutput,sent,{0}".format(code))
