@@ -389,7 +389,11 @@ class Keyboard(Input):
                 done = int((get_time() - start) * 1000) >= duration
             time.sleep(0.0005)
         if self._logging:
-            _internals.active_exp._event_file_log(
-                        "Keyboard,received,{0},wait_char".format(
-                        unicode2byte(found_char)))
+            if found_char is not None:
+                _internals.active_exp._event_file_log(
+                            "Keyboard,received,{0},wait_char".format(
+                            unicode2byte(found_char)))
+            else:
+                _internals.active_exp._event_file_log(
+                            "Keyboard,received,None,wait_char")
         return found_char, rt
