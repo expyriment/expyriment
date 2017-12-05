@@ -18,10 +18,11 @@ from ... import _internals
 
 
 def coordinates2position(coordinate, surface_size=None):
-    """"OBSOLETE METHOD: Please use 'coordinate2position'."""
+    """"OBSOLETE FUNCTION: Please use 'coordinate2position'."""
 
-    raise DeprecationWarning("coordinates2position is an obsolete method. Please use coordinate2position")
-
+    raise DeprecationWarning("coordinates2position is an obsolete function. Please use coordinate2position.")
+    
+    coordinate2position(coordinate, surface_size=None)
 
 def coordinate2position(coordinate, surface_size=None):
     """Convert a coordinate on the screen or surface to an
@@ -110,7 +111,6 @@ def position2visual_angle(position, viewing_distance, monitor_size):
              2.0 * _math.atan((cm[1] / 2) / viewing_distance))
     return (angle[0] * 180 / _math.pi, angle[1] * 180 / _math.pi)
 
-
 def visual_angle2position(visual_angle, viewing_distance, monitor_size):
     """Convert an position defined as visual angle from center to expyriment
     position (pixel).
@@ -139,8 +139,14 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
     return (cm[0] * screen_size[0] / monitor_size[0],
             cm[1] * screen_size[1] / monitor_size[1])
 
-
 def points_to_vertices(points):
+    """OBSOLETE FUNCTION! Please use `points2vertices`!"""
+    
+    raise DeprecationWarning("points_to_vertices is an obsolete function. Please use point2vertices.")
+
+    point2vertices(points)
+    
+def points2vertices(points):
     """Returns vertex representation of the points (int, int) in xy-coordinates
 
     Parameters
@@ -186,7 +192,6 @@ def lines_intersect(pa, pb, pc, pd):
 
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
 
-
 def cartesian2polar(xy, radians=False):
     """Convert a cartesian coordinate (x,y) to a polar coordinate
     (radial, angle[degrees]).
@@ -211,8 +216,6 @@ def cartesian2polar(xy, radians=False):
         return (radial, ang)
     else:
         return (radial, _math.degrees(ang))
-
-
 
 def polar2cartesian(polar, radians=False):
     """Convert a polar coordinate (radial, angle[degrees])
