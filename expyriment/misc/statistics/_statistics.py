@@ -136,6 +136,11 @@ def median(data):
         return (float(lower + upper)) / 2.0
 
 def frequence_table(data):
+    """OBSOLETE FUNCTION! Please use `frequency_table`!"""
+    
+    frequency_table(data)
+
+def frequency_table(data):
     """Returns the frequency table of the data as dictionary.
 
     Parameters
