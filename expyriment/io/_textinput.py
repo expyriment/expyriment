@@ -43,10 +43,11 @@ class TextInput(Input):
     def __init__(self, message="", position=None, ascii_filter=None,
                  length=None, message_text_size=None, message_colour=None,
                  message_font=None, message_bold=None, message_italic=None,
-                 user_text_size=None, user_text_bold=None, user_text_font=None,
-                 user_text_colour=None, background_colour=None,
-                 frame_colour=None, gap=None, screen=None,
-                 background_stimulus=None):
+                 message_right_to_left=None, user_text_size=None,
+                 user_text_bold=None, user_text_font=None,
+                 user_text_colour=None, user_right_to_left=None,
+                 background_colour=None, frame_colour=None, gap=None,
+                 screen=None, background_stimulus=None):
         """Create a text input box.
 
         Notes
@@ -73,6 +74,8 @@ class TextInput(Input):
             True if message text should be bold
         message_italic : bool, optional
             True if message text should be italic
+        message_right_to_left : bool, optional
+            whether or not the message text should be presented right-to-left
         user_text_size : int, optional
             text size of the user input
         user_text_font : str, optional
@@ -81,6 +84,8 @@ class TextInput(Input):
             text colour of the user input
         user_text_bold : bool, optional
             True if user text should be bold
+        user_right_to_left : bool, optional
+            whether or not the user text should be presented right-to-left
         background_colour : (int, int, int), optional
         frame_colour : (int, int, int)
             colour of the frame
@@ -143,6 +148,10 @@ class TextInput(Input):
             self._message_italic = message_italic
         else:
             self._message_italic = defaults.textinput_message_italic
+        if message_right_to_left is not None:
+            self._message_right_to_left = message_right_to_left
+        else:
+            self._message_right_to_left = defaults.textinput_message_right_to_left
         if user_text_size is None:
             user_text_size = defaults.textinput_user_text_size
         if user_text_size is not None:
@@ -171,6 +180,10 @@ class TextInput(Input):
             self._user_text_colour = user_text_colour
         else:
             self._user_text_colour = _internals.active_exp.foreground_colour
+        if user_right_to_left is not None:
+            self._user_right_to_left = user_right_to_left
+        else:
+            self._user_right_to_left = defaults.textinput_user_right_to_left
         if background_colour is None:
             background_colour = \
                 defaults.textinput_background_colour
@@ -263,6 +276,11 @@ class TextInput(Input):
         return self._message_italic
 
     @property
+    def message_right_to_left(self):
+        """getter for message_right_to_left"""
+        return self._message_right_to_left
+
+    @property
     def user_text_size(self):
         """Getter for user_text_size"""
         return self._user_text_size
@@ -281,6 +299,11 @@ class TextInput(Input):
     def user_text_colour(self):
         """Getter for user_text_colour"""
         return self._user_text_colour
+
+    @property
+    def user_right_to_left(self):
+        """Getter for user_right_to_left"""
+        return self._user_right_to_left
 
     @property
     def background_colour(self):
@@ -328,8 +351,11 @@ class TextInput(Input):
                                text_bold=self.user_text_bold)
         stimuli._stimulus.Stimulus._id_counter -= 1
         self._max_size = tmp.surface_size
+        text = self._message
+        if self._message_right_to_left:
+            text = self._message[::-1]
         message_text = stimuli.TextLine(
-            text=self._message, text_font=self.message_font,
+            text=text, text_font=self.message_font,
             text_size=self.message_text_size, text_bold=self.message_bold,
             text_italic=self.message_italic, text_colour=self.message_colour,
             background_colour=self._background_colour)
@@ -355,10 +381,16 @@ class TextInput(Input):
                           self._message_surface_size[1] + self._gap,
                           self._max_size[0] + 12, self._max_size[1] + 5), 1)
         if len(self._message) != 0:
-                    self._canvas._get_surface().blit(
-                        message_text._get_surface(),
-                        (self._canvas.surface_size[0] // 2 -
-                         self._message_surface_size[0] // 2, 0))
+            if self._message_right_to_left:
+                self._canvas._get_surface().blit(
+                    message_text._get_surface(),
+                    (self._canvas.surface_size[0] -
+                    self._message_surface_size[0], 0))
+            else:
+                self._canvas._get_surface().blit(
+                    message_text._get_surface(),
+                    (self._canvas.surface_size[0] // 2 -
+                    self._message_surface_size[0] // 2, 0))
         background = stimuli.BlankScreen(
             colour=self._background_colour)
         if self._background_stimulus is not None:
@@ -383,14 +415,23 @@ class TextInput(Input):
                                 user_canvas_size[1] // 2 -
                                 self._message_surface_size[1] -
                                 self._gap - offset)
+        text = "".join(self._user)
+        if self._user_right_to_left:
+            text = "".join(self._user)[::-1]
         user_text = stimuli.TextLine(
-            text="".join(self._user),
+            text=text,
             text_font=self.user_text_font, text_size=self.user_text_size,
             text_bold=self.user_text_bold, text_colour=self.user_text_colour,
             background_colour=self.background_colour)
         stimuli._stimulus.Stimulus._id_counter -= 1
         self._user_text_surface_size = user_text.surface_size
-        user_canvas._get_surface().blit(user_text._get_surface(), (0, 2))
+        if self._user_right_to_left:
+            user_canvas._get_surface().blit(
+                user_text._get_surface(),
+                (user_canvas.surface_size[0] -
+                 self._user_text_surface_size[0], 2))
+        else:
+            user_canvas._get_surface().blit(user_text._get_surface(), (0, 2))
         user_canvas.present(clear=False)
 
     def get(self, default_input=""):
