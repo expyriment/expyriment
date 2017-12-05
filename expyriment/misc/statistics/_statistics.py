@@ -138,6 +138,8 @@ def median(data):
 def frequence_table(data):
     """OBSOLETE FUNCTION! Please use `frequency_table`!"""
     
+    raise DeprecationWarning("frequence_table is an obsolete function. Please use frequency_table.")
+    
     frequency_table(data)
 
 def frequency_table(data):
