@@ -13,4 +13,4 @@ __date__ = ''
 
 
 from ._statistics import sum, mode, mean, median, variance, std
-from ._statistics import frequence_table
+from ._statistics import frequence_table, frequency_table
