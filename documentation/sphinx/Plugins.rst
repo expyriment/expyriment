@@ -20,7 +20,7 @@ package (e.g. ``expyriment.stimuli.extras.DotCloud``).
 Download plugins for stash
 --------------------------
 Several extra plugins can be found in the `Expyriment stash`_. When Expyriment
-has been installed with the option `download` (or `all`), all plugins can be 
+has been installed with the option ``download`` (or ``all``), all plugins can be 
 downloaded automatically by calling::
 
     expyriment.misc.download_from_stashcontent="extras")
