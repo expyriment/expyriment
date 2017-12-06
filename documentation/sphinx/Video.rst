@@ -44,8 +44,12 @@ Usage
    ``wait_frame()``
         behaves like ``wait_end()``, with the difference that it waits until frame number `frame` instead of the last frame.
 
-
    The perhaps most common situation is thus to use a combination of ``play()``, ``present()`` and ``wait_end()``.
+   
+5. When done, delete the video stimulus::
+
+    del my_video
+
 
 Example
 -------
