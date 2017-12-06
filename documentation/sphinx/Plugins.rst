@@ -9,10 +9,10 @@ package. Expyriment will look for installed plugins in the following
 locations within the ``.expyriment/extras`` (or ``~expyriment/extras``)
 directory located in the current user's home directory:
 
-    - ``expyriment_extras_design``
-    - ``expyriment_extras_stmuli``
-    - ``expyriment_extras_io``
-    - ``expyriment_extras_misc``
+- ``expyriment_extras_design``
+- ``expyriment_extras_stmuli``
+- ``expyriment_extras_io``
+- ``expyriment_extras_misc``
 
 Any plugins found will be integrated into the *.extras* namespace of each
 package (e.g. ``expyriment.stimuli.extras.DotCloud``).
