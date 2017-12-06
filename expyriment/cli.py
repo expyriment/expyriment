@@ -23,7 +23,7 @@ from .misc import _secure_hash, get_system_info
 
 
 cli_documentation = """
-python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
+expyriment [OPTIONS] [EXPYRIMENT SCRIPT]
 
 The Expyriment command line interface provides a collection of convenient
 methods helpful for the development and testing of experiments as well as
