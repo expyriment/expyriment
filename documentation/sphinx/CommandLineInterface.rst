@@ -1,8 +1,6 @@
 Expyriment command line interface
 =================================
 
-The Expyriment command line interface provides easy access to a variety of functions.
-
 ::
 
     usage: expyriment [-h] [-g] [-1] [-2] [-3] [-t] [-w] [-f] [-a] [-i] [-d] [-b]
