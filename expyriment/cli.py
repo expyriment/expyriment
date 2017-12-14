@@ -227,7 +227,7 @@ functions to join the data output.""",
         create_template()
         sys.exit()
     if args["D"]:
-        print("Downloading from Expyriment stash")
+        print("Download from stash")
         what = ""
         while what not in ("all", "examples", "extras", "tools"):
             what = input(" what to download ([all]/examples/extras/tools)? ")
