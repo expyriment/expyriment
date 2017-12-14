@@ -239,8 +239,8 @@ functions to join the data output.""",
         branch = ""
         while branch not in branches:
             branch = input(" from which branch? ([master]{0})? ".format(
-                "/".join(branches[1:]))
-            if brnach == "":
+                "/".join(branches[1:])))
+            if branch == "":
                 branch = "master"
         download_from_stash(what, branch)
     if args["J"]:
