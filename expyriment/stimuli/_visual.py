@@ -235,7 +235,7 @@ class Visual(Stimulus):
 
         self._was_compressed_before_preload = None
 
-        if _internals.active_exp is None:
+        if not _internals.active_exp.is_initialized:
             warn_message = "Stimulus created before initializing " + \
                            "(experiment defaults won't apply)!"
             print("Warning: " + warn_message)
