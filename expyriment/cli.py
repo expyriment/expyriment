@@ -249,14 +249,16 @@ functions to join the data output.""",
         d = join_data()
         output =""
         while len(output) <= 1:
-            output = input(" name of output csv file? ")
+            sys.stdout.write(" name of output csv file? ")
+            output = input()
         d.write_concatenated_data(output)
         sys.exit()
     if args["R"]:
         d = join_data()
         output =""
         while len(output) <= 1:
-            output = input(" name of RDS file? ")
+            sys.stdout.write(" name of RDS file? ")
+            output = input()
         d.write_concatenated_data_to_R_data_frame(output)
         sys.exit()
 
