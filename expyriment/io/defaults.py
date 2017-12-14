@@ -60,7 +60,7 @@ triggerinput_default_code = 1
 
 # TextInput
 textinput_position = (0, 0)
-textinput_ascii_filter = None
+textinput_character_filter = None
 textinput_length = 25
 textinput_message_text_size = None  # 'None' is experiment_text_size
 textinput_message_colour = None  # 'None is experiment_text_colour
