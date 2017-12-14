@@ -240,7 +240,7 @@ functions to join the data output.""",
         branch = ""
         while branch not in branches:
             sys.stdout.write(" from which branch? ([master]{0})? ".format(
-                "/".join(branches[1:]))
+                "/".join(branches[1:])))
             branch = input()
             if branch == "":
                 branch = "master"
