@@ -108,7 +108,7 @@ functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
     
     if len(sys.argv[1:])==0:
-        parser.print_usage()
+        parser.print_help()
         parser.exit()
 
     parser.add_argument("SCRIPT", action='store', default=None,
@@ -229,7 +229,7 @@ functions to join the data output.""",
     if args["D"]:
         print("Download from stash")
         what = ""
-        while what not in ("all", "examples", "extras", "tools"):
+        while what not in ["all", "examples", "extras", "tools"]:
             what = input(" what to download ([all]/examples/extras/tools)? ")
             if what == "":
                 what = "all"
