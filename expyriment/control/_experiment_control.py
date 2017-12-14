@@ -145,7 +145,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                     user_text_size=int(experiment.text_size),
                     background_colour=(0, 0, 0),
                     frame_colour=(70, 70, 70),
-                    ascii_filter=misc.constants.K_ALL_DIGITS)
+                    character_filter=misc.constants.K_ALL_DIGITS)
                 subject_id = ask_for_subject.get(repr(default_number))
                 try:
                     experiment._subject = int(subject_id)
