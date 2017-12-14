@@ -19,7 +19,7 @@ import sys, os
 from importlib import import_module
 
 from . import control, io, show_documentation
-from .misc import _secure_hash, get_system_info
+from .misc import _secure_hash, get_system_info, download_from_stash
 
 
 cli_documentation = """
@@ -106,6 +106,10 @@ def main():
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
+    
+    if len(sys.argv[1:])==0:
+        parser.print_usage()
+        parser.exit()
 
     parser.add_argument("SCRIPT", action='store', default=None,
                     help="The expyriment script to be executed",
@@ -146,6 +150,9 @@ functions to join the data output.""",
 
     parser.add_argument("-C", action="store_true",
                     help="Create experiment template")
+    
+    parser.add_argument("-D", action="store_true",
+                    help="Download from Expyriment stash")
 
     parser.add_argument("-J", action="store_true",
                     help="Join data files to one single csv file")
@@ -219,6 +226,23 @@ functions to join the data output.""",
     if args["C"]:
         create_template()
         sys.exit()
+    if args["D"]:
+        print("Downloading from Expyriment stash")
+        what = ""
+        while what not in ("all", "examples", "extras", "tools"):
+            what = input(" what to download ([all]/examples/extras/tools)? ")
+            if what == "":
+                what = "all"
+        branches = ["master"]
+        if __version__ != "":
+            branches.append(__version__)
+        branch = ""
+        while branch not in branches:
+            branch = input(" from which branch? ([master]{0})? ".format(
+                "/".join(branches[1:]))
+            if brnach == "":
+                branch = "master"
+        download_from_stash(what, branch)
     if args["J"]:
         d = join_data()
         output =""
