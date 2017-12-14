@@ -230,7 +230,8 @@ functions to join the data output.""",
         print("Download from stash")
         what = ""
         while what not in ["all", "examples", "extras", "tools"]:
-            what = input(" what to download ([all]/examples/extras/tools)? ")
+            sys.stdout.write(" what to download ([all]/examples/extras/tools)? ")
+            what = input()
             if what == "":
                 what = "all"
         branches = ["master"]
@@ -238,8 +239,9 @@ functions to join the data output.""",
             branches.append(__version__)
         branch = ""
         while branch not in branches:
-            branch = input(" from which branch? ([master]{0})? ".format(
-                "/".join(branches[1:])))
+            sys.stdout.write(" from which branch? ([master]{0})? ".format(
+                "/".join(branches[1:]))
+            branch = input()
             if branch == "":
                 branch = "master"
         download_from_stash(what, branch)
