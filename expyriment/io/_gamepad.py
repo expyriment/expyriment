@@ -266,8 +266,7 @@ class GamePad(Input, Output):
                     _button = rtn_callback
                     rt = int((get_time() - start) * 1000)
                     done = True
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     _button = rtn_callback

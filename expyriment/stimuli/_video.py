@@ -556,8 +556,7 @@ class Video(_visual.Stimulus):
                 rtn_callback = callback_function()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback
@@ -566,8 +565,7 @@ class Video(_visual.Stimulus):
                         break
 
             for event in pygame.event.get(pygame.KEYDOWN):
-                if _internals.active_exp is not None and \
-                   _internals.active_exp.is_initialized and \
+                if _internals.active_exp.is_initialized and \
                    process_control_events and \
                    event.type == pygame.KEYDOWN and (
                        event.key == self.Keyboard.get_quit_key() or
