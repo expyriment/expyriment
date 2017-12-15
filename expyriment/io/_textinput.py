@@ -40,14 +40,14 @@ from ._input_output import Input
 class TextInput(Input):
     """A class implementing a text input box."""
 
-    def __init__(self, message="", position=None, ascii_filter=None,
+    def __init__(self, message="", position=None, character_filter=None,
                  length=None, message_text_size=None, message_colour=None,
                  message_font=None, message_bold=None, message_italic=None,
                  message_right_to_left=None, user_text_size=None,
                  user_text_bold=None, user_text_font=None,
                  user_text_colour=None, user_right_to_left=None,
                  background_colour=None, frame_colour=None, gap=None,
-                 screen=None, background_stimulus=None):
+                 screen=None, background_stimulus=None, **kwargs):
         """Create a text input box.
 
         Notes
@@ -62,8 +62,8 @@ class TextInput(Input):
             position of the TextInput canvas
         length : int, optional
             the length of the text input frame in number of charaters
-        ascii_filter : list, optional
-            list of ASCII codes to filter for
+        character_filter : list, optional
+            list of character codes to filter for
         message_text_size : int, optional
             text size of the message
         message_colour : (int, int, int), optional
@@ -110,9 +110,11 @@ class TextInput(Input):
         else:
             self._position = defaults.textinput_position
         if ascii_filter is not None:
-            self._ascii_filter = ascii_filter
+            self._character_filter = character_filter
         else:
-            self._ascii_filter = defaults.textinput_ascii_filter
+            self._character_filter = defaults.textinput_character_filter
+        if "ascii_filter" in kwargs:
+            self._character_filter = kwargs["ascii_filter"]
         if length is not None:
             self._length = length
         else:
@@ -236,14 +238,14 @@ class TextInput(Input):
         return self._position
 
     @property
-    def ascii_code_filter(self):
-        """Getter for filter"""
-        return self._ascii_filter
+    def character_filter(self):
+        """Getter for character filter"""
+        return self._character_filter
 
-    @ascii_code_filter.setter
-    def ascii_code_filter(self, value):
-        """Getter for filter"""
-        self._ascii_filter = value
+    @character_filter.setter
+    def character_filter(self, value):
+        """Getter for character filter"""
+        self._character_filter = value
 
     @property
     def message_text_size(self):
@@ -460,10 +462,10 @@ class TextInput(Input):
             self._user.append(char)
         self._create()
         self._update()
-        if self._ascii_filter is None:
-            ascii_filter = list(range(0, 256)) + constants.K_ALL_KEYPAD_DIGITS
+        if self._character_filter is None:
+            filter = list(range(0, 256)) + constants.K_ALL_KEYPAD_DIGITS
         else:
-            ascii_filter = self._ascii_filter
+            filter = self._character_filter
         while True:
             inkey, string = self._get_key()
             if inkey == pygame.K_BACKSPACE:
@@ -473,7 +475,7 @@ class TextInput(Input):
             elif inkey != pygame.K_LCTRL or inkey != pygame.K_RCTRL:
                 if not self._user_text_surface_size[0] >= self._max_size[0]:
                     if android is not None:
-                        if inkey in ascii_filter:
+                        if inkey in filter:
                             if inkey in constants.K_ALL_KEYPAD_DIGITS:
                                 inkey = numpad_digit_code2ascii(inkey)
                             self._user.append(chr(inkey))
@@ -481,7 +483,7 @@ class TextInput(Input):
                         if inkey in constants.K_ALL_KEYPAD_DIGITS:
                             self._user.append(chr(numpad_digit_code2ascii(
                                 inkey)))
-                        elif string and ord(string) in ascii_filter:
+                        elif string and ord(string) in filter:
                             self._user.append(string)
             self._update()
         got = "".join(self._user)
