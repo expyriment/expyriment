@@ -109,7 +109,7 @@ class TextInput(Input):
             self._position = position
         else:
             self._position = defaults.textinput_position
-        if ascii_filter is not None:
+        if character_filter is not None:
             self._character_filter = character_filter
         else:
             self._character_filter = defaults.textinput_character_filter
