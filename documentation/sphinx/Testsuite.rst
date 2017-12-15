@@ -25,7 +25,7 @@ suite, just call::
 Alternatively, you can start the test suite from the command line using the 
 :doc:`Command line interface <CommandLineInterface>`::
 
-   $ python -m expyriment.cli -T 
+   $ expyriment.cli -T 
 
 **Please note that all changes to the** :doc:`Defaults` **prior to starting the test suite apply!**
 
