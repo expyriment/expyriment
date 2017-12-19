@@ -1,15 +1,15 @@
 Expyriment command line interface
 =================================
 
+The Expyriment command line interface provides a collection of convenient methods helpful for the development and testing of experiments as well as functions to join the data output.
+
+Usage
+-----
+
 ::
-
-    usage: expyriment [-h] [-g] [-1] [-2] [-3] [-t] [-w] [-f] [-a] [-i] [-d] [-b]
-                      [-C] [-D] [-J] [-R] [-S] [-T] [-A] [-B] [--version]
-                      [SCRIPT]
-
-    The Expyriment command line interface provides a collection of convenient
-    methods helpful for the development and testing of experiments as well as
-    functions to join the data output.
+    expyriment [-h] [-g] [-1] [-2] [-3] [-t] [-w] [-f] [-a] [-i] [-d] [-b]
+               [-C] [-D] [-J] [-R] [-S] [-T] [-A] [-B] [--version]
+               [SCRIPT]
 
     positional arguments:
       SCRIPT      The expyriment script to be executed
@@ -36,5 +36,3 @@ Expyriment command line interface
       -A          Start the Expyrimnent API Reference Tool
       -B          Open browser with API reference
       --version   Print version
-
-    (c) F. Krause & O. Lindemann
