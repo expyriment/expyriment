@@ -4,6 +4,7 @@ Input and output serial port.
 This module contains a class implementing serial port input/output.
 
 """
+
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
@@ -27,7 +28,7 @@ except:
 from . import defaults
 from ._input_output import Input, Output
 from .. import _internals, misc
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, PYTHON3
 
 
 class SerialPort(Input, Output):
@@ -307,14 +308,15 @@ The Python package 'pySerial' is not installed."""
 
         Returns
         -------
-        out : list of bytes
+        out : list of int
+            a list of integer values of the received bytes
 
         """
 
         read_time = self._clock.time
-        read = self._serial.read(self._serial.inWaiting())
+        read = bytes(self._serial.read(self._serial.inWaiting()))
         if len(read) > 0:
-            read = list(map(ord, list(read)))
+            read = list(read)
             if self.has_input_history:
                 if len(self._input_history.memory):
                     last_time = self._input_history.memory[-1][1]
@@ -341,16 +343,16 @@ The Python package 'pySerial' is not installed."""
 
         Returns
         -------
-        out : byte
-             one byte only will be returned
+        out : int
+             a single integer value of the received byte
         """
 
         poll_time = self._clock.time
-        read = self._serial.read()
-        if read != "":
+        read = bytes(self._serial.read())
+        if read != b"":
             if self.has_input_history:
                 last = self._input_history.get_last_event()
-                self._input_history.add_event(ord(read))
+                self._input_history.add_event(list(read)[0])
                 if last[1] > 0: # if input_history is empty
                     if self._serial.inWaiting() >= (self._os_buffer_size - 1):
                         warn_message = "{0} not updated for {1} ms!".format(
@@ -361,13 +363,13 @@ The Python package 'pySerial' is not installed."""
             if self._logging:
                 _internals.active_exp._event_file_log(
                         "SerialPort {0},received,{1},poll".format(
-                        repr(self._serial.port), ord(read)), 2)
+                            repr(self._serial.port), list(read)[0]), 2)
             return ord(read)
         return None
 
     def read_line(self, duration=None, callback_function=None,
                   process_control_events=True):
-        """Read a line from serial port (until newline) and return string.
+        """Read a line from serial port (until newline) and return byte string.
 
         The function is waiting for input. Use the duration parameter
         to avoid too long program blocking.
@@ -384,7 +386,7 @@ The Python package 'pySerial' is not installed."""
 
         Returns
         -------
-        line : str
+        line : bytes or str
 
         Notes
         -----
@@ -401,7 +403,7 @@ The Python package 'pySerial' is not installed."""
         if _internals.skip_wait_methods:
             return
 
-        rtn_string = ""
+        rtn_string = b""
         if duration is not None:
             timeout_time = self._clock.time + duration
 
@@ -430,18 +432,19 @@ The Python package 'pySerial' is not installed."""
 
             byte = self.poll()
             if byte:
-                byte = chr(byte)
-                if byte != '\n' and byte != '\r':
-                    rtn_string = rtn_string + byte
-                elif byte == '\n':
+                if byte != 10 and byte != 13:
+                    rtn_string = rtn_string + bytes([byte])
+                elif byte == 10:
                     break
-                elif byte == '\r':
+                elif byte == 13:
                     pass
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:
-            _internals.active_exp._event_file_log("SerialPort {0}, read line, end"\
-                                .format(repr(self._serial.port)), 2)
+            _internals.active_exp._event_file_log(
+                "SerialPort {0}, read line, end".format(
+                    repr(self._serial.port)), 2)
+
         return rtn_string
 
     @staticmethod
@@ -455,7 +458,7 @@ The Python package 'pySerial' is not installed."""
         Returns
         -------
         arr : list
-            list of strings representing the available serial ports
+            a list of strings representing the available serial ports
 
         """
 
@@ -470,15 +473,52 @@ The Python package 'pySerial' is not installed."""
         Parameters
         ----------
         data : int
-            data to be send (int)
+            the data to be sent
 
         """
 
-        self._serial.write(chr(data))
+        self._serial.write(bytes([data]))
+
         if self._logging:
             _internals.active_exp._event_file_log("SerialPort {0},sent,{1}"\
                                 .format(repr(self._serial.port), data), 2)
 
+    def send_line(self, data, carriage_return=False, line_feed=True):
+        """Send a line of data via the serial port.
+
+        Parameters
+        ----------
+        data : bytes or str
+            the data to be sent
+        carriage_return : bool, optional
+            whether to add a carriage return at end of data (default=True)
+        line_feed : bool, optional
+            whether to add a line feed at end of data (default=True)
+
+        """
+
+        if PYTHON3:
+            data = list(data)
+        else:
+            data = [ord(x) for x in data]
+
+        if carriage_return:
+            data.append(13)
+        if line_feed:
+            data.append(10)
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                    "SerialPort {0}, send line, start".format(
+                    repr(self._serial.port)), 2)
+
+        for x in data:
+            self.send(x)
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                "SerialPort {0}, send line, end".format(
+                    repr(self._serial.port)), 2)
 
     @staticmethod
     def _self_test(exp):
