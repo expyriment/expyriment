@@ -20,6 +20,7 @@ except ImportError:
 
 from .. import _internals
 from ._input_output import Output
+from ..misc.geometry import position2coordinate
 
 
 class Screen(Output):
@@ -213,12 +214,12 @@ machine!")
 
         if not self._open_gl:
             rectangles = []
-            half_screen_size = (self.size[0] // 2, self.size[1] // 2)
             for stim in stimuli:
                 pos = stim.absolute_position
                 stim_size = stim.surface_size
-                rect_pos = (pos[0] + half_screen_size[0] - stim_size[0] // 2,
-                            - pos[1] + half_screen_size[1] - stim_size[1] // 2)
+                rect_pos = position2coordinate(pos, self.size)
+                rect_pos[0] -= stim_size[0] // 2
+                rect_pos[1] -= stim_size[1] // 2
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
             pygame.display.update(rectangles)
             if self._logging:
@@ -249,13 +250,13 @@ machine!")
         screen of your current  experiment.
 
         """
-        
+
         return self._window_size[1] // 2
 
     @property
     def size(self):
         """Getter for the size of the screen.
-        
+
         Notes
         -----
         Each initialized experiment has its one screen (exp.screen). Please use always the
