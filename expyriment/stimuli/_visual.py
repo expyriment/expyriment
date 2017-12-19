@@ -912,10 +912,13 @@ class Visual(Stimulus):
         self._parent = stimulus
         rect = pygame.Rect((0, 0), self.surface_size)
         stimulus_surface_size = stimulus.surface_size
-        rect.center = geometry.position2coordinate(self.position,
-                                                   stimulus_surface_size)
-        #rect.center = [self.position[0] + stimulus_surface_size[0] // 2,
-        #               - self.position[1] + stimulus_surface_size[1] // 2]
+        x, y = geometry.position2coordinate(self.position,
+                                            stimulus_surface_size)
+        if stimulus_surface_size[0] % 2 == 0:
+            x += 1
+        if stimulus_surface_size[1] % 2 == 0:
+            y += 1
+        rect.center = (x, y)
         stimulus._get_surface().blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log(
@@ -1173,10 +1176,14 @@ class Visual(Stimulus):
             screen = _internals.active_exp.screen.surface
             rect = pygame.Rect((0, 0), self.surface_size)
             screen_size = screen.get_size()
-            rect.center = geometry.position2coordinate(self.position,
-                                                       screen_size)
-            rect.center = [self.position[0] + screen_size[0] // 2,
-                           - self.position[1] + screen_size[1] // 2]
+            x, y = geometry.position2coordinate(self.position, screen_size)
+            if screen_size[0] % 2 == 0:
+                x += 1
+            if screen_size[1] % 2 == 0:
+                y += 1
+            rect.center = (x, y)
+            #rect.center = [self.position[0] + screen_size[0] // 2,
+            #               - self.position[1] + screen_size[1] // 2]
             screen.blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
