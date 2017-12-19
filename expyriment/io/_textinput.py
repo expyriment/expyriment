@@ -48,6 +48,7 @@ class TextInput(Input):
                  user_text_colour=None, user_right_to_left=None,
                  background_colour=None, frame_colour=None, gap=None,
                  screen=None, background_stimulus=None, **kwargs):
+
         """Create a text input box.
 
         Notes
@@ -240,11 +241,13 @@ class TextInput(Input):
     @property
     def character_filter(self):
         """Getter for character filter"""
+  
         return self._character_filter
 
     @character_filter.setter
     def character_filter(self, value):
         """Getter for character filter"""
+
         self._character_filter = value
 
     @property
@@ -466,6 +469,7 @@ class TextInput(Input):
             filter = list(range(0, 256)) + constants.K_ALL_KEYPAD_DIGITS
         else:
             filter = self._character_filter
+
         while True:
             inkey, string = self._get_key()
             if inkey == pygame.K_BACKSPACE:

@@ -235,6 +235,11 @@ class Visual(Stimulus):
 
         self._was_compressed_before_preload = None
 
+        if not _internals.active_exp.is_initialized:
+            warn_message = "Stimulus created before initializing " + \
+                           "(experiment defaults won't apply)!"
+            print("Warning: " + warn_message)
+            
     _compression_exception_message = "Cannot call {0} on compressed stimuli!"
 
     def __del__(self):

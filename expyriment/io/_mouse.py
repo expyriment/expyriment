@@ -136,8 +136,7 @@ class Mouse(Input):
 
         """
 
-        if Mouse.quit_rect_location not in [0,1,2,3] or \
-            _internals.active_exp is None:
+        if Mouse.quit_rect_location not in [0,1,2,3]:
             return False
 
         if click_position is None:
@@ -478,8 +477,7 @@ class Mouse(Input):
                     btn_id = rtn_callback
                     rt = int((get_time() - start) * 1000)
                     break
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     btn_id = rtn_callback

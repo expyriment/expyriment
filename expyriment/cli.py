@@ -19,38 +19,73 @@ import sys, os
 from importlib import import_module
 
 from . import control, io, show_documentation
-from .misc import _secure_hash, get_system_info
+from .misc import _secure_hash, get_system_info, download_from_stash
 
+
+cli_documentation = """
+expyriment [OPTIONS] [EXPYRIMENT SCRIPT]
+
+The Expyriment command line interface provides a collection of convenient
+methods helpful for the development and testing of experiments as well as
+functions to join the data output.
+
+    OPTIONS:
+    -g | -0         No OpenGL (no vsync / no blocking)
+    -1              OpenGL (vsync / no blocking)
+    -2              OpenGL (vsync / blocking)
+    -3              OpenGL (vsync / alternative blocking)
+    -t              No time stamps for output files
+    -w              Window mode
+    -f              Fast mode (no initialize delay and fast quitting)
+    -a              Auto create subject ID
+    -i              Intensive logging (log level 2)
+    -d              Develop mode (equivalent to -wfat)
+    -b              Alternative blocking mode (blocking mode 2)
+
+    -C              Create experiment template
+    -J              Join data files to one single csv file
+    -R              Join data files and create R data frame (in RDS file)
+    -S              Print system information
+    -T              Run the Expyriment Test Suite
+    -A              Start the Expyrimnent API Reference Tool
+    -B              Open browser with API reference
+    -h              Show this help
+"""
 
 def create_template():
     template_file = '''#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-This file is an automatically created template (via python -m expyriment.cli -C)
-for an experiment with Expyriment.
+"""This file is an automatically created template for an Expyriment experiment.
+
+It has been created by calling `expyriment -C`.
 
 """
 
-from expyriment import control, design, misc, io, stimuli
 
-control.set_develop_mode(True)
-exp = design.Experiment(name="My experiment")
+import expyriment as xpy
 
-## initialize ##
-control.initialize(exp)
 
-## start ##
-control.start(exp)
+# SETTINGS
+#xpy.control.set_develop_mode()
 
-stimuli.TextScreen("The experiment is running", "press any key").present()
+
+# DESIGN
+exp = xpy.design.Experiment(name="My Experiment")
+
+xpy.control.initialize(exp)
+
+
+# RUN
+xpy.control.start()
+
+xpy.stimuli.TextScreen("Hello World!", "[Press any key to continue]").present()
 exp.keyboard.wait()
 
-## end ##
-control.end()
+xpy.control.end(goodbye_text="Thank you for participating!")
 '''
-    print("Created template_expyriment.py")
-    f = open('template_expyriment.py','w')
+    print("Created experiment_template.py")
+    f = open('experiment_template.py','w')
     f.write(template_file)
     f.close()
 
@@ -65,43 +100,16 @@ def join_data():
     d = data_preprocessing.Aggregator(folder, start_with)
     return d
 
-
-cli_documentation = """
-python -m expyriment.cli [OPTIONS] [EXPYRIMENT SCRIPT]
-
-The Expyriment command line interface provides a collection of convenient
-methods helpful for the development and testing of experiments as well as
-functions to join the data output.
-
-    OPTIONS:
-      -g | -0         No OpenGL (no vsync / no blocking)
-      -1              OpenGL (vsync / no blocking)
-      -2              OpenGL (vsync / blocking)
-      -3              OpenGL (vsync / alternative blocking)
-      -t              No time stamps for output files
-      -w              Window mode
-      -f              Fast mode (no initialize delay and fast quitting)
-      -a              Auto create subject ID
-      -i              Intensive logging (log level 2)
-      -d              Develop mode (equivalent to -wfat)
-      -b              Alternative blocking mode (blocking mode 2)
-
-      -C              Create Expyriment template
-      -J              Join data files to one single csv file
-      -R              Join data files and create R data frame (in RDS file)
-      -S              Print system information
-      -T              Run the Expyriment Test Suite
-      -A              Start the Expyrimnent API Reference Tool
-      -B              Open browser with API reference
-      -h              Show this help
-"""
-
-if __name__ == "__main__":
+def main():
     import argparse
     parser = argparse.ArgumentParser(description="""The Expyriment command line interface provides a collection of convenient
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
+    
+    if len(sys.argv[1:])==0:
+        parser.print_help()
+        parser.exit()
 
     parser.add_argument("SCRIPT", action='store', default=None,
                     help="The expyriment script to be executed",
@@ -141,7 +149,10 @@ functions to join the data output.""",
                     help="Alternative blocking mode (blocking mode 2)")
 
     parser.add_argument("-C", action="store_true",
-                    help="Create Expyriment template")
+                    help="Create experiment template")
+    
+    parser.add_argument("-D", action="store_true",
+                    help="Download from Expyriment stash")
 
     parser.add_argument("-J", action="store_true",
                     help="Join data files to one single csv file")
@@ -215,18 +226,39 @@ functions to join the data output.""",
     if args["C"]:
         create_template()
         sys.exit()
+    if args["D"]:
+        print("Download from stash")
+        what = ""
+        while what not in ["all", "examples", "extras", "tools"]:
+            sys.stdout.write(" what to download ([all]/examples/extras/tools)? ")
+            what = input()
+            if what == "":
+                what = "all"
+        branches = ["master"]
+        if __version__ != "":
+            branches.append(__version__)
+        branch = ""
+        while branch not in branches:
+            sys.stdout.write(" from which branch? ([master]{0})? ".format(
+                "/".join(branches[1:])))
+            branch = input()
+            if branch == "":
+                branch = "master"
+        download_from_stash(what, branch)
     if args["J"]:
         d = join_data()
         output =""
         while len(output) <= 1:
-            output = input(" name of output csv file? ")
+            sys.stdout.write(" name of output csv file? ")
+            output = input()
         d.write_concatenated_data(output)
         sys.exit()
     if args["R"]:
         d = join_data()
         output =""
         while len(output) <= 1:
-            output = input(" name of RDS file? ")
+            sys.stdout.write(" name of RDS file? ")
+            output = input()
         d.write_concatenated_data_to_R_data_frame(output)
         sys.exit()
 
@@ -247,3 +279,7 @@ functions to join the data output.""",
         _secure_hash.cout_hashes()
 
         execfile(pyfile)
+
+
+if __name__ == "__main__":
+    main()

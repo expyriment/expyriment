@@ -131,9 +131,8 @@ class Clock(object) :
             return
         start = self.time
         if isinstance(callback_function, FunctionType) or \
-           (_internals.active_exp is not None and \
-            (process_control_events or \
-             _internals.active_exp.is_callback_registered)):
+           (process_control_events or \
+             _internals.active_exp.is_callback_registered):
             while (self.time < start + waiting_time):
                 if isinstance(callback_function, FunctionType):
                     rtn_callback = callback_function()
@@ -152,8 +151,7 @@ class Clock(object) :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                if _internals.active_exp is not None and \
-                   _internals.active_exp.is_initialized:
+                if _internals.active_exp.is_initialized:
                     while (self.time < start + (waiting_time - looptime)):
                         if process_control_events:
                             if _internals.active_exp.mouse.process_quit_event() or \

@@ -275,8 +275,7 @@ class TouchScreenButtonBox(Input):
                 rtn_callback = callback_function()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback, int((get_time()-start)*1000)
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback, int((get_time()-start)*1000)

@@ -83,8 +83,7 @@ class Keyboard(Input):
                     pause_function()
                     return True
                 elif key_event.key == refresh_key:
-                    if _internals.active_exp is not None:
-                        _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
+                    _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
@@ -277,8 +276,7 @@ class Keyboard(Input):
                     done = True
                     found_key = rtn_callback
                     rt = int((get_time() - start) * 1000)
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     done = True
@@ -287,8 +285,7 @@ class Keyboard(Input):
                 if process_control_events:
                     _internals.active_exp.mouse.process_quit_event()
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
-                if _internals.active_exp is not None and \
-                   _internals.active_exp.is_initialized and \
+                if _internals.active_exp.is_initialized and \
                    process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True
@@ -365,8 +362,7 @@ class Keyboard(Input):
                     done = True
                     rt = int((get_time() - start) * 1000)
                     found_char = rtn_callback
-            if _internals.active_exp is not None and \
-               _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialized:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     done = True
@@ -375,8 +371,7 @@ class Keyboard(Input):
                 if process_control_events:
                     _internals.active_exp.mouse.process_quit_event()
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
-                if _internals.active_exp is not None and \
-                   _internals.active_exp.is_initialized and \
+                if _internals.active_exp.is_initialized and \
                    process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True

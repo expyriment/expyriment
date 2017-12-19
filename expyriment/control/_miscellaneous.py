@@ -104,8 +104,7 @@ def wait_end_audiosystem(channel=None, callback_function=None,
                 else:
                     channel.stop()
                 return rtn_callback
-        if _internals.active_exp is not None and \
-           _internals.active_exp.is_initialized:
+        if _internals.active_exp.is_initialized:
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 if channel is None:

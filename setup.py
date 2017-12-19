@@ -87,6 +87,10 @@ extras_require = {
                            "requests>=2,<3"],
     }
 
+entry_points = {
+        'console_scripts': ['expyriment=expyriment.cli:main'],
+    }
+
 
 class Sdist(sdist):
     def get_file_list(self):
@@ -189,7 +193,7 @@ if os.path.isdir(old_installation):
 # Build Sphinx HTML documentation and add them to data_files
 class InstallData(install_data):
     def run(self):
-        
+
         # Try to build/add documentation
         try:
             cwd = os.getcwd()
@@ -221,7 +225,7 @@ class InstallData(install_data):
 
         # Install data
         install_data.run(self)
-        
+
         # Clean up Sphinx folder
         rmtree("documentation/sphinx/expyriment", ignore_errors=True)
         rmtree("documentation/sphinx/_build", ignore_errors=True)
@@ -306,8 +310,8 @@ def run():
           data_files=data_files,
           install_requires=install_requires,
           extras_require=extras_require,
-          cmdclass=cmdclass)
-
+          cmdclass=cmdclass,
+          entry_points = entry_points)
 
 if __name__=="__main__":
 
