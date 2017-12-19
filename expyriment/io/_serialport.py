@@ -442,11 +442,9 @@ The Python package 'pySerial' is not installed."""
             elif duration is not None and self._clock.time >= timeout_time:
                 break
         if self._logging:
-            _internals.active_exp._event_file_log("SerialPort {0}, read line, end"\
-                                .format(repr(self._serial.port)), 2)
-
-        if not PYTHON3:
-            rtn_string = rtn_string.decode()
+            _internals.active_exp._event_file_log(
+                "SerialPort {0}, read line, end".format(
+                    repr(self._serial.port)), 2)
 
         return rtn_string
 
@@ -481,10 +479,47 @@ The Python package 'pySerial' is not installed."""
         """
 
         self._serial.write(bytes([data]))
+
         if self._logging:
             _internals.active_exp._event_file_log("SerialPort {0},sent,{1}"\
                                 .format(repr(self._serial.port), data), 2)
 
+    def send_line(self, data, carriage_return=False, line_feed=True):
+        """Send a line of data via the serial port.
+
+        Parameters
+        ----------
+        data : bytes or str
+            the data to be sent
+        carriage_return : bool, optional
+            whether to add a carriage return at end of data (default=True)
+        line_feed : bool, optional
+            whether to add a line feed at end of data (default=True)
+
+        """
+
+        if PYTHON3:
+            data = list(data)
+        else:
+            data = [ord(x) for x in data]
+
+        if carriage_return:
+            data.append(13)
+        if line_feed:
+            data.append(10)
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                    "SerialPort {0}, send line, start".format(
+                    repr(self._serial.port)), 2)
+
+        for x in data:
+            self.send(x)
+
+        if self._logging:
+            _internals.active_exp._event_file_log(
+                "SerialPort {0}, send line, end".format(
+                    repr(self._serial.port)), 2)
 
     @staticmethod
     def _self_test(exp):
