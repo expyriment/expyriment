@@ -58,6 +58,19 @@ class _LaminaPanelSurface(object):
 
         """
 
+
+        surface_size = surface.get_size()
+        if surface_size[0] == 1:
+            rect = pygame.Rect((0, 0), surface_size)
+            s = pygame.surface.Surface((2, surface_size[1]), pygame.SRCALPHA).convert_alpha()
+            s.blit(surface, rect)
+            surface = s
+        surface_size = surface.get_size()
+        if surface_size[1] == 1:
+            rect = pygame.Rect((0, 0), surface_size)
+            s = pygame.surface.Surface((surface_size[0], 2), pygame.SRCALPHA).convert_alpha()
+            s.blit(surface, rect)
+            surface = s
         self._txtr = Visual._load_texture(surface)
         if isinstance(surface, pygame.Surface):
             self._winsize = surface.get_size()
@@ -99,30 +112,31 @@ class _LaminaPanelSurface(object):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
         screensize = pygame.display.get_surface().get_size()
-        bottomleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                       self._winsize[0] / 2 + \
+        bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                       int(round(self._winsize[0] / 2)) + \
                                        self._position[0],
-                                       screensize[1] / 2 - \
-                                       int(round(self._winsize[1] / 2.0)) + \
+                                       screensize[1] // 2 - \
+                                       self._winsize[1] // 2 + \
                                        self._position[1], 0)
-        bottomright = oglu.gluUnProject(screensize[0] / 2 + \
-                                        int(round(self._winsize[0] / 2.0)) + \
+        bottomright = oglu.gluUnProject(screensize[0] // 2 + \
+                                        self._winsize[0] // 2 + \
                                         self._position[0],
-                                        screensize[1] / 2 - \
-                                        int(round(self._winsize[1] / 2.0)) + \
+                                        screensize[1] // 2 - \
+                                        self._winsize[1] // 2 + \
                                         self._position[1], 0)
-        topleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                    self._winsize[0] / 2 + \
+        topleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                    int(round(self._winsize[0] / 2)) + \
                                     self._position[0],
-                                    screensize[1] / 2 + \
-                                    self._winsize[1] / 2 + \
+                                    screensize[1] // 2 + \
+                                    int(round(self._winsize[1] / 2)) + \
                                     self._position[1], 0)
-        topright = oglu.gluUnProject(screensize[0] / 2 + \
-                                     int(round(self._winsize[0] / 2.0)) + \
+        topright = oglu.gluUnProject(screensize[0] // 2 + \
+                                     self._winsize[0] // 2 + \
                                      self._position[0],
-                                     screensize[1] / 2 + \
-                                     self._winsize[1] / 2 + \
+                                     screensize[1] // 2 + \
+                                     int(round(self._winsize[1] / 2)) + \
                                      self._position[1], 0)
+
 
         self.dims = topleft, topright, bottomright, bottomleft
         width = topright[0] - topleft[0]
@@ -914,9 +928,9 @@ class Visual(Stimulus):
         stimulus_surface_size = stimulus.surface_size
         x, y = geometry.position2coordinate(self.position,
                                             stimulus_surface_size)
-        if stimulus_surface_size[0] % 2 == 0:
+        if self.surface_size[0] % 2 == 0:
             x += 1
-        if stimulus_surface_size[1] % 2 == 0:
+        if self.surface_size[1] % 2 == 0:
             y += 1
         rect.center = (x, y)
         stimulus._get_surface().blit(self._get_surface(), rect)
@@ -1177,13 +1191,11 @@ class Visual(Stimulus):
             rect = pygame.Rect((0, 0), self.surface_size)
             screen_size = screen.get_size()
             x, y = geometry.position2coordinate(self.position, screen_size)
-            if screen_size[0] % 2 == 0:
+            if self.surface_size[0] % 2 == 0:
                 x += 1
-            if screen_size[1] % 2 == 0:
+            if self.surface_size[1] % 2 == 0:
                 y += 1
             rect.center = (x, y)
-            #rect.center = [self.position[0] + screen_size[0] // 2,
-            #               - self.position[1] + screen_size[1] // 2]
             screen.blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
