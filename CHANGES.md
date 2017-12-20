@@ -15,6 +15,8 @@ New Features:
 - all visual stimuli have a getter and setter for the position in polar
   coordinates: polar_coordiante
 - cartesian2polar & polar2cartesian in misc.geometry
+- trials, blocks and experiment have the method has_factor() to check if a
+  factor is defined
 
 Changed:
 - extras
@@ -30,6 +32,9 @@ Changed:
   calculate positions relative to a surfaces
 - Circle.get_polar_coordiantes & Circle.set_polar_coordiantes are obsolete
   use circle.polar_coordiante
+- trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
+  exception, if the factor is not defined. This can be suppressed by using the
+  parameter return_none_if_not_defined.
 
 Fixed:
 - Adding Field bug in TouchscreenButtonBox

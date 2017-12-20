@@ -35,6 +35,8 @@ from ..misc import constants, Clock, unicode2byte, byte2unicode, py2py3_sort_arr
 from .randomize import rand_int, shuffle_list
 from . import permute
 
+_FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
+_BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
 
 class Experiment(object):
     """A class implementing a basic experiment."""
@@ -349,13 +351,46 @@ class Experiment(object):
         self._bws_factors_names.append(factor_name)
         self._randomized_condition_for_subject[factor_name] = {}
 
-    def get_bws_factor(self, factor_name):
-        """Return all conditions of this between subject factor."""
+    def has_bws_factor(self, factor_name):
+        """Checks if a factor is defined.
+
+        Parameters
+        ----------
+        factor_name : str
+            factor name (str)
+
+        Returns
+        -------
+        bool : boolean
+
+        """
+
+        return factor_name in self.bws_factor_names
+
+    def get_bws_factor(self, factor_name, return_none_if_not_defined=False):
+        """Return all conditions of this between subject factor.
+
+        Parameters
+        ----------
+        factor_name : str
+            factor name
+        return_none_if_not_defined : boolean (default: False)
+            suppresses exception and returns None if factor is not defined.
+
+        Returns
+        -------
+        conditions : none or array of all conditions
+
+        """
+
 
         try:
             cond = self._bws_factors[factor_name]
         except:
-            return None
+            if return_none_if_not_defined:
+                return None
+            else:
+                raise RuntimeError(_BWS_FACTOR_NOT_EXIST.format(factor_name))
         return cond
 
     def get_permuted_bws_factor_condition(self, factor_name, subject_id=None):
@@ -667,7 +702,7 @@ type".format(permutation_type))
         for b in self.blocks:
             combi = []
             for f in factor_names:
-                combi.append([f, b.get_factor(f)])
+                combi.append([f, b.get_factor(f, return_none_if_not_defined=True)])
             new = True
             for c in all_factor_combi:
                 if c == combi:
@@ -696,7 +731,7 @@ type".format(permutation_type))
             for b in tmp:
                 combi = []
                 for f in factor_names:
-                    combi.append([f, b.get_factor(f)])
+                    combi.append([f, b.get_factor(f, return_none_if_not_defined=True)])
                 if combi == search_combi:
                     self._blocks.append(b)
 
@@ -795,10 +830,10 @@ type".format(permutation_type))
             for tr_cnt, tr in enumerate(bl.trials):
                 rtn += u"\n{0},{1}".format(bl_cnt, bl.id)
                 for f in bl_factors:
-                    rtn += u",{0}".format(bl.get_factor(f))
+                    rtn += u",{0}".format(bl.get_factor(f, return_none_if_not_defined=True))
                 rtn += u",{0},{1}".format(tr_cnt, tr.id)
                 for f in factors:
-                    rtn += u",{0}".format(tr.get_factor(f))
+                    rtn += u",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
 
         return rtn
 
@@ -1168,7 +1203,7 @@ class Block(object):
         for f in self.factor_names:
             all_factors = all_factors + \
                 u"{0} = {1}\n                   ".format(
-                    f, self.get_factor(f))
+                    f, self.get_factor(f, return_none_if_not_defined=True))
         all_factors = all_factors.rstrip()
         if len(all_factors) >= 1 and all_factors[-1] == ",":
             all_factors = all_factors[:-1]
@@ -1194,20 +1229,45 @@ class Block(object):
                 "{0} is not allowed.".format(type(value))
             raise TypeError(message)
 
-    def get_factor(self, name):
-        """Get a factor of the block.
+    def has_factor(self, name):
+        """Checks if a factor is defined.
 
         Parameters
         ----------
         name : str
             factor name (str)
 
+        Returns
+        -------
+        bool : boolean
+
+        """
+
+        return name in self.factor_names
+
+    def get_factor(self, name, return_none_if_not_defined=False):
+        """Get a factor of the block.
+
+        Parameters
+        ----------
+        name : str
+            factor name
+        return_none_if_not_defined : boolean (default: False)
+            suppresses exception and returns None if factor is not defined.
+
+        Returns
+        -------
+        factor_val : str or numeric
+
         """
 
         try:
             rtn = self._factors[name]
         except:
-            rtn = None
+            if return_none_if_not_defined:
+                return None
+            else:
+                raise RuntimeError(_FACTOR_NOT_EXIST.format(name))
         return rtn
 
     @property
@@ -1365,7 +1425,7 @@ class Block(object):
 
         rtn = []
         for trial in self.trials:
-            rtn.append(trial.get_factor(name))
+            rtn.append(trial.get_factor(name, return_none_if_not_defined=True))
         return rtn
 
     @property
@@ -1387,7 +1447,7 @@ class Block(object):
         for cnt, tr in enumerate(self.trials):
             rtn = rtn + "\n{0},{1}".format(cnt, tr.id)
             for f in factors:
-                rtn = rtn + ",{0}".format(tr.get_factor(f))
+                rtn = rtn + ",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
         return rtn
 
     def save_design(self, filename):
@@ -1437,9 +1497,9 @@ class Block(object):
                 if fac == self._trial_cnt_variable_name:
                     pass
                 elif fac == self._trial_id_variable_name:
-                    new._id = int(tr.get_factor(fac))
+                    new._id = int(tr.get_factor(fac, return_none_if_not_defined=True))
                 else:
-                    new.set_factor(fac, tr.get_factor(fac))
+                    new.set_factor(fac, tr.get_factor(fac, return_none_if_not_defined=True))
             self.add_trial(new)
 
     def add_trials_from_csv_file(self, filename, encoding=None):
@@ -1754,13 +1814,31 @@ class Trial(object):
                 "{0} is not allowed.".format(type(value))
             raise TypeError(message)
 
-    def get_factor(self, name):
+    def has_factor(self, name):
+        """Checks if a factor is defined.
+
+        Parameters
+        ----------
+        name : str
+            factor name (str)
+
+        Returns
+        -------
+        bool : boolean
+
+        """
+
+        return name in self.factor_names
+
+    def get_factor(self, name, return_none_if_not_defined=False):
         """Get a factor of the trial.
 
         Parameters
         ----------
         name : str
             factor name
+        return_none_if_not_defined : boolean (default: False)
+            suppresses exception and returns None if factor is not defined.
 
         Returns
         -------
@@ -1771,7 +1849,10 @@ class Trial(object):
         try:
             rtn = self._factors[name]
         except:
-            rtn = None
+            if return_none_if_not_defined:
+                return None
+            else:
+                raise RuntimeError(_FACTOR_NOT_EXIST.format(name))
         return rtn
 
     @property
@@ -1797,7 +1878,7 @@ class Trial(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + "{0}={1}, ".format(
-                unicode2byte(f), unicode2byte(str(self.get_factor(f))))
+                unicode2byte(f), unicode2byte(str(self.get_factor(f, return_none_if_not_defined=True))))
         return all_factors
 
     def compare(self, trial):
