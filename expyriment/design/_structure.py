@@ -31,7 +31,7 @@ from copy import deepcopy
 
 from . import defaults
 from .. import _internals
-from ..misc import constants, Clock, unicode2byte, byte2unicode
+from ..misc import constants, Clock, unicode2byte, byte2unicode, py2py3_sort_array
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -1148,7 +1148,7 @@ class Block(object):
             for tf in self.get_trial_factor_values(f):
                 if tf not in val:
                     val.append(tf)
-            val.sort()
+            py2py3_sort_array(val)
             val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(

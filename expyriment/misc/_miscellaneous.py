@@ -462,3 +462,21 @@ The Python package 'Requests' is not installed.""")
             f.write(data.content)
         show_progress(counter+1, len(blobs), "{0} ({1})".format(content, branch))
     print("")
+
+def py2py3_sort_array(array):
+    """Sorts an array with different types using the string representation
+    under Python2 and Python3. Sorts in place!
+
+    Returns:
+    array: the sorted array
+    """
+
+    array.sort(key=_sorter_fnc)
+    return array
+
+def _sorter_fnc(x):
+    """sorter function for py_sort"""
+    if x is None:
+        return str("")
+    else:
+        return str(x)

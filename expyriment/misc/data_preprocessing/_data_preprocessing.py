@@ -30,6 +30,7 @@ except:
     _np = None
 from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
+from ...misc import py2py3_sort_array as _py2py3_sort_array
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
@@ -550,7 +551,7 @@ The Python package 'Numpy' is not installed."""
         iv_values = []
         for iv in self._iv:
             tmp = list(set(data[:, iv]))
-            tmp.sort()
+            _py2py3_sort_array(tmp)
             iv_values.append(tmp)
 
         new_variable_names, combinations = self._get_new_variables(iv_values)
@@ -1321,7 +1322,7 @@ The Python package 'Numpy' is not installed."""
         iv_values = []
         for iv in self._iv:
             tmp = list(set(data[:, iv]))
-            tmp.sort()
+            _py2py3_sort_array(tmp)
             iv_values.append(tmp)
 
         new_variable_names, combinations = self._get_new_variables(iv_values)
