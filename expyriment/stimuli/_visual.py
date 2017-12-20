@@ -58,6 +58,19 @@ class _LaminaPanelSurface(object):
 
         """
 
+
+        surface_size = surface.get_size()
+        if surface_size[0] == 1:
+            rect = pygame.Rect((0, 0), surface_size)
+            s = pygame.surface.Surface((2, surface_size[1]), pygame.SRCALPHA).convert_alpha()
+            s.blit(surface, rect)
+            surface = s
+        surface_size = surface.get_size()
+        if surface_size[1] == 1:
+            rect = pygame.Rect((0, 0), surface_size)
+            s = pygame.surface.Surface((surface_size[0], 2), pygame.SRCALPHA).convert_alpha()
+            s.blit(surface, rect)
+            surface = s
         self._txtr = Visual._load_texture(surface)
         if isinstance(surface, pygame.Surface):
             self._winsize = surface.get_size()
@@ -99,30 +112,31 @@ class _LaminaPanelSurface(object):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
         screensize = pygame.display.get_surface().get_size()
-        bottomleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                       self._winsize[0] / 2 + \
+        bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                       int(round(self._winsize[0] / 2)) + \
                                        self._position[0],
-                                       screensize[1] / 2 - \
-                                       int(round(self._winsize[1] / 2.0)) + \
+                                       screensize[1] // 2 - \
+                                       self._winsize[1] // 2 + \
                                        self._position[1], 0)
-        bottomright = oglu.gluUnProject(screensize[0] / 2 + \
-                                        int(round(self._winsize[0] / 2.0)) + \
+        bottomright = oglu.gluUnProject(screensize[0] // 2 + \
+                                        self._winsize[0] // 2 + \
                                         self._position[0],
-                                        screensize[1] / 2 - \
-                                        int(round(self._winsize[1] / 2.0)) + \
+                                        screensize[1] // 2 - \
+                                        self._winsize[1] // 2 + \
                                         self._position[1], 0)
-        topleft = oglu.gluUnProject(screensize[0] / 2 - \
-                                    self._winsize[0] / 2 + \
+        topleft = oglu.gluUnProject(screensize[0] // 2 - \
+                                    int(round(self._winsize[0] / 2)) + \
                                     self._position[0],
-                                    screensize[1] / 2 + \
-                                    self._winsize[1] / 2 + \
+                                    screensize[1] // 2 + \
+                                    int(round(self._winsize[1] / 2)) + \
                                     self._position[1], 0)
-        topright = oglu.gluUnProject(screensize[0] / 2 + \
-                                     int(round(self._winsize[0] / 2.0)) + \
+        topright = oglu.gluUnProject(screensize[0] // 2 + \
+                                     self._winsize[0] // 2 + \
                                      self._position[0],
-                                     screensize[1] / 2 + \
-                                     self._winsize[1] / 2 + \
+                                     screensize[1] // 2 + \
+                                     int(round(self._winsize[1] / 2)) + \
                                      self._position[1], 0)
+
 
         self.dims = topleft, topright, bottomright, bottomleft
         width = topright[0] - topleft[0]
@@ -239,7 +253,7 @@ class Visual(Stimulus):
             warn_message = "Stimulus created before initializing " + \
                            "(experiment defaults won't apply)!"
             print("Warning: " + warn_message)
-            
+
     _compression_exception_message = "Cannot call {0} on compressed stimuli!"
 
     def __del__(self):
@@ -293,12 +307,12 @@ class Visual(Stimulus):
     @property
     def absolute_position(self):
         """Getter for absolute_position.
-        
+
         Notes
         -----
         The absolute position differs for instance from the (relative) position, if the
         stimulus is plotted ontop of another stimulus, which has not the position (0,0).
-        
+
         """
 
         if self._parent:
@@ -345,7 +359,7 @@ class Visual(Stimulus):
 
     def get_pixel_array(self):
         """Return a 2D array referencing the surface pixel data.
-        
+
         Returns
         -------
         pixel_array: Pygame.PixelArray
@@ -358,7 +372,7 @@ class Visual(Stimulus):
         """
 
         return pygame.PixelArray(self.get_surface_copy())
-    
+
     def get_surface_array(self, replace_transparent_with_colour=None):
         """Get a 3D array containing the surface pixel data.
 
@@ -605,7 +619,7 @@ class Visual(Stimulus):
             the other stimulus
         mode : mode (str), optional
             "visible": based on non-transparent pixels or
-            "rectangle": based on pixels in pygame surface
+            "surface": based on pixels in pygame surface
             (default = visible")
 
         Returns
@@ -623,12 +637,22 @@ class Visual(Stimulus):
             screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             other_size = stimulus.surface_size
-            self_pos = (
-                self.position[0] + screen_size[0] // 2 - self_size[0] // 2,
-                - self.position[1] + screen_size[1] // 2 - self_size[1] // 2)
-            other_pos = (
-                stimulus.position[0] + screen_size[0] // 2 - other_size[0] // 2,
-                - stimulus.position[1] + screen_size[1] // 2 - other_size[1] // 2)
+            self_pos = geometry.position2coordinate(self.position,
+                                                    screen_size)
+            self_pos[0] -= self_size[0] // 2
+            self_pos[1] -= self_size[1] // 2
+            if self_size[0] % 2 == 0:
+                self_pos[0] += 1
+            if self_size[1] % 2 == 0:
+                self_pos[1] += 1
+            other_pos = geometry.position2coordinate(stimulus.position,
+                                                     screen_size)
+            other_pos[0] -= other_size[0] // 2
+            other_pos[1] -= other_size[1] // 2
+            if other_size[0] % 2 == 0:
+                other_pos[0] += 1
+            if other_size[1] % 2 == 0:
+                other_pos[1] += 1
             offset = (-self_pos[0] + other_pos[0], -self_pos[1] + other_pos[1])
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
@@ -640,17 +664,25 @@ class Visual(Stimulus):
 
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
-            sx = self.absolute_position[0] + screen_size[0] // 2
-            sy = self.absolute_position[1] + screen_size[1] // 2
+            sx, sy = geometry.coordinate2position(self.absolute_position,
+                                                  screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
+            if self.surface_size[0] % 2 == 0:
+                sx += 1
+            if self.surface_size[1] % 2 == 0:
+                sy += 1
             selfrect.center = (sx, sy)
-            ox = stimulus.absolute_position[0] + screen_size[0] // 2
-            oy = stimulus.absolute_position[1] + screen_size[1] // 2
+            ox, oy = geometry.coordinate2position(stimulus.absolute_position,
+                                                  screen_size)
+            if stimulus.surface_size[0] % 2 == 0:
+                ox += 1
+            if stimulus.surface_size[1] % 2 == 0:
+                oy += 1
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
             stimrect.center = (ox, oy)
-            if selfrect.contains(stimrect):
+            if stimrect.contains(selfrect):
                 return True
             else:
                 return False
@@ -682,7 +714,7 @@ class Visual(Stimulus):
         -----
         Depending on the size of the stimulus, this method may take some time
         to compute!
-        
+
         CAUTION: Please note that if a stimulus is plotted on another smaller
         stimulus, such that it is not fully visible on screen, this method will
         still check overlapping of the full stimulus! Due to a current bug in
@@ -695,23 +727,43 @@ class Visual(Stimulus):
             self_size = self.surface_size
             other_size = stimulus.surface_size
             if use_absolute_position:
-                self_pos = (self.absolute_position[0] + screen_size[0] // 2 -
-                            self_size[0] // 2,
-                            - self.absolute_position[1] + screen_size[1] // 2 -
-                            self_size[1] // 2)
-                other_pos = (stimulus.absolute_position[0] + screen_size[0] // 2
-                             - other_size[0] // 2,
-                             - stimulus.absolute_position[1] + screen_size[1] //
-                             2 - other_size[1] // 2)
+                self_pos = geometry.position2coordinate(
+                    self.absolute_position, screen_size)
+                self_pos[0] -= self_size[0] // 2
+                self_pos[1] -= self_size[1] // 2
+                if self_size[0] % 2 == 0:
+                    self_pos[0] += 1
+                if self_size[1] % 2 == 0:
+                    self_pos[1] += 1
+
+                other_pos = geometry.position2coordinate(
+                    stimulus.absolute_position, screen_size)
+                other_pos[0] -= other_size[0] // 2
+                other_pos[1] -= other_size[1] // 2
+                if other_size[0] % 2 == 0:
+                    other_pos[0] += 1
+                if other_size[1] % 2 == 0:
+                    other_pos[1] += 1
+
             else:
-                self_pos = (self.position[0] + screen_size[0] // 2 -
-                            self_size[0] // 2,
-                            - self.position[1] + screen_size[1] // 2 -
-                            self_size[1] // 2)
-                other_pos = (stimulus.position[0] + screen_size[0] // 2 -
-                             other_size[0] // 2,
-                             - stimulus.position[1] + screen_size[1] // 2 -
-                             other_size[1] // 2)
+                self_pos = geometry.position2coordinate(
+                    self.position, screen_size)
+                self_pos[0] -= self_size[0] // 2
+                self_pos[1] -= self_size[1] // 2
+                if self_size[0] % 2 == 0:
+                    self_pos[0] += 1
+                if self_size[1] % 2 == 0:
+                    self_pos[1] += 1
+
+                other_pos = geometry.position2coordinate(
+                    stimulus.position, screen_size)
+                other_pos[0] -= other_size[0] // 2
+                other_pos[1] -= other_size[1] // 2
+                if other_size[0] % 2 == 0:
+                    other_pos[0] += 1
+                if other_size[1] % 2 == 0:
+                    other_pos[1] += 1
+
             offset = (-self_pos[0] + other_pos[0], -self_pos[1] + other_pos[1])
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
@@ -720,21 +772,30 @@ class Visual(Stimulus):
                 return True, overlap
             else:
                 return False, overlap
+
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx = self.absolute_position[0] + screen_size[0] // 2
-                sy = self.absolute_position[1] + screen_size[1] // 2
-                ox = stimulus.absolute_position[0] + screen_size[0] // 2
-                oy = stimulus.absolute_position[1] + screen_size[1] // 2
+                sx, sy = geometry.coordinate2position(
+                    self.absolute_position, screen_size)
+                ox, oy = geometry.coordinate2position(
+                    stimulus.absolute_position, screen_size)
             else:
-                sx = self.position[0] + screen_size[0] // 2
-                sy = self.position[1] + screen_size[1] // 2
-                ox = stimulus.position[0] + screen_size[0] // 2
-                oy = stimulus.position[1] + screen_size[1] // 2
+                sx, sy = geometry.coordinate2position(
+                    self.position, screen_size)
+                ox, oy = geometry.coordinate2position(
+                    stimulus.position, screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
+            if self.surface_size[0] % 2 == 0:
+                sx += 1
+            if self.surface_size[1] % 2 == 0:
+                sy += 1
             selfrect.center = (sx, sy)
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
+            if stimulus.surface_size[0] % 2 == 0:
+                ox += 1
+            if stimulus.surface_size[1] % 2 == 0:
+                oy += 1
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
             stimrect.center = (ox, oy)
@@ -771,24 +832,33 @@ class Visual(Stimulus):
         stimulus, such that it is not fully visible on screen, this method will
         still check overlapping of the full stimulus! Due to a current bug in
         Pygame, we can right now not change this.
-        
+
         """
 
         if mode == "visible":
             screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             if use_absolute_position:
-                self_pos = (
-                    (self.absolute_position[0] + screen_size[0] // 2) -
-                    self_size[0] // 2,
-                    (-self.absolute_position[1] + screen_size[1] // 2) -
-                    self_size[1] // 2)
+                self_pos = geometry.position2coordinate(
+                    self.absolute_position, screen_size)
+                self_pos[0] -= self_size[0] // 2
+                self_pos[1] -= self_size[1] // 2
+                if self_size[0] % 2 == 0:
+                    self_pos[0] += 1
+                if self_size[1] % 2 == 0:
+                    self_pos[1] += 1
+
             else:
-                self_pos = (
-                    (self.position[0] + screen_size[0] // 2) - self_size[0] // 2,
-                    (-self.position[1] + screen_size[1] // 2) - self_size[1] // 2)
-            pos = (position[0] + screen_size[0] // 2,
-                   - position[1] + screen_size[1] // 2)
+                self_pos = geometry.position2coordinate(
+                    self.position, screen_size)
+                self_pos[0] -= self_size[0] // 2
+                self_pos[1] -= self_size[1] // 2
+                if self_size[0] % 2 == 0:
+                    self_pos[0] += 1
+                if self_size[1] % 2 == 0:
+                    self_pos[1] += 1
+
+            pos = geometry.position2coordinate(position, screen_size)
             offset = (int(pos[0] - self_pos[0]), int(pos[1] - self_pos[1]))
             self_mask = pygame.mask.from_surface(self._get_surface())
             overlap = False
@@ -803,15 +873,22 @@ class Visual(Stimulus):
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx = self.absolute_position[0] + screen_size[0] // 2
-                sy = self.absolute_position[1] + screen_size[1] // 2
+                sx, sy = geometry.coordinate2position(self.absolute_position,
+                                                      screen_size)
             else:
-                sx = self.position[0] + screen_size[0] // 2
-                sy = self.position[1] + screen_size[1] // 2
+                sx, sy = geometry.coordinate2position(self.position,
+                                                      screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
+            if self.surface_size[0] % 2 == 0:
+                sx += 1
+            if self.surface_size[1] % 2 == 0:
+                sy += 1
             selfrect.center = (sx, sy)
+            p = geometry.coordinate2position(position, screen_size)
             p = (position[0] + screen_size[0] // 2,
                  position[1] + screen_size[1] // 2)
+            p = geometry.coordinate2position(position, screen_size)
+            print(sx, sy, p)
             if selfrect.collidepoint(p):
                 return True
             else:
@@ -849,8 +926,13 @@ class Visual(Stimulus):
         self._parent = stimulus
         rect = pygame.Rect((0, 0), self.surface_size)
         stimulus_surface_size = stimulus.surface_size
-        rect.center = [self.position[0] + stimulus_surface_size[0] // 2,
-                       - self.position[1] + stimulus_surface_size[1] // 2]
+        x, y = geometry.position2coordinate(self.position,
+                                            stimulus_surface_size)
+        if self.surface_size[0] % 2 == 0:
+            x += 1
+        if self.surface_size[1] % 2 == 0:
+            y += 1
+        rect.center = (x, y)
         stimulus._get_surface().blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log(
@@ -1108,8 +1190,12 @@ class Visual(Stimulus):
             screen = _internals.active_exp.screen.surface
             rect = pygame.Rect((0, 0), self.surface_size)
             screen_size = screen.get_size()
-            rect.center = [self.position[0] + screen_size[0] // 2,
-                           - self.position[1] + screen_size[1] // 2]
+            x, y = geometry.position2coordinate(self.position, screen_size)
+            if self.surface_size[0] % 2 == 0:
+                x += 1
+            if self.surface_size[1] % 2 == 0:
+                y += 1
+            rect.center = (x, y)
             screen.blit(self._get_surface(), rect)
         if self._logging:
             _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
