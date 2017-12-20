@@ -312,6 +312,37 @@ class OutputFile(Output):
         self._filename = new_filename
         self._fullpath = new_fullpath
 
+    @staticmethod
+    def get_next_subject_number():
+        """Return the next subject number based on the existing data and event files."""
+
+        subject_number = 1
+        file_list = []
+        if os.path.isdir(defaults.datafile_directory):
+            file_list.extend(os.listdir(defaults.datafile_directory))
+        if os.path.isdir(defaults.eventfile_directory):
+            file_list.extend(os.listdir(defaults.eventfile_directory))
+
+        if len(file_list)>0:
+            mainfile_name = os.path.split(sys.argv[0])[1].replace(".py", "")
+            for filename in file_list:
+                if filename.startswith(mainfile_name) and \
+                        (filename.endswith(DataFile._file_suffix) or
+                         filename.endswith(EventFile._file_suffix)):
+                    tmp = filename.replace(mainfile_name, "")\
+                                  .replace(DataFile._file_suffix, "")\
+                                  .replace(EventFile._file_suffix, "")
+                    tmp = tmp.split('_')
+                    try:
+                        num = int(tmp[1])
+                        if num >= subject_number and num<200000000000:
+                            # large numbers are probably timestamps (normally the current event has no subject id
+                            # yet and only a timestamp)
+                            subject_number = num + 1
+                    except:
+                        pass
+        return subject_number
+
 
 class DataFile(OutputFile):
     """A class implementing a data file."""
@@ -550,27 +581,6 @@ class DataFile(OutputFile):
                 _internals.active_exp._event_file_log("Data,saved")
 
         return int((get_time() - start) * 1000)
-
-    @staticmethod
-    def get_next_subject_number():
-        """Return the next subject number based on the existing data files."""
-
-        subject_number = 1
-        if os.path.isdir(defaults.datafile_directory):
-            mainfile_name = os.path.split(sys.argv[0])[1].replace(".py", "")
-            for filename in os.listdir(defaults.datafile_directory):
-                if filename.startswith(mainfile_name) and \
-                        filename.endswith(DataFile._file_suffix):
-                    tmp = filename.replace(mainfile_name, "")
-                    tmp = tmp.replace(DataFile._file_suffix, "")
-                    tmp = tmp.split('_')
-                    try:
-                        num = int(tmp[1])
-                        if num >= subject_number:
-                            subject_number = num + 1
-                    except:
-                        pass
-        return subject_number
 
 
 class EventFile(OutputFile):
