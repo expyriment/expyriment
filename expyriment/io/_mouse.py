@@ -504,12 +504,12 @@ class Mouse(Input):
                     int((get_time() - start) * 1000) >= duration):
                 break
 
-        position_in_expy_coordinates = self.position
+        position_in_expy_coordinate = self.position
 
         if self._logging:
             _internals.active_exp._event_file_log(
             "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occured))
-        return btn_id, motion_occured, position_in_expy_coordinates, rt
+        return btn_id, motion_occured, position_in_expy_coordinate, rt
 
 
     def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
