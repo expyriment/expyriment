@@ -35,6 +35,7 @@ Fixed:
 - Adding Field bug in TouchscreenButtonBox
 - 1-pixel bug when converting Expyriment positions to screen (Pygame)
   positions: position2coordinate & coordinate2position
+- auto_subject_id takes now also existing event files into account
 
 
 
