@@ -19,18 +19,18 @@ package (e.g. ``expyriment.stimuli.extras.DotCloud``).
 
 There are three ways to import extras:
 
-1. Import all extras in one go
-   ::
+1. Import all extras in one go::
+
     import expyriment
     expyriment.import_all_extras()
 
-2. Import all extras from a specific package
-   ::
+2. Import all extras from a specific package::
+
     import expyriment
     import expyriment.stimuli.extras
 
-3. Import a specific plugin
-   ::
+3. Import a specific plugin::
+
     import expyriment
     from expyriment_stimuli_extras.dotcloud import DotCloud
 
