@@ -83,7 +83,8 @@ class Keyboard(Input):
                     pause_function()
                     return True
                 elif key_event.key == refresh_key:
-                    _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
+                    if _internals.active_exp.is_initialized:
+                        _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
