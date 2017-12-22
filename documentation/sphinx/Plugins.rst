@@ -17,13 +17,30 @@ directory located in the current user's home directory:
 Any plugins found will be integrated into the *.extras* namespace of each
 package (e.g. ``expyriment.stimuli.extras.DotCloud``).
 
+There are three ways to import extras:
+
+1. Import all extras in one go
+   ::
+    import expyriment
+    expyriment.import_all_extras()
+
+2. Import all extras from a specific package
+   ::
+    import expyriment
+    import expyriment.stimuli.extras
+
+3. Import a specific plugin
+   ::
+    import expyriment
+    from expyriment_stimuli_extras.dotcloud import DotCloud
+
 Download plugins for stash
 --------------------------
 Several extra plugins can be found in the `Expyriment stash`_. When Expyriment
 has been installed with the option ``download`` (or ``all``), all plugins can be 
 downloaded automatically by calling::
 
-    expyriment.misc.download_from_stashcontent="extras")
+    expyriment.misc.download_from_stash(content="extras")
 
 Development
 -----------
