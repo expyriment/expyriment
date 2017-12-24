@@ -33,12 +33,12 @@ Changed:
 - the option ascii_fiter in io.TextInput has been renamed to character_filter
 - frequence_table in misc.statistics has been renamed to frequency_table
 - points_to_vertices in misc.geometry has been renamed to points2vertices
-- coordinates2position in misc.geometry has been renamed to
-  coordinate2position
-- position2coordinate & coordinate2position have a new optional argument to
+- position2coordinate in misc.geometry has been renamed to
+  position2coordinates
+- position2coordinates & coordinates2position have a new optional argument to
   calculate positions relative to a surfaces
 - Circle.get_polar_coordiantes & Circle.set_polar_coordiantes are obsolete
-  use circle.polar_coordiante
+  use circle.polar_position
 - trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
   exception, if the factor is not defined. This can be suppressed by using the
   parameter return_none_if_not_defined
