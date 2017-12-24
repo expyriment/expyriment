@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-upcoming version
------------------
+0.9.1b1 (24.12.2017)
+--------------------
 New Features:
 - Expyriment windows with no frame; set default.window_no_frame=True before
   initialize
