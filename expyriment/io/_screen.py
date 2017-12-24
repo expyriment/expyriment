@@ -20,7 +20,7 @@ except ImportError:
 
 from .. import _internals
 from ._input_output import Output
-from ..misc.geometry import position2coordinate
+from ..misc.geometry import position2coordinates
 
 
 class Screen(Output):
@@ -217,7 +217,7 @@ machine!")
             for stim in stimuli:
                 pos = stim.absolute_position
                 stim_size = stim.surface_size
-                rect_pos = position2coordinate(pos, self.size)
+                rect_pos = position2coordinates(pos, self.size)
                 rect_pos[0] -= stim_size[0] // 2
                 rect_pos[1] -= stim_size[1] // 2
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
