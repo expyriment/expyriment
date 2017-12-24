@@ -289,13 +289,13 @@ class Visual(Stimulus):
 
     @property
     def polar_position(self):
-        """Getter for the position in polar coordinate (radial, angle[degrees])"""
+        """Getter for the position in polar coordinates (radial, angle[degrees])"""
 
         return geometry.cartesian2polar(self._position)
 
     @polar_position.setter
     def polar_position(self, value):
-        """Setter for the position in polar coordinate (radial, angle[degrees])
+        """Setter for the position in polar coordinates (radial, angle[degrees])
 
         When using OpenGL, this can take longer then 1ms!
 
