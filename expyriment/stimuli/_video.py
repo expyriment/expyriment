@@ -72,10 +72,11 @@ class Video(_visual.Stimulus):
                     ffmpeg_binary = which(ffmpeg_binary)
                 return ffmpeg_binary
             except imageio.core.NeedDownloadError:
-                if has_internet_connection():
+                try:
+                    assert has_internet_connection()
                     imageio.plugins.ffmpeg.download()
                     return imageio.plugins.ffmpeg.get_exe()
-                else:
+                except:
                     os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
         except ImportError:
             pass
