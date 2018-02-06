@@ -90,10 +90,11 @@ class TextScreen(Visual):
         self._text = text
         if heading_font is None:
             heading_font = defaults.textscreen_heading_font
-        if heading_font is not None:
-            self._heading_font = find_font(heading_font)
-        else:
-            self._heading_font = find_font(_internals.active_exp.text_font)
+        if heading_font is None:
+            heading_font = _internals.active_exp.text_font
+        if heading_font is None:
+            heading_font = "FreeSans"
+        self._heading_font = find_font(heading_font)
         try:
             with open(self._heading_font, 'rb') as f:
                 pygame.font.Font(f, 10)
