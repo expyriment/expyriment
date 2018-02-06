@@ -20,6 +20,7 @@ import sys
 import glob
 import random
 import colorsys
+import warnings
 
 import pygame
 
@@ -270,7 +271,10 @@ def find_font(font):
     if font_file is not None:
         return font_file
     else:
-        return ""
+        warnings.warn(
+            'Failed find font {0}, falling back to default'.format(font)
+        )
+        return pygame.font.match_font(pygame.font.get_fonts()[0])
 
 
 def get_monitor_resolution():
