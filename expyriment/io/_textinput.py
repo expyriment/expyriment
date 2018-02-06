@@ -134,10 +134,11 @@ class TextInput(Input):
             self._message_colour = _internals.active_exp.foreground_colour
         if message_font is None:
             message_font = defaults.textinput_message_font
-        if message_font is not None:
-            self._message_font = find_font(message_font)
-        else:
-            self._message_font = find_font(_internals.active_exp.text_font)
+        if message_font is None:
+            message_font = _internals.active_exp.text_font
+        if message_font is None:
+            message_font = "FreeSans"
+        self._message_font = find_font(message_font)
         try:
             with open(self._message_font, 'rb') as f:
                 pygame.font.Font(f, 10)
@@ -168,10 +169,11 @@ class TextInput(Input):
             self._user_text_bold = defaults.textinput_user_text_bold
         if user_text_font is None:
             user_text_font = defaults.textinput_user_text_font
-        if user_text_font is not None:
-            self._user_text_font = find_font(user_text_font)
-        else:
-            self._user_text_font = find_font(_internals.active_exp.text_font)
+        if user_font is None:
+            user_font = _internals.active_exp.text_font
+        if user_font is None:
+            user_font = "FreeSans"
+        self._user_font = find_font(user_font)
         try:
             with open(self._user_text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
