@@ -12,6 +12,9 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+import os
+import sys
+
 
 # Experiment
 experiment_name = None  # Set None if experiment default name should be the
@@ -20,10 +23,17 @@ experiment_name = None  # Set None if experiment default name should be the
 
 experiment_background_colour = (0, 0, 0)
 experiment_foreground_colour = (150, 150, 150)
-#experiment_text_font = _str2unicode(_os.path.abspath(
-#    _os.path.join(_os.path.dirname(__file__),
-#                  "..", "_fonts", "FreeSans.ttf")))
-experiment_text_font = "FreeSans"
+
+# On some versions of Mac OS, looking up a font without a full path fails. This
+# is a quick hack to overcome this issue, but the root cause should be figured
+# out.
+if sys.platform == 'darwin':
+    experiment_text_font = os.path.abspath(os.path.join(
+            os.path.dirname(__file__),
+            "..", "_fonts", "FreeSans.ttf"
+    ))
+else:
+    experiment_text_font = "FreeSans"
 experiment_text_size = 20
 experiment_filename_suffix = None
 
