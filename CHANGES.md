@@ -2,47 +2,56 @@
 Expyriment Release Notes
 ========================
 
-upcoming version
------------------
+0.9.1b1 (24.12.2017)
+--------------------
 New Features:
-- Expyriment windows with no frame. Just set default.window_no_frame=True
-  before initialize
+- Expyriment windows with no frame; set default.window_no_frame=True before
+  initialize
 - download plugins from stash: misc.download_from_stash()
 - stimuli.Shape: A vertex list can be added when creating a shape object
   using the optional vertex_list parameter
-- visual.get_surface_array & set_surface_arry for direct pixel manipultions
+- visual.get_surface_array & set_surface_arry for direct pixel manipulations
   with numpy
 - all visual stimuli have a getter and setter for the position in polar
   coordinates: polar_coordiante
 - cartesian2polar & polar2cartesian in misc.geometry
 - trials, blocks and experiment have the method has_factor() to check if a
   factor is defined
+- after installation the command line interface will be available from the
+  system command 'expyriment'
+- io.TextInput can now optionally how text right-to-left
+- io.SerialPort has a new method send_line
 
 Changed:
 - extras
     - extras need to be explicitly imported
     - extras and plugins are not anymore part of expyriment package and can
-      be instead download from the expyriment stash (see
+      be instead downloaded from the Expyriment stash (see
       misc.download_from_stash())
     - All installed extras will be installed in the local settings folder
       (typically .expyriment of the $HOME directory)
-- coordinates2position in misc.geometry has been renamed to
-  coordinate2position
-- position2coordinate & coordinate2position have a new optional argument to
+- the option ascii_fiter in io.TextInput has been renamed to character_filter
+- frequence_table in misc.statistics has been renamed to frequency_table
+- points_to_vertices in misc.geometry has been renamed to points2vertices
+- position2coordinate in misc.geometry has been renamed to
+  position2coordinates
+- position2coordinates & coordinates2position have a new optional argument to
   calculate positions relative to a surfaces
 - Circle.get_polar_coordiantes & Circle.set_polar_coordiantes are obsolete
-  use circle.polar_coordiante
+  use circle.polar_position
 - trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
   exception, if the factor is not defined. This can be suppressed by using the
-  parameter return_none_if_not_defined.
+  parameter return_none_if_not_defined
 
 Fixed:
-- Adding Field bug in TouchscreenButtonBox
-- 1-pixel bug when converting Expyriment positions to screen (Pygame)
+- Adding field bug in TouchscreenButtonBox
+- 1-pixel bug when converting Expyriment positions to screen (Pygame);
   positions: position2coordinate & coordinate2position
 - auto_subject_id takes now also existing event files into account
-
-
+- io.SerialPort bug with Python 3
+- script path is added to PYTHONPATH
+- representation lists in output CSV files
+- bug in io.Keyboard.wait
 
 Version 0.9.0 (9 Mar 2017)
 ---------------------------

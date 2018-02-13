@@ -91,10 +91,11 @@ class TextLine(Visual):
             self._text_size = _internals.active_exp.text_size
         if text_font is None:
             text_font = defaults.textline_text_font
-        if text_font is not None:
-            self._text_font = find_font(text_font)
-        else:
-            self._text_font = find_font(_internals.active_exp.text_font)
+        if text_font is None:
+            text_font = _internals.active_exp.text_font
+        if text_font is None:
+            text_font = "FreeSans"
+        self._text_font = find_font(text_font)
         try:
             with open(self._text_font, 'rb') as f:
                 pygame.font.Font(f, 10)

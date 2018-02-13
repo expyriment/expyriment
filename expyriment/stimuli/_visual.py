@@ -289,13 +289,13 @@ class Visual(Stimulus):
 
     @property
     def polar_position(self):
-        """Getter for the position in polar coordinate (radial, angle[degrees])"""
+        """Getter for the position in polar coordinates (radial, angle[degrees])"""
 
         return geometry.cartesian2polar(self._position)
 
     @polar_position.setter
     def polar_position(self, value):
-        """Setter for the position in polar coordinate (radial, angle[degrees])
+        """Setter for the position in polar coordinates (radial, angle[degrees])
 
         When using OpenGL, this can take longer then 1ms!
 
@@ -637,16 +637,16 @@ class Visual(Stimulus):
             screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             other_size = stimulus.surface_size
-            self_pos = geometry.position2coordinate(self.position,
-                                                    screen_size)
+            self_pos = geometry.position2coordinates(self.position,
+                                                     screen_size)
             self_pos[0] -= self_size[0] // 2
             self_pos[1] -= self_size[1] // 2
             if self_size[0] % 2 == 0:
                 self_pos[0] += 1
             if self_size[1] % 2 == 0:
                 self_pos[1] += 1
-            other_pos = geometry.position2coordinate(stimulus.position,
-                                                     screen_size)
+            other_pos = geometry.position2coordinates(stimulus.position,
+                                                      screen_size)
             other_pos[0] -= other_size[0] // 2
             other_pos[1] -= other_size[1] // 2
             if other_size[0] % 2 == 0:
@@ -664,16 +664,16 @@ class Visual(Stimulus):
 
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
-            sx, sy = geometry.coordinate2position(self.absolute_position,
-                                                  screen_size)
+            sx, sy = geometry.coordinates2position(self.absolute_position,
+                                                   screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
             if self.surface_size[0] % 2 == 0:
                 sx += 1
             if self.surface_size[1] % 2 == 0:
                 sy += 1
             selfrect.center = (sx, sy)
-            ox, oy = geometry.coordinate2position(stimulus.absolute_position,
-                                                  screen_size)
+            ox, oy = geometry.coordinates2position(stimulus.absolute_position,
+                                                   screen_size)
             if stimulus.surface_size[0] % 2 == 0:
                 ox += 1
             if stimulus.surface_size[1] % 2 == 0:
@@ -727,7 +727,7 @@ class Visual(Stimulus):
             self_size = self.surface_size
             other_size = stimulus.surface_size
             if use_absolute_position:
-                self_pos = geometry.position2coordinate(
+                self_pos = geometry.position2coordinates(
                     self.absolute_position, screen_size)
                 self_pos[0] -= self_size[0] // 2
                 self_pos[1] -= self_size[1] // 2
@@ -736,7 +736,7 @@ class Visual(Stimulus):
                 if self_size[1] % 2 == 0:
                     self_pos[1] += 1
 
-                other_pos = geometry.position2coordinate(
+                other_pos = geometry.position2coordinates(
                     stimulus.absolute_position, screen_size)
                 other_pos[0] -= other_size[0] // 2
                 other_pos[1] -= other_size[1] // 2
@@ -746,7 +746,7 @@ class Visual(Stimulus):
                     other_pos[1] += 1
 
             else:
-                self_pos = geometry.position2coordinate(
+                self_pos = geometry.position2coordinates(
                     self.position, screen_size)
                 self_pos[0] -= self_size[0] // 2
                 self_pos[1] -= self_size[1] // 2
@@ -755,7 +755,7 @@ class Visual(Stimulus):
                 if self_size[1] % 2 == 0:
                     self_pos[1] += 1
 
-                other_pos = geometry.position2coordinate(
+                other_pos = geometry.position2coordinates(
                     stimulus.position, screen_size)
                 other_pos[0] -= other_size[0] // 2
                 other_pos[1] -= other_size[1] // 2
@@ -776,14 +776,14 @@ class Visual(Stimulus):
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx, sy = geometry.coordinate2position(
+                sx, sy = geometry.coordinates2position(
                     self.absolute_position, screen_size)
-                ox, oy = geometry.coordinate2position(
+                ox, oy = geometry.coordinates2position(
                     stimulus.absolute_position, screen_size)
             else:
-                sx, sy = geometry.coordinate2position(
+                sx, sy = geometry.coordinates2position(
                     self.position, screen_size)
-                ox, oy = geometry.coordinate2position(
+                ox, oy = geometry.coordinates2position(
                     stimulus.position, screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
             if self.surface_size[0] % 2 == 0:
@@ -839,7 +839,7 @@ class Visual(Stimulus):
             screen_size = _internals.active_exp.screen.surface.get_size()
             self_size = self.surface_size
             if use_absolute_position:
-                self_pos = geometry.position2coordinate(
+                self_pos = geometry.position2coordinates(
                     self.absolute_position, screen_size)
                 self_pos[0] -= self_size[0] // 2
                 self_pos[1] -= self_size[1] // 2
@@ -849,7 +849,7 @@ class Visual(Stimulus):
                     self_pos[1] += 1
 
             else:
-                self_pos = geometry.position2coordinate(
+                self_pos = geometry.position2coordinates(
                     self.position, screen_size)
                 self_pos[0] -= self_size[0] // 2
                 self_pos[1] -= self_size[1] // 2
@@ -858,7 +858,7 @@ class Visual(Stimulus):
                 if self_size[1] % 2 == 0:
                     self_pos[1] += 1
 
-            pos = geometry.position2coordinate(position, screen_size)
+            pos = geometry.position2coordinates(position, screen_size)
             offset = (int(pos[0] - self_pos[0]), int(pos[1] - self_pos[1]))
             self_mask = pygame.mask.from_surface(self._get_surface())
             overlap = False
@@ -873,21 +873,21 @@ class Visual(Stimulus):
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
             if use_absolute_position:
-                sx, sy = geometry.coordinate2position(self.absolute_position,
-                                                      screen_size)
+                sx, sy = geometry.coordinates2position(self.absolute_position,
+                                                       screen_size)
             else:
-                sx, sy = geometry.coordinate2position(self.position,
-                                                      screen_size)
+                sx, sy = geometry.coordinates2position(self.position,
+                                                       screen_size)
             selfrect = pygame.Rect((0, 0), self.surface_size)
             if self.surface_size[0] % 2 == 0:
                 sx += 1
             if self.surface_size[1] % 2 == 0:
                 sy += 1
             selfrect.center = (sx, sy)
-            p = geometry.coordinate2position(position, screen_size)
+            p = geometry.coordinates2position(position, screen_size)
             p = (position[0] + screen_size[0] // 2,
                  position[1] + screen_size[1] // 2)
-            p = geometry.coordinate2position(position, screen_size)
+            p = geometry.coordinates2position(position, screen_size)
             print(sx, sy, p)
             if selfrect.collidepoint(p):
                 return True
@@ -926,8 +926,8 @@ class Visual(Stimulus):
         self._parent = stimulus
         rect = pygame.Rect((0, 0), self.surface_size)
         stimulus_surface_size = stimulus.surface_size
-        x, y = geometry.position2coordinate(self.position,
-                                            stimulus_surface_size)
+        x, y = geometry.position2coordinates(self.position,
+                                             stimulus_surface_size)
         if self.surface_size[0] % 2 == 0:
             x += 1
         if self.surface_size[1] % 2 == 0:
@@ -1190,7 +1190,7 @@ class Visual(Stimulus):
             screen = _internals.active_exp.screen.surface
             rect = pygame.Rect((0, 0), self.surface_size)
             screen_size = screen.get_size()
-            x, y = geometry.position2coordinate(self.position, screen_size)
+            x, y = geometry.position2coordinates(self.position, screen_size)
             if self.surface_size[0] % 2 == 0:
                 x += 1
             if self.surface_size[1] % 2 == 0:

@@ -36,7 +36,7 @@ help:
 clean:
 	rm -rf $(BUILDDIR)
 	rm -f expyriment.*
-	rm -f Changelog.rst CommandLineInterface.rst sitemap.yml
+	rm -f Changelog.rst sitemap.yml
 
 rst:
 	@make expyriment.rst

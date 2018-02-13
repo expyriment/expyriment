@@ -270,6 +270,8 @@ def find_font(font):
     if font_file is not None:
         return font_file
     else:
+        warn_message = "Failed to find font {0}!".format(font)
+        print("Warning: " + warn_message)
         return ""
 
 

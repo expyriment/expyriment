@@ -358,12 +358,12 @@ class Shape(Visual):
         self._update_points()
 
     def convert_expyriment_xy_to_surface_xy(self, point_xy):
-        """Convert a point from shape coordinates to surface coordinate.
+        """Convert a point from shape coordinates to surface coordinates.
 
         Parameters
         ----------
         point_xy : (int, int)
-            Expyriment screen coordinate (tuple)
+            Expyriment screen coordinates (tuple)
 
         """
 
@@ -375,7 +375,7 @@ class Shape(Visual):
         """Return True if the position is inside the shape.
 
         Parameters
-        position -- Expyriment screen coordinate (tuple)
+        position -- Expyriment screen coordinates (tuple)
 
         Returns
         -------

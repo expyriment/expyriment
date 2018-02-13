@@ -181,4 +181,3 @@ Functions
         create_module_rst(mod_name)
 
     create_change_log_rst()
-    make_cli_rst()

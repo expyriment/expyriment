@@ -50,8 +50,13 @@ packages = ['expyriment',
             'expyriment.io', 'expyriment.io.extras',
             'expyriment.io._parallelport',
             'expyriment.misc', 'expyriment.misc.extras',
+            'expyriment.misc.data_preprocessing',
+            'expyriment.misc.geometry',
+            'expyriment.misc.statistics',
             'expyriment.stimuli', 'expyriment.stimuli.extras',
-            'expyriment.design', 'expyriment.design.extras']
+            'expyriment.design', 'expyriment.design.extras',
+            'expyriment.design.randomize',
+            'expyriment.design.permute']
 
 package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
 

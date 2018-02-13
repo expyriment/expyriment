@@ -17,21 +17,14 @@ import math as _math
 from ... import _internals
 
 
-def coordinates2position(coordinate, surface_size=None):
-    """"OBSOLETE FUNCTION: Please use 'coordinate2position'."""
-
-    raise DeprecationWarning("coordinates2position is an obsolete function. Please use coordinate2position.")
-    
-    coordinate2position(coordinate, surface_size=None)
-
-def coordinate2position(coordinate, surface_size=None):
-    """Convert a coordinate on the screen or surface to an
+def coordinates2position(coordinates, surface_size=None):
+    """Convert coordinates on the screen or surface to an
     Expyriment position.
 
     Parameters
     ----------
-    coordinate : (int, int)
-        coordinate (x,y) to convert
+    coordinates : (int, int)
+        coordinates (x,y) to convert
     surface_size: (int, int), optional
         size of the surface one which position is defined
         if None (default), the position will be calculated relative
@@ -39,37 +32,44 @@ def coordinate2position(coordinate, surface_size=None):
 
     Returns
     -------
-    coordinate : [int, int]
+    position : [int, int]
 
     """
 
     if surface_size is None:
         surface_size = _internals.active_exp.screen.surface.get_size()
 
-    rtn = [coordinate[0] - surface_size[0] // 2,
-            - coordinate[1] + surface_size[1] // 2]
+    rtn = [coordinates[0] - surface_size[0] // 2,
+            - coordinates[1] + surface_size[1] // 2]
     if (surface_size[0] % 2) == 0: #even
         rtn[0] += 1
     if (surface_size[1] % 2) == 0:
         rtn[1] -= 1
     return rtn
 
-def position2coordinate(position, surface_size=None):
-    """Convert an Expyriment position to a coordinate on the
+def position2coordinate(coordinate, surface_size=None):
+    """"OBSOLETE FUNCTION: Please use 'position2coordinates'."""
+
+    raise DeprecationWarning("position2coordinate is an obsolete function. Please use position2coordinates.")
+    
+    position2coordinates(coordinate, surface_size=None)
+    
+def position2coordinates(position, surface_size=None):
+    """Convert an Expyriment position to coordinates on the
     screen or surface.
 
     Parameters
     ----------
-    coordinate : (int, int)
-        coordinate (x,y) to convert
+    position : (int, int)
+        position (x,y) to convert
     surface_size: (int, int), optional
-        size of the surface one which position should be calculated
-        if None (default), the position will be calculated relative
+        size of the surface one which coordinates should be calculated
+        if None (default), the coordinats will be calculated relative
         to the screen
 
     Returns
     -------
-    coordinate : [int, int]
+    coordinates : [int, int]
 
     """
 

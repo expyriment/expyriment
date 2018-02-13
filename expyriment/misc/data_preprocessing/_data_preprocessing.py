@@ -299,7 +299,7 @@ The Python package 'Numpy' is not installed."""
             raise ImportError(message)
 
         _version = _np.version.version.split(".")
-        if not _version[0] == 1 and _version[1] < 6:
+        if not int(_version[0]) == 1 and int(_version[1]) < 6:
             raise ImportError("Expyriment {0} ".format(__version__) +
                               "is not compatible with Numpy {0}.".format(
                                   _np.version.version) +
