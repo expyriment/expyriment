@@ -31,7 +31,7 @@ except ImportError:
     from distutils.command.install_data import install_data
     from distutils.command.bdist_wininst import bdist_wininst
 from os import remove, close, chmod, path
-from shutil import move, copyfile, copytree, rmtree
+from shutil import move, copytree, rmtree
 from tempfile import mkstemp
 from glob import glob
 

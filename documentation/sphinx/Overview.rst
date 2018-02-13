@@ -23,8 +23,7 @@ experience.
 * `Florian Krause <http://www.fladd.de/research>`_, Brain Innovation, Maastricht University, The Netherlands
     
 * `Oliver Lindemann 
-  <http://www.psych.uni-potsdam.de/people/lindemann/index-e.html>`_, University 
-  of Potsdam, Germany
+  <http://www.cognitive-psychology.eu/lindemann/>`_, Erasmus University Rotterdam, The Netherlands
 
 
 Publications & citation
