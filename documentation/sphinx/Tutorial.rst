@@ -437,7 +437,7 @@ will overwrite any previous default settings!
 
 One of the most common things to do, while developing is to change
 to develop mode, which changes several default settings in one go (such as
-setting the default presentation mode from fullscreen to a window, and skiping
+setting the default presentation mode from fullscreen to a window, and skipping
 the start screen and subject ID query)::
 
     expyriment.control.set_develop_mode(True)

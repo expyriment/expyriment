@@ -62,7 +62,7 @@ class TextInput(Input):
         position : (int, int), optional
             position of the TextInput canvas
         length : int, optional
-            the length of the text input frame in number of charaters
+            the length of the text input frame in number of characters
         character_filter : list, optional
             list of character codes to filter for
         message_text_size : int, optional

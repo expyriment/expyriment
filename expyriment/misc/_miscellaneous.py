@@ -155,7 +155,7 @@ def unicode2str(u, fse=False):
 def numpad_digit_code2ascii(keycode):
     """Convert numpad keycode to the ascii code of that particular number
 
-    If it is not a keypad digit code, no convertion takes place and the
+    If it is not a keypad digit code, no conversion takes place and the
     same code will be returned.
 
     Returns

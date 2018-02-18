@@ -16,7 +16,7 @@ application which can be used to directly run experiments on an Andoroid device
 Installing Expyriment
 ---------------------
 The easiest way to run experiments on Android devices is to use our "Expyriment
-Android Runtime" appplication.
+Android Runtime" application.
 You can download the current version from our `Android release
 page`_.
 

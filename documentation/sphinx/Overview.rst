@@ -28,7 +28,7 @@ experience.
 
 Publications & citation
 -----------------------
-If you have used Expyriment in your work, please cite the follwing 
+If you have used Expyriment in your work, please cite the following 
 publication:
 
     Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for

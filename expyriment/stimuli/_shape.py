@@ -195,7 +195,7 @@ class Shape(Visual):
 
     @property
     def vertices(self):
-        """Getter for the polygon verticies."""
+        """Getter for the polygon vertices."""
 
         return self._vertices
 
@@ -555,7 +555,7 @@ class Shape(Visual):
 
          """
 
-        # Copying and scaling and flipping of verticies
+        # Copying and scaling and flipping of vertices
         tmp_vtx = []
         for v in self._vertices:
             v = (v[0] * self._native_scaling[0],

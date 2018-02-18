@@ -56,7 +56,7 @@ class SerialPort(Input, Output):
         enough.
         Importantly, the fuller the receive buffer is, the longer clearing
         and polling will take (this can be more than 1 ms!), since all the
-        bytes have to be transfered to the input_history.
+        bytes have to be transferred to the input_history.
 
         Parameters
         ----------

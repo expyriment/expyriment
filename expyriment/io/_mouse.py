@@ -28,7 +28,7 @@ from .. import _internals, misc
 class Mouse(Input):
     """A class implementing a mouse input.
 
-    Calling ``expyriment.control.intialize(exp)`` will automatically create a
+    Calling ``expyriment.control.initialize(exp)`` will automatically create a
     mouse instance and will reference it in exp.mouse for easy access.
 
     """
@@ -437,7 +437,7 @@ class Mouse(Input):
         event_id : int
             id of the event that quited waiting
         move : bool
-            True if a motion occured
+            True if a motion occurred
         pos : (int, int)
             mouse position (tuple)
         rt : int

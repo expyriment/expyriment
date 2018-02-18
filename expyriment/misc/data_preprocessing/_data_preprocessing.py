@@ -1003,7 +1003,7 @@ The Python package 'Numpy' is not installed."""
 
         if len(variable_names) != data_shape[1]:
             raise RuntimeError(
-                "Amount of variables and added colums doesn't fit.")
+                "Amount of variables and added columns doesn't fit.")
         if data_shape[0] != _np.shape(self.concatenated_data[0])[0]:
             raise RuntimeError("Number of rows doesn't match.")
 

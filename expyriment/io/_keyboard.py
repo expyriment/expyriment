@@ -41,7 +41,7 @@ pause_function = None
 class Keyboard(Input):
     """A class implementing a keyboard input.
 
-    Calling `expyriment.control.intialize(exp)` will automatically create a
+    Calling `expyriment.control.initialize(exp)` will automatically create a
     keyboard instance and will reference it in exp.keyboard for easy access.
 
     """
@@ -180,7 +180,7 @@ class Keyboard(Input):
         Returns
         -------
         key : int
-            pressed key or None. Only the first occurence is returned!
+            pressed key or None. Only the first occurrence is returned!
 
         """
 

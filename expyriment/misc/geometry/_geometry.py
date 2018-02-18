@@ -314,7 +314,7 @@ class XYPoint(object):
         return cartesian2polar((self._x, self._y))
 
     def move(self, v):
-        """Move the point along the coodinates specified by the vector v.
+        """Move the point along the coordinates specified by the vector v.
 
         Parameters
         ----------
