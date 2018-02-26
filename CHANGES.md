@@ -62,7 +62,7 @@ New Features:
 - new io device: io.extras.TcpServer
 - new method to add full factorial designs:
   Block.add_trials_full_factorial & Experiment.add_blocks_full_factorial
-- Network inteface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
+- Network interface to Turbo-Satori: io.extras.TurbosatoriNetworkInterface
   (see www.brainvoyager.com/products/turbosatori.html)
 - stimuli.Rectangle: Option to have rounded (anti-aliased) corners
 - rotate() method of stimuli applies filtering on the content now
@@ -87,7 +87,7 @@ Changed:
         specific function in every loop iteration
     (3) pump the pygame event queue to (hopefully) prevent the OS to think the
         window is "not responding"
-- control.set_develop_mode: new skip_wait_methods attribute to ommit all wait 
+- control.set_develop_mode: new skip_wait_methods attribute to omit all wait 
   functions in the experiment (for testing)
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
@@ -115,7 +115,7 @@ Version 0.8.0 (30 Jun 2015)
 New Features:
 - antialiasing option for stimuli.Ellipse() and stimuli.Circle()
 - new class: misc.HSVColour. Class to handle HSV colours [hue, saturation, value] 
-- new function: quiting wait or event loops by callback_function, if this function
+- new function: quitting wait or event loops by callback_function, if this function
   returns an instance of the new class control.CallbackQuitEvent
 - new method: all visual stimuli have methods for lowlevel Pygame operations
   get_surface_copy(), set_surface(), get_pixel_array()
@@ -324,7 +324,7 @@ Fixed:
   text_font argument
 - stimuli.TextLine.copy()
 - Bug fixes in self tester of stimuli
-- Fixed segmentation fault when repeatedly initalizing and ending an experiment
+- Fixed segmentation fault when repeatedly initializing and ending an experiment
 - Fixed surface size shapes
 - Fixed incorrect line_width plotting for scaled shapes
 - Copying preloaded stimuli in OpenGL mode
@@ -345,7 +345,7 @@ Changed:
   line_width is a property the underlying shape and always 0 (filled shapes) 
 - stimuli.Frame is deprecated now, use stimuli.Rectangle with line_width > 0
 - stimuli.Rectangle was rewritten and is not inherited from Shape anymore;
-  the old Rectangle stimulus is now knwon as stimuli.extras.PolygonRectangle
+  the old Rectangle stimulus is now known as stimuli.extras.PolygonRectangle
 
 Version 0.5.2 (13 Jun 2012)
 ---------------------------
@@ -581,7 +581,7 @@ Fixed:
 Version 0.1.1 (11 May 2011)
 ---------------------------
 New Features:
-- Throws a usefull exception on old or integrated Intel graphics cards that 
+- Throws a useful exception on old or integrated Intel graphics cards that 
   do not support OpenGL properly
 Fixed:
 - Experiment.permute_blocks() will not destroy the surfaces of the 

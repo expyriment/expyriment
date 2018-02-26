@@ -94,7 +94,7 @@ def balanced_latin_square(elements):
                 c_idx.append(tmp.pop(0))
             take_last = not take_last
 
-        # Write sorted colums to square
+        # Write sorted columns to square
         square = _empty_square(n)
         for c in range(0, n):
             for r in range(0, n):

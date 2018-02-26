@@ -96,7 +96,7 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                         if sha is not None:
                             hash_dict[pyfile] = sha
                             hash_dict = _append_hashes_from_imported_modules(
-                                        hash_dict, pyfile) #recusion
+                                        hash_dict, pyfile) #recursion
     except:
         pass
     return hash_dict

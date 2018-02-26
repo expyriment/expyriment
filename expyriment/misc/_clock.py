@@ -57,7 +57,7 @@ class Clock(object) :
     @staticmethod
     def monotonic_time():
         """Returns the time of the high-resolution monitonoic timer that is
-        used by Expyriment interally.
+        used by Expyriment internally.
 
         """
         return get_time()
@@ -167,7 +167,7 @@ class Clock(object) :
 
     def wait_seconds(self, time_sec, callback_function=None,
                      process_control_events=False):
-        """Wait for a certain amout of seconds.
+        """Wait for a certain amount of seconds.
 
         Parameters
         ----------

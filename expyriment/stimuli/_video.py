@@ -290,7 +290,7 @@ class Video(_visual.Stimulus):
         if not self._is_preloaded:
             if not _internals.active_exp.is_initialized:
                 message = "Can't preload video. Expyriment needs to be " + \
-                          "initilized before preloading a video."
+                          "initialized before preloading a video."
                 raise RuntimeError(message)
             if self._backend == "pygame":
                 self._file = pygame.movie.Movie(self._filename)
@@ -594,7 +594,7 @@ class Video(_visual.Stimulus):
         This will also by default process control events (quit and pause).
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
-        If keybaord events should not be cleared, a loop has to be created
+        If keyboard events should not be cleared, a loop has to be created
         manually like::
 
             video.present()
@@ -626,7 +626,7 @@ class Video(_visual.Stimulus):
         This will also by default process control events (quit and pause).
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
-        If keybaord events should not be cleared, a loop has to be created
+        If keyboard events should not be cleared, a loop has to be created
         manually like::
 
             video.present()

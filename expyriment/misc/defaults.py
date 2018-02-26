@@ -2,7 +2,7 @@
 Default settings for the misc package.
 
 This module contains default values for all optional arguments in the init
-function of all classes in this packge.
+function of all classes in this package.
 
 """
 

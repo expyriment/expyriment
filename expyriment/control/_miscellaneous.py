@@ -131,7 +131,7 @@ def set_skip_wait_methods(on=True):
     ----------
     on : bool, optional
         If True, all wait methods in the experiment (i.e. all wait functions
-        in ``expyriment.io`` and the clock) will be ommited (default = True)
+        in ``expyriment.io`` and the clock) will be omitted (default = True)
 
     """
 
@@ -163,7 +163,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
         (default = False)
     skip_wait_methods : bool, optional
         If True, all wait functions in the experiment (i.e. all wait functions
-        in ``expyriment.io`` and the clock) will be ommited (default = False)
+        in ``expyriment.io`` and the clock) will be omitted (default = False)
 
     """
 

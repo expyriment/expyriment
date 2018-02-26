@@ -25,7 +25,7 @@ class EventButtonBox(StreamingButtonBox):
 
         Compared to a StreamingButtonBox, an EventButtonBox has no baseline
         (baseline=None). The methods wait() and check() are therefore
-        responsive to every incomming interface event.
+        responsive to every incoming interface event.
 
         Parameters
         ----------

@@ -1040,7 +1040,7 @@ class Visual(Stimulus):
         automatically during presentation. However, stimulus presentation will
         take some time then!
 
-        Always preload your stimuli when a timing acurate presentation is
+        Always preload your stimuli when a timing accurate presentation is
         needed!
 
         Parameters
@@ -1064,7 +1064,7 @@ class Visual(Stimulus):
         start = get_time()
         if not _internals.active_exp.is_initialized:
             message = "Can't preload stimulus. Expyriment needs to be " + \
-                      "initilized before preloading a stimulus."
+                      "initialized before preloading a stimulus."
             raise RuntimeError(message)
         self._was_compressed_before_preload = self.is_compressed
         if not self.is_preloaded:

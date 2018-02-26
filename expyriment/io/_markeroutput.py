@@ -28,7 +28,7 @@ class MarkerOutput(Output):
         If a default code is specified, it will automatically be applied when
         send() is called without a code.
         If a default duration is specified, a 0 is sent automatically after
-        the specifed duration when send() is called without a duration.
+        the specified duration when send() is called without a duration.
 
         Notes
         -----
