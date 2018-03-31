@@ -59,7 +59,7 @@ class Canvas(Visual):
     def size(self, value):
         """Setter for size."""
 
-        if self.has__surface:
+        if self.has_surface:
             raise AttributeError(Canvas._getter_exception_message.format(
                 "size"))
         else:
@@ -74,7 +74,7 @@ class Canvas(Visual):
     def colour(self, value):
         """Setter for colour."""
 
-        if self.has__surface:
+        if self.has_surface:
             raise AttributeError(Canvas._getter_exception_message.format(
                 "colour"))
         else:
