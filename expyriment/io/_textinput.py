@@ -173,7 +173,7 @@ class TextInput(Input):
             user_text_font = _internals.active_exp.text_font
         if user_text_font is None:
             user_text_font = "FreeSans"
-        self._user_text_font = find_font(user_font)
+        self._user_text_font = find_font(user_text_font)
         try:
             with open(self._user_text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
