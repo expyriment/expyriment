@@ -58,24 +58,23 @@ class _LaminaPanelSurface(object):
 
         """
 
-
-        surface_size = surface.get_size()
-        if surface_size[0] == 1:
-            rect = pygame.Rect((0, 0), surface_size)
-            s = pygame.surface.Surface((2, surface_size[1]), pygame.SRCALPHA).convert_alpha()
-            s.blit(surface, rect)
-            surface = s
-        surface_size = surface.get_size()
-        if surface_size[1] == 1:
-            rect = pygame.Rect((0, 0), surface_size)
-            s = pygame.surface.Surface((surface_size[0], 2), pygame.SRCALPHA).convert_alpha()
-            s.blit(surface, rect)
-            surface = s
-        self._txtr = Visual._load_texture(surface)
         if isinstance(surface, pygame.Surface):
+            surface_size = surface.get_size()
+            if surface_size[0] == 1:
+                rect = pygame.Rect((0, 0), surface_size)
+                s = pygame.surface.Surface((2, surface_size[1]), pygame.SRCALPHA).convert_alpha()
+                s.blit(surface, rect)
+                surface = s
+            surface_size = surface.get_size()
+            if surface_size[1] == 1:
+                rect = pygame.Rect((0, 0), surface_size)
+                s = pygame.surface.Surface((surface_size[0], 2), pygame.SRCALPHA).convert_alpha()
+                s.blit(surface, rect)
+                surface = s
             self._winsize = surface.get_size()
         else:
             self._winsize = (len(surface[0]), len(surface))
+        self._txtr = Visual._load_texture(surface)
         self._position = position
         left, top, width, height = quadDims
         right, bottom = left + width, top - height
