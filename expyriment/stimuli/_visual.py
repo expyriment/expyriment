@@ -51,8 +51,8 @@ class _LaminaPanelSurface(object):
 
         Parameters
         ----------
-        surface : pygame surface
-            pygame surface to convert
+        surface : pygame.Surface or numpy.array object
+            surface to convert
         quadDims : (int,int), optional
         position : (int,int), optional
 
