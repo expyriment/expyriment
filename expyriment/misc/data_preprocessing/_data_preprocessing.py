@@ -1034,44 +1034,6 @@ The Python package 'Numpy' is not installed."""
         write_csv_file(filename=output_file, data=data[0], varnames=data[1],
                        delimiter=delimiter)
 
-    def write_concatenated_data_to_R_data_frame(self, output_file):
-        """Creates a R data frame of the concatenated data and stores it in a
-        RDS file.
-
-        Parameters
-        ----------
-        output_file : str, optional
-            name of RDS output file
-            If not specified data will the save to {file_name}.csv
-
-        Notes
-        -----
-        This method requires R and the Python package 'Rpy2'.
-
-        """
-
-        try:
-            import rpy2.robjects as robjects
-        except:
-            message = "Saving data to R data frame requires the " +\
-                    "Python package 'Rpy2', which is not installed."""
-            raise ImportError(message)
-
-        if output_file is None:
-            output_file = u"{0}.rds".format(self.file_name)
-        fl, tmp_file_name = _mkstemp()
-        _os.close(fl)
-        self.write_concatenated_data(output_file=tmp_file_name, delimiter=',')
-
-        robjects.r('''data = read.csv("{0}", comment.char="#",
-        na.strings=c("NA", "None"))'''.format(tmp_file_name))
-        robjects.r('''str(data)''')
-        print("write file: {0}".format(output_file))
-        robjects.r('''saveRDS(data, file="{0}")'''.format(output_file))
-        try:
-            _os.remove(tmp_file_name)
-        except:
-            pass
 
     def set_independent_variables(self, variables):
         """Set the independent variables.

@@ -44,7 +44,6 @@ functions to join the data output.
 
     -C              Create experiment template
     -J              Join data files to one single csv file
-    -R              Join data files and create R data frame (in RDS file)
     -S              Print system information
     -T              Run the Expyriment Test Suite
     -A              Start the Expyrimnent API Reference Tool
@@ -157,9 +156,6 @@ functions to join the data output.""",
     parser.add_argument("-J", action="store_true",
                     help="Join data files to one single csv file")
 
-    parser.add_argument("-R", action="store_true",
-                    help="Join data files and create R data frame (in RDS file)")
-
     parser.add_argument("-S", action="store_true",
                     help="Print system information")
 
@@ -252,14 +248,6 @@ functions to join the data output.""",
             sys.stdout.write(" name of output csv file? ")
             output = input()
         d.write_concatenated_data(output)
-        sys.exit()
-    if args["R"]:
-        d = join_data()
-        output =""
-        while len(output) <= 1:
-            sys.stdout.write(" name of RDS file? ")
-            output = input()
-        d.write_concatenated_data_to_R_data_frame(output)
         sys.exit()
 
     # run script
