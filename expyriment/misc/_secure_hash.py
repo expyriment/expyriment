@@ -19,8 +19,9 @@ from ._miscellaneous import is_interactive_mode
 
 def _make_secure_hash(filename):
     """returns secure hash from file or None, if not possile"""
+
     try:
-        with open(filename) as f:
+        with open(filename, 'br') as f:
             return sha1(f.read()).hexdigest()[:6]
     except:
         return None
@@ -106,7 +107,7 @@ def module_hashes_as_string():
     if len(secure_hashes)>1:
         txt = ""
         for fl, sha in get_module_hash_dictionary().items():
-            txt += "{0} ({1}), ".format(fl, sha)
+            txt += u"{0} ({1}), ".format(fl, sha)
         return txt[:-2]
     else:
         return ""
