@@ -191,7 +191,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         inaccuracies = []
         delayed_presentations = 0
         for key in list(hist.keys()):
-            inaccuracies.extend([key % (1000 // refresh_rate)] * hist[key])
+            inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
         inaccuracy = int(round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
