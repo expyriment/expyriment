@@ -191,7 +191,7 @@ machine!")
                 ogl.glEnd()
             ogl.glFinish()
         if self._logging:
-            _internals.active_exp._event_file_log("Screen,updated", 2)
+            _internals.active_exp._event_file_log("Screen,updated", 1)
 
     def update_stimuli(self, stimuli):
         """Update only some stimuli on the screen.
@@ -224,7 +224,7 @@ machine!")
             pygame.display.update(rectangles)
             if self._logging:
                 _internals.active_exp._event_file_log("Screen,stimuli updated,{0}"\
-                                .format([stim.id for stim in stimuli]), 2)
+                                .format([stim.id for stim in stimuli]), 1)
             pygame.event.pump()
 
     @property
