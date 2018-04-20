@@ -384,7 +384,10 @@ def get_system_info(as_string=False):
     info["hardware_ports_parallel"] = \
             ParallelPort.get_available_ports()
     info["hardware_ports_parallel_driver"] = ParallelPort.get_driver()
-    info["hardware_ports_serial"] = _com_port_list
+    try:
+        info["hardware_ports_serial"] = [x.device for x in _com_port_list]
+    except:
+        info["hardware_ports_serial"] = _com_port_list
     info["hardware_video_card"] = hardware_video_card
 
     if as_string:
