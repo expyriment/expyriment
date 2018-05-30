@@ -288,10 +288,19 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     if not _internals.active_exp.is_initialized:
         if pre_quit_function is not None:
             pre_quit_function()
+
+        # Delete open file handles and previously opened fonts
+        import expyriment.stimuli._textline, expyriment.stimuli._textbox
+        for text_stim in [stimuli._textline, stimuli._textbox]:
+            for f in text_stim.open_filehandles:
+                f.close()
+            text_stim.fonts = {}
+
         pygame.quit()
         if system_exit:
             sys.exit()
         return True
+
     experiment = _internals.active_exp
     if confirmation:
         experiment._event_file_log("Experiment,paused")
@@ -343,7 +352,17 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
     _internals.active_exp = design.Experiment("None")
     if pre_quit_function is not None:
         pre_quit_function()
+
+    # Delete open file handles and previously opened fonts
+    import expyriment.stimuli._textline, expyriment.stimuli._textbox
+    for text_stim in [expyriment.stimuli._textline, expyriment.stimuli._textbox]:
+        for f in text_stim.open_filehandles:
+            f.close()
+        text_stim.fonts = {}
+
     pygame.quit()
+    if system_exit:
+        sys.exit()
     return True
 
 
