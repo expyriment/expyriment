@@ -9,6 +9,7 @@ All Linux distributions
 1. Use your distribution's package manager to install
 
   * Python or Python3
+  * setuptools
   * pip or pip3
   * build-essential (or equivalent)
   * libffi-dev
@@ -24,7 +25,7 @@ All Linux distributions
 
 For example, in Debian run::
 
-    sudo apt-get install python python-pip build-essential libffi-dev python-dev libportaudio2
+    sudo apt-get install python python-setuptools python-pip build-essential libffi-dev python-dev libportaudio2
     sudo pip install -U pip
     sudo pip install -U expyriment[optional]
     
