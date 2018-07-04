@@ -168,11 +168,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        if isinstance(_permuted_bws_factor_condition, str):
-            _permuted_bws_factor_condition = \
-                misc.unicode2byte(_permuted_bws_factor_condition)
-        experiment.data.add_subject_info("{0} = {1}".format(
-            misc.unicode2byte(f), _permuted_bws_factor_condition))
+        experiment.data.add_subject_info(misc.unicode2byte("{0} = {1}".format(
+            f, _permuted_bws_factor_condition)))
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp
