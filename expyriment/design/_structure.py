@@ -209,7 +209,7 @@ class Experiment(object):
         return self._is_initialized
 
     def __str__(self):
-        tmp_str = "Experiment: {0}\n".format(self.name)
+        tmp_str = u"Experiment: {0}\n".format(self.name)
         if len(self.bws_factor_names) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
@@ -222,10 +222,10 @@ class Experiment(object):
                 _bws_factor = \
                     [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
-                tmp_str = tmp_str + "    {0} = [{1}]\n".format(
-                    f, ", ".join(_bws_factor))
+                tmp_str = tmp_str + u"    {0} = [{1}]\n".format(
+                    f, u", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + "{0}\n".format(block.summary)
+            tmp_str = tmp_str + u"{0}\n".format(block.summary)
         return tmp_str
 
     @property
@@ -1020,11 +1020,11 @@ type".format(permutation_type))
         """
 
         if self.is_initialized and self.events is not None:
-            self.events.log("design,log,{0}".format(additional_comment))
+            self.events.log(u"design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    "design: {0}".format(ln).replace(":#", "-"))
-            self.events.log("design,logged,{0}".format(
+                    u"design: {0}".format(ln).replace(":#", "-"))
+            self.events.log(u"design,logged,{0}".format(
                 additional_comment))
 
     def register_wait_callback_function(self, function):

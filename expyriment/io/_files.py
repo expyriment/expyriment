@@ -459,7 +459,7 @@ class DataFile(OutputFile):
 
         """
 
-        self._subject_info.append("{0}s {1}{2}".format(
+        self._subject_info.append(u"{0}s {1}{2}".format(
             self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
@@ -477,7 +477,7 @@ class DataFile(OutputFile):
         """
 
         for line in text.splitlines():
-            self._experiment_info.append("{0}e {1}{2}".format(
+            self._experiment_info.append(u"{0}e {1}{2}".format(
                 self.comment_char, line, defaults.outputfile_eol))
 
     @property
