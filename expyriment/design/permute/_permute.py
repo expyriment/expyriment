@@ -51,7 +51,7 @@ def is_permutation_type(type_str):
 
     """
 
-    from ..misc import constants
+    from ...misc import constants
     return (type_str == constants.P_RANDOM or \
             type_str == constants.P_CYCLED_LATIN_SQUARE or \
             type_str == constants.P_BALANCED_LATIN_SQUARE)
