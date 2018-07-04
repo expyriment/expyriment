@@ -40,7 +40,7 @@ class Mouse(Input):
 
 
     def __init__(self, show_cursor=True, track_button_events=None,
-                 track_motion_events=None, quit_click_rect_size=None):
+                 track_motion_events=None):
         """Initialize a mouse input.
 
         Parameters
@@ -59,7 +59,13 @@ class Mouse(Input):
         the Pygame event queue and you might consequently loose important
         events.
 
-        (b) See ``process_quit_event`` for the forced quitting of experiments
+        (b) Note, turning the mouse wheel causes button_down_events. Thus,
+        turning the mouse wheel rather extensively causes an overflow of
+        the Pygame event queue. You might consider turn off the default
+        tracking of mouse button event by calling
+        `experiment.mouse.track_button_events = False`.
+
+        (c) See ``process_quit_event`` for the forced quitting of experiments
         via mouse events.
 
         """
