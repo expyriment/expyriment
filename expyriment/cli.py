@@ -52,8 +52,7 @@ functions to join the data output.
 """
 
 def create_template():
-    template_file = '''#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+    template_file = '''# -*- coding: utf-8 -*-
 
 """This file is an automatically created template for an Expyriment experiment.
 
