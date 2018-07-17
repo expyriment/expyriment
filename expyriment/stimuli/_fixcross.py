@@ -16,12 +16,15 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+import pygame
 
 from . import defaults
-from ._shape import Shape
+from ._visual import Visual
+from ._canvas import Canvas
+from ._line import Line
 from .. import _internals
 
-class FixCross(Shape):
+class FixCross(Visual):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
@@ -54,6 +57,8 @@ class FixCross(Shape):
 
         if position is None:
             position = defaults.fixcross_position
+        Visual.__init__(self, position=position)
+
         if colour is None:
             colour = defaults.fixcross_colour
         if colour is not None:
@@ -62,28 +67,12 @@ class FixCross(Shape):
             self._colour = _internals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
-        Shape.__init__(self, position=position, line_width=0,
-                         colour=colour,
-                         anti_aliasing=anti_aliasing)
         if size is None:
             size = defaults.fixcross_size
         if line_width is None:
             line_width = defaults.fixcross_line_width
 
-        self._size = size
-        x = (self._size[0] - line_width) // 2
-        y = (self._size[1] - line_width) // 2
-        self.add_vertex((line_width, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((x, 0))
-        self.add_vertex((0, -line_width))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((-line_width, 0))
-        self.add_vertex((0, y))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, line_width))
-        self.add_vertex((x, 0))
+        self._size = (size[0], size[1]) # ensure tuple
 
     @property
     def size(self):
@@ -103,7 +92,10 @@ class FixCross(Shape):
 
         return self._line_width
 
-
+    def _create_surface(self):
+        surface = pygame.surface.Surface(self.size,
+                                         pygame.SRCALPHA).convert_alpha()
+        return surface
 if __name__ == "__main__":
     from .. import control
     control.set_develop_mode(True)
