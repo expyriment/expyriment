@@ -16,15 +16,16 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+import math
 import pygame
 
 from . import defaults
-from ._visual import Visual
-from ._canvas import Canvas
+from ..misc.geometry import XYPoint
 from ._line import Line
+from ._canvas import Canvas
 from .. import _internals
 
-class FixCross(Visual):
+class FixCross(Canvas):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
@@ -57,28 +58,22 @@ class FixCross(Visual):
 
         if position is None:
             position = defaults.fixcross_position
-        Visual.__init__(self, position=position)
+
+        if size is None:
+            size = defaults.fixcross_size
 
         if colour is None:
             colour = defaults.fixcross_colour
-        if colour is not None:
-            self._colour = colour
-        else:
-            self._colour = _internals.active_exp.foreground_colour
-        if anti_aliasing is None:
-            anti_aliasing = defaults.fixcross_anti_aliasing
-        if size is None:
-            size = defaults.fixcross_size
+        if colour is None:
+            colour = _internals.active_exp.foreground_colour
         if line_width is None:
             line_width = defaults.fixcross_line_width
+        if anti_aliasing is None:
+            anti_aliasing = defaults.fixcross_anti_aliasing
 
-        self._size = (size[0], size[1]) # ensure tuple
-
-    @property
-    def size(self):
-        """Getter for size."""
-
-        return self._size
+        Canvas.__init__(self, size=(size[0], size[1]), position=position, colour=colour)
+        self._line_width = line_width
+        self._anti_aliasing = anti_aliasing
 
     @property
     def cross_size(self):
@@ -87,15 +82,32 @@ class FixCross(Visual):
         raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
+    def anti_aliasing(self):
+        """Getter for anti_aliasing."""
+
+        return self._anti_aliasing
+
+    @property
     def line_width(self):
         """Getter for line_width."""
 
         return self._line_width
 
     def _create_surface(self):
-        surface = pygame.surface.Surface(self.size,
-                                         pygame.SRCALPHA).convert_alpha()
-        return surface
+
+        canvas = Canvas(position=self._position, size=self._size, colour=None)
+        s = (self._size[0] /2.0, self._size[1] /2.0)
+        print(s)
+        Line(start_point=(-s[0], 0), end_point=(s[1], 0), line_width=self._line_width,
+                    colour=self._colour, anti_aliasing=self._anti_aliasing).plot(canvas)
+        Line(start_point=(0, -s[0]), end_point=(0, s[1]), line_width=self._line_width,
+                    colour=self._colour, anti_aliasing=self._anti_aliasing).plot(canvas)
+        canvas._create_surface()
+
+        return canvas._get_surface()
+
+
+
 if __name__ == "__main__":
     from .. import control
     control.set_develop_mode(True)
