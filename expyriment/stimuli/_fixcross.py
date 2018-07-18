@@ -90,8 +90,7 @@ class FixCross(Canvas):
     def _create_surface(self):
 
         canvas = Canvas(position=self._position, size=self._size, colour=None)
-        s = (self._size[0] // 2, self._size[1] /2)
-        print(s)
+        s = (self._size[0] // 2, self._size[1] // 2)
         Line(start_point=(-s[0], 0), end_point=(s[1], 0), line_width=self._line_width,
                     colour=self._colour, anti_aliasing=False).plot(canvas)
         Line(start_point=(0, -s[0]), end_point=(0, s[1]), line_width=self._line_width,
