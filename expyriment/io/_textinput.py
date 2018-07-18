@@ -341,7 +341,7 @@ class TextInput(Input):
         while True:
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
-                return rtn_callback
+                return rtn_callback, None
 
             event = pygame.event.poll()
             if event.type == pygame.KEYDOWN:
@@ -452,6 +452,13 @@ class TextInput(Input):
         default_input : str, optional
             default input in the textbox
 
+        Returns
+        -------
+        text_input: str or None
+            returns the entered text string. If get() is interrupted by a
+            CallbackQuitEvent from an registered wait-callback-function it
+            returns None.
+
         See Also
         --------
         design.experiment.register_wait_callback_function
@@ -472,7 +479,9 @@ class TextInput(Input):
 
         while True:
             inkey, string = self._get_key()
-            if inkey == pygame.K_BACKSPACE:
+            if isinstance(inkey, CallbackQuitEvent):
+                return None
+            elif inkey == pygame.K_BACKSPACE:
                 self._user = self._user[0:-1]
             elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
                 break
