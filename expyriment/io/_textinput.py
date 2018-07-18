@@ -458,7 +458,7 @@ class TextInput(Input):
         -------
         text_input: str or None
             returns the entered text string. If get() is interrupted by a
-            CallbackQuitEvent from an registered wait-callback-function it
+            CallbackQuitEvent from a registered wait-callback-function get()
             returns None.
 
         See Also
