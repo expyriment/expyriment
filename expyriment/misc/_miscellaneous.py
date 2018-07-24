@@ -399,7 +399,7 @@ def which(programme):
     return None
 
 
-def download_from_stash(content="all", branch="master"):
+def download_from_stash(content="all", branch="master"):  # TODO: change dynamically to current tag somehow!
     """Download content from the Expyriment stash.
 
     Content will be stored in a Expyriment settings diretory (`.expyriment` or
@@ -408,7 +408,7 @@ def download_from_stash(content="all", branch="master"):
     Parameters
     ----------
     content : str, optional
-        the content to download ("examples", "extras" or "tools", "all")
+        the content to install ("examples", "extras", "tools", or "all")
         (default="all")
     branch : str, optional
         the branch to get the content from (default="master")
@@ -416,53 +416,77 @@ def download_from_stash(content="all", branch="master"):
     """
 
     def show_progress(count, total, status=''):
-        bar_len = 50
+        bar_len = 40
         filled_len = int(round(bar_len * count / float(total)))
         percents = round(100.0 * count / float(total), 1)
         bar = '=' * filled_len + ' ' * (bar_len - filled_len)
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()
 
-    try:
-        import requests
-    except ImportError:
-        raise ImportError("""Cannot download from Expyriment stash.
-The Python package 'Requests' is not installed.""")
+    if PYTHON3:
+        from urllib.request import urlopen
+    else:
+        from urllib2 import urlopen
 
-    api_url = "https://api.github.com/repos/expyriment/expyriment-stash/{0}/{1}"
-    download_url = "https://raw.githubusercontent.com/expyriment/expyriment-stash/{0}/{1}"
-    if get_settings_folder() is None:
-        os.makedirs(os.path.join(os.path.expanduser("~"), ".expyriment"))
-    path = get_settings_folder()
+    from tempfile import TemporaryFile
+    from zipfile import ZipFile
+    from shutil import copyfileobj
 
-    # Request branch
-    response = requests.get(api_url.format("branches",  branch))
-    if not response.ok:
-        raise RuntimeError("Could not retrieve branch!")
+    with TemporaryFile() as f:
+        url = "https://github.com/expyriment/expyriment-stash/archive/{0}.zip"  # TODO: Don't hardcore this (maybe argument to function?)
+        url = url.format(branch)
+        u = urlopen(url)
+        meta = u.info()
+        file_size = int(meta.getheaders("Content-Length")[0])
+        file_size_dl = 0
+        block_sz = 8192
+        while True:
+            buffer = u.read(block_sz)
+            if not buffer:
+                break
+            file_size_dl += len(buffer)
+            f.write(buffer)
+            show_progress(file_size_dl, file_size,
+                          "downloading stash ({0})".format(branch))
+        print("")
 
-    # Request recursive tree
-    response = requests.get(api_url.format(
-        "git/trees", response.json()["commit"]["sha"] + "?recursive=1"))
-    if not response.ok:
-        raise RuntimeError("Could not retrieve file list!")
-    if response.json()["truncated"]:
-        raise RuntimeError("Retrieved incomplete file list!")
+        if get_settings_folder() is None:
+            os.makedirs(os.path.join(os.path.expanduser("~"), ".expyriment"))
+        path = get_settings_folder()
 
-    # For each file in tree, request it and write it to settings dir
-    blobs = [x for x in response.json()["tree"] if x["type"] == "blob"]
-    if content != "all":
-        blobs = [x for x in blobs if x["path"].startswith(content)]
-    for counter, blob in enumerate(blobs):
-        data = requests.get(download_url.format(branch, blob["path"]))
-        if not data.ok:
-            raise RuntimeError("Could not retrieve {0}!".format(
-                download_url.format(branch, blob["path"])))
-        filename = os.path.join(path, blob["path"])
-        if not os.path.exists(os.path.split(filename)[0]):
-            os.makedirs(os.path.split(filename)[0])
-        with open(filename, 'wb') as f:
-            f.write(data.content)
-        show_progress(counter+1, len(blobs), "{0} ({1})".format(content, branch))
+        f_zip = ZipFile(f)    
+        check = f_zip.testzip()
+        if check is not None:
+            raise RuntimeError("Download was corrupted!")
+        if content == "all":
+            content_ = ("examples", "extras", "tools")
+        else:
+            content_ = content
+        if not type(content_) in (list, tuple):
+            content_ = (content_,)
+        files = []
+        root = f_zip.namelist()[0]
+        for c in content_:
+            mask = os.path.join(root, c)
+            files.extend([x for x in f_zip.namelist() if x.startswith(mask)])
+        files_installed = 0
+        for member in files:
+            filename = os.path.basename(member)
+            if not filename:
+                try:
+                    os.mkdir(os.path.join(path, os.path.relpath(member, root)))
+                except:
+                    pass
+                files_installed += 1
+                continue
+            source = f_zip.open(member)
+            target = open(os.path.join(path, os.path.relpath(member, root)),
+                          'wb')
+            with source, target:
+                copyfileobj(source, target)
+            files_installed += 1
+            show_progress(files_installed, len(files),
+                          "installing content ({0})".format(content))
     print("")
 
 def py2py3_sort_array(array):
