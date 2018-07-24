@@ -925,13 +925,13 @@ class Visual(Stimulus):
         stimulus.unload(keep_surface=True)
         self._parent = stimulus
         surface = self._get_surface()
-        rect = pygame.Rect((0, 0), surface.get_size())
-        stimulus_surface_size = stimulus.surface_size
+        surface_size = surface.get_size()
+        rect = pygame.Rect((0, 0), surface_size)
         x, y = geometry.position2coordinates(self.position,
-                                             stimulus_surface_size)
-        if surface.get_size()[0] % 2 == 0:
+                                             stimulus.surface_size)
+        if surface_size[0] % 2 == 0:
             x += 1
-        if surface.get_size()[1] % 2 == 0:
+        if surface_size[1] % 2 == 0:
             y += 1
         rect.center = (x, y)
         stimulus._get_surface().blit(surface, rect)
