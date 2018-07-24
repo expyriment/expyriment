@@ -924,16 +924,17 @@ class Visual(Stimulus):
                 "plot()"))
         stimulus.unload(keep_surface=True)
         self._parent = stimulus
-        rect = pygame.Rect((0, 0), self.surface_size)
+        surface = self._get_surface()
+        rect = pygame.Rect((0, 0), surface.get_size())
         stimulus_surface_size = stimulus.surface_size
         x, y = geometry.position2coordinates(self.position,
                                              stimulus_surface_size)
-        if self.surface_size[0] % 2 == 0:
+        if surface.get_size()[0] % 2 == 0:
             x += 1
-        if self.surface_size[1] % 2 == 0:
+        if surface.get_size()[1] % 2 == 0:
             y += 1
         rect.center = (x, y)
-        stimulus._get_surface().blit(self._get_surface(), rect)
+        stimulus._get_surface().blit(surface, rect)
         if self._logging:
             _internals.active_exp._event_file_log(
                 "Stimulus,plotted,{0},{1}".format(self.id, stimulus.id), 2)
