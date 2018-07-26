@@ -18,14 +18,15 @@ __date__ = ''
 
 
 from . import defaults
-from ._shape import Shape
+from ._line import Line
+from ._canvas import Canvas
 from .. import _internals
 
-class FixCross(Shape):
+class FixCross(Canvas):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
-                 colour=None, anti_aliasing=None, cross_size=None):
+                 colour=None, anti_aliasing=False, cross_size=None):
         """Create a fixation cross.
 
         Parameters
@@ -38,13 +39,10 @@ class FixCross(Shape):
             width of the lines
         colour : (int, int, int), optional
             colour of the cross
-        anti_aliasing :  int, optional
-            anti aliasing parameter (good anti_aliasing with 10)
-
 
         NOTE
         ----
-        The parameter cross_size is now OBSOLETE.
+        The parameter anti_aliasing and cross_size are deprecated.
         Please use 'size' and specify x and y dimensions.
 
         """
@@ -54,42 +52,22 @@ class FixCross(Shape):
 
         if position is None:
             position = defaults.fixcross_position
-        if colour is None:
-            colour = defaults.fixcross_colour
-        if colour is not None:
-            self._colour = colour
-        else:
-            self._colour = _internals.active_exp.foreground_colour
-        if anti_aliasing is None:
-            anti_aliasing = defaults.fixcross_anti_aliasing
-        Shape.__init__(self, position=position, line_width=0,
-                         colour=colour,
-                         anti_aliasing=anti_aliasing)
+
         if size is None:
             size = defaults.fixcross_size
+
+        if colour is None:
+            colour = defaults.fixcross_colour
+        if colour is None:
+            colour = _internals.active_exp.foreground_colour
         if line_width is None:
             line_width = defaults.fixcross_line_width
 
-        self._size = size
-        x = (self._size[0] - line_width) // 2
-        y = (self._size[1] - line_width) // 2
-        self.add_vertex((line_width, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((x, 0))
-        self.add_vertex((0, -line_width))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((-line_width, 0))
-        self.add_vertex((0, y))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, line_width))
-        self.add_vertex((x, 0))
+        if anti_aliasing is not False:
+            raise DeprecationWarning("Anti_aliasing for fixcross is deprecated.")
 
-    @property
-    def size(self):
-        """Getter for size."""
-
-        return self._size
+        Canvas.__init__(self, size=(size[0], size[1]), position=position, colour=colour)
+        self._line_width = line_width
 
     @property
     def cross_size(self):
@@ -98,10 +76,29 @@ class FixCross(Shape):
         raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
+    def anti_aliasing(self):
+        """Getter for anti_aliasing."""
+
+        raise DeprecationWarning("Anti_aliasing for fixcross is deprecated.")
+
+    @property
     def line_width(self):
         """Getter for line_width."""
 
         return self._line_width
+
+    def _create_surface(self):
+
+        canvas = Canvas(position=self._position, size=self._size, colour=None)
+        s = (self._size[0] // 2, self._size[1] // 2)
+        Line(start_point=(-s[0], 0), end_point=(s[1], 0), line_width=self._line_width,
+                    colour=self._colour, anti_aliasing=False).plot(canvas)
+        Line(start_point=(0, -s[0]), end_point=(0, s[1]), line_width=self._line_width,
+                    colour=self._colour, anti_aliasing=False).plot(canvas)
+        canvas._create_surface()
+
+        return canvas._get_surface()
+
 
 
 if __name__ == "__main__":

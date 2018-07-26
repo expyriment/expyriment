@@ -24,7 +24,7 @@ import pygame
 from . import defaults
 from ._visual import Visual
 from .. import _internals
-from .. import misc
+from ..misc.geometry import XYPoint
 from ..misc._timer import get_time
 
 
@@ -64,9 +64,9 @@ class Line(Visual):
         else:
             self._anti_aliasing = defaults.line_anti_aliasing
 
-        s = misc.geometry.XYPoint(start_point)
-        e = misc.geometry.XYPoint(end_point)
-        d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
+        s = XYPoint(start_point)
+        e = XYPoint(end_point)
+        d = XYPoint(e.x - s.x, e.y - s.y)
         self._position[0] = s.x + (d.x // 2)
         self._position[1] = s.y + (d.y // 2)
 
@@ -184,9 +184,8 @@ class Line(Visual):
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        s = misc.geometry.XYPoint(self._start_point)
-        e = misc.geometry.XYPoint(self._end_point)
-        d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
+        s = XYPoint(self._start_point)
+        e = XYPoint(self._end_point)
         aa_scaling = int((self._anti_aliasing / 5.0) + 1)
         if self._anti_aliasing > 0:
            surface = pygame.surface.Surface((s.distance(e)*aa_scaling,
@@ -195,7 +194,7 @@ class Line(Visual):
             surface = pygame.surface.Surface((s.distance(e),
                 self._line_width), pygame.SRCALPHA).convert_alpha()
         surface.fill(self._colour)
-        surface = pygame.transform.rotate(surface, math.atan2(d.y, d.x) * 180 / math.pi)
+        surface = pygame.transform.rotate(surface, math.atan2(e.y - s.y, e.x - s.x) * 180 / math.pi)
         if self._anti_aliasing > 0:
             size = surface.get_size()
             surface = pygame.transform.smoothscale(surface,

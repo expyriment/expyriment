@@ -185,6 +185,6 @@ if __name__ == "__main__":
     control.set_develop_mode(True)
     control.defaults.event_logging = 0
     exp = control.initialize()
-    ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
+    ellipse = Ellipse(radii=(200, 100), anti_aliasing=10)
     ellipse.present()
     exp.clock.wait(1000)

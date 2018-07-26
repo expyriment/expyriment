@@ -42,6 +42,7 @@ Changed:
 - trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
   exception, if the factor is not defined. This can be suppressed by using the
   parameter return_none_if_not_defined
+- stimuli.FixCross: antialiasing parameter is now deprecated
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox
