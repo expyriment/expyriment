@@ -94,7 +94,7 @@ class Shape(Visual):
 
         self._vertices = []
         self._xy_points = []
-        self._rect = []
+        self._rect = (0, 0, 0, 0)
         self._native_rotation = 0
         self._native_scaling = [1, 1]
         self._native_rotation_centre = (0, 0)
@@ -173,11 +173,11 @@ class Shape(Visual):
 
     @property
     def width(self):
-        return self._rect[3] - self._rect[1]#r-l
+        return self._rect[3] - self._rect[1]  # r-l
 
     @property
     def height(self):
-        return self._rect[0] - self._rect[2]#t-b
+        return self._rect[0] - self._rect[2]  # t-b
 
     @property
     def shape_size(self):
@@ -350,7 +350,7 @@ class Shape(Visual):
 
         self._vertices = []
         self._xy_points = []
-        self._rect = []
+        self._rect = (0, 0, 0, 0)
         self._native_rotation = 0
         self._native_scaling = [1, 1]
         self._native_rotation_centre = (0, 0)
@@ -550,41 +550,41 @@ class Shape(Visual):
     def _update_points(self):
         """Updates the points of the shape and the drawing rect.
 
-        Converts vertex to points, centers points, rotates, calculates rect and
-        clears surface and draw_rotation_point.
-
-         """
+        Converts vertex to points, centers points, rotates, calculates rect
+        """
 
         # Copying and scaling and flipping of vertices
-        tmp_vtx = []
+        tmp_vtx = [] # TODO map function?
         for v in self._vertices:
             v = (v[0] * self._native_scaling[0],
                  v[1] * self._native_scaling[1])
             tmp_vtx.append(v)
 
         # Converts tmp_vtx to points in xy-coordinates
-        xy_p = [XYPoint(0, 0)]
-        for v in map(Shape._compensate_for_pygame_polygon_bug ,tmp_vtx):
+        xy_p = [XYPoint(0, 0)] # TODO map function?
+        for v in tmp_vtx:
             x = (v[0] + xy_p[-1].x)
             y = (v[1] + xy_p[-1].y)
             xy_p.append(XYPoint(x, y))
 
-        xy_p = self._center_points(xy_p)
+        xy_p = Shape._center_points(xy_p)
         if self._native_rotation != 0:
             for x in range(0, len(xy_p)):
                 xy_p[x].rotate(self._native_rotation,
                                self._native_rotation_centre)
 
         self._xy_points = xy_p
-        self._rect = self._make_shape_rect(self.xy_points)
+        self._rect = Shape._make_shape_rect(self.xy_points)
 
-    def _make_shape_rect(self, points):
-        """Four points (geomerty.XYPoint) top, left, bottom, right."""
+    @staticmethod
+    def _make_shape_rect(points):
+        """rect (top, left, bottom, right) around the points."""
 
         t = 0
         l = 0
         r = 0
         b = 0
+
         for p in points:
             if p.x < l:
                 l = p.x
@@ -594,18 +594,21 @@ class Shape(Visual):
                 t = p.y
             elif p.y < b:
                 b = p.y
+
         return (t, l, b, r)
 
-    def _center_points(self, points):
+
+    @staticmethod
+    def _center_points(points):
         """Return centered points (list of geomerty.XYPoint)."""
 
-        t, l, b, r = self._make_shape_rect(points)
-
-        # Stimulus center
-        c = XYPoint(((r - l) / 2.0) - r,
-                                             ((t - b) / 2.0) - t)
+        t, l, b, r = Shape._make_shape_rect(points)
+        w = r-l
+        h = t-b
+        cntr = (l + (w // 2), t - (h // 2))
+        m = XYPoint(x=-1*cntr[0], y=-1*cntr[1])
         for x in range(0, len(points)): # Center points
-            points[x].move(c)
+            points[x].move(m)
         return points
 
     def _create_surface(self):

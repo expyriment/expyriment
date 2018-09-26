@@ -73,17 +73,20 @@ class FixCross(Shape):
         self._size = size
         x = (self._size[0] - line_width) // 2
         y = (self._size[1] - line_width) // 2
-        self.add_vertex((line_width, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((x, 0))
-        self.add_vertex((0, -line_width))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, -y))
-        self.add_vertex((-line_width, 0))
-        self.add_vertex((0, y))
-        self.add_vertex((-x, 0))
-        self.add_vertex((0, line_width))
-        self.add_vertex((x, 0))
+        vertices = [(line_width, 0),
+                    (0, -y),
+                    (x, 0),
+                    (0, -line_width),
+                    (-x, 0),
+                    (0, -y),
+                    (-line_width, 0),
+                    (0, y),
+                    (-x, 0),
+                    (0, line_width),
+                    (x, 0)]
+        self.add_vertices(vertex_list=vertices)
+        print(self.xy_points)
+        print(self.xy_points_on_screen)
 
     @property
     def size(self):
