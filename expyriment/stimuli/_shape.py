@@ -25,7 +25,7 @@ from . import defaults
 from ._visual import Visual
 from .. import _internals
 from ..misc._timer import get_time
-from ..misc.geometry import XYPoint, lines_intersect
+from ..misc.geometry import XYPoint, lines_intersect, position2coordinates
 
 class Shape(Visual):
     """A class implementing a shape."""
@@ -538,7 +538,7 @@ class Shape(Visual):
         return int((get_time() - start) * 1000)
 
     @staticmethod
-    def _compensate_for_pygame_polygon_bug(vertex):
+    def _compensate_for_pygame_polygon_bug(vertex): # FIXME can be removed?
         """Pygame seems to add a pixel, if a polygon function is drawing
         lines along the horizontal dimension. We therefore compress each vertex by
         one pixel in its horizontal movement component.
@@ -553,28 +553,25 @@ class Shape(Visual):
         Converts vertex to points, centers points, rotates, calculates rect
         """
 
-        # Copying and scaling and flipping of vertices
-        tmp_vtx = [] # TODO map function?
+        xy_p = [XYPoint(0, 0)]
         for v in self._vertices:
+            # Copying and scaling and flipping of vertices
             v = (v[0] * self._native_scaling[0],
                  v[1] * self._native_scaling[1])
-            tmp_vtx.append(v)
-
-        # Converts tmp_vtx to points in xy-coordinates
-        xy_p = [XYPoint(0, 0)] # TODO map function?
-        for v in tmp_vtx:
+            # Converts tmp_vtx to points in xy-coordinates
             x = (v[0] + xy_p[-1].x)
             y = (v[1] + xy_p[-1].y)
             xy_p.append(XYPoint(x, y))
 
         xy_p = Shape._center_points(xy_p)
+
         if self._native_rotation != 0:
             for x in range(0, len(xy_p)):
                 xy_p[x].rotate(self._native_rotation,
                                self._native_rotation_centre)
 
         self._xy_points = xy_p
-        self._rect = Shape._make_shape_rect(self.xy_points)
+        self._rect = Shape._make_shape_rect(self._xy_points)
 
     @staticmethod
     def _make_shape_rect(points):
@@ -622,19 +619,20 @@ class Shape(Visual):
 
         line_width = int(self._line_width)
         # Draw the rect
-        s = (self.width + line_width, self.height + line_width)
+        s = (self.width  + line_width, self.height + line_width)  # FIXME if width+1 it is OK
         surface = pygame.surface.Surface(s,
                                         pygame.SRCALPHA).convert_alpha()
-        #surface.fill((255, 0, 0)) # for debugging only
+        surface.fill((255, 0, 0)) # for debugging only
         #create polygon
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
+
         pygame.draw.polygon(surface, self.colour, poly, line_width)
 
-        rot_centre = self.convert_expyriment_xy_to_surface_xy(
-            self._native_rotation_centre)
         if self._rotation_centre_display_colour is not None:
+            rot_centre = self.convert_expyriment_xy_to_surface_xy(
+                self._native_rotation_centre)
             pygame.draw.circle(surface, self._rotation_centre_display_colour,
                                rot_centre, 2)
 
