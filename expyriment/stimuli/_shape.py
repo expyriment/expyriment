@@ -27,6 +27,8 @@ from .. import _internals
 from ..misc._timer import get_time
 from ..misc.geometry import XYPoint, lines_intersect, position2coordinates
 
+FIX_PYGAME_POLYGON_BUG = True
+
 class Shape(Visual):
     """A class implementing a shape."""
 
@@ -189,8 +191,12 @@ class Shape(Visual):
 
     @property
     def rect(self):
-        """Getter for rect =(top, left, width, right).
-        From version 0.9.1 on this is a pygame.Rect
+        """Getter for bouncing rectangular
+        rect = pygame.Rect(left, top, width, height)
+
+        Note
+        -----
+        Fom version 0.9.1 on, this is a pygame.Rect
 
         """
 
@@ -575,7 +581,7 @@ class Shape(Visual):
 
     @staticmethod
     def _get_shape_rect(points):
-        """ return pygame.Rect rect (top, left, width, height) around the points."""
+        """ return bouncing rect as pygame.Rect rect (top, left, width, height) around the points."""
 
         t = 0
         l = 0
@@ -606,11 +612,14 @@ class Shape(Visual):
 
         line_width = int(self._line_width)
         # Draw the rect
-        s = (self.width  + line_width, self.height + line_width)  # FIXME if width+1 it is OK
-        surface = pygame.surface.Surface(s,
+        target_surface_size = (self.width  + line_width, self.height + line_width)  # width + 1 to fix pygame polygon bug
+        if FIX_PYGAME_POLYGON_BUG:
+            target_surface_size = (target_surface_size[0] + 1, target_surface_size[1])
+
+        surface = pygame.surface.Surface(target_surface_size,
                                         pygame.SRCALPHA).convert_alpha()
-        #surface.fill((255, 0, 0)) # for debugging only
-        #create polygon
+
+        # create polygon
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
@@ -630,6 +639,7 @@ class Shape(Visual):
                                  int(size[1] / aa_scaling)))
             self._native_scaling = old_scaling
             self._update_points()
+
         return surface
 
 
