@@ -86,7 +86,6 @@ class FixCross(Shape):
                     (x, 0)]
         self.add_vertices(vertex_list=vertices)
 
-        print(self.xy_points)
 
     @property
     def size(self):

@@ -94,7 +94,7 @@ class Shape(Visual):
 
         self._vertices = []
         self._xy_points = []
-        self._rect = (0, 0, 0, 0)
+        self._rect = pygame.Rect(0, 0, 0, 0)
         self._native_rotation = 0
         self._native_scaling = [1, 1]
         self._native_rotation_centre = (0, 0)
@@ -173,15 +173,15 @@ class Shape(Visual):
 
     @property
     def width(self):
-        return self._rect[3] - self._rect[1]  # r-l
+        return self._rect.width
 
     @property
     def height(self):
-        return self._rect[0] - self._rect[2]  # t-b
+        return self._rect.height
 
     @property
     def shape_size(self):
-        return (self.width, self.height)
+        return self._rect.size
 
     @property
     def line_width(self):
@@ -189,7 +189,10 @@ class Shape(Visual):
 
     @property
     def rect(self):
-        """Getter for rect =(top, left, bottom, right)."""
+        """Getter for rect =(top, left, width, right).
+        From version 0.9.1 on this is a pygame.Rect
+
+        """
 
         return self._rect
 
@@ -350,7 +353,7 @@ class Shape(Visual):
 
         self._vertices = []
         self._xy_points = []
-        self._rect = (0, 0, 0, 0)
+        self._rect = pygame.Rect(0, 0, 0, 0)
         self._native_rotation = 0
         self._native_scaling = [1, 1]
         self._native_rotation_centre = (0, 0)
@@ -368,8 +371,8 @@ class Shape(Visual):
         """
 
         jitter = self._line_width // 2
-        return (int(point_xy[0] - self.rect[1] + jitter),
-                - 1 * int(point_xy[1] - self.rect[0] - jitter))
+        return (int(point_xy[0] - self._rect.left + jitter),
+                - 1 * int(point_xy[1] - self._rect.top - jitter))
 
     def native_overlapping_with_position(self, position):
         """Return True if the position is inside the shape.
@@ -537,15 +540,6 @@ class Shape(Visual):
         self.scale((level, level))
         return int((get_time() - start) * 1000)
 
-    @staticmethod
-    def _compensate_for_pygame_polygon_bug(vertex): # FIXME can be removed?
-        """Pygame seems to add a pixel, if a polygon function is drawing
-        lines along the horizontal dimension. We therefore compress each vertex by
-        one pixel in its horizontal movement component.
-
-        """
-
-        return (vertex[0] - cmp(vertex[0], 0),  vertex[1])
 
     def _update_points(self):
         """Updates the points of the shape and the drawing rect.
@@ -563,7 +557,12 @@ class Shape(Visual):
             y = (v[1] + xy_p[-1].y)
             xy_p.append(XYPoint(x, y))
 
-        xy_p = Shape._center_points(xy_p)
+        # center points
+        r = Shape._get_shape_rect(xy_p)
+        cntr = (r.left + (r.width // 2), r.top - (r.height // 2))
+        m = XYPoint(x=-1*cntr[0], y=-1*cntr[1])
+        for x in range(0, len(xy_p)): # Center points
+            xy_p[x].move(m)
 
         if self._native_rotation != 0:
             for x in range(0, len(xy_p)):
@@ -571,11 +570,12 @@ class Shape(Visual):
                                self._native_rotation_centre)
 
         self._xy_points = xy_p
-        self._rect = Shape._make_shape_rect(self._xy_points)
+        self._rect = Shape._get_shape_rect(xy_p)
+
 
     @staticmethod
-    def _make_shape_rect(points):
-        """rect (top, left, bottom, right) around the points."""
+    def _get_shape_rect(points):
+        """ return pygame.Rect rect (top, left, width, height) around the points."""
 
         t = 0
         l = 0
@@ -592,21 +592,8 @@ class Shape(Visual):
             elif p.y < b:
                 b = p.y
 
-        return (t, l, b, r)
+        return pygame.Rect(l, t, r - l, t - b)
 
-
-    @staticmethod
-    def _center_points(points):
-        """Return centered points (list of geomerty.XYPoint)."""
-
-        t, l, b, r = Shape._make_shape_rect(points)
-        w = r-l
-        h = t-b
-        cntr = (l + (w // 2), t - (h // 2))
-        m = XYPoint(x=-1*cntr[0], y=-1*cntr[1])
-        for x in range(0, len(points)): # Center points
-            points[x].move(m)
-        return points
 
     def _create_surface(self):
         """Create the surface of the stimulus."""
@@ -622,7 +609,7 @@ class Shape(Visual):
         s = (self.width  + line_width, self.height + line_width)  # FIXME if width+1 it is OK
         surface = pygame.surface.Surface(s,
                                         pygame.SRCALPHA).convert_alpha()
-        surface.fill((255, 0, 0)) # for debugging only
+        #surface.fill((255, 0, 0)) # for debugging only
         #create polygon
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
@@ -647,16 +634,19 @@ class Shape(Visual):
 
 
     @staticmethod
-    def _test():
+    def _test(ground = 3, gap = 3, spike_length = 50,  spike_width = 2, n_spikes = 50):
         from .. import control
         control.set_develop_mode(True)
         control.defaults.event_logging = 0
         exp = control.initialize()
+
+
         sh = Shape(position=(20, 200), colour=(255, 0, 255))
-        sh.add_vertex((0, 0))
-        sh.add_vertex((50, 50))
-        sh.add_vertex((0, 50))
+        sh.add_vertices([(0, ground), (gap, 0)])
+        sh.add_vertices([(0, spike_length), (spike_width, 0), (0, -spike_length), (gap, 0)] * n_spikes)
+        sh.add_vertex((0, -ground))
         sh.present()
+
         exp.clock.wait(1000)
 
 
