@@ -23,6 +23,7 @@ New Features:
 - io.SerialPort has a new method send_line
 
 Changed:
+- major rewrite of stimuli.Shape, bug fixes, see improved documentation 
 - extras
     - extras need to be explicitly imported
     - extras and plugins are not anymore part of expyriment package and can

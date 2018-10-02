@@ -88,6 +88,7 @@ shape_colour = None  # 'None' is experiment_text_colour
 shape_position = (0, 0)
 shape_anti_aliasing = 0
 shape_line_width = 0
+shape_contour_colour = None
 
 # Line
 line_colour = None  # 'None' is experiment_text_colour

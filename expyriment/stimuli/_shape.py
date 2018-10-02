@@ -18,7 +18,7 @@ __revision__ = ''
 __date__ = ''
 
 import copy
-from math import sqrt
+from math import sqrt, copysign
 import pygame
 
 from . import defaults
@@ -27,14 +27,37 @@ from .. import _internals
 from ..misc._timer import get_time
 from ..misc.geometry import XYPoint, lines_intersect, position2coordinates
 
-FIX_PYGAME_POLYGON_BUG = True
+
+def _get_shape_rect(points):
+    # helper function
+    """ return bouncing rect as pygame.Rect rect (top, left, width, height) around the points."""
+
+    t = 0
+    l = 0
+    r = 0
+    b = 0
+
+    for p in points:
+        if p.x < l:
+            l = p.x
+        elif p.x > r:
+            r = p.x
+        if p.y > t:
+            t = p.y
+        elif p.y < b:
+            b = p.y
+
+    return pygame.Rect(l, t, r - l, t - b)
 
 class Shape(Visual):
     """A class implementing a shape."""
 
     def __init__(self, position=None, colour=None, line_width=None,
                  anti_aliasing=None,
-                 vertex_list=None):
+                 vertex_list=None,
+                 contour_colour = None
+                 ):
+
         """Create a shape.
 
         A shape is an object described by vertices. For more details about
@@ -43,19 +66,30 @@ class Shape(Visual):
 
         The vertex representation describes the contour of an object. Think of
         it as if you would draw with a pen. You start somewhere and make
-        movements in different directions. A rectangle could be then for
-        instance described by a right, a down, a left and an up movement
-        (see example below).
+        movements in different directions. Shapes are always closed. Thus, a
+        rectangle could be for instance described by a right, a down and a left.
+        (The fours movement up to the origin is not required; see example below).
+
+        IMPORTANTLY, take into account that you always start drawing with one
+        already plotted pixel (resulting from "putting the pen on the surface"
+        or from the line plotted before). That is, if your start, for instance,
+        by moving the pen for L steps to the right [ add_vertex((L, 0)) ], you
+        end up with the line of the length L+1. As a consequence, the resulting
+        surface size is in this example (L+1, 1) and not (L, 0)!
 
         As always in Expyriment, the center of the surface of the shape is its
         position. That means, that with every new vertex, the shape size might
         change and the shape position will be realigned.
 
+        Hint: To check your created shapes, it might be helpful to adapt the
+        colour of the contour (default is same colour as shape).
+
         Example
         -------
-            r = stimuli.Shape(line_width = 0)
-            r.add_vertex((100,0))
-            r.add_vertices([(0,-50),(-100,0) ])
+            # drawing a rectangle with the size (100, 50)
+            r = stimuli.Shape()
+            r.add_vertex((99,0))
+            r.add_vertices([(0,-49),(-99,0) ])
             # three vertices are sufficient, because shapes are always closed
             r.present()
 
@@ -73,6 +107,9 @@ class Shape(Visual):
             anti aliasing parameter (good anti_aliasing with 10)
         vertex_list : (int, int)
             list of vertices (int, int)
+        contour_colour : (int, int, int), optional
+            colour of the counture of the shape,
+            if None (default), the contour colour is colour of the shape
 
         """
 
@@ -93,6 +130,10 @@ class Shape(Visual):
             self._anti_aliasing = anti_aliasing
         else:
             self._anti_aliasing = defaults.shape_anti_aliasing
+        if contour_colour is None:
+            self._contour_colour = defaults.shape_contour_colour
+        else:
+            self._contour_colour = contour_colour
 
         self._vertices = []
         self._xy_points = []
@@ -126,6 +167,7 @@ class Shape(Visual):
             raise AttributeError(Shape._getter_exception_message.format(
                 "colour change"))
         self._colour = colour
+
 
     @property
     def anti_aliasing(self):
@@ -172,6 +214,24 @@ class Shape(Visual):
 
         self._rotation_centre_display_colour = colour
         self._update_points()
+
+    @property
+    def contour_colour(self):
+        """Getter for conture_colour."""
+
+        if self._contour_colour is None:
+            return self.colour
+        else:
+            return self._contour_colour
+
+    @contour_colour.setter
+    def contour_colour(self, colour):
+        """Setter for conture_colour."""
+
+        if self.has_surface:
+            raise AttributeError(Shape._getter_exception_message.format(
+                "contour colour change"))
+        self._contour_colour = self.colour
 
     @property
     def width(self):
@@ -321,8 +381,8 @@ class Shape(Visual):
 
         Parameters
         ----------
-        vertex_list : (int, int)
-            list of vertices (int, int)
+        vertex_list : ((int, int))
+            list of vertices ((int, int))
 
         """
         type_error_message = "The method add_vertices requires a list of" + \
@@ -435,8 +495,7 @@ class Shape(Visual):
             for to1 in range(from1 + 1, len(s1)):
                 for from2 in range(0, len(s2) - 1):
                     for to2 in range(0, len(s2)):
-                        if lines_intersect(s1[from1],
-                                                s1[to1], s2[from2], s2[to2]):
+                        if lines_intersect(s1[from1], s1[to1], s2[from2], s2[to2]):
                             return True
         return False
 
@@ -559,12 +618,11 @@ class Shape(Visual):
             v = (v[0] * self._native_scaling[0],
                  v[1] * self._native_scaling[1])
             # Converts tmp_vtx to points in xy-coordinates
-            x = (v[0] + xy_p[-1].x)
-            y = (v[1] + xy_p[-1].y)
-            xy_p.append(XYPoint(x, y))
+            xy_p.append(XYPoint(x = int(v[0] + xy_p[-1].x),
+                                y = int(v[1] + xy_p[-1].y)))
 
         # center points
-        r = Shape._get_shape_rect(xy_p)
+        r = _get_shape_rect(xy_p)
         cntr = (r.left + (r.width // 2), r.top - (r.height // 2))
         m = XYPoint(x=-1*cntr[0], y=-1*cntr[1])
         for x in range(0, len(xy_p)): # Center points
@@ -576,30 +634,7 @@ class Shape(Visual):
                                self._native_rotation_centre)
 
         self._xy_points = xy_p
-        self._rect = Shape._get_shape_rect(xy_p)
-
-
-    @staticmethod
-    def _get_shape_rect(points):
-        """ return bouncing rect as pygame.Rect rect (top, left, width, height) around the points."""
-
-        t = 0
-        l = 0
-        r = 0
-        b = 0
-
-        for p in points:
-            if p.x < l:
-                l = p.x
-            elif p.x > r:
-                r = p.x
-            if p.y > t:
-                t = p.y
-            elif p.y < b:
-                b = p.y
-
-        return pygame.Rect(l, t, r - l, t - b)
-
+        self._rect = _get_shape_rect(xy_p)
 
     def _create_surface(self):
         """Create the surface of the stimulus."""
@@ -611,20 +646,26 @@ class Shape(Visual):
             self.native_scale([aa_scaling, aa_scaling], scale_line_width=True)
 
         line_width = int(self._line_width)
-        # Draw the rect
-        target_surface_size = (self.width  + line_width, self.height + line_width)  # width + 1 to fix pygame polygon bug
-        if FIX_PYGAME_POLYGON_BUG:
-            target_surface_size = (target_surface_size[0] + 1, target_surface_size[1])
 
+        # make surface
+        target_surface_size = (1 + self.width  + line_width, 1 + self.height + line_width)  # width + 1 to fix pygame polygon bug
         surface = pygame.surface.Surface(target_surface_size,
                                         pygame.SRCALPHA).convert_alpha()
 
-        # create polygon
+        # plot create polygon area
         poly = []
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
 
         pygame.draw.polygon(surface, self.colour, poly, line_width)
+
+        # plot polygon contours manually
+        poly.append(poly[0])
+        p1 = poly[0]
+        for p2 in poly[1:]:
+            pygame.draw.line(surface, self.contour_colour, p1, p2, 1)
+            p1 = p2
+
 
         if self._rotation_centre_display_colour is not None:
             rot_centre = self.convert_expyriment_xy_to_surface_xy(
