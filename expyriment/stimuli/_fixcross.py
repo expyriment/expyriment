@@ -72,15 +72,20 @@ class FixCross(Shape):
 
         self._size = size
         x_a = (self._size[0] - line_width) // 2
+        x_b = x_a
         y_a = (self._size[1] - line_width) // 2
-        if (self._size[0] - line_width) % 2 == 0: # both have the same parity
-            x_b = x_a
-        else:
+        y_b = y_a
+
+        if (self._size[0] - line_width) % 2: # both have the different parities
             x_b = x_a + 1
-        if (self._size[1] - line_width) % 2 == 0: # both have the same parity
-            y_b = y_a
-        else:
+            # to ensure that Shape behaves like two crossed surfaces plotted on each other
+            if line_width % 2: # odd line width swap x_a - x_b
+                x_b, x_a = x_a, x_b
+
+        if (self._size[1] - line_width) % 2: # both have the different parities
             y_b = y_a + 1
+            if line_width % 2 == 0:  # even line width swap x_a - x_b
+                y_b, y_a = y_a, y_b
 
         vertices = [(line_width-1, 0),
                     (0, -y_a),
