@@ -71,19 +71,29 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        x = (self._size[0] - line_width) // 2
-        y = (self._size[1] - line_width) // 2
-        vertices = [(line_width, 0),
-                    (0, -y),
-                    (x, 0),
-                    (0, -line_width),
-                    (-x, 0),
-                    (0, -y),
-                    (-line_width, 0),
-                    (0, y),
-                    (-x, 0),
-                    (0, line_width),
-                    (x, 0)]
+        x_a = (self._size[0] - line_width) // 2
+        y_a = (self._size[1] - line_width) // 2
+        if (self._size[0] - line_width) % 2 == 0: # both have the same parity
+            x_b = x_a
+        else:
+            x_b = x_a + 1
+        if (self._size[1] - line_width) % 2 == 0: # both have the same parity
+            y_b = y_a
+        else:
+            y_b = y_a + 1
+
+        vertices = [(line_width-1, 0),
+                    (0, -y_a),
+                    (x_a, 0),
+                    (0, -line_width+1),
+                    (-x_a, 0),
+                    (0, -y_b),
+                    (-line_width+1, 0),
+                    (0, y_b),
+                    (-x_b, 0),
+                    (0, line_width-1),
+                    (x_b, 0)]
+
         self.add_vertices(vertex_list=vertices)
 
 

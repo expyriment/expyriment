@@ -72,7 +72,7 @@ ellipse_anti_aliasing = 0
 
 # FixCross
 fixcross_colour = None  # 'None' is experiment_text_colour
-fixcross_size = (20, 20)
+fixcross_size = (21, 21)
 fixcross_line_width = 1
 fixcross_position = (0, 0)
 fixcross_anti_aliasing = 0
