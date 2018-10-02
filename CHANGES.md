@@ -44,6 +44,8 @@ Changed:
   exception, if the factor is not defined. This can be suppressed by using the
   parameter return_none_if_not_defined
 - stimuli.Shape.rect is now a pygame.Rect()
+- misc.geometry.points2vertices requires now a list of misc.XYPoints and
+  not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox

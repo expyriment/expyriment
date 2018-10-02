@@ -139,15 +139,17 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
     return (cm[0] * screen_size[0] / monitor_size[0],
             cm[1] * screen_size[1] / monitor_size[1])
 
+def tuples2points(list_of_tuples):
+    """Converts a list of tuples (x,y) to a list of misc.XYPoints"""
+    return list(map(lambda v:XYPoint(x=v[0], y=v[1]), list_of_tuples))
+
 def points_to_vertices(points):
     """OBSOLETE FUNCTION! Please use `points2vertices`!"""
     
-    raise DeprecationWarning("points_to_vertices is an obsolete function. Please use point2vertices.")
+    raise DeprecationWarning("points_to_vertices is an obsolete function. Please use points2vertices.")
 
-    point2vertices(points)
-    
 def points2vertices(points):
-    """Returns vertex representation of the points (int, int) in xy-coordinates
+    """Returns vertex representation of the points (list of misc.XYPoints)
 
     Parameters
     ----------
@@ -163,7 +165,7 @@ def points2vertices(points):
 
     vtx = []
     for i in range(1, len(points)):
-        vtx.append((points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]))
+        vtx.append((points[i].x - points[i - 1].x, points[i].y - points[i - 1].y))
     return vtx
 
 def lines_intersect(pa, pb, pc, pd):
