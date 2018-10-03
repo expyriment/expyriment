@@ -59,16 +59,17 @@ class _LaminaPanelSurface(object):
         """
 
         if isinstance(surface, pygame.Surface):
+            # Fix for uneven surface sizes
             surface_size = surface.get_size()
-            if surface_size[0] == 1:
+            if surface_size[0] % 2 == 1:
                 rect = pygame.Rect((0, 0), surface_size)
-                s = pygame.surface.Surface((2, surface_size[1]), pygame.SRCALPHA).convert_alpha()
+                s = pygame.surface.Surface((surface_size[0] + 1, surface_size[1]), pygame.SRCALPHA).convert_alpha()
                 s.blit(surface, rect)
                 surface = s
             surface_size = surface.get_size()
-            if surface_size[1] == 1:
+            if surface_size[1] % 2 == 1:
                 rect = pygame.Rect((0, 0), surface_size)
-                s = pygame.surface.Surface((surface_size[0], 2), pygame.SRCALPHA).convert_alpha()
+                s = pygame.surface.Surface((surface_size[0], surface_size[1] + 1), pygame.SRCALPHA).convert_alpha()
                 s.blit(surface, rect)
                 surface = s
             self._winsize = surface.get_size()
