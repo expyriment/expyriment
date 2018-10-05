@@ -244,6 +244,137 @@ def polar2cartesian(polar, radians=False):
         a = _math.radians(polar[1])
     return (polar[0]*_math.cos(a), polar[0]*_math.sin(a))
 
+def _angular_vertex(angle, length):
+    """Helper function
+
+    calculates the vertex coordinates of a line with a particular
+    length and angle (relative to the horizontal)
+
+    """
+
+    angle = _math.radians(angle)
+    return -1*_math.cos(angle)*float(length), -1*_math.sin(angle)*float(length)
+
+def vertices_rectangle(size):
+    """Returns a list of vertices describing a rectangle
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    size : (int, int)
+        size (width, height) of the rectangle
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    return  [ (size[0]-1, 0),
+              (0, -size[1]+1),
+              (-size[0]+1, 0),
+              (0, size[1]-1)]
+
+def vertices_triangle(angle, length1, length2):
+    """Returns a list of vertices describing a triangle
+    A, B, C
+    ```
+            A --- B
+                 .
+                .
+               C
+    ```
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    angle : float
+        the angle between the lines AB and BC in degrees
+    length1 : float
+        the length between AB
+    length2 : float
+        the length between BC
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    xy = _angular_vertex(angle, length2)
+    return [(length1-1, 0), (int(xy[0]), int(xy[1]))]
+
+
+def vertices_regular_polygon(n_edges, length):
+    """Returns a list of vertices describing a regular
+    polygon
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    n_edges : int
+        the number of edges
+    length : float
+        the length of one side of the polygon
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    sum_of_angle = (n_edges - 2) * 180.0
+    angle = 180 - (sum_of_angle / n_edges)
+    x = 180
+    vtx = []
+    for _ in range(n_edges - 1):
+        v = _angular_vertex(x, length=length)
+        vtx.append((int(v[0]), int(v[1])))
+        x += angle
+    return vtx
+
+def vertices_frame(size, frame_thickness):
+    """Returns a list of vertices describing a frame
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    size : (int, int)
+        size (width, height) of the rectangle
+    frame_thickness : int
+        the thickness of the frame
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    return  [(size[0] - frame_thickness - 1, 0),
+             (0, -size[1]+1),
+             (-size[0]+1, 0),
+             (0, size[1]-1),
+             (frame_thickness - 1, 0),
+             (0, -(size[1] - frame_thickness - 1)),
+             (size[0] - 2 * frame_thickness - 1, 0),
+             (0, size[1] - 2 * frame_thickness - 1),
+             (-(size[0] - 2 * frame_thickness - 2), 0)]
 
 class XYPoint(object):
     """ The Expyriment point class """

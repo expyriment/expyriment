@@ -21,7 +21,9 @@ New Features:
   system command 'expyriment'
 - io.TextInput can now optionally how text right-to-left
 - io.SerialPort has a new method send_line
-
+- geometry module has convenience functions for predefined geometrical
+  shapes used for plotting with stimuli.Shape 
+  
 Changed:
 - major rewrite of stimuli.Shape, bug fixes, see improved documentation 
 - extras

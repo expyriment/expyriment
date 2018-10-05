@@ -91,6 +91,7 @@ class Shape(Visual):
 
         Example
         -------
+        ```
             ## EXAMPLE 1 ###
             # drawing a rectangle with the size (100, 50)
             r = stimuli.Shape()
@@ -101,18 +102,26 @@ class Shape(Visual):
 
             ## EXAMPLE 2 ###
             # drawing a frame
-            def frame_shape(size, line_width):
-                return  [ (size[0]-line_width-1, 0),
+            def vertices_frame(size, frame_thickness):
+                # this function is also available in the geometry module
+                return  [ (size[0]-frame_thickness-1, 0),
                           (0, -size[1]+1),
                           (-size[0]+1, 0),
                           (0, size[1]-1),
-                          (line_width-1, 0),
-                          (0, -(size[1]-line_width-1)),
-                          (size[0]-2*line_width-1, 0),
-                          (0, size[1]-2*line_width-1),
-                          (-(size[0]-2*line_width-2), 0)]
-            fr = stimuli.Shape(vertex_list=frame_shape(size=(200, 100), line_width=10))
+                          (frame_thickness-1, 0),
+                          (0, -(size[1]-frame_thickness-1)),
+                          (size[0]-2*frame_thickness-1, 0),
+                          (0, size[1]-2*frame_thickness-1),
+                          (-(size[0]-2*frame_thickness-2), 0)]
+            fr = stimuli.Shape(vertex_list=vertices_frame(size=(200, 100), frame_thickness=10))
             fr.present()
+
+            ## EXAMPLE 3 ##
+            # using expyriment.misc.geometry
+            from expyriment.misc import geometry
+            sh = stimuli.Shape(vertex_list=geometry.vertices_regular_polygon(5, 60))
+            sh.present()
+        ```
 
         Parameters
         ----------
@@ -130,6 +139,13 @@ class Shape(Visual):
         contour_colour : (int, int, int), optional
             colour of the counture of the shape,
             if None (default), the contour colour is colour of the shape
+
+        See Also
+        --------
+        You can also use the convenience function `vertices_triangle`,
+        `vertices_rectangle`, `vertices_regular_polygon`, `vertices_frame`
+        defined in `expyriment.misc.geometry`  to plot predefined geometrical
+        shapes (see example 3).
 
         """
 
