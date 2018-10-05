@@ -81,11 +81,17 @@ class Shape(Visual):
         position. That means, that with every new vertex, the shape size might
         change and the shape position will be realigned.
 
+        Please note that the parameter line_width should be always set to zero
+        (i.e. filled shape), since a shape object should conceptually describe
+        the contour of an object. Thus, a frame should be correctly implemented as
+        illustrated in example 2 (see below)
+
         Hint: To check your created shapes, it might be helpful to adapt the
         colour of the contour (default is same colour as shape).
 
         Example
         -------
+            ## EXAMPLE 1 ###
             # drawing a rectangle with the size (100, 50)
             r = stimuli.Shape()
             r.add_vertex((99,0))
@@ -93,6 +99,20 @@ class Shape(Visual):
             # three vertices are sufficient, because shapes are always closed
             r.present()
 
+            ## EXAMPLE 2 ###
+            # drawing a frame
+            def frame_shape(size, line_width):
+                return  [ (size[0]-line_width-1, 0),
+                          (0, -size[1]+1),
+                          (-size[0]+1, 0),
+                          (0, size[1]-1),
+                          (line_width-1, 0),
+                          (0, -(size[1]-line_width-1)),
+                          (size[0]-2*line_width-1, 0),
+                          (0, size[1]-2*line_width-1),
+                          (-(size[0]-2*line_width-2), 0)]
+            fr = stimuli.Shape(vertex_list=frame_shape(size=(200, 100), line_width=10))
+            fr.present()
 
         Parameters
         ----------
