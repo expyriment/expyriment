@@ -35,7 +35,7 @@ def vertices_rectangle(size):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -61,7 +61,7 @@ def vertices_cross(size, line_width):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -74,6 +74,10 @@ def vertices_cross(size, line_width):
     Returns
     -------
     vtx : list of vertices
+
+    See also
+    --------
+    stimuli.FixCross()
 
     """
 
@@ -111,7 +115,7 @@ def vertices_trapezoid(width_top, width_bottom, height):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -149,7 +153,7 @@ def vertices_triangle(angle, length1, length2):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -183,7 +187,7 @@ def vertices_parallelogram(angle, length1, length2):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -212,7 +216,7 @@ def vertices_regular_polygon(n_edges, length):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
@@ -244,7 +248,7 @@ def vertices_frame(size, frame_thickness):
 
     Notes
     -----
-    The resulting vertices can be plot with the class
+    The resulting vertices can be plotted with the class
     stimuli.Shape(vertex_list=...).
 
     Parameters
