@@ -308,9 +308,9 @@ def vertices_trapezoid(width_top, width_bottom, height):
     right_bottom = XYPoint(x = width_bottom, y = 0)
     left_top = XYPoint(x = 0 + (width_bottom-width_top)/2.0, y = height)
     right_top = XYPoint(x = width_bottom - (width_bottom-width_top)/2.0, y = height)
-
     return list(map(lambda xy: (int(xy[0]), int(xy[1])),
                     points2vertices((left_top, right_top, right_bottom, left_bottom))))
+
 
 def vertices_triangle(angle, length1, length2):
     """Returns a list of vertices describing a triangle
@@ -345,6 +345,39 @@ def vertices_triangle(angle, length1, length2):
     xy = _angular_vertex(angle, length2)
     return [(length1-1, 0), (int(xy[0]), int(xy[1]))]
 
+def vertices_parallelogram(angle, length1, length2):
+    """Returns a list of vertices describing a parallelogram
+    A, B, C, D
+    ```
+            A --- B
+           .     .
+          .     .
+         D --- C
+    ```
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    angle : float
+        the angle between the lines AB and BC in degrees
+    length1 : float
+        the length between AB
+    length2 : float
+        the length between BC
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    vtx = vertices_triangle(angle=angle, length1=length1, length2=length2)
+    vtx.append((-length1+1, 0))
+    return vtx
 
 def vertices_regular_polygon(n_edges, length):
     """Returns a list of vertices describing a regular
