@@ -20,6 +20,7 @@ __date__ = ''
 from . import defaults
 from ._shape import Shape
 from .. import _internals
+from ..misc.geometry import vertices_cross
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""
@@ -71,35 +72,8 @@ class FixCross(Shape):
             line_width = defaults.fixcross_line_width
 
         self._size = size
-        x_a = (self._size[0] - line_width) // 2
-        x_b = x_a
-        y_a = (self._size[1] - line_width) // 2
-        y_b = y_a
-
-        if (self._size[0] - line_width) % 2: # both have the different parities
-            x_b = x_a + 1
-            # to ensure that Shape behaves like two crossed surfaces plotted on each other
-            if line_width % 2: # odd line width swap x_a - x_b
-                x_b, x_a = x_a, x_b
-
-        if (self._size[1] - line_width) % 2: # both have the different parities
-            y_b = y_a + 1
-            if line_width % 2 == 0:  # even line width swap x_a - x_b
-                y_b, y_a = y_a, y_b
-
-        vertices = [(line_width-1, 0),
-                    (0, -y_a),
-                    (x_a, 0),
-                    (0, -line_width+1),
-                    (-x_a, 0),
-                    (0, -y_b),
-                    (-line_width+1, 0),
-                    (0, y_b),
-                    (-x_b, 0),
-                    (0, line_width-1),
-                    (x_b, 0)]
-
-        self.add_vertices(vertex_list=vertices)
+        self.add_vertices(vertex_list=vertices_cross(size=size,
+                                                     line_width=line_width))
 
 
     @property

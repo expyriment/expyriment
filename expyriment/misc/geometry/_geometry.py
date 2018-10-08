@@ -281,6 +281,56 @@ def vertices_rectangle(size):
 
 
 
+def vertices_cross(size, line_width):
+    """Returns a list of vertices describing a cross
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    size : (int, int)
+        xy, length of the horizontal (x) and vertical (y) line
+    line_width : int
+        width of the lines
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    x_a = (size[0] - line_width) // 2
+    x_b = x_a
+    y_a = (size[1] - line_width) // 2
+    y_b = y_a
+
+    if (size[0] - line_width) % 2:  # both have the different parities
+        x_b = x_a + 1
+        # to ensure that Shape behaves like two crossed surfaces plotted on each other
+        if line_width % 2:  # odd line width swap x_a - x_b
+            x_b, x_a = x_a, x_b
+
+    if (size[1] - line_width) % 2:  # both have the different parities
+        y_b = y_a + 1
+        if line_width % 2 == 0:  # even line width swap x_a - x_b
+            y_b, y_a = y_a, y_b
+
+    return [(line_width - 1, 0),
+            (0, -y_a),
+            (x_a, 0),
+            (0, -line_width + 1),
+            (-x_a, 0),
+            (0, -y_b),
+            (-line_width + 1, 0),
+            (0, y_b),
+            (-x_b, 0),
+            (0, line_width - 1),
+            (x_b, 0)]
+
+
 def vertices_trapezoid(width_top, width_bottom, height):
     """Returns a list of vertices describing a trapezoid
 
