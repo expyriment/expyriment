@@ -17,3 +17,4 @@ from ._geometry import position2visual_angle, visual_angle2position
 from ._geometry import cartesian2polar, polar2cartesian, tuples2points
 from ._geometry import points_to_vertices, points2vertices, lines_intersect, XYPoint
 from ._geometry import vertices_triangle, vertices_rectangle, vertices_regular_polygon, vertices_frame
+from ._geometry import vertices_trapezoid

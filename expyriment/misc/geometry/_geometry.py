@@ -279,6 +279,39 @@ def vertices_rectangle(size):
               (-size[0]+1, 0),
               (0, size[1]-1)]
 
+
+
+def vertices_trapezoid(width_top, width_bottom, height):
+    """Returns a list of vertices describing a trapezoid
+
+    Notes
+    -----
+    The resulting vertices can be plot with the class
+    stimuli.Shape(vertex_list=...).
+
+    Parameters
+    ----------
+    width_top: int
+        width of the top edge
+    width_bottom: int
+        width of the bottom edge
+    height : int
+        height of the trapezoid
+
+    Returns
+    -------
+    vtx : list of vertices
+
+    """
+
+    left_bottom =XYPoint(x = 0, y = 0)
+    right_bottom = XYPoint(x = width_bottom, y = 0)
+    left_top = XYPoint(x = 0 + (width_bottom-width_top)/2.0, y = height)
+    right_top = XYPoint(x = width_bottom - (width_bottom-width_top)/2.0, y = height)
+
+    return list(map(lambda xy: (int(xy[0]), int(xy[1])),
+                    points2vertices((left_top, right_top, right_bottom, left_bottom))))
+
 def vertices_triangle(angle, length1, length2):
     """Returns a list of vertices describing a triangle
     A, B, C
