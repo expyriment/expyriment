@@ -306,7 +306,11 @@ class Shape(Visual):
 
     @property
     def points(self):
-        """Return polygon as list of tuples (x,y) in Expyriment coordinates.
+        """Returns shape as list of tuples (x, y) representing points.
+         see Shape.xy_points
+
+        The representation does not take into account the position. Use
+        points_on_screen for position-depended representation.
 
         In contrast to the vertex representation, the point representation
         takes into all the native transformations (rotation, scaling,
@@ -326,11 +330,15 @@ class Shape(Visual):
 
     @property
     def points_on_screen(self):
-        """Return polygon as list of tuples in Expyriment coordinates.
+        """Returns shape as list of tuples (x, y) resenting points on the
+        screen. see Shape.xy_points_on_screen.
+
+        In contrast to Shape.points, it takes into account the position on
+        screen.
 
         In contrast to the vertex representation, the point representation
         takes into all the native transformations (rotation, scaling,
-        flipping)
+        flipping).
 
         Returns
         -------
@@ -361,7 +369,7 @@ class Shape(Visual):
 
     @property
     def xy_points(self):
-        """Return polygon as list of XYPoints of the shape.
+        """Returns the shape as list of XYPoints.
 
         The representation does not take into account the position. Use
         xy_points_on_screen for position-depended representation.
@@ -381,7 +389,10 @@ class Shape(Visual):
 
     @property
     def xy_points_on_screen(self):
-        """Return polygon as list of XYPoints in Expyriment coordinates.
+        """Returns the shape as list of XYPoints in Expyriment coordinates.
+
+        In contrast to xy_points, it takes into account the position on
+        screen.
 
         In contrast to the vertex representation, the point representation
         takes into all the native transformations (rotation, scaling,

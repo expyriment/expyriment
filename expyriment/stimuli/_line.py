@@ -25,7 +25,7 @@ from . import defaults
 from ._visual import Visual
 from ._shape import Shape
 from .. import _internals
-from ..misc.geometry import XYPoint, vertices_rectangle
+from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect
 from ..misc._timer import get_time
 
 
@@ -183,6 +183,44 @@ class Line(Visual):
         shape.native_rotate(degree = math.atan2(diff[1], diff[0]) * -180 / math.pi)
 
         return shape
+
+    def join(self, other_line):
+
+        self_shape = self.get_shape()
+        other_shape = other_line.get_shape()
+
+        tmp = self_shape.xy_points_on_screen
+        self_edge_end = (tmp[1], tmp[2])
+        self_edge_start = (tmp[0], tmp[3])
+        tmp = other_shape.xy_points_on_screen
+        other_edge_end = (tmp[1], tmp[2])
+        other_edge_start = (tmp[0], tmp[3])
+
+        if lines_intersect(self_edge_start[0], self_edge_start[1],
+                           other_edge_start[0], other_edge_start[1]):
+            #two start line edges intersect
+            if self_shape.is_point_inside(other_edge_start[0]):
+                other_p = other_edge_start[1]
+            else:
+                other_p = other_edge_start[0]
+            if other_shape.is_point_inside(self_edge_start[0]):
+                self_p = self_edge_start[1]
+            else:
+                self_p = self_edge_start[0]
+
+        elif lines_intersect(self_edge_end[0], self_edge_end[1],
+                           other_edge_end[0], other_edge_end[1]):
+            pass
+        elif lines_intersect(self_edge_start[0], self_edge_start[1],
+                           other_edge_end[0], other_edge_end[1]):
+            pass
+        elif lines_intersect(self_edge_end[0], self_edge_end[1],
+                             other_edge_start[0], other_edge_start[1]):
+            pass
+        else:
+            raise RuntimeWarning("The two lines are not connected and can't be joined.")
+
+    def __join_end(self, other_line, s):
 
     def _create_surface(self):
         """Create the surface of the stimulus."""
