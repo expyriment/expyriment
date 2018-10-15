@@ -64,12 +64,6 @@ class Line(Visual):
         else:
             self._anti_aliasing = defaults.line_anti_aliasing
 
-        s = misc.geometry.XYPoint(start_point)
-        e = misc.geometry.XYPoint(end_point)
-        d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
-        self._position[0] = s.x + (d.x // 2)
-        self._position[1] = s.y + (d.y // 2)
-
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
     @property
@@ -130,19 +124,19 @@ class Line(Visual):
     @property
     def position(self):
         """Getter for position."""
-        return self._position
+        return (int(self.start_point[0] + (self.end_point[0] - self.start_point[0]) / 2.0),
+                int(self.start_point[1] + (self.end_point[1] - self.start_point[1]) / 2.0))
 
     @position.setter
     def position(self, value):
         """Setter for position."""
 
-        offset_x = value[0] - self._position[0]
-        offset_y = value[1] - self._position[1]
-        self._position = list(value)
-        self._start_point[0] = self._start_point[0] + offset_x
-        self._start_point[1] = self._start_point[1] + offset_y
-        self._end_point[0] = self._end_point[0] + offset_x
-        self._end_point[1] = self._end_point[1] + offset_y
+        offset = (value[0] - self.position[0],
+                  value[1] - self.position[1])
+        self._start_point = (self._start_point[0] + offset[0],
+                             self._start_point[1] + offset[1])
+        self._end_point = (self._end_point[0] + offset[0],
+                           self._end_point[1] + offset[1])
 
     def move(self, offset):
         """Moves the stimulus in 2D space.
@@ -164,21 +158,12 @@ class Line(Visual):
         """
 
         start = get_time()
-        moved = False
-        x = offset[0]
-        y = offset[1]
-        if x > 0 or x < 0:
-            self._position[0] = self._position[0] + x
-            moved = True
-        if y > 0 or y < 0:
-            self._position[1] = self._position[1] + y
-            moved = True
-        if moved and self._ogl_screen is not None:
-            self._ogl_screen.refresh_position()
-        self._start_point[0] = self._start_point[0] + x
-        self._start_point[1] = self._start_point[1] + y
-        self._end_point[0] = self._end_point[0] + x
-        self._end_point[1] = self._end_point[1] + y
+        self._start_point = (self._start_point[0] + offset[0],
+                             self._start_point[1] + offset[1])
+        self._end_point = (self._end_point[0] + offset[0],
+                          self._end_point[1] + offset[1])
+        if self._ogl_screen is not None and (offset[0]!=0 or offset[1]!=0):
+                self._ogl_screen.refresh_position()
         return int((get_time() - start) * 1000)
 
     def _create_surface(self):
