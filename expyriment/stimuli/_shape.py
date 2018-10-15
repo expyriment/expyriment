@@ -549,8 +549,8 @@ class Shape(Visual):
 
         Parameters
         ----------
-        degree : int
-            degree to rotate counterclockwise (int)
+        degree : float
+            degree to rotate counterclockwise (float)
 
         """
 

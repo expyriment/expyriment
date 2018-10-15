@@ -23,8 +23,9 @@ import pygame
 
 from . import defaults
 from ._visual import Visual
+from ._shape import Shape
 from .. import _internals
-from .. import misc
+from ..misc.geometry import XYPoint, vertices_rectangle
 from ..misc._timer import get_time
 
 
@@ -131,12 +132,8 @@ class Line(Visual):
     def position(self, value):
         """Setter for position."""
 
-        offset = (value[0] - self.position[0],
-                  value[1] - self.position[1])
-        self._start_point = (self._start_point[0] + offset[0],
-                             self._start_point[1] + offset[1])
-        self._end_point = (self._end_point[0] + offset[0],
-                           self._end_point[1] + offset[1])
+        self.move(offset = (value[0] - self.position[0],
+                            value[1] - self.position[1]))
 
     def move(self, offset):
         """Moves the stimulus in 2D space.
@@ -166,28 +163,31 @@ class Line(Visual):
                 self._ogl_screen.refresh_position()
         return int((get_time() - start) * 1000)
 
+    def get_shape(self):
+        """returns the shape representation of the line
+
+        Returns
+        -------
+        shape : stimuli.Shape
+            Shape representation of the line
+
+        """
+
+        dist = XYPoint(self._start_point).distance(XYPoint(self._end_point))
+        shape = Shape(vertex_list=vertices_rectangle(size=(dist, self.line_width)),
+                      colour=self.colour, position=self.position, line_width=0,
+                      anti_aliasing= self.anti_aliasing,
+                      contour_colour = self.colour)
+        diff = (self._end_point[0] - self._start_point[0],
+                self._end_point[1] - self._start_point[1])
+        shape.native_rotate(degree = math.atan2(diff[1], diff[0]) * -180 / math.pi)
+
+        return shape
+
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
-        s = misc.geometry.XYPoint(self._start_point)
-        e = misc.geometry.XYPoint(self._end_point)
-        d = misc.geometry.XYPoint(e.x - s.x, e.y - s.y)
-        aa_scaling = int((self._anti_aliasing / 5.0) + 1)
-        if self._anti_aliasing > 0:
-           surface = pygame.surface.Surface((s.distance(e)*aa_scaling,
-                self._line_width*aa_scaling), pygame.SRCALPHA).convert_alpha()
-        else:
-            surface = pygame.surface.Surface((s.distance(e),
-                self._line_width), pygame.SRCALPHA).convert_alpha()
-        surface.fill(self._colour)
-        surface = pygame.transform.rotate(surface, math.atan2(d.y, d.x) * 180 / math.pi)
-        if self._anti_aliasing > 0:
-            size = surface.get_size()
-            surface = pygame.transform.smoothscale(surface,
-                                                   (int(size[0] / aa_scaling),
-                                                    int(size[1] / aa_scaling)))
-        return surface
-
+        return self.get_shape()._create_surface()
 
 if __name__ == "__main__":
     from .. import control
