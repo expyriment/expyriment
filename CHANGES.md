@@ -23,6 +23,8 @@ New Features:
 - io.SerialPort has a new method send_line
 - geometry module has convenience functions for predefined geometrical
   shapes used for plotting with stimuli.Shape 
+- stimuli.Line is internally based on shape and has the new methods
+  get_shape and get_connected_shape
   
 Changed:
 - major rewrite of stimuli.Shape, bug fixes, see improved documentation 

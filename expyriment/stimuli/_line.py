@@ -18,14 +18,14 @@ __date__ = ''
 
 
 import math
-
+from copy import copy
 import pygame
 
 from . import defaults
 from ._visual import Visual
 from ._shape import Shape
 from .. import _internals
-from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect
+from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect, points2vertices
 from ..misc._timer import get_time
 
 
@@ -184,43 +184,96 @@ class Line(Visual):
 
         return shape
 
-    def join(self, other_line):
+    def get_connecting_shape(self, other_line):
+        """returns a modified line shape that connects without gap with
+        another line, if the two lines do indeed touch each other. Otherwise,
+        a runtime error is raised.
+
+        Parameter
+        ---------
+        other_line : stimuli.Line
+            the other line to join with
+
+        Returns
+        -------
+        shape : stimuli.Shape
+            Shape representation of the modified line
+
+        Example
+        -------
+        ```
+            line_1 = stimuli.Line((100,100), (140, 190), line_width=20, colour=constants.C_BLUE)
+            line_2 = stimuli.Line((140, 190), (260, 230), line_width=20, colour=constants.C_BLUE)
+            line1_mod = line_1.get_connecting_shape(line_2)
+
+            #plot
+            bl = stimuli.BlankScreen()
+            line1_mod.plot(bl)
+            line_2.plot(bl)
+            bl.present()
+        ```
+
+        """
 
         self_shape = self.get_shape()
         other_shape = other_line.get_shape()
 
-        tmp = self_shape.xy_points_on_screen
-        self_edge_end = (tmp[1], tmp[2])
-        self_edge_start = (tmp[0], tmp[3])
-        tmp = other_shape.xy_points_on_screen
-        other_edge_end = (tmp[1], tmp[2])
-        other_edge_start = (tmp[0], tmp[3])
+        for a_end, b_start in ((True, True), (True, False), (False, False), (False, True)):
+            rtn = Line.__join_end(self_shape, other_shape, a_end=a_end, b_start=b_start)
+            if rtn is not None:
+                return rtn
 
-        if lines_intersect(self_edge_start[0], self_edge_start[1],
-                           other_edge_start[0], other_edge_start[1]):
-            #two start line edges intersect
-            if self_shape.is_point_inside(other_edge_start[0]):
-                other_p = other_edge_start[1]
-            else:
-                other_p = other_edge_start[0]
-            if other_shape.is_point_inside(self_edge_start[0]):
-                self_p = self_edge_start[1]
-            else:
-                self_p = self_edge_start[0]
+        raise RuntimeWarning("The two lines do not connected and can't be joined.")
 
-        elif lines_intersect(self_edge_end[0], self_edge_end[1],
-                           other_edge_end[0], other_edge_end[1]):
-            pass
-        elif lines_intersect(self_edge_start[0], self_edge_start[1],
-                           other_edge_end[0], other_edge_end[1]):
-            pass
-        elif lines_intersect(self_edge_end[0], self_edge_end[1],
-                             other_edge_start[0], other_edge_start[1]):
-            pass
+
+    @staticmethod
+    def __join_end(line_shape_a, line_shape_b, a_end=True, b_start=True):
+        """helper function: returns the modified line_shape_a"""
+
+        a_points = line_shape_a.xy_points_on_screen
+        if a_end:
+            a_edge = (1, 2)
         else:
-            raise RuntimeWarning("The two lines are not connected and can't be joined.")
+            a_edge = (3, 0)
 
-    def __join_end(self, other_line, s):
+        b_points = line_shape_b.xy_points_on_screen
+        if b_start:
+            b_edge = (3, 0)
+        else:
+            b_edge = (1, 2)
+
+        if lines_intersect(a_points[a_edge[0]], a_points[a_edge[1]],
+                           b_points[b_edge[0]], b_points[b_edge[1]]):
+            #two start line edges intersect
+            if line_shape_a.overlapping_with_position(b_points[b_edge[0]].tuple):
+                b_join_point = b_edge[1]
+            else:
+                b_join_point = b_edge[0]
+
+            a_modified = copy(a_points)
+            if a_end:
+                # 0, 1, join, 2, 3
+                new_point_insert = 2
+            else:
+                # 0, 1, 2, 3, join
+                new_point_insert = 4
+            a_modified.insert(new_point_insert, b_points[b_join_point])
+
+            rtn = Shape(colour=line_shape_a.colour,
+                        line_width=line_shape_a.line_width,
+                        anti_aliasing=line_shape_a.anti_aliasing,
+                        vertex_list=points2vertices(a_modified),
+                        contour_colour = line_shape_a.contour_colour)
+            rtn.move((b_points[b_join_point].x - rtn.xy_points_on_screen[new_point_insert].x,
+                     b_points[b_join_point].y - rtn.xy_points_on_screen[new_point_insert].y))
+            return rtn
+        else:
+            return None
+
+
+
+
+        pass
 
     def _create_surface(self):
         """Create the surface of the stimulus."""

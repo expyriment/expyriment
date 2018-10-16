@@ -302,6 +302,8 @@ class XYPoint(object):
 
     @property
     def tuple(self):
+        """Getter for the tuple (x, y) """
+
         return (self._x, self._y)
 
     @tuple.setter
@@ -312,6 +314,8 @@ class XYPoint(object):
 
     @property
     def polar(self):
+        """Getter for polar coordinate the point """
+
         return cartesian2polar((self._x, self._y))
 
     def move(self, v):
