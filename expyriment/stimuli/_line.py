@@ -184,7 +184,7 @@ class Line(Visual):
 
         return shape
 
-    def get_connecting_shape(self, other_line):
+    def get_connecting_shape(self, other_line, sharp_corner=False):
         """returns a modified line shape that connects without gap with
         another line, if the two lines do indeed touch each other. Otherwise,
         a runtime error is raised.
@@ -193,6 +193,8 @@ class Line(Visual):
         ---------
         other_line : stimuli.Line
             the other line to join with
+        sharp_corner : boolean (optional)
+            if True, corner will be sharp and not cropped
 
         Returns
         -------
@@ -219,7 +221,7 @@ class Line(Visual):
         other_shape = other_line.get_shape()
 
         for a_end, b_start in ((True, True), (True, False), (False, False), (False, True)):
-            rtn = Line.__join_end(self_shape, other_shape, a_end=a_end, b_start=b_start)
+            rtn = Line.__join_end(self_shape, other_shape, a_end=a_end, b_start=b_start, sharp_corner=sharp_corner)
             if rtn is not None:
                 return rtn
 
@@ -227,7 +229,7 @@ class Line(Visual):
 
 
     @staticmethod
-    def __join_end(line_shape_a, line_shape_b, a_end=True, b_start=True):
+    def __join_end(line_shape_a, line_shape_b, a_end=True, b_start=True, sharp_corner=False):
         """helper function: returns the modified line_shape_a"""
 
         a_points = line_shape_a.xy_points_on_screen
@@ -252,20 +254,27 @@ class Line(Visual):
 
             a_modified = copy(a_points)
             if a_end:
-                # 0, 1, join, 2, 3
-                new_point_insert = 2
+                # 0, 1, contact point, 2, 3
+                insert_pos = 2
             else:
-                # 0, 1, 2, 3, join
-                new_point_insert = 4
-            a_modified.insert(new_point_insert, b_points[b_join_point])
+                # 0, 1, 2, 3, contact point
+                insert_pos = 4
+            a_modified.insert(insert_pos, b_points[b_join_point]) # insert contact point
+
+            if sharp_corner:
+                # calc sharp corner point before contact point
+                _edge(a_modified[insert_pos-1])
+                _edge(a_modified[insert_pos])
+                sharp_corner_point = None
+                a_modified.insert(insert_pos, sharp_corner_point)
 
             rtn = Shape(colour=line_shape_a.colour,
                         line_width=line_shape_a.line_width,
                         anti_aliasing=line_shape_a.anti_aliasing,
                         vertex_list=points2vertices(a_modified),
                         contour_colour = line_shape_a.contour_colour)
-            rtn.move((b_points[b_join_point].x - rtn.xy_points_on_screen[new_point_insert].x,
-                     b_points[b_join_point].y - rtn.xy_points_on_screen[new_point_insert].y))
+            rtn.move((b_points[b_join_point].x - rtn.xy_points_on_screen[insert_pos].x,
+                     b_points[b_join_point].y - rtn.xy_points_on_screen[insert_pos].y))
             return rtn
         else:
             return None
@@ -279,6 +288,17 @@ class Line(Visual):
         """Create the surface of the stimulus."""
 
         return self.get_shape()._create_surface()
+
+def _edge(id):
+    """helper function"""
+    if id == 0:
+        return (1, 0)
+    elif id == 1:
+        return (0, 1)
+    elif id == 3:
+        return (2, 3)
+    elif id == 2:
+        return (3, 2)
 
 if __name__ == "__main__":
     from .. import control

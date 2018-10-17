@@ -168,17 +168,17 @@ def points2vertices(points):
     return vtx
 
 def lines_intersect(pa, pb, pc, pd):
-    """Return true if two line segments are intersecting
+    """Returns true if two line segments are intersecting
 
     Parameters
     ----------
-    pa : misc.XYPoint
+    pa : misc.geometry.XYPoint
         point 1 of line 1
-    pb : misc.XYPoint
+    pb : misc.geometry.XYPoint
         point 2 of line 1
-    pc : misc.XYPoint
+    pc : misc.geometry.XYPoint
         point 1 of line 2
-    pb : misc.XYPoint
+    pb : misc.geometry.XYPoint
         point 2 of line 2
 
     Returns
@@ -192,6 +192,43 @@ def lines_intersect(pa, pb, pc, pd):
         return (pc._y - pa._y) * (pb._x - pa._x) > (pb._y - pa._y) * (pc._x - pa._x)
 
     return ccw(pa, pc, pd) != ccw(pb, pc, pd) and ccw(pa, pb, pc) != ccw(pa, pb, pd)
+
+def lines_intersection_point(pa, pb, pc, pd):
+    """Returns the intersection point of two lines (a-b) and (c-d)
+
+    Parameters
+    ----------
+    pa : misc.geometry.XYPoint
+        point 1 of line 1
+    pb : misc.geometry.XYPoint
+        point 2 of line 1
+    pc : misc.geometry.XYPoint
+        point 1 of line 2
+    pb : misc.geometry.XYPoint
+        point 2 of line 2
+
+    Returns
+    -------
+    intersec_point: misc.geometry.XYPoint
+        intersection point
+
+    """
+
+    xdiff = (pa.x - pb.x, pc.x - pd.x)
+    ydiff = (pa.y - pb.y, pc.y - pd.y)
+
+    def det(a, b):
+        return a[0] * b[1] - a[1] * b[0]
+
+    div = det(xdiff, ydiff)
+    if div == 0:
+       raise Exception('lines do not intersect')
+
+    d = (det(*line1), det(*line2))
+    x = det(d, xdiff) / div
+    y = det(d, ydiff) / div
+    return x, y
+
 
 def cartesian2polar(xy, radians=False):
     """Convert a cartesian coordinate (x,y) to a polar coordinate
