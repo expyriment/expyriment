@@ -125,8 +125,8 @@ class Line(Visual):
     @property
     def position(self):
         """Getter for position."""
-        return (int(self.start_point[0] + (self.end_point[0] - self.start_point[0]) / 2.0),
-                int(self.start_point[1] + (self.end_point[1] - self.start_point[1]) / 2.0))
+        return (self.start_point[0] + (self.end_point[0] - self.start_point[0]) / 2.0,
+                self.start_point[1] + (self.end_point[1] - self.start_point[1]) / 2.0)
 
     @position.setter
     def position(self, value):
@@ -287,6 +287,7 @@ class Line(Visual):
                         anti_aliasing=line_shape_a.anti_aliasing,
                         vertex_list=points2vertices(a_modified),
                         contour_colour = line_shape_a.contour_colour)
+
             rtn.move((b_points[id_b_joinpoint].x - rtn.xy_points_on_screen[id_insert].x,
                      b_points[id_b_joinpoint].y - rtn.xy_points_on_screen[id_insert].y))
             return rtn
@@ -294,21 +295,11 @@ class Line(Visual):
             return None
 
 
-
-
-        pass
-
     def _create_surface(self):
         """Create the surface of the stimulus."""
 
         return self.get_shape()._create_surface()
 
-def _edge(id):
-    """helper function"""
-    if id == 0 or id == 1:
-        return (1, 0)
-    else:
-        return (3, 2)
 
 if __name__ == "__main__":
     from .. import control

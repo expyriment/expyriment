@@ -665,8 +665,8 @@ class Shape(Visual):
             v = (v[0] * self._native_scaling[0],
                  v[1] * self._native_scaling[1])
             # Converts tmp_vtx to points in xy-coordinates
-            xy_p.append(XYPoint(x = int(v[0] + xy_p[-1].x),
-                                y = int(v[1] + xy_p[-1].y)))
+            xy_p.append(XYPoint(x = v[0] + xy_p[-1].x,
+                                y = v[1] + xy_p[-1].y))
 
         # center points
         r = _get_shape_rect(xy_p)
