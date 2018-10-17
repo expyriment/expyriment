@@ -214,20 +214,22 @@ def lines_intersection_point(pa, pb, pc, pd):
 
     """
 
-    xdiff = (pa.x - pb.x, pc.x - pd.x)
-    ydiff = (pa.y - pb.y, pc.y - pd.y)
+    # slope: dy/dx (y2 - y1) / (x2 - x1)
+    slope = ((pb.y - pa.y) / float(pb.x - pa.x), #line 1
+             (pd.y - pc.y) / float(pd.x - pc.x)) #line 2
+    if slope[0] == slope[1]:
+        return None  # lines are parallel
 
-    def det(a, b):
-        return a[0] * b[1] - a[1] * b[0]
+    # intercept: y = slope*x + b,  b = y - slope*x
+    intercept =(pa.y - slope[0]*pa.x,
+                pc.y - slope[1]*pc.x)
 
-    div = det(xdiff, ydiff)
-    if div == 0:
-       raise Exception('lines do not intersect')
-
-    d = (det(*line1), det(*line2))
-    x = det(d, xdiff) / div
-    y = det(d, ydiff) / div
-    return x, y
+    # Set both lines equal to find the intersection point in the x direction
+    # m1 * x + b1 = m2 * x + b2 ==> x = (b2 - b1) / (m1 - m2)
+    x = (intercept[1] - intercept[0]) / float(slope[0] - slope[1])
+    # solve for y:  y = mx + b
+    y = slope[0] * x + intercept[0]
+    return XYPoint(x=x,y=y)
 
 
 def cartesian2polar(xy, radians=False):

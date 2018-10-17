@@ -25,7 +25,7 @@ from . import defaults
 from ._visual import Visual
 from ._shape import Shape
 from .. import _internals
-from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect, points2vertices
+from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect, points2vertices, lines_intersection_point
 from ..misc._timer import get_time
 
 
@@ -206,7 +206,7 @@ class Line(Visual):
         ```
             line_1 = stimuli.Line((100,100), (140, 190), line_width=20, colour=constants.C_BLUE)
             line_2 = stimuli.Line((140, 190), (260, 230), line_width=20, colour=constants.C_BLUE)
-            line1_mod = line_1.get_connecting_shape(line_2)
+            line1_mod = line_1.get_connecting_shape(line_2, sharp_corner=False)
 
             #plot
             bl = stimuli.BlankScreen()
@@ -234,47 +234,61 @@ class Line(Visual):
 
         a_points = line_shape_a.xy_points_on_screen
         if a_end:
-            a_edge = (1, 2)
+            id_a_edge = (1, 2)
         else:
-            a_edge = (3, 0)
+            id_a_edge = (3, 0)
 
         b_points = line_shape_b.xy_points_on_screen
         if b_start:
-            b_edge = (3, 0)
+            id_b_edge = (3, 0)
         else:
-            b_edge = (1, 2)
+            id_b_edge = (1, 2)
 
-        if lines_intersect(a_points[a_edge[0]], a_points[a_edge[1]],
-                           b_points[b_edge[0]], b_points[b_edge[1]]):
-            #two start line edges intersect
-            if line_shape_a.overlapping_with_position(b_points[b_edge[0]].tuple):
-                b_join_point = b_edge[1]
+        if lines_intersect(a_points[id_a_edge[0]], a_points[id_a_edge[1]],
+                           b_points[id_b_edge[0]], b_points[id_b_edge[1]]):
+            #two line edges intersect
+            if line_shape_a.overlapping_with_position(b_points[id_b_edge[0]].tuple):
+                id_b_joinpoint = id_b_edge[1]
             else:
-                b_join_point = b_edge[0]
+                id_b_joinpoint = id_b_edge[0]
+
 
             a_modified = copy(a_points)
             if a_end:
                 # 0, 1, contact point, 2, 3
-                insert_pos = 2
+                id_insert = 2
             else:
                 # 0, 1, 2, 3, contact point
-                insert_pos = 4
-            a_modified.insert(insert_pos, b_points[b_join_point]) # insert contact point
+                id_insert = 4
+            a_modified.insert(id_insert, b_points[id_b_joinpoint]) # insert contact point
 
             if sharp_corner:
                 # calc sharp corner point before contact point
-                _edge(a_modified[insert_pos-1])
-                _edge(a_modified[insert_pos])
-                sharp_corner_point = None
-                a_modified.insert(insert_pos, sharp_corner_point)
+                if line_shape_b.overlapping_with_position(a_points[id_a_edge[0]].tuple):
+                    id_outer_edge_point = id_a_edge[1]
+                else:
+                    id_outer_edge_point = id_a_edge[0]
+                if id_outer_edge_point == 0 or id_outer_edge_point ==1:
+                    a_long_edge = (a_points[0], a_points[1])
+                else:
+                    a_long_edge = (a_points[2], a_points[3])
 
+                if id_b_joinpoint == 0 or id_b_joinpoint ==1:
+                    b_long_edge = (b_points[0], b_points[1])
+                else:
+                    b_long_edge = (b_points[2], b_points[3])
+                sharp_corner_point = lines_intersection_point(a_long_edge[0], a_long_edge[1],
+                                                              b_long_edge[0], b_long_edge[1])
+                if sharp_corner_point is not None:
+                    a_modified.insert(id_insert, sharp_corner_point)
+                    id_insert +=1 # because it is later used to determin the join point
             rtn = Shape(colour=line_shape_a.colour,
                         line_width=line_shape_a.line_width,
                         anti_aliasing=line_shape_a.anti_aliasing,
                         vertex_list=points2vertices(a_modified),
                         contour_colour = line_shape_a.contour_colour)
-            rtn.move((b_points[b_join_point].x - rtn.xy_points_on_screen[insert_pos].x,
-                     b_points[b_join_point].y - rtn.xy_points_on_screen[insert_pos].y))
+            rtn.move((b_points[id_b_joinpoint].x - rtn.xy_points_on_screen[id_insert].x,
+                     b_points[id_b_joinpoint].y - rtn.xy_points_on_screen[id_insert].y))
             return rtn
         else:
             return None
@@ -291,13 +305,9 @@ class Line(Visual):
 
 def _edge(id):
     """helper function"""
-    if id == 0:
+    if id == 0 or id == 1:
         return (1, 0)
-    elif id == 1:
-        return (0, 1)
-    elif id == 3:
-        return (2, 3)
-    elif id == 2:
+    else:
         return (3, 2)
 
 if __name__ == "__main__":
