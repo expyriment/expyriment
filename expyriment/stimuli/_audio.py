@@ -45,9 +45,11 @@ class Audio(Stimulus):
         Parameters
         ----------
         filename : str
-            the filename
+            the filename. Must be an .ogg or uncompressed .wav file.
 
         """
+        if os.path.splitext(filename)[1] not in ('.wav', '.ogg'):
+            raise ValueError("The audio file must be an .ogg or uncompressed .wav file")
 
         Stimulus.__init__(self, filename)
         self._filename = filename
