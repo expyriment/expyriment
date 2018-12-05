@@ -1537,9 +1537,13 @@ class Block(object):
                     encoding = re.findall("coding[:=]\s*([-\w.]+)",
                                           second_line)
                     if encoding == []:
-                        encoding = [None]
+                        if _internals.PYTHON3:
+                            encoding = ['utf-8']
+                        else:
+                            encoding = [None]
         else:
             encoding = [encoding]
+
         with codecs.open(filename, "rb", encoding[0], errors='replace') as f:
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
