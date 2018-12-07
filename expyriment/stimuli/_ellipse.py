@@ -152,7 +152,10 @@ class Ellipse(Visual):
             surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         else:
-            line_width = self._line_width * aa_scaling
+            if self._line_width % 2 == 0:
+                line_width = self._line_width * aa_scaling
+            else:
+                line_width = (self._line_width - 1) * aa_scaling
             surface = pygame.surface.Surface(
                 [x + line_width for x in size],
                 pygame.SRCALPHA).convert_alpha()
