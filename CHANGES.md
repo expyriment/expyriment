@@ -61,6 +61,8 @@ Fixed:
 - script path is added to PYTHONPATH
 - representation lists in output CSV files
 - bug in io.Keyboard.wait
+- bug when drawing textures to screen (OpenGL) leading to 1-pixel inaccuracies
+- bug in Ellipse with uneven line_width
 
 Version 0.9.0 (9 Mar 2017)
 ---------------------------
