@@ -28,7 +28,7 @@ from . import defaults, initialize, end
 from .. import stimuli, io, _internals, design
 import expyriment
 
-from ..misc import constants, statistics, list_fonts, unicode2byte
+from ..misc import constants, statistics, list_fonts, unicode2byte, round
 from ..misc._timer import get_time
 from ..design import randomize
 
