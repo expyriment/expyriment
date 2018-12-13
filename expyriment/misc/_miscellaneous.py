@@ -39,6 +39,41 @@ if FS_ENC is None:
     FS_ENC = 'utf-8'
 
 
+_round = round
+
+def round(number, ndigits=None):
+    """Round half away from zero.
+
+    This method implements the Python 2 way of rounding.
+    For "bankers rounding" (round half to even), plese use the builtin `round`
+    function in Python 3 or Numpy's `around` function in Python 2.
+
+    Parameters
+    ----------
+    number : int or float
+        the number to be rounded
+    ndigits : int
+        the number of digits to round to
+
+    Returns
+    -------
+    rounded_number : float
+        the rounded number
+
+    """
+
+    import math
+
+    if not PYTHON3:
+        return _round(number, ndigits)
+    else:
+        p = 10 ** ndigits
+        if number > 0:
+            return float(math.floor((number * p) + 0.5))/p
+        else:
+            return float(math.ceil((number * p) - 0.5))/p
+
+        
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
@@ -507,38 +542,3 @@ def _sorter_fnc(x):
         return str("")
     else:
         return str(x)
-
-
-_round = round
-
-def round(number, ndigits=None):
-    """Round half away from zero.
-
-    This method implements the Python 2 way of rounding.
-    For "bankers rounding" (round half to even), plese use the builtin `round`
-    function in Python 3 or Numpy's `around` function in Python 2.
-
-    Parameters
-    ----------
-    number : int or float
-        the number to be rounded
-    ndigits : int
-        the number of digits to round to
-
-    Returns
-    -------
-    rounded_number : float
-        the rounded number
-
-    """
-
-    import math
-
-    if not PYTHON3:
-        return _round(number, ndigits)
-    else:
-        p = 10 ** ndigits
-        if number > 0:
-            return float(math.floor((number * p) + 0.5))/p
-        else:
-            return float(math.ceil((number * p) - 0.5))/p
