@@ -33,7 +33,7 @@ except ImportError:
 from . import defaults
 from .. import _internals
 from ._stimulus import Stimulus
-from ..misc import geometry, unicode2byte
+from ..misc import geometry, unicode2byte, round
 from ..misc._timer import get_time
 
 random.seed()
@@ -111,14 +111,9 @@ class _LaminaPanelSurface(object):
     def refresh_position(self):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
-        def python2round(f):
-            if round(f + 1) - round(f) != 1:
-                return f + abs(f) / f * 0.5
-            return round(f)
-        
         screensize = pygame.display.get_surface().get_size()
         bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                       int(python2round(self._winsize[0] / 2)) + \
+                                       int(round(self._winsize[0] / 2)) + \
                                        self._position[0],
                                        screensize[1] // 2 - \
                                        self._winsize[1] // 2 + \
@@ -130,16 +125,16 @@ class _LaminaPanelSurface(object):
                                         self._winsize[1] // 2 + \
                                         self._position[1], 0)
         topleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                    int(python2round(self._winsize[0] / 2)) + \
+                                    int(round(self._winsize[0] / 2)) + \
                                     self._position[0],
                                     screensize[1] // 2 + \
-                                    int(python2round(self._winsize[1] / 2)) + \
+                                    int(round(self._winsize[1] / 2)) + \
                                     self._position[1], 0)
         topright = oglu.gluUnProject(screensize[0] // 2 + \
                                      self._winsize[0] // 2 + \
                                      self._position[0],
                                      screensize[1] // 2 + \
-                                     int(python2round(self._winsize[1] / 2)) + \
+                                     int(round(self._winsize[1] / 2)) + \
                                      self._position[1], 0)
 
 
