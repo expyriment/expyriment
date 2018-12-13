@@ -28,7 +28,8 @@ from . import defaults, initialize, end
 from .. import stimuli, io, _internals, design
 import expyriment
 
-from ..misc import constants, statistics, list_fonts, unicode2byte, round
+import ..misc
+from ..misc import constants, statistics, list_fonts, unicode2byte
 from ..misc._timer import get_time
 from ..design import randomize
 
@@ -194,8 +195,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
-        delayed = round(100 * delayed_presentations/180.0, 2)
+        inaccuracy = int(misc.round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
+        delayed = misc.round(100 * delayed_presentations/180.0, 2)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
                     constants.K_0:0, constants.K_1:1, constants.K_2:2}
@@ -207,15 +208,15 @@ After the test, you will be asked to indicate which (if any) of those two square
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
-        if int(round(refresh_rate))  < 50 or int(round(refresh_rate)) > 120:
+        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 120:
             results1_colour = [255, 0, 0]
-        elif int(round(refresh_rate)) != 60:
+        elif int(misc.round(refresh_rate)) != 60:
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
+                        int(misc.round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
