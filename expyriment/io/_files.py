@@ -34,7 +34,7 @@ from . import defaults
 from .. import _internals
 from ..misc._timer import get_time
 from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
-from ..misc import statistics
+from ..misc import statistics, round
 from ._input_output import Input, Output
 
 
