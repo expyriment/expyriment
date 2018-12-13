@@ -33,7 +33,7 @@ except ImportError:
 from . import defaults
 from .. import _internals, stimuli
 from ..misc import find_font, unicode2byte, constants, \
-                 numpad_digit_code2ascii
+                 numpad_digit_code2ascii, round
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
 
