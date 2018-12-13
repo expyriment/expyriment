@@ -26,6 +26,7 @@ New Features:
 - geometry.lines_intersection_point calculates interscetion point of two lines
 - stimuli.Line is internally based on shape and has the new methods
   get_shape and get_connected_shape
+- new function misc.round, implementing the old Python 2 rounding behaviour
   
 Changed:
 - major rewrite of stimuli.Shape, bug fixes, see improved documentation 
