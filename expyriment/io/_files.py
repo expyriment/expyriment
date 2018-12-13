@@ -32,9 +32,10 @@ from itertools import combinations
 
 from . import defaults
 from .. import _internals
+import ..misc
 from ..misc._timer import get_time
 from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
-from ..misc import statistics, round
+from ..misc import statistics
 from ._input_output import Input, Output
 
 
@@ -774,9 +775,9 @@ class _InterEventIntervallLog():
                 txt = "{0} --> {1}: n={2}".format(a,b, len(iei))
                 if len(iei)>0:
                     txt += ", mean={0}, median={1}, std={2}".format(
-                                round(statistics.mean(iei),2),
-                                round(statistics.median(iei),2),
-                                round(statistics.std(iei),2),
+                                misc.round(statistics.mean(iei),2),
+                                misc.round(statistics.median(iei),2),
+                                misc.round(statistics.std(iei),2),
                                 )
                 rtn.append(txt)
         return rtn
