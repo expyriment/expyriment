@@ -27,7 +27,7 @@ import pygame
 
 from . import defaults
 from .. import _internals
-from ..misc import find_font, unicode2byte, byte2unicode, round
+from ..misc import find_font, unicode2byte, byte2unicode
 from ._visual import Visual
 
 
