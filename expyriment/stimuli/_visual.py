@@ -33,7 +33,8 @@ except ImportError:
 from . import defaults
 from .. import _internals
 from ._stimulus import Stimulus
-from ..misc import geometry, unicode2byte, round
+import ..misc
+from ..misc import geometry, unicode2byte
 from ..misc._timer import get_time
 
 random.seed()
@@ -113,7 +114,7 @@ class _LaminaPanelSurface(object):
 
         screensize = pygame.display.get_surface().get_size()
         bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                       int(round(self._winsize[0] / 2)) + \
+                                       int(misc.round(self._winsize[0] / 2)) + \
                                        self._position[0],
                                        screensize[1] // 2 - \
                                        self._winsize[1] // 2 + \
@@ -125,16 +126,16 @@ class _LaminaPanelSurface(object):
                                         self._winsize[1] // 2 + \
                                         self._position[1], 0)
         topleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                    int(round(self._winsize[0] / 2)) + \
+                                    int(misc.round(self._winsize[0] / 2)) + \
                                     self._position[0],
                                     screensize[1] // 2 + \
-                                    int(round(self._winsize[1] / 2)) + \
+                                    int(misc.round(self._winsize[1] / 2)) + \
                                     self._position[1], 0)
         topright = oglu.gluUnProject(screensize[0] // 2 + \
                                      self._winsize[0] // 2 + \
                                      self._position[0],
                                      screensize[1] // 2 + \
-                                     int(round(self._winsize[1] / 2)) + \
+                                     int(misc.round(self._winsize[1] / 2)) + \
                                      self._position[1], 0)
 
 
@@ -302,7 +303,7 @@ class Visual(Stimulus):
         """
 
         pos = geometry.polar2cartesian(value)
-        self.reposition((int(round(pos[0])), int(round(pos[1]))))
+        self.reposition((int(misc.round(pos[0])), int(misc.round(pos[1]))))
 
     @property
     def absolute_position(self):
@@ -1341,8 +1342,8 @@ class Visual(Stimulus):
             factors[1] = abs(factors[1])
         self._set_surface(pygame.transform.smoothscale(
             self._get_surface(),
-            (int(round(self.surface_size[0] * factors[0])),
-             int(round(self.surface_size[1] * factors[1])))))
+            (int(misc.round(self.surface_size[0] * factors[0])),
+             int(misc.round(self.surface_size[1] * factors[1])))))
         if True in flip:
             self.flip(flip)
         if self._logging:
