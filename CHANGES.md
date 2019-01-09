@@ -2,8 +2,8 @@
 Expyriment Release Notes
 ========================
 
-0.9.1b1 (24.12.2017)
---------------------
+Coming up
+---------
 New Features:
 - Expyriment windows with no frame; set default.window_no_frame=True before
   initialize
@@ -52,6 +52,8 @@ Changed:
 - stimuli.Shape.rect is now a pygame.Rect()
 - misc.geometry.points2vertices requires now a list of misc.XYPoints and
   not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
+- stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
+  initializing a Video stimulus with the "mediadecoder" backend
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox
