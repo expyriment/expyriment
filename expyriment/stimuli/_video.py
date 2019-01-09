@@ -133,13 +133,13 @@ class Video(_visual.Stimulus):
                 unicode2byte(self._filename)))
 
         if self._backend == "mediadecoder":
+            Video.get_ffmpeg_binary()  # in case it still needs to be downloaded
             try:
                 import mediadecoder as _mediadecoder
             except ImportError:
                 print("Warning: Package 'mediadecoder' not installed!\n" +
                       "Video backend will be set to 'pygame'.")
                 self._backend = "pygame"
-
             try:
                 import sounddevice as _sounddevice
             except ImportError:
