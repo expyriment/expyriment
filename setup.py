@@ -318,7 +318,7 @@ def run():
 
 if __name__=="__main__":
 
-    # Check if we are building/installing from built a archive/distribution
+    # Check if we are building/installing from a built archive/distribution
     version_nr, revision_nr, date = get_version_info_from_file("expyriment/__init__.py")
     if not version_nr == '':
         cmdclass={'install': Install, 
