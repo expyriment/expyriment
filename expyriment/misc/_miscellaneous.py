@@ -23,7 +23,7 @@ import colorsys
 
 import pygame
 
-from .._internals import PYTHON3, android, get_settings_folder
+from .._internals import PYTHON3, android, get_settings_folder, get_version
 
 try:
     from locale import getdefaultlocale
@@ -434,11 +434,11 @@ def which(programme):
     return None
 
 
-def download_from_stash(content="all", branch="master"):  # TODO: change dynamically to current tag somehow!
+def download_from_stash(content="all", branch=None):
     """Download content from the Expyriment stash.
 
-    Content will be stored in a Expyriment settings diretory (`.expyriment` or
-    `~expyriment`, located in the current user's home directory).
+    Content will be stored in an Expyriment settings diretory (`.expyriment`
+    or `~expyriment`, located in the current user's home directory).
 
     Parameters
     ----------
@@ -446,7 +446,9 @@ def download_from_stash(content="all", branch="master"):  # TODO: change dynamic
         the content to install ("examples", "extras", "tools", or "all")
         (default="all")
     branch : str, optional
-        the branch to get the content from (default="master")
+        a specific branch to get the content from (if not set, the branch
+        corresponding to the current Expyriment release is used)
+        (default=None)
 
     """
 
@@ -467,10 +469,16 @@ def download_from_stash(content="all", branch="master"):  # TODO: change dynamic
     from zipfile import ZipFile
     from shutil import copyfileobj
 
-    with TemporaryFile() as f:
-        url = "https://github.com/expyriment/expyriment-stash/archive/{0}.zip"  # TODO: Don't hardcore this (maybe argument to function?)
-        url = url.format(branch)
+    if branch is None:
+        branch = get_version().split(" ")[0]
+    url = "https://github.com/expyriment/expyriment-stash/archive/{0}.zip"
+    url = url.format(branch)
+    try:
         u = urlopen(url)
+    except:
+        raise RuntimeError("Download of {0} failed!".format(url)
+
+    with TemporaryFile() as f:
         meta = u.info()
         file_size = int(meta.getheaders("Content-Length")[0])
         file_size_dl = 0
