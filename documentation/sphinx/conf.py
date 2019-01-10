@@ -13,6 +13,10 @@
 
 import sys, os, time
 
+from ...setup import get_version_info_from_file, \
+                     get_version_info_from_release_info, \
+                     get_version_info_from_git
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -57,28 +61,35 @@ copyright = u'{0}, Florian Krause & Oliver Lindemann'.format(
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
+
+# Check if we are building/installing from a built archive/distribution
 filename = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..',
                                         '..', 'expyriment', '__init__.py'))
-release = ""
-with open(filename) as f:
-    for line in f:
-        if line.startswith("__version__"):
-            release = line.split("'")[1]
-if release == "":
-    try:
-        from subprocess import Popen, PIPE
-        proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
-                             stdout=PIPE, stderr=PIPE)
-        initial_revision = proc.stdout.readline()
-        if not 'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in initial_revision:
-            raise Exception
-        release = "{0}"
-        proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
-                            stdout=PIPE, stderr=PIPE)
-        release = release.format(proc.stdout.read().lstrip("v").strip())
-    except:
-        pass
+version_info = get_version_info_from_file(filename)
 
+# If not, we are building/installing from source
+if version_info[0] == '':  
+
+    # Are we building/installing from a source archive/distribution?
+    version_info = get_version_info_from_release_info()
+    if version_info[2].startswith("$Format:"):
+
+        # Are we building/installing from the GitHub repository?
+        try:
+            from subprocess import Popen, PIPE
+            proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
+                         stdout=PIPE, stderr=PIPE)
+            initial_revision = proc.stdout.readline()
+            if not b'e21fa0b4c78d832f40cf1be1d725bebb2d1d8f10' in \
+                                                            initial_revision:
+                raise Exception
+            version_info = get_version_info_from_git()
+        except:
+          raise RuntimeError("Building documentation failed!")
+
+# The release name
+release = version_info[0]
+              
 # The normal X.Y.Z version.
 version_nr = release[:5]
 
