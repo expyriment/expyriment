@@ -343,7 +343,7 @@ if __name__=="__main__":
 
         # Are we building/installing from the GitHub repository?
         else:
-            if True:
+            true:
                 proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                              stdout=PIPE, stderr=PIPE)
                 initial_revision = proc.stdout.readline()
@@ -353,7 +353,7 @@ if __name__=="__main__":
                 version_nr, revision_nr, date = get_version_info_from_git()
                 run()
                 message = "from repository"
-            else:
+            except:
                 raise RuntimeError("Building/Installing Expyriment failed!")
    
     print("")
