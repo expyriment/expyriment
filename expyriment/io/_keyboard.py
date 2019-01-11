@@ -166,14 +166,16 @@ class Keyboard(Input):
             rtn.append(event.key)
         return rtn
 
-
-    def check(self, keys=None, check_for_control_keys=True):
+    def check(self, keys=None, check_for_keyup=False,
+              check_for_control_keys=True):
         """Check if keypress is in event queue.
 
         Parameters
         ----------
         keys : int or list, optional
             a specific key or list of keys to check
+        check_for_keyup : bool, optional
+            if True it checks for key-up (default = False)
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default = True)
 
@@ -191,9 +193,14 @@ class Keyboard(Input):
                 keys = list(keys)
             except:
                 keys = [keys]
+        if check_for_keyup:
+            target_event = pygame.KEYUP
+            pygame.event.clear(pygame.KEYDOWN)
+        else:
+            target_event = pygame.KEYDOWN
+            pygame.event.clear(pygame.KEYUP)
         pygame.event.pump()
-        pygame.event.clear(pygame.KEYUP)
-        for event in pygame.event.get(pygame.KEYDOWN):
+        for event in pygame.event.get(target_event):
             if check_for_control_keys:
                 Keyboard.process_control_keys(event)
             if keys:
