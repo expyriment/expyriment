@@ -32,7 +32,7 @@ from itertools import combinations
 
 from . import defaults
 from .. import _internals
-import ..misc
+from .. import misc
 from ..misc._timer import get_time
 from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
 from ..misc import statistics

@@ -33,7 +33,7 @@ except ImportError:
 from . import defaults
 from .. import _internals
 from ._stimulus import Stimulus
-import ..misc
+from .. import misc
 from ..misc import geometry, unicode2byte
 from ..misc._timer import get_time
 
