@@ -476,7 +476,7 @@ def download_from_stash(content="all", branch=None):
     try:
         u = urlopen(url)
     except:
-        raise RuntimeError("Download of {0} failed!".format(url)
+        raise RuntimeError("Download of {0} failed!".format(url))
 
     with TemporaryFile() as f:
         meta = u.info()

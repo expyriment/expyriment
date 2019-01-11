@@ -19,7 +19,7 @@ from ._miscellaneous import unicode2byte, byte2unicode, numpad_digit_code2ascii
 from ._miscellaneous import get_monitor_resolution, is_idle_running, is_ipython_running, \
                             is_android_running, is_interactive_mode, create_colours, \
                             has_internet_connection, which, download_from_stash,\
-                            py2py3_sort_array
+                            py2py3_sort_array, round
 from ._get_system_info import get_system_info
 from ._secure_hash import get_module_hash_dictionary, get_experiment_secure_hash, module_hashes_as_string
 from . import constants
