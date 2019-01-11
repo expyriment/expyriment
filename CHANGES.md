@@ -27,6 +27,8 @@ New Features:
 - stimuli.Line is internally based on shape and has the new methods
   get_shape and get_connected_shape
 - new function misc.round, implementing the old Python 2 rounding behaviour
+- io.keyboard.check now has an argument 'check_for_keyup' which will check for
+  keyup events instead of keydown events
   
 Changed:
 - major rewrite of stimuli.Shape, bug fixes, see improved documentation 
