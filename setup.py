@@ -343,7 +343,7 @@ if __name__=="__main__":
 
         # Are we building/installing from the GitHub repository?
         else:
-            true:
+            try:
                 proc = Popen(['git', 'rev-list', '--max-parents=0', 'HEAD'],
                              stdout=PIPE, stderr=PIPE)
                 initial_revision = proc.stdout.readline()

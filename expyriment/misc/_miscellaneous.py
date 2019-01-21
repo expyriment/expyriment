@@ -41,7 +41,7 @@ if FS_ENC is None:
 
 _round = round
 
-def round(number, ndigits=None):
+def round(number, ndigits=0):
     """Round half away from zero.
 
     This method implements the Python 2 way of rounding.
@@ -53,7 +53,7 @@ def round(number, ndigits=None):
     number : int or float
         the number to be rounded
     ndigits : int
-        the number of digits to round to
+        the number of digits to round to (default = 0)
 
     Returns
     -------
