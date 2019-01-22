@@ -167,7 +167,7 @@ class Rectangle(Visual):
                 surface = pygame.surface.Surface(scaled_size,
                                              pygame.SRCALPHA).convert_alpha()
                 rounding = self._corner_rounding * 0.5 * \
-                           min(surface.get_size()) / 100
+                           min(surface.get_size()) // 100
                 size = [2 * rounding,
                         2 * rounding]
                 tmp = pygame.surface.Surface(scaled_size)
@@ -206,7 +206,7 @@ class Rectangle(Visual):
             else:
                 surface = pygame.surface.Surface(
                     rectangle_size, pygame.SRCALPHA).convert_alpha()
-                rounding = self._corner_rounding * 0.5 * min(surface.get_size()) / 100
+                rounding = self._corner_rounding * 0.5 * min(surface.get_size()) // 100
                 size = [(2 * rounding) * aa_scaling,
                         (2 * rounding) * aa_scaling]
                 rect1 = pygame.surface.Surface(
@@ -249,22 +249,29 @@ class Rectangle(Visual):
                 surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         else:
+            if self._line_width % 2 == 0:
+                surface_size = [x + self._line_width for x in self._size]
+                hole_size = [x - self._line_width for x in self._size]
+            else:
+                surface_size = [x + self._line_width - 1 for x in self._size]
+                hole_size = [x - (self._line_width + 1) for x in self._size]
             surface = pygame.surface.Surface(
-                [x + self._line_width for x in self._size],
+                surface_size,  #[x + self._line_width for x in self._size],
                 pygame.SRCALPHA).convert_alpha()
             if self._corner_rounding == 0:
                 surface.fill((0, 0, 0))
                 hole = pygame.surface.Surface(
-                    [x - self._line_width for x in self._size],
+                    hole_size,  #[x - self._line_width for x in self._size],
                     pygame.SRCALPHA).convert_alpha()
                 surface.blit(hole, (self._line_width, self._line_width),
                              special_flags=pygame.BLEND_RGBA_MIN)
                 surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
             else:
                 surface = create_rounded_rectangle(
-                    [x + self._line_width for x in self._size])
+                    surface_size)  #[x + self._line_width for x in self._size])
                 hole = create_rounded_rectangle(
-                    [x - self._line_width for x in self._size], inverted=True)
+                    hole_size,  #[x - self._line_width for x in self._size],
+                    inverted=True)
                 surface.blit(hole, (self._line_width, self._line_width),
                              special_flags=pygame.BLEND_RGBA_MIN)
                 surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)

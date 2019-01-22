@@ -152,16 +152,16 @@ class Ellipse(Visual):
             surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         else:
-            if self._line_width % 2 == 0:
-                line_width = self._line_width * aa_scaling
+            line_width = self._line_width * aa_scaling
+            if line_width % 2 == 0:
+                surface_size = [x + line_width for x in size]
             else:
-                line_width = (self._line_width - 1) * aa_scaling
-            surface = pygame.surface.Surface(
-                [x + line_width for x in size],
+                surface_size = [x + line_width - 1 for x in size]
+            surface = pygame.surface.Surface(surface_size,
                 pygame.SRCALPHA).convert_alpha()
             pygame.draw.ellipse(surface, (0, 0, 0), pygame.Rect(
                 (0, 0),
-                [x + line_width for x in size]))
+                surface_size))#[x + line_width for x in size]))
             tmp = pygame.surface.Surface(
                 [x - line_width for x in size])
             hole = pygame.surface.Surface(
