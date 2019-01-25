@@ -483,6 +483,8 @@ class TextInput(Input):
             inkey, string = self._get_key()
             if isinstance(inkey, CallbackQuitEvent):
                 return None
+            elif inkey == pygame.K_ESCAPE:
+                return ''
             elif inkey == pygame.K_BACKSPACE:
                 self._user = self._user[0:-1]
             elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
