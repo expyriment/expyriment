@@ -13,7 +13,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
-# The named colour are the 140 HTML colour names:
+# The named colours are the 140 HTML colour names:
 #    see https://www.w3schools.com/colors/colors_names.asp
 _colours = {
     'aliceblue':                (240, 248, 255),
