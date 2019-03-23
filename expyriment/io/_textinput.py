@@ -212,9 +212,7 @@ class TextInput(Input):
         else:
             self._screen = _internals.active_exp.screen
         if background_stimulus is not None:
-            # FIXME child of child of visual does not work as background stimulus, e.g. BlankScreen
-            if background_stimulus.__class__.__base__ in \
-                     [stimuli._visual.Visual, stimuli.Shape]:
+            if background_stimulus.__class__.__bases__[0] == stimuli._visual.Visual:
                 self._background_stimulus = background_stimulus
             else:
                 raise TypeError("{0} ".format(type(background_stimulus)) +
