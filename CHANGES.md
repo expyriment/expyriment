@@ -67,6 +67,7 @@ Fixed:
 - bug in io.Keyboard.wait
 - bug when drawing textures to screen (OpenGL) leading to 1-pixel inaccuracies
 - bug in Ellipse with uneven line_width
+- io.TextIput background_stimulus now takes all Expyriment stimuli
 
 Version 0.9.0 (9 Mar 2017)
 ---------------------------
