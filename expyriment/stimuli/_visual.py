@@ -890,7 +890,6 @@ class Visual(Stimulus):
             p = (position[0] + screen_size[0] // 2,
                  position[1] + screen_size[1] // 2)
             p = geometry.coordinates2position(position, screen_size)
-            print(sx, sy, p)
             if selfrect.collidepoint(p):
                 return True
             else:
