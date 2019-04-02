@@ -1200,11 +1200,15 @@ class Visual(Stimulus):
             rect.center = (x, y)
             screen.blit(self._get_surface(), rect)
         if self._logging:
-            _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
-                                   .format(self.id), 1,
+            _internals.active_exp._event_file_log("Stimulus,drawn,{0}"\
+                                   .format(self.id), 2,
                                  log_event_tag=log_event_tag)
         if update:
             _internals.active_exp.screen.update()
+        if self._logging:
+            _internals.active_exp._event_file_log("Stimulus,presented,{0}"\
+                                   .format(self.id), 1,
+                                 log_event_tag=log_event_tag)
         if preloading_required:
             self.unload(keep_surface=keep_surface)
 
