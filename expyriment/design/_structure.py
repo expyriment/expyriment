@@ -1329,7 +1329,7 @@ class Block(object):
         return self._trials[rnd]
 
     def add_trial(self, trial, copies=1, random_position=False):
-        """Add trial to the block.
+        """Adds one or multiple copies of the trial to the block.
 
         Parameters
         ----------
