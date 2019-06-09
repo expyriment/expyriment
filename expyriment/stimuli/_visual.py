@@ -44,8 +44,8 @@ class _LaminaPanelSurface(object):
     """A class implementing an OpenGL surface."""
 
     # The following code is based on part of the Lamina module by David Keeney
-    # (http://pitchersduel.python-hosting.com/file/branches/Lamina/lamina.py)
-    # with some modifications to fit it into expyriment (e.g. positioning)
+    # (https://pypi.org/project/Lamina/) with some modifications to fit it
+    # into expyriment (e.g. positioning)
     def __init__(self, surface, quadDims=(-1, 1, 1, 1),
                  position=(0, 0)):
         """Initialize new instance.
@@ -183,8 +183,8 @@ class Visual(Stimulus):
 
 
     # The following code is based on part of the Lamina module by David Keeney
-    # (http://pitchersduel.python-hosting.com/file/branches/Lamina/lamina.py)
-    # with some modifications to fit it into expyriment (e.g. positioning)
+    # (https://pypi.org/project/Lamina/) with some modifications to fit it
+    # into expyriment (e.g. positioning)
     @staticmethod
     def _load_texture(surf):
         """Load surface into texture object.
