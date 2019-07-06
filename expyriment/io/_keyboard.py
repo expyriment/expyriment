@@ -87,7 +87,7 @@ class Keyboard(Input):
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
-                return Keyboard.process_control_keys(event)
+                return Keyboard.process_control_keys(event, quit_confirmed_function)
 
         return False
 
