@@ -183,11 +183,14 @@ class Ellipse(Visual):
         return surface
 
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
-    ellipse.present()
-    exp.clock.wait(1000)
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
+        ellipse.present()
+        if exp is None:
+            exp_.clock.wait(1000)

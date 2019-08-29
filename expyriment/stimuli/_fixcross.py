@@ -95,11 +95,14 @@ class FixCross(Shape):
         return self._line_width
 
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    fixcross = FixCross(size=(100, 100))
-    fixcross.present()
-    exp.clock.wait(1000)
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        fixcross = FixCross(size=(100, 100))
+        fixcross.present()
+        if exp is None:
+            exp_.clock.wait(1000)

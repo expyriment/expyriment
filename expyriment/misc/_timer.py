@@ -112,6 +112,3 @@ if _use_time_module:
         def get_time():
             """Get high-resolution time stamp (float) """
             return time.time()
-
-if __name__ == "__main__":
-    print(get_time())

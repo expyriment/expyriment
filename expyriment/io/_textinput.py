@@ -508,14 +508,16 @@ class TextInput(Input):
         return got
 
 
-if __name__ == '__main__':
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    textinput = TextInput(message="Subject Number:",
-                          message_colour=(160, 70, 250),
-                          user_text_size=30,
-                          user_text_colour=(255, 150, 50),
-                          frame_colour=(70, 70, 70))
-    print(textinput.get())
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        textinput = TextInput(message="Subject Number:",
+                              message_colour=(160, 70, 250),
+                              user_text_size=30,
+                              user_text_colour=(255, 150, 50),
+                              frame_colour=(70, 70, 70))
+        print(textinput.get())

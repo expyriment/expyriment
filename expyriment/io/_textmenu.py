@@ -347,14 +347,15 @@ class TextMenu(Input):
             return self._original_items[pressed]
 
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-
-    menu = TextMenu(heading="Expyriment TextMenu",
-                    menu_items=["Items 1", "Items 1", "Items 3", "Items 4",
-                           "Items 5"],
-                    width=250, select_frame_line_width = 5)
-    print(menu.get())
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        menu = TextMenu(heading="Expyriment TextMenu",
+                        menu_items=["Items 1", "Items 1", "Items 3",
+                                    "Items 4", "Items 5"],
+                        width=250, select_frame_line_width = 5)
+        print(menu.get())

@@ -104,7 +104,7 @@ def main():
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.""",
             epilog="(c) F. Krause & O. Lindemann")
-    
+
     if len(sys.argv[1:])==0:
         parser.print_help()
         parser.exit()
@@ -148,7 +148,7 @@ functions to join the data output.""",
 
     parser.add_argument("-C", action="store_true",
                     help="Create experiment template")
-    
+
     parser.add_argument("-D", action="store_true",
                     help="Download from Expyriment stash")
 

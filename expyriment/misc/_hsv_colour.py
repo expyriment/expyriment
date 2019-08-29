@@ -14,7 +14,9 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+
 from colorsys import rgb_to_hsv, hsv_to_rgb
+
 
 class HSVColour(object):
     """Class to handle HSV colours [hue, saturation, value]
@@ -118,9 +120,3 @@ class HSVColour(object):
     def __str__(self):
 
         return "hsv={1}, rgb={0}".format(repr(self.rgb), repr(self.hsv))
-
-
-if __name__ == "__main__":
-
-    my_colour = HSVColour(hue=20, saturation=200, value = 128)
-    print(my_colour)

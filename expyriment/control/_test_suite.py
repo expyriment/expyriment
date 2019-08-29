@@ -573,7 +573,7 @@ def run_test_suite():
     pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 255))
     pict.scale(0.35)
     pict.plot(background)
-    
+
     v = stimuli.TextLine("Version {0}".format(get_version()), text_size=10,
             text_colour=constants.C_EXPYRIMENT_PURPLE)
     v.move((0, 205))

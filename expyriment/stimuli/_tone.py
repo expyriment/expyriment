@@ -206,16 +206,14 @@ class Tone(Audio):
 
 
     @staticmethod
-    def _test():
-        from .. import control
-        control.set_develop_mode(True)
-        control.defaults.event_logging = 0
-        control.start_audiosystem()
-        exp = control.initialize()
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            control.start_audiosystem()
+            exp_ = control.initialize()
         sine = Tone(duration=1000)
         sine.present()
-        exp.clock.wait(1000)
-
-
-if __name__ == "__main__":
-    Tone._test()
+        if exp is None:
+            exp_.clock.wait(1000)

@@ -50,9 +50,9 @@ def position2coordinate(coordinate, surface_size=None):
     """"OBSOLETE FUNCTION: Please use 'position2coordinates'."""
 
     raise DeprecationWarning("position2coordinate is an obsolete function. Please use position2coordinates.")
-    
+
     position2coordinates(coordinate, surface_size=None)
-    
+
 def position2coordinates(position, surface_size=None):
     """Convert an Expyriment position to coordinates on the
     screen or surface.

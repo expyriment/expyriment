@@ -298,17 +298,15 @@ class TextLine(Visual):
 
 
     @staticmethod
-    def _test():
-        from .. import control
-        control.set_develop_mode(True)
-        control.defaults.event_logging = 0
-        exp = control.initialize()
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
         textline = TextLine("abcde fghijk lmnopqrstuvwxyz 12 348 56789",
                             text_font="Helvetica",
                             text_size=20, text_bold=False)
         textline.present()
-        exp.clock.wait(1000)
-
-
-if __name__ == "__main__":
-    TextLine._test()
+        if exp is None:
+            exp_.clock.wait(1000)
