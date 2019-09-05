@@ -461,7 +461,7 @@ def download_from_stash(content="all", branch=None):
         sys.stdout.flush()
 
     if PYTHON3:
-        from urllib.request import urlopen
+        from urllib.request import urlopen, Request
     else:
         from urllib2 import urlopen
 
@@ -474,30 +474,44 @@ def download_from_stash(content="all", branch=None):
     url = "https://github.com/expyriment/expyriment-stash/archive/{0}.zip"
     url = url.format(branch)
     try:
-        u = urlopen(url)
+        r = Request(url, headers={"Accept-Encoding": "gzip; deflate"})
+        u = urlopen(r)
     except:
         raise RuntimeError("Download of {0} failed!".format(url))
 
     with TemporaryFile() as f:
         meta = u.info()
-        file_size = int(meta.getheaders("Content-Length")[0])
-        file_size_dl = 0
-        block_sz = 8192
-        while True:
-            buffer = u.read(block_sz)
-            if not buffer:
-                break
-            file_size_dl += len(buffer)
-            f.write(buffer)
-            show_progress(file_size_dl, file_size,
+        try:
+            if PYTHON3:
+                file_size = int(u.getheader('Content-Length'))
+            else:
+                file_size = int(u.info().getheaders("Content-Length")[0])
+            file_size_dl = 0
+            block_sz = 8192
+            while True:
+                buffer = u.read(block_sz)
+                if not buffer:
+                    break
+                file_size_dl += len(buffer)
+                f.write(buffer)
+                show_progress(file_size_dl, file_size,
+                              "downloading stash ({0})".format(branch))
+            print("")
+        except:
+            show_progress(0, 100,
                           "downloading stash ({0})".format(branch))
-        print("")
+            chunk = u.read()
+            while chunk:
+                f.write(chunk)
+                chunk = u.read()
+            show_progress(100, 100,
+                          "downloading stash ({0})".format(branch))
 
         if get_settings_folder() is None:
             os.makedirs(os.path.join(os.path.expanduser("~"), ".expyriment"))
         path = get_settings_folder()
 
-        f_zip = ZipFile(f)    
+        f_zip = ZipFile(f)
         check = f_zip.testzip()
         if check is not None:
             raise RuntimeError("Download was corrupted!")
