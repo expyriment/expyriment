@@ -90,11 +90,14 @@ class Canvas(Visual):
         return surface
 
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    cnvs = Canvas((200, 200), colour=(255, 255, 255))
-    cnvs.present()
-    exp.clock.wait(1000)
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        cnvs = Canvas((200, 200), colour=(255, 255, 255))
+        cnvs.present()
+        if exp is None:
+            exp_.clock.wait(1000)

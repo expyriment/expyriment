@@ -731,22 +731,18 @@ class Shape(Visual):
         return surface
 
 
+    # TODO: better demo (something simple such as a triangle or star)
     @staticmethod
-    def _test(ground = 3, gap = 3, spike_length = 50,  spike_width = 2, n_spikes = 50):
-        from .. import control
-        control.set_develop_mode(True)
-        control.defaults.event_logging = 0
-        exp = control.initialize()
-
-
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
         sh = Shape(position=(20, 200), colour=(255, 0, 255))
-        sh.add_vertices([(0, ground), (gap, 0)])
-        sh.add_vertices([(0, spike_length), (spike_width, 0), (0, -spike_length), (gap, 0)] * n_spikes)
-        sh.add_vertex((0, -ground))
+        sh.add_vertices([(0, 3), (3, 0)])
+        sh.add_vertices([(0, 50), (2, 0), (0, -2), (3, 0)] * 50)
+        sh.add_vertex((0, -3))
         sh.present()
-
-        exp.clock.wait(1000)
-
-
-if __name__ == "__main__":
-    Shape._test()
+        if exp is None:
+            exp_.clock.wait(1000)

@@ -144,11 +144,15 @@ class Circle(Ellipse):
         d = self.distance(other)
         return (d <= other._radius - self._radius)
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    dot = Circle(radius=100, anti_aliasing=10)
-    dot.present()
-    exp.clock.wait(1000)
+
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        dot = Circle(radius=100, anti_aliasing=10)
+        dot.present()
+        if exp is None:
+            exp_.clock.wait(1000)

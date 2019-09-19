@@ -495,16 +495,14 @@ class TextScreen(Visual):
         return surface
 
     @staticmethod
-    def _test():
-        from .. import control
-        control.set_develop_mode(True)
-        control.defaults.event_logging = 0
-        exp = control.initialize()
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
         textscreen = TextScreen("Hello World",
                                 "Line one.\nLine two.\nLine three.")
         textscreen.present()
-        exp.clock.wait(1000)
-
-
-if __name__ == "__main__":
-    TextScreen._test()
+        if exp is None:
+            exp_.clock.wait(1000)

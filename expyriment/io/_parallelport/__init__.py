@@ -847,11 +847,3 @@ class ParallelPort(Input, Output):
                     result["testsuite_serial_port"] = address
                     return result
                 _update(inputs_states, outputs_states, c, d, s, p)
-
-
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    ParallelPort._self_test(exp)

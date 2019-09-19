@@ -301,13 +301,16 @@ class Line(Visual):
         return self.get_shape()._create_surface()
 
 
-if __name__ == "__main__":
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    p1 = (-180, 15)
-    p2 = (200, 0)
-    line = Line(p1, p2, 2)
-    line.present()
-    exp.clock.wait(1000)
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        p1 = (-180, 15)
+        p2 = (200, 0)
+        line = Line(p1, p2, 2)
+        line.present()
+        if exp is None:
+            exp_.clock.wait(1000)

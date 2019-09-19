@@ -37,6 +37,7 @@ from ..misc import find_font, unicode2byte, constants, \
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
 
+
 class TextInput(Input):
     """A class implementing a text input box."""
 
@@ -241,7 +242,7 @@ class TextInput(Input):
     @property
     def character_filter(self):
         """Getter for character filter"""
-  
+
         return self._character_filter
 
     @character_filter.setter
@@ -335,7 +336,7 @@ class TextInput(Input):
         """Getter for background_stimulus"""
         return self._background_stimulus
 
-    def _get_key(self):
+    def _get_key(self, process_control_events):
         """Get a key press."""
 
         while True:
@@ -343,8 +344,16 @@ class TextInput(Input):
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback, None
 
-            event = pygame.event.poll()
-            if event.type == pygame.KEYDOWN:
+            if process_control_events:
+                _internals.active_exp.mouse.process_quit_event()
+
+            events = pygame.event.get(pygame.KEYDOWN)
+            for event in events:
+                if process_control_events:
+                    if _internals.active_exp.keyboard.process_control_keys(event):
+                        self._create()
+                        self._update()
+                        return None, None
                 return event.key, event.unicode
 
     def _create(self):
@@ -439,18 +448,21 @@ class TextInput(Input):
             user_canvas._get_surface().blit(user_text._get_surface(), (0, 2))
         user_canvas.present(clear=False)
 
-    def get(self, default_input=""):
+    def get(self, default_input="", process_control_events=True):
         """Get input from user.
 
         Notes
         -----
         This displays and updates the input box automatically. Pressing ENTER
-        returns the user input. Pressing ESC quits, returning an empty string.
+        returns the user input.
 
         Parameters
         ----------
         default_input : str, optional
             default input in the textbox
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
 
         Returns
         -------
@@ -478,14 +490,14 @@ class TextInput(Input):
             filter = self._character_filter
 
         while True:
-            inkey, string = self._get_key()
+            inkey, string = self._get_key(process_control_events)
             if isinstance(inkey, CallbackQuitEvent):
                 return None
             elif inkey == pygame.K_BACKSPACE:
                 self._user = self._user[0:-1]
             elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
                 break
-            elif inkey != pygame.K_LCTRL or inkey != pygame.K_RCTRL:
+            elif inkey not in (pygame.K_LCTRL, pygame.K_RCTRL, pygame.K_TAB):
                 if not self._user_text_surface_size[0] >= self._max_size[0]:
                     if android is not None:
                         if inkey in filter:
@@ -508,14 +520,16 @@ class TextInput(Input):
         return got
 
 
-if __name__ == '__main__':
-    from .. import control
-    control.set_develop_mode(True)
-    control.defaults.event_logging = 0
-    exp = control.initialize()
-    textinput = TextInput(message="Subject Number:",
-                          message_colour=(160, 70, 250),
-                          user_text_size=30,
-                          user_text_colour=(255, 150, 50),
-                          frame_colour=(70, 70, 70))
-    print(textinput.get())
+    @staticmethod
+    def _demo(exp=None):
+        if exp is None:
+            from .. import control
+            control.set_develop_mode(True)
+            control.defaults.event_logging = 0
+            exp_ = control.initialize()
+        textinput = TextInput(message="Subject Number:",
+                              message_colour=(160, 70, 250),
+                              user_text_size=30,
+                              user_text_colour=(255, 150, 50),
+                              frame_colour=(70, 70, 70))
+        print(textinput.get())
