@@ -7,6 +7,8 @@ This module contains a class implementing an RGB colour.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
+from colorsys import rgb_to_hsv, hsv_to_rgb
+
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -159,7 +161,7 @@ _colours = {
 }
 
 
-class Colour:
+class Colour():
     """Implements a class representing an RGB colour.
 
     Parameters
@@ -167,6 +169,12 @@ class Colour:
     colour : list or tuple or str
         the colour to be created as either an rgb value (e.g. (255,0,0) or
         [255,0,0]), a hex value (e.g. "#ff0000"), or a name (e.g. "red")
+
+    Note
+    ----
+    All methods in Expyriment that have a colour parameter require RGB
+    colours. Colour with this class can be also defined via HSV values. To do
+    so, use the hsv property.
 
     """
 
@@ -176,6 +184,7 @@ class Colour:
 
         from collections import OrderedDict
         return OrderedDict(sorted(_colours.items(), key=lambda t: t[0]))
+
 
     def __init__(self, colour):
         if len(colour) == 3 and \
@@ -195,6 +204,23 @@ class Colour:
         return "Colour(red={0}, green={1}, blue={2})".format(self._rgb[0],
                                                              self._rgb[1],
                                                              self._rgb[2])
+    @property
+    def hsv(self):
+        """Getter for HSV values [hue, saturation, value] of the colour.
+        HSV values vary between 0 and 255.
+
+        """
+
+        return multiply255(rgb_to_hsv(divide255(self._rgb)))
+
+    @hsv.setter
+    def hsv(self, hsv_colour):
+        """Setter for HSV value [hue, saturation, value]  of the colour.
+        HSV values vary between 0 and 255.
+
+        """
+
+        self._rgb = multiply255(hsv_to_rgb(divide255(hsv_colour)))
 
     def __getitem__(self, i):
         return self._rgb[i]
@@ -221,3 +247,13 @@ class Colour:
             if rgb == self.rgb:
                 return name
         return None
+
+
+#helper functions
+def multiply255(v):
+    return tuple(map(lambda x:x*255.0, v))
+
+def divide255(v):
+    return tuple(map(lambda x:x/255.0, v))
+
+

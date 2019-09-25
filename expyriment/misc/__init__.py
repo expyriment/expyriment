@@ -25,7 +25,6 @@ from ._secure_hash import get_module_hash_dictionary, get_experiment_secure_hash
 from . import constants
 from ._buffer import  Buffer, ByteBuffer
 from ._clock import Clock
-from ._hsv_colour import HSVColour
 from . import geometry
 from . import data_preprocessing
 from . import statistics
