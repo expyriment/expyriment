@@ -8,7 +8,6 @@ This module contains a class implementing a shape stimulus.
 """
 from __future__ import absolute_import, print_function, division
 from builtins import *
-from past.builtins import cmp
 
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
@@ -18,7 +17,7 @@ __revision__ = ''
 __date__ = ''
 
 import copy
-from math import sqrt, copysign
+from math import sqrt
 import pygame
 
 from . import defaults
@@ -52,10 +51,11 @@ def _get_shape_rect(points):
 class Shape(Visual):
     """A class implementing a shape."""
 
-    def __init__(self, position=None, colour=None, line_width=None,
+    def __init__(self, position=None, colour=None,
+                 line_width=None,
                  anti_aliasing=None,
                  vertex_list=None,
-                 contour_colour = None
+                 debug_contour_colour = None
                  ):
 
         """Create a shape.
@@ -70,24 +70,22 @@ class Shape(Visual):
         rectangle could be for instance described by a right, a down and a left.
         (The fours movement up to the origin is not required; see example below).
 
-        IMPORTANTLY, take into account that you always start drawing with one
-        already plotted pixel (resulting from "putting the pen on the surface"
-        or from the line plotted before). That is, if your start, for instance,
-        by moving the pen for L steps to the right [ add_vertex((L, 0)) ], you
-        end up with the line of the length L+1. As a consequence, the resulting
-        surface size is in this example (L+1, 1) and not (L, 0)!
+        A shapes is conceptually a filled object. The vertices describe
+        the contour of the object. That is, a shape object has no
+        line_width and has thus no contour of different colour. Displaying
+        the contour might be useful for debugging purposes. To do so,
+        set the parameter 'debug_contour_colour'. However, note that is
+        affects the surface size inconsistently.
+
+        If you want to plot a contour-like stimulus (e.g. a frame) the
+        vertices need to describe the contour shape, in other words "the
+        contour of to-be-displayed contour". Thus, a frame should be
+        correct implemented as illustrated in example 2.
 
         As always in Expyriment, the center of the surface of the shape is its
         position. That means, that with every new vertex, the shape size might
         change and the shape position will be realigned.
 
-        Please note that the parameter line_width should be always set to zero
-        (i.e. filled shape), since a shape object should conceptually describe
-        the contour of an object. Thus, a frame should be correctly implemented as
-        illustrated in example 2 (see below)
-
-        Hint: To check your created shapes, it might be helpful to adapt the
-        colour of the contour (default is same colour as shape).
 
         Example
         -------
@@ -95,8 +93,7 @@ class Shape(Visual):
             ## EXAMPLE 1 ###
             # drawing a rectangle with the size (100, 50)
             r = stimuli.Shape()
-            r.add_vertex((99,0))
-            r.add_vertices([(0,-49),(-99,0) ])
+            r.add_vertices([(100,0), (0,-50),(-100,0) ])
             # three vertices are sufficient, because shapes are always closed
             r.present()
 
@@ -104,23 +101,25 @@ class Shape(Visual):
             # drawing a frame
             def vertices_frame(size, frame_thickness):
                 # this function is also available in the geometry module
-                return  [ (size[0]-frame_thickness-1, 0),
-                          (0, -size[1]+1),
-                          (-size[0]+1, 0),
-                          (0, size[1]-1),
-                          (frame_thickness-1, 0),
-                          (0, -(size[1]-frame_thickness-1)),
-                          (size[0]-2*frame_thickness-1, 0),
-                          (0, size[1]-2*frame_thickness-1),
-                          (-(size[0]-2*frame_thickness-2), 0)]
-            fr = stimuli.Shape(vertex_list=vertices_frame(size=(200, 100), frame_thickness=10))
+                return  [ (size[0]-frame_thickness, 0),
+                          (0, -size[1]),
+                          (-size[0], 0),
+                          (0, size[1]),
+                          (frame_thickness, 0),
+                          (0, -(size[1]-frame_thickness)),
+                          (size[0]-2*frame_thickness, 0),
+                          (0, size[1]-2*frame_thickness),
+                          (-(size[0]-2*frame_thickness), 0)]
+            fr = stimuli.Shape(vertex_list=vertices_frame(size=(200, 100),
+                          frame_thickness=10))
             fr.present()
 
             ## EXAMPLE 3 ##
-            # using expyriment.misc.geometry
+            # using 'vertices_regular_polygon' from misc.geometry
             from expyriment.misc import geometry
             sh = stimuli.Shape(vertex_list=geometry.vertices_regular_polygon(5, 60))
             sh.present()
+
         ```
 
         Parameters
@@ -128,17 +127,16 @@ class Shape(Visual):
         position : (int, int), optional
             position of the stimulus
         colour : (int, int, int), optional
-            colour of the shape
-        line_width : int, optional
-            line width in pixels; 0 will result in a filled shape,
-            as does a value < 0 or >= min(size) (optional)
+            colour of the shape or the fill colour
         anti_aliasing : int, optional
             anti aliasing parameter (good anti_aliasing with 10)
         vertex_list : (int, int)
             list of vertices (int, int)
-        contour_colour : (int, int, int), optional
-            colour of the counture of the shape,
-            if None (default), the contour colour is colour of the shape
+        debug_contour_colour : (int, int, int), optional
+            The colour of the contour of the shape.
+            If None (default), contour colour is not displyed.
+            Use this option only for debugging. The resulting surface size
+            might be enlarged by one pixel large depending on the shape.
 
         See Also
         --------
@@ -158,18 +156,12 @@ class Shape(Visual):
             self._colour = colour
         else:
             self._colour = _internals.active_exp.foreground_colour
-        if line_width is not None:
-            self._line_width = line_width
-        else:
-            self._line_width = defaults.shape_line_width
         if anti_aliasing is not None:
             self._anti_aliasing = anti_aliasing
         else:
             self._anti_aliasing = defaults.shape_anti_aliasing
-        if contour_colour is None:
-            self._contour_colour = defaults.shape_contour_colour
-        else:
-            self._contour_colour = contour_colour
+
+        self._debug_contour_colour = debug_contour_colour
 
         self._vertices = []
         self._xy_points = []
@@ -252,22 +244,19 @@ class Shape(Visual):
         self._update_points()
 
     @property
-    def contour_colour(self):
+    def debug_contour_colour(self):
         """Getter for conture_colour."""
 
-        if self._contour_colour is None:
-            return self.colour
-        else:
-            return self._contour_colour
+        return self._debug_contour_colour
 
-    @contour_colour.setter
-    def contour_colour(self, colour):
+    @debug_contour_colour.setter
+    def debug_contour_colour(self, colour):
         """Setter for conture_colour."""
 
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
                 "contour colour change"))
-        self._contour_colour = self.colour
+        self._debug_contour_colour = self.colour
 
     @property
     def width(self):
@@ -280,10 +269,6 @@ class Shape(Visual):
     @property
     def shape_size(self):
         return self._rect.size
-
-    @property
-    def line_width(self):
-        return self._line_width
 
     @property
     def rect(self):
@@ -483,9 +468,8 @@ class Shape(Visual):
 
         """
 
-        jitter = self._line_width // 2
-        return (int(point_xy[0] - self._rect.left + jitter),
-                - 1 * int(point_xy[1] - self._rect.top - jitter))
+        return (int(point_xy[0] - self._rect.left),
+                - 1 * int(point_xy[1] - self._rect.top))
 
     def native_overlapping_with_position(self, position):
         """Return True if the position is inside the shape.
@@ -584,9 +568,6 @@ class Shape(Visual):
         ----------
         factors : int or (int, int)
             x and y factors to scale
-        scale_line_width : bool, optional
-            if True, line_width will be scaled proportionally to the change in
-            surface size (default=False)
 
         """
 
@@ -598,8 +579,6 @@ class Shape(Visual):
 
         self._native_scaling[0] = self._native_scaling[0] * factors[0]
         self._native_scaling[1] = self._native_scaling[1] * factors[1]
-        if scale_line_width:
-            self._line_width = self._line_width * sqrt(factors[0] * factors[1])
         self._update_points()
 
     def native_flip(self, booleans):
@@ -690,12 +669,15 @@ class Shape(Visual):
         if self._anti_aliasing > 0: # Draw enlarged shape
             aa_scaling = (self._anti_aliasing / 5.0) + 1
             old_scaling = copy.copy(self._native_scaling)
-            self.native_scale([aa_scaling, aa_scaling], scale_line_width=True)
+            self.native_scale([aa_scaling, aa_scaling])
 
-        line_width = int(self._line_width)
+        if self.debug_contour_colour is None:
+            line_width = 0 # change if contours
+        else:
+            line_width = 1 # change if contours
 
         # make surface
-        target_surface_size = (1 + self.width  + line_width, 1 + self.height + line_width)  # width + 1 to fix pygame polygon bug
+        target_surface_size = (self.width  + line_width, self.height + line_width)
         surface = pygame.surface.Surface(target_surface_size,
                                         pygame.SRCALPHA).convert_alpha()
 
@@ -704,15 +686,11 @@ class Shape(Visual):
         for p in self.xy_points: # Convert points_in_pygame_coordinates
             poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
 
-        pygame.draw.polygon(surface, self.colour, poly, line_width)
+        pygame.draw.polygon(surface, self.colour, poly, 0)
 
         # plot polygon contours manually
-        poly.append(poly[0])
-        p1 = poly[0]
-        for p2 in poly[1:]:
-            pygame.draw.line(surface, self.contour_colour, p1, p2, 1)
-            p1 = p2
-
+        if self.debug_contour_colour is not None:
+            pygame.draw.polygon(surface, self.debug_contour_colour, poly, 1)
 
         if self._rotation_centre_display_colour is not None:
             rot_centre = self.convert_expyriment_xy_to_surface_xy(
@@ -730,8 +708,6 @@ class Shape(Visual):
 
         return surface
 
-
-    # TODO: better demo (something simple such as a triangle or star)
     @staticmethod
     def _demo(exp=None):
         if exp is None:
@@ -739,10 +715,8 @@ class Shape(Visual):
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
             exp_ = control.initialize()
-        sh = Shape(position=(20, 200), colour=(255, 0, 255))
-        sh.add_vertices([(0, 3), (3, 0)])
-        sh.add_vertices([(0, 50), (2, 0), (0, -2), (3, 0)] * 50)
-        sh.add_vertex((0, -3))
+        sh = Shape(position=(10, 100), colour=(255, 0, 255))
+        sh.add_vertices([(60, 60), (0, -120)])
         sh.present()
         if exp is None:
             exp_.clock.wait(1000)

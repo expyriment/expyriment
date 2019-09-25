@@ -8,7 +8,7 @@ New Features:
 - Expyriment windows with no frame; set default.window_no_frame=True before
   initialize
 - download plugins from stash: misc.download_from_stash()
-- stimuli.Shape: A vertex list can be added when creating a shape object
+- stimuli.Shape: a vertex list can be added when creating a shape object
   using the optional vertex_list parameter
 - visual.get_surface_array & set_surface_arry for direct pixel manipulations
   with numpy
@@ -32,7 +32,10 @@ New Features:
   has been removed.
      
 Changed:
-- major rewrite of stimuli.Shape, bug fixes, see improved documentation 
+- major rewrite of stimuli.Shape with several bug fixes
+  e.g. shapes have no line_width, contour_colour is renamed to 
+  debug_contour_colour, Shape.rect is now a pygame.Rect(),
+  see improved documentation
 - extras
     - extras need to be explicitly imported
     - extras and plugins are not anymore part of expyriment package and can
@@ -52,7 +55,6 @@ Changed:
 - trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
   exception, if the factor is not defined. This can be suppressed by using the
   parameter return_none_if_not_defined
-- stimuli.Shape.rect is now a pygame.Rect()
 - misc.geometry.points2vertices requires now a list of misc.XYPoints and
   not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
 - stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
