@@ -32,4 +32,4 @@ from ._colour import Colour
 
 from os import path as _path
 add_fonts(byte2unicode(_path.abspath(_path.join(_path.dirname(__file__),
-                  "_fonts"))))
+                  "..", "_fonts"))))
