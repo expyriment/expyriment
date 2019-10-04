@@ -107,8 +107,10 @@ if _use_time_module:
     if platform == 'win32':
         def get_time():
             """Get high-resolution time stamp (float) """
-            return time.clock()
+            return time.clock() #TODO: deprecated method with PY3.3+
+                                # change to pref_counter() or time_ns(PY3.6+)
+
     else:
         def get_time():
             """Get high-resolution time stamp (float) """
-            return time.time()
+            return time.time() # TODO: change to pref_counter() or time_ns(PY3.6+)

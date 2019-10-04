@@ -28,12 +28,6 @@ class Clock(object) :
 
     """
 
-    if sys.platform == 'win32':
-        _cpu_time = time.clock
-    else:
-        _cpu_time = time.time
-
-
 
     def __init__(self, sync_clock=None):
         """Create a clock.
@@ -56,7 +50,7 @@ class Clock(object) :
 
     @staticmethod
     def monotonic_time():
-        """Returns the time of the high-resolution monitonoic timer that is
+        """Returns the time of the high-resolution monotonic timer that is
         used by Expyriment internally.
 
         """
@@ -76,9 +70,10 @@ class Clock(object) :
 
     @property
     def cpu_time(self):
-        """Getter for CPU time."""
+        """OBSOLETE property: Please use monotonic_time()."""
+        # TODO: make deprecated with 1.0
 
-        return self._cpu_time()
+        return get_time()
 
     @property
     def stopwatch_time(self):

@@ -321,7 +321,7 @@ if __name__=="__main__":
     # Check if we are building/installing from a built archive/distribution
     version_nr, revision_nr, date = get_version_info_from_file("expyriment/__init__.py")
     if not version_nr == '':
-        cmdclass={'install': Install, 
+        cmdclass={'install': Install,
                   'bdist_wininst': Wininst,
                   'install_data': InstallData,}
         run()
@@ -355,7 +355,7 @@ if __name__=="__main__":
                 message = "from repository"
             except:
                 raise RuntimeError("Building/Installing Expyriment failed!")
-   
+
     print("")
     print("Expyriment Version: [{0}] ({1})".format( version_nr, message))
     try:

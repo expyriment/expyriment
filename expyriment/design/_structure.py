@@ -2056,10 +2056,10 @@ class Trial(object):
 
         """
 
-        start = Clock._cpu_time()
+        start = Clock.monotonic_time()
         for stim in self._stimuli:
             stim.preload()
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((Clock.monotonic_time() - start) * 1000)
 
     def unload_stimuli(self, keep_surface=False):
         """Unload all stimuli in trial.
@@ -2076,10 +2076,10 @@ class Trial(object):
 
         """
 
-        start = Clock._cpu_time()
+        start = Clock.monotonic_time()
         for stim in self._stimuli:
             stim.unload(keep_surface=keep_surface)
-        return int((Clock._cpu_time() - start) * 1000)
+        return int((Clock.monotonic_time() - start) * 1000)
 
 
 def _get_next_permutation(values, levels):
