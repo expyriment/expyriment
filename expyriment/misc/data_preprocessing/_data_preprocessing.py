@@ -1150,7 +1150,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if not issubclass(recoding_syntax (list, tuple)):
+        if not isinstance(recoding_syntax, (list, tuple)):
             self._recode_txt = [recoding_syntax]
         else:
             self._recode_txt = recoding_syntax
@@ -1208,7 +1208,7 @@ The Python package 'Numpy' is not installed."""
 
         """
 
-        if not issubclass(compute_syntax, (list, tuple)):
+        if not isinstance(compute_syntax, (list, tuple)):
             self._computes_txt = [compute_syntax]
         else:
             self._computes_txt = compute_syntax
