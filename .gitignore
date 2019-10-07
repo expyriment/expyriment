@@ -47,6 +47,9 @@ nosetests.xml
 # macOS
 .DS_Store
 
+# VS code
+.vscode
+
 #### Expyriment specific
 test_suite_protocol.xpp
 data/
