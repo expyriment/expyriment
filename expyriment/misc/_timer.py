@@ -102,15 +102,29 @@ else:
 
 if _use_time_module:
     import time
-    warn_message = "Failed to initialize monotonic timer. Python's time module will be use."
-    print("Warning: " + warn_message)
-    if platform == 'win32':
-        def get_time():
-            """Get high-resolution time stamp (float) """
-            return time.clock() #TODO: deprecated method with PY3.3+
-                                # change to pref_counter() or time_ns(PY3.6+)
+    try:
+        from time import perf_counter
+    except:
+        perf_counter = None
+
+    if perf_counter is None:
+        if platform == 'win32':
+            timer_used = "clock"
+            def get_time():
+                """Get high-resolution time stamp (float) """
+                return time.clock()
+
+        else:
+            timer_used = "time"
+            def get_time():
+                """Get high-resolution time stamp (float) """
+                return time.time()
 
     else:
+        timer_used = "perf_counter"
         def get_time():
             """Get high-resolution time stamp (float) """
-            return time.time() # TODO: change to pref_counter() or time_ns(PY3.6+)
+            return time.perf_counter()
+
+    print("Warning: Failed to initialize monotonic timer. Python's "
+                         "time.{}() function will be use.".format(timer_used))

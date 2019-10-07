@@ -58,6 +58,8 @@ Changed:
 - stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
   initializing a Video stimulus with the "mediadecoder" backend
 - misc.HSVColour has been removed and merged with the colour class (misc.colour)
+- Fallback function for the high-precision time uses now time.perf_counter() under
+  Python 3.3+
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox
