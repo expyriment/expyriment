@@ -32,6 +32,8 @@ New Features:
   has been removed.
      
 Changed:
+- Python's time.perf_counter() function will be used as high-precision timer
+  if it exists (that is, for Python 3.3+)
 - major rewrite of stimuli.Shape, bug fixes, see improved documentation 
 - extras
     - extras need to be explicitly imported
