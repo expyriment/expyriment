@@ -88,7 +88,7 @@ During the test, you will see two squares on the screen.
 After the test, you will be asked to indicate which (if any) of those two squares were flickering.
 
 [Press RETURN to continue]"""
-        # TODO test very slow quit
+
         text = stimuli.TextScreen("Visual stimulus presentation test", info)
         #y = []
         #for x in [16, 32, 48, 64]:
@@ -130,10 +130,10 @@ After the test, you will be asked to indicate which (if any) of those two square
         s2 = stimuli.Circle(1, colour=exp.background_colour)
         s1.preload()
         s2.preload()
-        todo_time = list(range(0, 60)) * 3
-        randomize.shuffle_list(todo_time)
+        to_do_time = list(range(0, 60)) * 3
+        randomize.shuffle_list(to_do_time)
         actual_time = []
-        for x in todo_time:
+        for x in to_do_time:
             s1.present(clear=False)
             start = get_time()
             exp.clock.wait(x)
@@ -153,7 +153,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         refresh_rate = 1000 // (statistics.mean(tmp) * 1000)
 
         #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
-        #graph = _make_graph(todo_time, actual_time, [150, 150, 150])
+        #graph = _make_graph(to_do_time, actual_time, [150, 150, 150])
         #graph.position = (0, -100)
         #text.present(update=False)
         #graph.present(clear=False)
@@ -186,8 +186,8 @@ After the test, you will be asked to indicate which (if any) of those two square
         def expected_delay(presentation_time, refresh_rate):
             refresh_time = old_div(1000.0, refresh_rate)
             return refresh_time - (presentation_time % refresh_time)
-        # delay = map(lambda x: x[1]- x[0], zip(todo_time, actual_time))
-        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(todo_time, actual_time)]
+        # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
+        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
@@ -255,7 +255,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         info.present()
         exp.keyboard.wait([constants.K_RETURN])
 
-        return todo_time, actual_time, refresh_rate, inaccuracy, delayed, response
+        return to_do_time, actual_time, refresh_rate, inaccuracy, delayed, response
 
 
 
@@ -596,13 +596,13 @@ def run_test_suite():
 
         if select == 0:
             rtn = _stimulus_timing(exp)
-            results["testsuite_visual_timing_todo"] = rtn[0]
+            results["testsuite_visual_timing_to_do"] = rtn[0]
             results["testsuite_visual_timing_actual"] = rtn[1]
             results["testsuite_visual_sync_refresh_rate"] = str(rtn[2]) + " Hz"
             results["testsuite_visual_timing_inaccuracy"] = str(rtn[3]) + " ms"
             results["testsuite_visual_timing_delayed"] = str(rtn[4]) + " %"
             results["testsuite_visual_flipping_user"] = rtn[5]
-            delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_todo"],
+            delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_to_do"],
                                results["testsuite_visual_timing_actual"])]
             results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
             results["testsuite_visual_opengl"] = exp.screen.open_gl
