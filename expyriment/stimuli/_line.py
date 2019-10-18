@@ -19,7 +19,6 @@ __date__ = ''
 
 import math
 from copy import copy
-import pygame
 
 from . import defaults
 from ._visual import Visual
@@ -174,10 +173,10 @@ class Line(Visual):
         """
 
         dist = XYPoint(self._start_point).distance(XYPoint(self._end_point))
-        shape = Shape(vertex_list=vertices_rectangle(size=(dist, self.line_width)),
+        shape = Shape(vertex_list=vertices_rectangle(size=(dist,
+                                                           self.line_width)),
                       colour=self.colour, position=self.position, line_width=0,
-                      anti_aliasing= self.anti_aliasing,
-                      contour_colour = self.colour)
+                      anti_aliasing= self.anti_aliasing)
         diff = (self._end_point[0] - self._start_point[0],
                 self._end_point[1] - self._start_point[1])
         shape.native_rotate(degree = math.atan2(diff[1], diff[0]) * -180 / math.pi)
@@ -285,8 +284,7 @@ class Line(Visual):
             rtn = Shape(colour=line_shape_a.colour,
                         line_width=line_shape_a.line_width,
                         anti_aliasing=line_shape_a.anti_aliasing,
-                        vertex_list=points2vertices(a_modified),
-                        contour_colour = line_shape_a.contour_colour)
+                        vertex_list=tuple(points2vertices(a_modified)))
 
             rtn.move((b_points[id_b_joinpoint].x - rtn.xy_points_on_screen[id_insert].x,
                      b_points[id_b_joinpoint].y - rtn.xy_points_on_screen[id_insert].y))
