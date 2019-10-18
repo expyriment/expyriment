@@ -24,7 +24,7 @@ try:
     from time import perf_counter
     def get_time():
         """Get high-resolution time stamp (float) """
-        return time.perf_counter()
+        return perf_counter()
 
     get_time()
 
