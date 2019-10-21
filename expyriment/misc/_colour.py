@@ -7,7 +7,7 @@ This module contains a class implementing an RGB colour.
 from __future__ import absolute_import, print_function, division
 from builtins import *
 
-from colorsys import rgb_to_hsv, hsv_to_rgb
+import colorsys
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -158,25 +158,57 @@ _colours = {
     'whitesmoke':               (245, 245, 245),
     'yellow':                   (255, 255, 0),
     'yellowgreen':              (154, 205, 50),
+    'expyriment_gray' :         (200, 200, 200),
+    'expyriment_darkgray':      (150, 150, 150),
+    'expyriment_orange':        (255, 150, 50),
+    'expyriment_purple':        (160, 70, 250)
 }
+
 
 
 class Colour():
     """Implements a class representing an RGB colour.
 
-    Parameters
-    ----------
-    colour : list or tuple or str
-        the colour to be created as either an rgb value (e.g. (255,0,0) or
-        [255,0,0]), a hex value (e.g. "#ff0000"), or a name (e.g. "red")
-
-    Note
-    ----
-    All methods in Expyriment that have a colour parameter require RGB
-    colours. Colour with this class can be also defined via HSV values. To do
-    so, use the hsv property.
-
     """
+
+    def __init__(self, colour):
+        """Create a Colour
+
+        Parameters
+        ----------
+        colour : list or tuple or str
+            the colour to be created as either an rgb value (e.g. (255,0,0) or
+            [255,0,0]), a hex value (e.g. "#ff0000"), or a name (e.g. "red")
+
+        Note
+        ----
+        All methods in Expyriment that have a colour parameter require RGB
+        colours. Colour with this class can be also defined via HSV or HLS values.
+        To do so, use the hsv or hls property.
+
+        """
+
+        try:
+            self.rgb = colour
+        except:
+            try:
+                self.name = colour
+            except:
+                try:
+                    self.hex = colour
+                except:
+                    raise ValueError("'{0}' is not a valid colour!".format(colour) + \
+            "\nUse RGB tuple, hex triplet or a colour name from Colour.list_names()")
+
+    def __str__(self):
+        return "Colour(red={0}, green={1}, blue={2})".format(self._rgb[0],
+                                                             self._rgb[1],
+                                                             self._rgb[2])
+    def __eq__(self, other):
+        return self._rgb == other._rgb
+
+    def __ne__(self, other):
+        return self._rgb != other._rgb
 
     @staticmethod
     def list_names():
@@ -185,42 +217,20 @@ class Colour():
         from collections import OrderedDict
         return OrderedDict(sorted(_colours.items(), key=lambda t: t[0]))
 
+    @staticmethod
+    def is_colour_name(name):
+        """Returns to True is name is a colour name
 
-    def __init__(self, colour):
-        if len(colour) == 3 and \
-                not False in [isinstance(x, int) for x in colour]:
-            self._rgb = tuple(colour)
-        else:
-            try:
-                if colour.lower() in _colours.keys():
-                    self._rgb = _colours[colour.lower()]
-                elif colour.startswith("#") and len(colour) == 7:
-                    c = colour.lstrip("#")
-                    self._rgb = tuple(int(c[i:i+2], 16) for i in (0, 2 ,4))
-            except:
-                raise ValueError("'{0}' is not a valid colour!".format(colour))
-
-    def __str__(self):
-        return "Colour(red={0}, green={1}, blue={2})".format(self._rgb[0],
-                                                             self._rgb[1],
-                                                             self._rgb[2])
-    @property
-    def hsv(self):
-        """Getter for HSV values [hue, saturation, value] of the colour.
-        HSV values vary between 0 and 255.
+         Parameters
+         ----------
+         name : string, colour name
 
         """
 
-        return multiply255(rgb_to_hsv(divide255(self._rgb)))
-
-    @hsv.setter
-    def hsv(self, hsv_colour):
-        """Setter for HSV value [hue, saturation, value]  of the colour.
-        HSV values vary between 0 and 255.
-
-        """
-
-        self._rgb = multiply255(hsv_to_rgb(divide255(hsv_colour)))
+        try:
+            return name.lower() in _colours.keys()
+        except:
+            return False
 
     def __getitem__(self, i):
         return self._rgb[i]
@@ -233,12 +243,31 @@ class Colour():
         """Return colour in rgb format"""
         return self._rgb[0], self._rgb[1], self._rgb[2]
 
+    @rgb.setter
+    def rgb(self, rgb):
+
+        if len(rgb) == 3 and \
+                not False in [isinstance(x, int) for x in rgb]:
+            self._rgb = tuple(rgb)
+        else:
+            raise ValueError("'{0}' is not a valid RGB colour!".format(rgb))
+
+
     @property
     def hex(self):
         """Return colour in hex format"""
         return '#{:02X}{:02X}{:02X}'.format(self._rgb[0],
                                             self._rgb[1],
                                             self._rgb[2])
+    @hex.setter
+    def hex(self, value):
+        """Setter for colour name"""
+
+        if value.startswith("#") and len(value) == 7:
+            c = value.lstrip("#")
+            self._rgb = tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
+        else:
+            raise ValueError("'{0}' is not a valid hex colour!".format(value))
 
     @property
     def name(self):
@@ -247,6 +276,52 @@ class Colour():
             if rgb == self.rgb:
                 return name
         return None
+
+    @name.setter
+    def name(self, colour_name):
+        """Setter for colour name"""
+        if colour_name is None:
+            return
+        try:
+            self._rgb = _colours[colour_name.lower()]
+        except:
+            raise ValueError("'{0}' is not a valid colour name!".format(colour_name))
+
+    @property
+    def hsv(self):
+        """Getter for HSV values [hue, saturation, value] of the colour.
+        HSV values vary between 0 and 255.
+
+        """
+
+        return multiply255(colorsys.rgb_to_hsv(divide255(self._rgb)))
+
+    @hsv.setter
+    def hsv(self, hsv_colour):
+        """Setter for HSV value [hue, saturation, value]  of the colour.
+        HSV values vary between 0 and 255.
+
+        """
+
+        self._rgb = multiply255(colorsys.hsv_to_rgb(divide255(hsv_colour)))
+
+    @property
+    def hls(self):
+        """Getter for HLS values [hue, saturation, lightness] of the colour.
+        HLS values vary between 0 and 255.
+
+        """
+
+        return multiply255(colorsys.rgb_to_hls(divide255(self._rgb)))
+
+    @hls.setter
+    def hls(self, hls_colour):
+        """Setter for HLS value [hue, saturation, value]  of the colour.
+        HLS values vary between 0 and 255.
+
+        """
+
+        self._rgb = multiply255(colorsys.hls_to_rgb(divide255(hls_colour)))
 
 
 #helper functions
