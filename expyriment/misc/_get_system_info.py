@@ -6,7 +6,6 @@ from future import standard_library
 standard_library.install_aliases()
 from builtins import *
 
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
