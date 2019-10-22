@@ -68,7 +68,7 @@ filename = os.path.abspath(os.path.join(os.path.split(__file__)[0], '..',
 version_info = get_version_info_from_file(filename)
 
 # If not, we are building/installing from source
-if version_info[0] == '':  
+if version_info[0] == '':
 
     # Are we building/installing from a source archive/distribution?
     version_info = get_version_info_from_release_info()
@@ -89,7 +89,7 @@ if version_info[0] == '':
 
 # The release name
 release = version_info[0]
-              
+
 # The normal X.Y.Z version.
 version_nr = release[:5]
 
