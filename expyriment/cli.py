@@ -229,7 +229,7 @@ functions to join the data output.""",
             what = input()
             if what == "":
                 what = "all"
-        branches = ["master",""]
+        branches = ["master"]
         if __version__ != "":
             branches.append(__version__)
         branch = ""
