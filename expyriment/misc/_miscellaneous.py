@@ -41,7 +41,7 @@ if FS_ENC is None:
 
 _round = round
 
-def round(number, ndigits=None):
+def round(number, ndigits=0):
     """Round half away from zero.
 
     This method implements the Python 2 way of rounding.
@@ -73,7 +73,7 @@ def round(number, ndigits=None):
         else:
             return float(math.ceil((number * p) - 0.5))/p
 
-        
+
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
