@@ -283,7 +283,7 @@ class TextInput(Input):
 
     @property
     def message_right_to_left(self):
-        """getter for message_right_to_left"""
+        """Getter for message_right_to_left"""
         return self._message_right_to_left
 
     @property
