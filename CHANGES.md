@@ -28,8 +28,7 @@ New Features:
   get_shape and get_connected_shape
 - new function misc.round, implementing the old Python 2 rounding behaviour
 - new class misc.Colour: create colours by names, hex strings or RGB values
-  The class can also handle HSV values. The misc.HSVColour is thus obsolete and 
-  has been removed.
+  The class can also handle HSV, HSL values. The misc.HSVColour is thus obsolete.
      
 Changed:
 - Python's time.perf_counter() function will be used as high-precision timer
@@ -61,7 +60,8 @@ Changed:
   not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
 - stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
   initializing a Video stimulus with the "mediadecoder" backend
-- misc.HSVColour has been removed and merged with the colour class (misc.colour)
+- new Colour class that can handle 
+- misc.HSVColour has been removed and merged with new colour class (misc.colour)
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox

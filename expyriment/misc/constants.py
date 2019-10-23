@@ -16,6 +16,7 @@ import os as _os
 import pygame as _pygame
 
 from ..misc import byte2unicode as _str2unicode
+from ..misc._colour import Colour
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE
@@ -156,16 +157,16 @@ K_ALL_DIGITS = list(range(K_0, K_9 + 1))
 K_ALL_KEYPAD_DIGITS = list(range(K_KP0, K_KP9 + 1))
 
 # Colours
-C_BLACK = (0, 0, 0)
-C_WHITE = (255, 255, 255)
-C_RED = (255, 0, 0)
-C_GREEN = (0, 255, 0)
-C_BLUE = (0, 0, 255)
-C_YELLOW = (255, 255, 0)
-C_GREY = (200, 200, 200)
-C_DARKGREY = (150, 150, 150)
-C_EXPYRIMENT_ORANGE = (255, 150, 50)
-C_EXPYRIMENT_PURPLE = (160, 70, 250)
+C_BLACK = Colour((0, 0, 0))
+C_WHITE = Colour((255, 255, 255))
+C_RED = Colour((255, 0, 0))
+C_GREEN = Colour((0, 255, 0))
+C_BLUE = Colour((0, 0, 255))
+C_YELLOW = Colour((255, 255, 0))
+C_GREY = Colour((200, 200, 200))
+C_DARKGREY = Colour((150, 150, 150))
+C_EXPYRIMENT_ORANGE = Colour((255, 150, 50))
+C_EXPYRIMENT_PURPLE = Colour((160, 70, 250))
 
 # Permutation types
 P_BALANCED_LATIN_SQUARE = 'balanced-latin-square'
