@@ -163,10 +163,10 @@ C_RED = Colour((255, 0, 0))
 C_GREEN = Colour((0, 255, 0))
 C_BLUE = Colour((0, 0, 255))
 C_YELLOW = Colour((255, 255, 0))
-C_GREY = Colour('expyriment_gray')
-C_DARKGREY = Colour('expyriment_darkgray')
-C_EXPYRIMENT_ORANGE = Colour('expyriment_orange')
-C_EXPYRIMENT_PURPLE = Colour('expyriment_purple')
+C_GREY = Colour((200, 200, 200))
+C_DARKGREY = Colour((150, 150, 150))
+C_EXPYRIMENT_ORANGE = Colour((255, 150, 50))
+C_EXPYRIMENT_PURPLE = Colour((160, 70, 250))
 
 # Permutation types
 P_BALANCED_LATIN_SQUARE = 'balanced-latin-square'
