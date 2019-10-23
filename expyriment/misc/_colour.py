@@ -333,11 +333,11 @@ class Colour():
 
         """
 
-        if Colour.is_rgb:
+        if Colour.is_rgb(colour):
             self.rgb = colour
-        elif Colour.is_hex:
+        elif Colour.is_hex(colour):
             self.hex = colour
-        elif Colour.is_name:
+        elif Colour.is_name(colour):
             self.name = colour
         else:
             raise ValueError("'{0}' is not a valid colour!".format(colour) + \
