@@ -195,7 +195,7 @@ class Mouse(Input):
                     # simulate quit key
                     simulated_key = pygame.event.Event(
                         pygame.KEYDOWN,
-                        {'key': _internals.active_exp.eyboard.get_quit_key()})
+                        {'key': _internals.active_exp.keyboard.get_quit_key()})
                     return _internals.active_exp.keyboard.process_control_keys(
                         key_event=simulated_key)
         return False
