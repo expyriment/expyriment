@@ -8,7 +8,7 @@ New Features:
 - Expyriment windows with no frame; set default.window_no_frame=True before
   initialize
 - download plugins from stash: misc.download_from_stash()
-- stimuli.Shape: a vertex list can be added when creating a shape object
+- stimuli.Shape: A vertex list can be added when creating a shape object
   using the optional vertex_list parameter
 - visual.get_surface_array & set_surface_arry for direct pixel manipulations
   with numpy
@@ -27,6 +27,8 @@ New Features:
 - stimuli.Line is internally based on shape and has the new methods
   get_shape and get_connected_shape
 - new function misc.round, implementing the old Python 2 rounding behaviour
+- io.keyboard.check now has an argument 'check_for_keyup' which will check for
+  keyup events instead of keydown events
 - new class misc.Colour: create colours by names, hex strings or RGB values
   The class can also handle HSV, HSL values. The misc.HSVColour is thus obsolete.
      
@@ -60,8 +62,6 @@ Changed:
   not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
 - stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
   initializing a Video stimulus with the "mediadecoder" backend
-- new Colour class that can handle 
-- misc.HSVColour has been removed and merged with new colour class (misc.colour)
 
 Fixed:
 - Adding field bug in TouchscreenButtonBox

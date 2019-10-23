@@ -166,14 +166,16 @@ class Keyboard(Input):
             rtn.append(event.key)
         return rtn
 
-
-    def check(self, keys=None, check_for_control_keys=True):
+    def check(self, keys=None, check_for_keyup=False,
+              check_for_control_keys=True):
         """Check if keypress is in event queue.
 
         Parameters
         ----------
         keys : int or list, optional
             a specific key or list of keys to check
+        check_for_keyup : bool, optional
+            if True checks for key-up (default = False)
         check_for_control_keys : bool, optional
             checks if control key has been pressed (default = True)
 
@@ -181,6 +183,14 @@ class Keyboard(Input):
         -------
         key : int
             pressed key or None. Only the first occurrence is returned!
+
+        Notes
+        -----
+        Keys are defined by keyboard constants (please see misc.constants).
+
+        When checking for key-down (default), all key-up events are first
+        cleared, and when checking for key-up events, all key-down events are
+        first cleared!
 
         """
 
@@ -191,9 +201,19 @@ class Keyboard(Input):
                 keys = list(keys)
             except:
                 keys = [keys]
+
         pygame.event.pump()
-        pygame.event.clear(pygame.KEYUP)
-        for event in pygame.event.get(pygame.KEYDOWN):
+
+        if check_for_keyup:
+            target_event = pygame.KEYUP
+            if check_for_control_keys:
+                Keyboard.process_control_keys()
+                check_for_control_keys = False
+        else:
+            target_event = pygame.KEYDOWN
+            pygame.event.clear(pygame.KEYUP)
+
+        for event in pygame.event.get(target_event):
             if check_for_control_keys:
                 Keyboard.process_control_keys(event)
             if keys:
@@ -224,7 +244,7 @@ class Keyboard(Input):
         duration : int, optional
             maximal time to wait in ms
         wait_for_keyup : bool, optional
-            if True it waits for key-up
+            if True it waits for key-up (default=False)
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
@@ -240,7 +260,7 @@ class Keyboard(Input):
 
         Notes
         -----
-        Keys are defined by keyboard constants (please use see misc.constants)
+        Keys are defined by keyboard constants (please see misc.constants).
 
         See Also
         --------

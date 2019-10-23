@@ -73,7 +73,7 @@ def round(number, ndigits=0):
         else:
             return float(math.ceil((number * p) - 0.5))/p
 
-        
+
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
     """Helper function to compare input_code with a standard codes.
 
