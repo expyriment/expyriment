@@ -276,7 +276,7 @@ class Colour():
 
     @staticmethod
     def is_hsl(value):
-    """Check for valid HSL tuple value.
+        """Check for valid HSL tuple value.
 
         Parameters
         ----------
@@ -292,6 +292,27 @@ class Colour():
 
         return is_hsv(value)
 
+    @staticmethod
+    def is_colour(value):
+        """Check for valid colour value.
+
+        Parameters
+        ----------
+        value : any type
+            the value to be checked
+
+        Returns
+        -------
+        valid : bool
+            whether the value is valid or not
+
+        """
+
+        return Colour.is_rgb(value) or\
+            Colour.is_name(value) or \
+            Colour.is_hex(value) or \
+            Colour.is_hlv(value) or\
+            Colour.is_hls(value)
 
     def __init__(self, colour):
         """Create an RGB colour.
@@ -312,11 +333,11 @@ class Colour():
 
         """
 
-        if self._is_rgb:
+        if Colour.is_rgb:
             self.rgb = colour
-        elif self._is_hex:
+        elif Colour.is_hex:
             self.hex = colour
-        elif self._is_name:
+        elif Colour.is_name:
             self.name = colour
         else:
             raise ValueError("'{0}' is not a valid colour!".format(colour) + \
@@ -348,7 +369,7 @@ class Colour():
     def rgb(self, value):
         """Setter for colour in RGB format [red, green, blue]."""
 
-        if self._is_rgb(value):
+        if Colour.is_rgb(value):
             self._rgb = tuple(value)
         else:
             raise ValueError("'{0}' is not a valid RGB colour!".format(value))
@@ -364,7 +385,7 @@ class Colour():
     def hex(self, value):
         """Setter for colour in Hex format "#RRGGBB"."""
 
-        if self._is_hex(value):
+        if Colour.is_hex(value):
             c = value.lstrip("#")
             self._rgb = tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
         else:
@@ -383,7 +404,7 @@ class Colour():
     def name(self, value):
         """Setter for colour name."""
 
-        if self._is_name(value):
+        if Colour.is_name(value):
             self._rgb = _colours[value.lower()]
         else:
             raise ValueError("'{0}' is not a valid colour name!".format(value))
@@ -401,7 +422,7 @@ class Colour():
     def hsv(self, value):
         """Setter for colour in HSV format [hue, saturation, value]."""
 
-        if self._is_hsx(value):
+        if Colour.is_hsv(value):
             hsv = list(divide([value[0]], 360))
             hsv.extend(divide(value[1:], 100))
             self._rgb = multiply(colorsys.hsv_to_rgb(*hsv), 255)
@@ -412,7 +433,7 @@ class Colour():
     def hsl(self):
         """Getter for colour in HSL format [hue, saturation, lightness]."""
 
-        hsl = colorsys.rgb_to_hsl(*divide(self.rgb, 255.0))
+        hsl = colorsys.rgb_to_hls(*divide(self.rgb, 255.0))
         rtn = list(multiply([hsl[0]], 360))
         rtn.extend(multiply(hsl[1:], 100))
         return rtn
@@ -421,7 +442,7 @@ class Colour():
     def hsl(self, value):
         """Setter for colour in HSL format [hue, saturation, lightness]."""
 
-        if self._is_hsx(value):
+        if Colour.is_hsv(value):
             hsl = list(divide([value[0]], 360))
             hsl.extend(divide(value[1:], 100))
             self._rgb = multiply(colorsys.hls_to_rgb(*hsl), 255)
