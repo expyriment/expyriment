@@ -203,15 +203,24 @@ class Line(Visual):
         Example
         -------
         ```
-            line_1 = stimuli.Line((100,100), (140, 190), line_width=20, colour=constants.C_BLUE)
-            line_2 = stimuli.Line((140, 190), (260, 230), line_width=20, colour=constants.C_BLUE)
+            line_1 = stimuli.Line((100,100), (140, 190), line_width=20,
+                                        colour=misc.constants.C_BLUE)
+            line_2 = stimuli.Line((140, 190), (260, 230), line_width=20,
+                                        colour=misc.constants.C_BLUE)
             line1_mod = line_1.get_connecting_shape(line_2, sharp_corner=False)
 
             #plot
             bl = stimuli.BlankScreen()
-            line1_mod.plot(bl)
             line_2.plot(bl)
+            line_1.plot(bl)
             bl.present()
+            exp.keyboard.wait()
+
+            bl = stimuli.BlankScreen()
+            line_2.plot(bl)
+            line1_mod.plot(bl)
+            bl.present()
+            exp.keyboard.wait()
         ```
 
         """
@@ -220,7 +229,7 @@ class Line(Visual):
         other_shape = other_line.get_shape()
 
         for a_end, b_start in ((True, True), (True, False), (False, False), (False, True)):
-            rtn = Line.__join_end(self_shape, other_shape, a_end=a_end, b_start=b_start, sharp_corner=sharp_corner)
+            rtn = Line.__join_line_shapes(self_shape, other_shape, a_end=a_end, b_start=b_start, sharp_corner=sharp_corner)
             if rtn is not None:
                 return rtn
 
@@ -228,7 +237,7 @@ class Line(Visual):
 
 
     @staticmethod
-    def __join_end(line_shape_a, line_shape_b, a_end=True, b_start=True, sharp_corner=False):
+    def __join_line_shapes(line_shape_a, line_shape_b, a_end=True, b_start=True, sharp_corner=False):
         """helper function: returns the modified line_shape_a"""
 
         a_points = line_shape_a.xy_points_on_screen
@@ -282,7 +291,6 @@ class Line(Visual):
                     a_modified.insert(id_insert, sharp_corner_point)
                     id_insert +=1 # because it is later used to determin the join point
             rtn = Shape(colour=line_shape_a.colour,
-                        line_width=line_shape_a.line_width,
                         anti_aliasing=line_shape_a.anti_aliasing,
                         vertex_list=tuple(points2vertices(a_modified)))
 
