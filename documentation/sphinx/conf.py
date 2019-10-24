@@ -97,8 +97,8 @@ version_nr = release[:5]
 version = version_nr[:3]
 
 rst_epilog = """
-.. |expyriment-wheel| replace:: expyriment-{0}-py2-none-any.whl
-.. |expyriment-wheel-code| replace:: ``expyriment-{0}-py2-none-any.whl``
+.. |expyriment-wheel| replace:: expyriment-{0}-py2.py3-none-any.whl
+.. |expyriment-wheel-code| replace:: ``expyriment-{0}-py2.py3-none-any.whl``
 """.format(release)
 
 
