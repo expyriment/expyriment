@@ -59,7 +59,7 @@ class Mouse(Input):
         the Pygame event queue and you might consequently loose important
         events.
 
-        (b) Note, turning the mouse wheel causes button_down_events. Thus,
+        (b) Turning the mouse wheel causes button_down_events. Thus,
         turning the mouse wheel rather extensively causes an overflow of
         the Pygame event queue. You might consider turn off the default
         tracking of mouse button event by calling
@@ -457,7 +457,7 @@ class Mouse(Input):
 
         See Also
         --------
-        design.experiment.register_wait_callback_function
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 

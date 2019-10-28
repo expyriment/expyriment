@@ -18,9 +18,9 @@ experience.
 
 *Website*: http://www.expyriment.org
 
-*Authors*
+*Authors:*
 
-* `Florian Krause <http://www.fladd.de/research>`_, Brain Innovation, Maastricht University, The Netherlands
+* `Florian Krause <http://www.floriankrause.org>`_, Donders Institute, RadboudUMC Nijmegen, The Netherlands
     
 * `Oliver Lindemann 
   <http://www.cognitive-psychology.eu/lindemann/>`_, Erasmus University Rotterdam, The Netherlands
@@ -115,13 +115,13 @@ Mailing lists
 **Expyriment newsletter**: All users of Expyriment should subscribe to the 
 Expyriment newsletter, since the project is still under development. All 
 modifications and new versions will be announced via this mailing list. (Visit 
-`website <http://groups.google.com/group/expyriment>`_ or send an email 
+http://groups.google.com/group/expyriment or send an email 
 to expyriment+subscribe@googlegroups.com). 
     
 **Expyriment users mailing list**: If you have questions regarding the 
 installation, usage or documentation of Expyriment please don't hesitate to 
-contact the Expyriment users mailing list (visit `website 
-<http://groups.google.com/group/expyriment-users>`_ or send an email to 
+contact the Expyriment users mailing list (visit
+http://groups.google.com/group/expyriment-users or send an email to 
 expyriment-users+subscribe@googlegroups.com) or contact us directly by sending 
 an email to info@expyriment.org.  
 
@@ -144,7 +144,6 @@ Social networks
 * Subscribe to `/r/expyriment <http://www.reddit.com/r/expyriment>`_ on Reddit
 * Follow `@expyriment <http://www.twitter.com/expyriment>`_ on Twitter
 * Like `Expyriment <http://www.facebook.com/expyriment>`_ on Facebook
-* +1 `+ExpyrimentOrg <http://google.com/+ExpyrimentOrg>`_ on Google+
 
 
 Related projects

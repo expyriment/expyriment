@@ -100,7 +100,7 @@ class ParallelPort(Input, Output):
     (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
 
     """
-    
+
     def __init__(self, address, reverse=False):
         """Create a parallel port input and output.
 
@@ -115,15 +115,14 @@ class ParallelPort(Input, Output):
         Notes
         -----
         On Windows, common port addresses are::
-            
+
             LPT1 = 0x0378 or 0x03BC
             LPT2 = 0x0278 or 0x0378
             LPT3 = 0x0278
-            
+
         On Linux, port addresses are in the following format::
-            
+
             /dev/parport0
-            
 
         """
 
@@ -160,7 +159,7 @@ class ParallelPort(Input, Output):
 
     @property
     def parallel(self):
-        """Getter for parallel"""
+        """Getter for parallel."""
         return self._parallel
 
     @property
@@ -196,15 +195,15 @@ class ParallelPort(Input, Output):
         Reads the data pins (2-9) on the parallel port.
 
         The received data is encoded in 8 bits, corresponding to the 8 pins::
+
             Pin:  9   7   6   5   4   3   2   1
                   |   |   |   |   |   |   |   |
             Bit: 128  64  32  16  8   4   2   1
 
-        Returns:
-        --------
+        Returns
+        -------
         data : int
             The value of the data pins.
-
 
         """
 

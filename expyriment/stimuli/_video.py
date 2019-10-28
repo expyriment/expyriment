@@ -37,8 +37,8 @@ class Video(_visual.Stimulus):
 
     This class uses a background thread for playing the video!
 
-    Note
-    ----
+    Notes
+    -----
     When the backend is set to ``"pygame"``, only MPEG-1 videos with MP3 audio
     are supported. You can use ffmpeg (www.ffmpeg.org) to convert from other
     formats:
@@ -93,8 +93,8 @@ class Video(_visual.Stimulus):
         position : (int, int), optional
             position of the stimulus
 
-        Note
-        ----
+        Notes
+        -----
         When the backend is set to ``"pygame"``, only MPEG-1 videos with MP3
         audio are supported. You can use ffmpeg (www.ffmpeg.org) to convert from
         other formats:
@@ -277,8 +277,8 @@ class Video(_visual.Stimulus):
     def preload(self):
         """Preload stimulus to memory.
 
-        Note
-        ----
+        Notes
+        -----
         When the audio from the video should be played as well, the audiosystem
         has to be stopped (by calling ``expyriment.control.stop_audiosystem()``)
         BEFORE the video stimulus is preloaded! After the stimulus has been
@@ -360,8 +360,8 @@ class Video(_visual.Stimulus):
         audio : bool, optional
             whether audio of video (if present) should be played (default=True)
 
-        Note
-        ----
+        Notes
+        -----
         When the audio from the video should be played as well, the audiosystem
         has to be stopped (by calling expyriment.control.stop_audiosystem() )
         BEFORE the video stimulus is preloaded! After the stimulus has been
@@ -425,16 +425,16 @@ class Video(_visual.Stimulus):
     def forward(self, seconds):
         """Advance playback position.
 
-        Note
-        ----
-        When the backend is set to ``"pygame"``, this will not forward
-        immediately, but play a short period of the beginning of the file! This
-        is a Pygame issue which we cannot fix right now.
-
         Parameters
         ----------
         seconds : int
             amount to advance (in seconds)
+
+        Notes
+        -----
+        When the backend is set to ``"pygame"``, this will not forward
+        immediately, but play a short period of the beginning of the file! This
+        is a Pygame issue which we cannot fix right now.
 
         """
 
@@ -469,8 +469,8 @@ class Video(_visual.Stimulus):
         When using OpenGL, the method blocks until this frame is actually being
         written to the screen.
 
-        Note
-        ----
+        Notes
+        -----
         When the audio from the video should be played as well, the audiosystem
         has to be stopped (by calling ``expyriment.control.stop_audiosystem()``)
         BEFORE the video stimulus is preloaded! After the stimulus has been
@@ -540,7 +540,7 @@ class Video(_visual.Stimulus):
 
         See Also
         --------
-        design.experiment.register_wait_callback_function
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 

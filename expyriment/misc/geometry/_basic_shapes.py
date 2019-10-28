@@ -19,10 +19,10 @@ import math as _math
 from ._geometry import XYPoint, points2vertices
 
 def _angular_vertex(angle, length):
-    """Helper function
+    """Helper function.
 
-    calculates the vertex coordinates of a line with a particular
-    length and angle (relative to the horizontal)
+    Calculates the vertex coordinates of a line with a particular
+    length and angle (relative to the horizontal).
 
     """
 
@@ -31,7 +31,7 @@ def _angular_vertex(angle, length):
 
 
 def vertices_rectangle(size):
-    """Returns a list of vertices describing a rectangle
+    """Returns a list of vertices describing a rectangle.
 
     Notes
     -----
@@ -57,7 +57,7 @@ def vertices_rectangle(size):
 
 
 def vertices_cross(size, line_width):
-    """Returns a list of vertices describing a cross
+    """Returns a list of vertices describing a cross.
 
     Notes
     -----
@@ -75,9 +75,9 @@ def vertices_cross(size, line_width):
     -------
     vtx : list of vertices
 
-    See also
+    See Also
     --------
-    stimuli.FixCross()
+    expyriment.stimuli.FixCross
 
     """
 
@@ -142,14 +142,14 @@ def vertices_trapezoid(width_top, width_bottom, height):
 
 
 def vertices_triangle(angle, length1, length2):
-    """Returns a list of vertices describing a triangle
-    A, B, C
-    ```
+    """Returns a list of vertices describing a triangle A, B, C.
+
+    ::
+
             A --- B
                  .
                 .
                C
-    ```
 
     Notes
     -----
@@ -176,14 +176,14 @@ def vertices_triangle(angle, length1, length2):
 
 
 def vertices_parallelogram(angle, length1, length2):
-    """Returns a list of vertices describing a parallelogram
-    A, B, C, D
-    ```
+    """Returns a list of vertices describing a parallelogram A, B, C, D.
+
+    ::
+
             A --- B
            .     .
           .     .
          D --- C
-    ```
 
     Notes
     -----
@@ -211,8 +211,7 @@ def vertices_parallelogram(angle, length1, length2):
 
 
 def vertices_regular_polygon(n_edges, length):
-    """Returns a list of vertices describing a regular
-    polygon
+    """Returns a list of vertices describing a regular polygon.
 
     Notes
     -----

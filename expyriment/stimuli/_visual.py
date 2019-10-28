@@ -1107,7 +1107,7 @@ class Visual(Stimulus):
 
         See Also
         --------
-        clear_surface.
+        clear_surface
 
         Notes
         -----

@@ -1,12 +1,15 @@
-Expyriment command line interface
-=================================
+Command line interface
+======================
 
-The Expyriment command line interface provides a collection of convenient methods helpful for the development and testing of experiments as well as functions to join the data output.
+The Expyriment command line interface provides a convenient way to run
+experiment scripts and apply default settings, as well as access to a
+selection of other common functionality.
 
 Usage
 -----
 
 ::
+    
     expyriment [-h] [-g] [-1] [-2] [-3] [-t] [-w] [-f] [-a] [-i] [-d] [-b]
                [-C] [-D] [-J] [-R] [-S] [-T] [-A] [-B] [--version]
                [SCRIPT]
@@ -33,6 +36,6 @@ Usage
       -R          Join data files and create R data frame (in RDS file)
       -S          Print system information
       -T          Run the Expyriment Test Suite
-      -A          Start the Expyrimnent API Reference Tool
+      -A          Start the Expyriment API Reference Tool
       -B          Open browser with API reference
       --version   Print version

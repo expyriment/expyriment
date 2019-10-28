@@ -78,7 +78,8 @@ def pump_pygame_events():
 
 class Expyriment_object(object):
     """A class implementing a general Expyriment object.
-       Parent of all stimuli and IO objects
+
+       Parent of all stimuli and IO objects.
 
     """
 
@@ -94,10 +95,9 @@ class Expyriment_object(object):
         onoff : bool
             set logging on (True) or off (False)
 
-        Notes
-        -----
-        See also design.experiment.set_log_level fur further information about
-        event logging.
+        See Also
+        --------
+        expyriment.design.Experiment.set_log_level
 
         """
 
@@ -110,25 +110,26 @@ class Expyriment_object(object):
         return self._logging
 
 class CallbackQuitEvent(object):
-    """A CallbackQuitEvent
+    """A CallbackQuitEvent.
 
     If a callback function returns a CallbackQuitEvent object the currently processed
     the wait or event loop function will be quited.
+
     """
 
     def __init__(self, data=None):
-        """Init CallbackQuitEvent
+        """Init CallbackQuitEvent.
 
-        Parameter
-        ---------
-        data: any data type, optional
-            You might use this variable to return data or values from your callback
-            function to your main function, since the quited wait or event loop function
-            will return this CallbackQuitEvent.
+        Parameters
+        ----------
+        data : any data type, optional
+            you might use this variable to return data or values from your
+            callback function to your main function, since the quited wait or
+            event loop function will return this CallbackQuitEvent
 
         See Also
         --------
-        experiment.register_wait_callback_function()
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 

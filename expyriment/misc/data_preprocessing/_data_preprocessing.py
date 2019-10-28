@@ -244,27 +244,27 @@ class Aggregator(object):
     This tool helps, for instance, to aggregate your data for certain combinations
     of independent variables. E.g., data of a numerical magnitude judgement
     experiment. The code below makes a file with mean and median RTs and a
-    second file with the errors and the number of trials::
+    second file with the errors and the number of trials
 
-        from expyriment.misc import data_preprocessing
-        agg = data_preprocessing.Aggregator(data_folder= "./mydata/",
-                                file_name = "MagnitudeJudgements")
-        agg.set_computed_variables(["parity = target_number % 2",
-                       "size = target_number > 65"])
-        agg.set_independent_variables(["hand", "size" , "parity"])
-
-        agg.set_exclusions(["trial_counter < 0",
-                            "error != 0",
-                            "RT < 2*std",
-                            "RT > 2*std" # remove depending std in iv factor
-                                         # combination for each subject
-                            ])
-        agg.set_dependent_variables(["mean(RT)", "median(RT)"])
-        agg.aggregate(output_file="rts.csv")
-
-        agg.set_exclusions(["trial_counter < 0"])
-        agg.set_dependent_variables(["sum(error)", "n_trials"])
-        agg.aggregate(output_file="errors.csv")
+    >>> from expyriment.misc import data_preprocessing
+    >>> agg = data_preprocessing.Aggregator(data_folder= "./mydata/",
+    >>>                                     file_name = "MagnitudeJudgements")
+    >>> agg.set_computed_variables(["parity = target_number % 2",
+    >>>                             "size = target_number > 65"])
+    >>> agg.set_independent_variables(["hand", "size" , "parity"])
+    >>>
+    >>> agg.set_exclusions(["trial_counter < 0",
+    >>>                     "error != 0",
+    >>>                     "RT < 2*std",
+    >>>                     "RT > 2*std" # remove depending std in iv factor
+    >>>                                  # combination for each subject
+    >>>                    ])
+    >>> agg.set_dependent_variables(["mean(RT)", "median(RT)"])
+    >>> agg.aggregate(output_file="rts.csv")
+    >>>
+    >>> agg.set_exclusions(["trial_counter < 0"])
+    >>> agg.set_dependent_variables(["sum(error)", "n_trials"])
+    >>> agg.aggregate(output_file="errors.csv")
 
     """
 
@@ -980,7 +980,7 @@ The Python package 'Numpy' is not installed."""
         Notes
         -----
         The amount of variables and added columns must match. The added data
-        must also match the number of rows. Note, manually added variables
+        must also match the number of rows. Manually added variables
         will be lost if cases will be excluded afterwards via a call of
         the method `set_exclusions`.
 

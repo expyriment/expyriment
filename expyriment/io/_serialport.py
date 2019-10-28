@@ -281,7 +281,8 @@ The Python package 'pySerial' is not installed."""
         -----
         If an input_history is used, all data in the receive buffer, will be
         added to the history before clearing (via read_input()).
-        Note: The copy process might take a few milliseconds. If you need a
+
+        The copy process might take a few milliseconds. If you need a
         very fast clearing of the device buffer, you should skip copying the
         data into the input_history using the skip_input_history parameter.
 
@@ -396,7 +397,7 @@ The Python package 'pySerial' is not installed."""
 
         See Also
         --------
-        design.experiment.register_wait_callback_function
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 

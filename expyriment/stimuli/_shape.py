@@ -87,40 +87,37 @@ class Shape(Visual):
         change and the shape position will be realigned.
 
 
-        Example
-        -------
-        ```
-            ## EXAMPLE 1 ###
-            # drawing a rectangle with the size (100, 50)
-            r = stimuli.Shape()
-            r.add_vertices([(100,0), (0,-50),(-100,0) ])
-            # three vertices are sufficient, because shapes are always closed
-            r.present()
+        Examples
+        --------
+        EXAMPLE 1:
+        >>> # drawing a rectangle with the size (100, 50)
+        >>> r = stimuli.Shape()
+        >>> r.add_vertices([(100,0), (0,-50),(-100,0) ])
+        >>> # three vertices are sufficient, because shapes are always closed
+        >>> r.present()
 
-            ## EXAMPLE 2 ###
-            # drawing a frame
-            def vertices_frame(size, frame_thickness):
-                # this function is also available in the geometry module
-                return  [ (size[0]-frame_thickness, 0),
-                          (0, -size[1]),
-                          (-size[0], 0),
-                          (0, size[1]),
-                          (frame_thickness, 0),
-                          (0, -(size[1]-frame_thickness)),
-                          (size[0]-2*frame_thickness, 0),
-                          (0, size[1]-2*frame_thickness),
-                          (-(size[0]-2*frame_thickness), 0)]
-            fr = stimuli.Shape(vertex_list=vertices_frame(size=(200, 100),
-                          frame_thickness=10))
-            fr.present()
+        EXAMPLE 2:
+        >>> # drawing a frame
+        >>> def vertices_frame(size, frame_thickness):
+        >>>     # this function is also available in the geometry module
+        >>>     return  [ (size[0]-frame_thickness, 0),
+        >>>               (0, -size[1]),
+        >>>               (-size[0], 0),
+        >>>               (0, size[1]),
+        >>>               (frame_thickness, 0),
+        >>>               (0, -(size[1]-frame_thickness)),
+        >>>               (size[0]-2*frame_thickness, 0),
+        >>>               (0, size[1]-2*frame_thickness),
+        >>>               (-(size[0]-2*frame_thickness), 0)]
+        >>> fr = stimuli.Shape(vertex_list=vertices_frame(size=(200, 100),
+        >>>               frame_thickness=10))
+        >>> fr.present()
 
-            ## EXAMPLE 3 ##
-            # using 'vertices_regular_polygon' from misc.geometry
-            from expyriment.misc import geometry
-            sh = stimuli.Shape(vertex_list=geometry.vertices_regular_polygon(5, 60))
-            sh.present()
-
-        ```
+        EXAMPLE 3:
+        >>> # using 'vertices_regular_polygon' from misc.geometry
+        >>> from expyriment.misc import geometry
+        >>> sh = stimuli.Shape(vertex_list=geometry.vertices_regular_polygon(5, 60))
+        >>> sh.present()
 
         Parameters
         ----------
@@ -138,11 +135,11 @@ class Shape(Visual):
             Use this option only for debugging. The resulting surface size
             might be enlarged by one pixel large depending on the shape.
 
-        See Also
-        --------
+        Notes
+        -----
         You can also use the convenience function `vertices_triangle`,
         `vertices_rectangle`, `vertices_regular_polygon`, `vertices_frame`
-        defined in `expyriment.misc.geometry`  to plot predefined geometrical
+        defined in `expyriment.misc.geometry` to plot predefined geometrical
         shapes (see example 3).
 
         """
@@ -275,7 +272,7 @@ class Shape(Visual):
         """Getter for bouncing rectangular
         rect = pygame.Rect(left, top, width, height)
 
-        Note
+        Notes
         -----
         Fom version 0.9.1 on, this is a pygame.Rect
 

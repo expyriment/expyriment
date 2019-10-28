@@ -92,7 +92,7 @@ class TriggerInput(Input):
 
         See Also
         --------
-        design.experiment.register_wait_callback_function
+        expyriment.design.Experiment.register_wait_callback_function
 
        """
 

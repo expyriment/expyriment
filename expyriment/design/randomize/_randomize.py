@@ -29,7 +29,7 @@ def rand_int_sequence(first_elem, last_elem):
     last_elem : int
         last element of the range
 
-    Results
+    Returns
     -------
     rnd_seq : list
         randomised sequence of integers in given range
@@ -51,7 +51,7 @@ def rand_int(a, b):
     b : int
         last element of range
 
-    Results
+    Returns
     -------
     rnd : int
 
@@ -63,11 +63,11 @@ def rand_int(a, b):
 def rand_element(list_):
     """Return a random element from a list
 
-    Parameter
-    ---------
+    Parameters
+    ----------
     list_ : list
 
-    Results
+    Returns
     -------
     elem : a random element from the list
 
@@ -163,8 +163,8 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
         returns if randomization was successful and fulfilled the specified
         constrains (see max_repetitions)
 
-    Note
-    ----
+    Notes
+    -----
     When shuffling lists of trials or blocks, IDs and added stimuli will be
     ignored to determine repetitions, because trial or block comparisons are
     based on the `compare`method (see documentation of `Trial` or `Block`).

@@ -546,13 +546,15 @@ def download_from_stash(content="all", branch=None):
                           "installing content ({0})".format(content))
     print("")
 
-    
+
 def py2py3_sort_array(array):
     """Sorts an array with different types using the string representation
     under Python2 and Python3. Sorts in place!
 
-    Returns:
+    Returns
+    -------
     array: the sorted array
+
     """
 
     array.sort(key=_sorter_fnc)

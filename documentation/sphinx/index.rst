@@ -6,6 +6,7 @@
 Expyriment |release| documentation
 ==================================
 .. image:: expyriment_logo.png
+
 *A Python library for cognitive and neuroscientific experiments*. :doc:`Read more
 ...<Overview>`
 

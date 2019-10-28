@@ -43,10 +43,10 @@ class FixCross(Shape):
             anti aliasing parameter (good anti_aliasing with 10)
 
 
-        NOTE
-        ----
-        The parameter cross_size is now OBSOLETE.
-        Please use 'size' and specify x and y dimensions.
+        Notes
+        -----
+        The parameter cross_size is now OBSOLETE. Please use 'size' and
+        specify x and y dimensions.
 
         """
 

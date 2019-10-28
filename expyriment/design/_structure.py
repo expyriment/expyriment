@@ -550,7 +550,7 @@ class Experiment(object):
 
         See Also
         --------
-        Block.add_trials_full_factorial for an example
+        expyriment.design.Block.add_trials_full_factorial
 
         """
 
@@ -658,7 +658,7 @@ class Experiment(object):
 
         See Also
         --------
-        randomize.shuffle_list
+        expyriment.design.randomize.shuffle_list
 
         """
 
@@ -1008,14 +1008,14 @@ type".format(permutation_type))
         will not do anything. This function will be automatically called after
         an experiment has been started.
 
-        Notes
-        -----
-        See also save_design().
-
         Parameters
         ----------
         additional_comment : str, optional
             additional comment that will be logged
+
+        See Also
+        --------
+        save_design
 
         """
 
@@ -1070,7 +1070,7 @@ type".format(permutation_type))
 
         See Also
         --------
-        control.CallbackQuitEvent
+        expyriment.control.CallbackQuitEvent
 
         """
 
@@ -1295,17 +1295,17 @@ class Block(object):
         """Compares this block with another block and returns `True` if all
         factors associated with both blocks are identical.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         block : design.Block
 
         Returns
         -------
         identical: boolean
 
-        See also
+        See Also
         --------
-        Trials.compare()
+        expyriment.design.Trial.compare
 
         """
 
@@ -1565,22 +1565,21 @@ class Block(object):
          indicate the factor names. Each value of the dictionary has to be
          a list of the factor levels.
 
-         Example
-         -------
+         Parameters
+         ----------
+         design_dict : dictionary
+             keys: factor names, values: lists of factor levels
+         copies : int, optional
+             number of copies to add (default = 1)
 
-            bl = design.Block()
-            design = {
-                "target": ["left", "center", "right"],
-                "cue": [-300, 300],
-                "letter": ["H", "F"]}
-            bl.add_trials_full_factorial(design, copies=10)
-
-        Parameters
-        ----------
-        design_dict : dictionary
-            keys: factor names, values: lists of factor levels
-        copies : int, optional
-            number of copies to add (default = 1)
+         Examples
+         --------
+         >>> bl = design.Block()
+         >>> design = {
+         >>>    "target": ["left", "center", "right"],
+         >>>    "cue": [-300, 300],
+         >>>    "letter": ["H", "F"]}
+         >>> bl.add_trials_full_factorial(design, copies=10)
 
         """
 
@@ -1890,8 +1889,8 @@ class Trial(object):
         factors associated with both trials are identical. Added stimuli will
         be ignored for the comparison.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         trail : design.Trial
 
         Returns
@@ -1996,7 +1995,7 @@ class Trial(object):
 
         See Also
         ----------
-        randomize.shuffle_list
+        expyriment.design.randomize.shuffle_list
 
         """
 

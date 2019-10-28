@@ -28,14 +28,12 @@ from ._stimulus import Stimulus
 class Audio(Stimulus):
     """A class implementing a general auditory stimulus.
 
-    Notes
-    -----
-    See also
-
-        - expyriment.control.start_audiosystem
-        - expyriment.control.stop_audiosystem
-        - expyriment.control.is_busy_audiosystem
-        - expyriment.control.wait_end_audiosystem
+    See Also
+    --------
+    expyriment.control.start_audiosystem
+    expyriment.control.stop_audiosystem
+    expyriment.control.get_audiosystem_is_playing
+    expyriment.control.wait_end_audiosystem
 
     """
 
@@ -63,13 +61,13 @@ class Audio(Stimulus):
 
     @property
     def is_preloaded(self):
-        """Getter for is_preloaded"""
+        """Getter for is_preloaded."""
 
         return self._is_preloaded
 
     @property
     def filename(self):
-        """Getter for filename"""
+        """Getter for filename."""
 
         return self._filename
 
@@ -88,7 +86,7 @@ class Audio(Stimulus):
 
         Returns
         -------
-        copy: stimulus.Audio
+        copy: expyriment.stimuli.Audio
             Returned copy will NOT be is_preloaded!
 
         """

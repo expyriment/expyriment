@@ -128,7 +128,7 @@ class Build(build_py):
                 # Create temp file
                 fh, abs_path = mkstemp()
                 new_file = open(abs_path, 'wb')
-                old_file = open(f, 'rUb')
+                old_file = open(f, 'rb')  # was 'rUb'
                 for line in old_file:
                     if line[0:11] == '__version__':
                         new_file.write("__version__ = '" + version_nr + "'" +
@@ -235,7 +235,7 @@ class InstallData(install_data):
         for file_ in glob("documentation/sphinx/expyriment.*"):
             remove_file(file_)
         remove_file("documentation/sphinx/Changelog.rst")
-        remove_file("documentation/sphinx/CommandLineInterface.rst")
+        #remove_file("documentation/sphinx/CommandLineInterface.rst")
         remove_file("documentation/sphinx/sitemap.yml")
 
 
@@ -251,7 +251,8 @@ def get_version_info_from_git():
 
     proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
-    version_nr = "{0}".format(proc.stdout.read().lstrip(b"v").strip())
+    version_nr = "{0}".format(
+        proc.stdout.read().lstrip(b"v").strip().decode("utf-8"))
     proc = Popen(['git', 'log', '--format=%H', '-1'], \
                         stdout=PIPE, stderr=PIPE)
     revision_nr = proc.stdout.read().strip()[:7]
@@ -263,7 +264,8 @@ def get_version_info_from_git():
 def get_version_info_from_release_info():
     """Get version number, revision number and date from .release_info."""
 
-    with open(".release_info") as f:
+    setup_dir = os.path.split(os.path.abspath(__file__))[0]
+    with open(os.path.join(setup_dir, ".release_info")) as f:
         lines = []
         for line in f:
             lines.append(line)
@@ -276,7 +278,7 @@ def get_version_info_from_release_info():
     date = lines[2].strip()
     # GitHub source archive (snapshot, no tag)
     if version_nr == "":
-        with open("CHANGES.md") as f:
+        with open(os.path.join(setup_dir, "CHANGES.md")) as f:
             for line in f:
                 if line.lower().startswith("version"):
                     version_nr = "{0}-0-g{1}".format(line.split(" ")[1],
@@ -357,7 +359,7 @@ if __name__=="__main__":
                 raise RuntimeError("Building/Installing Expyriment failed!")
 
     print("")
-    print("Expyriment Version: [{0}] ({1})".format( version_nr, message))
+    print("Expyriment Version: [{0}] ({1})".format(version_nr, message))
     try:
         print("Warning:", warning)
     except:

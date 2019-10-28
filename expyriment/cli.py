@@ -22,35 +22,6 @@ from . import control, io, show_documentation
 from .misc import _secure_hash, get_system_info, download_from_stash
 
 
-cli_documentation = """
-expyriment [OPTIONS] [EXPYRIMENT SCRIPT]
-
-The Expyriment command line interface provides a collection of convenient
-methods helpful for the development and testing of experiments as well as
-functions to join the data output.
-
-    OPTIONS:
-    -g | -0         No OpenGL (no vsync / no blocking)
-    -1              OpenGL (vsync / no blocking)
-    -2              OpenGL (vsync / blocking)
-    -3              OpenGL (vsync / alternative blocking)
-    -t              No time stamps for output files
-    -w              Window mode
-    -f              Fast mode (no initialize delay and fast quitting)
-    -a              Auto create subject ID
-    -i              Intensive logging (log level 2)
-    -d              Develop mode (equivalent to -wfat)
-    -b              Alternative blocking mode (blocking mode 2)
-
-    -C              Create experiment template
-    -J              Join data files to one single csv file
-    -S              Print system information
-    -T              Run the Expyriment Test Suite
-    -A              Start the Expyrimnent API Reference Tool
-    -B              Open browser with API reference
-    -h              Show this help
-"""
-
 def create_template():
     template_file = '''# -*- coding: utf-8 -*-
 
@@ -100,9 +71,9 @@ def join_data():
 
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="""The Expyriment command line interface provides a collection of convenient
-methods helpful for the development and testing of experiments as well as
-functions to join the data output.""",
+    parser = argparse.ArgumentParser(description="""The Expyriment command line interface provides a convenient way to run
+experiment scripts and apply default settings, as well as access to a
+selection of other common functionality.""",
             epilog="(c) F. Krause & O. Lindemann")
 
     if len(sys.argv[1:])==0:
@@ -162,7 +133,7 @@ functions to join the data output.""",
                     help="Run the Expyriment Test Suite")
 
     parser.add_argument("-A", action="store_true",
-                    help="Start the Expyrimnent API Reference Tool")
+                    help="Start the Expyriment API Reference Tool")
 
     parser.add_argument("-B", action="store_true",
                     help="Open browser with API reference")

@@ -1,5 +1,5 @@
-Expyriment test suite
-=====================
+Test suite
+==========
 
 The Expyriment test suite is a guided tool for testing your computer's 
 abilities and performance. This includes timing accuracy of visual stimulus

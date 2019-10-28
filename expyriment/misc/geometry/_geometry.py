@@ -258,8 +258,8 @@ def cartesian2polar(xy, radians=False):
         return (radial, _math.degrees(ang))
 
 def polar2cartesian(polar, radians=False):
-    """Convert a polar coordinate (radial, angle[degrees])
-     to a polar coordinate (x, y)
+    """Convert a polar coordinate (radial, angle[degrees]) to a polar
+    coordinate (x, y)
 
 
     Parameters

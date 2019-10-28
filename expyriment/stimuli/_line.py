@@ -188,8 +188,8 @@ class Line(Visual):
         another line, if the two lines do indeed touch each other. Otherwise,
         a runtime error is raised.
 
-        Parameter
-        ---------
+        Parameters
+        ----------
         other_line : stimuli.Line
             the other line to join with
         sharp_corner : boolean (optional)
@@ -200,28 +200,26 @@ class Line(Visual):
         shape : stimuli.Shape
             Shape representation of the modified line
 
-        Example
-        -------
-        ```
-            line_1 = stimuli.Line((100,100), (140, 190), line_width=20,
-                                        colour=misc.constants.C_BLUE)
-            line_2 = stimuli.Line((140, 190), (260, 230), line_width=20,
-                                        colour=misc.constants.C_BLUE)
-            line1_mod = line_1.get_connecting_shape(line_2, sharp_corner=False)
+        Examples
+        --------
+        >>> line_1 = stimuli.Line((100,100), (140, 190), line_width=20,
+        >>>                       colour=misc.constants.C_BLUE)
+        >>> line_2 = stimuli.Line((140, 190), (260, 230), line_width=20,
+        >>>                       colour=misc.constants.C_BLUE)
+        >>> line1_mod = line_1.get_connecting_shape(line_2, sharp_corner=False)
 
-            #plot
-            bl = stimuli.BlankScreen()
-            line_2.plot(bl)
-            line_1.plot(bl)
-            bl.present()
-            exp.keyboard.wait()
+        >>> #plot
+        >>> bl = stimuli.BlankScreen()
+        >>> line_2.plot(bl)
+        >>> line_1.plot(bl)
+        >>> bl.present()
+        >>> exp.keyboard.wait()
 
-            bl = stimuli.BlankScreen()
-            line_2.plot(bl)
-            line1_mod.plot(bl)
-            bl.present()
-            exp.keyboard.wait()
-        ```
+        >>> bl = stimuli.BlankScreen()
+        >>> line_2.plot(bl)
+        >>> line1_mod.plot(bl)
+        >>> bl.present()
+        >>> exp.keyboard.wait()
 
         """
 

@@ -323,13 +323,12 @@ class Colour():
             the colour to be created as either an RGB tuple (e.g.[255, 0, 0]),
             a Hex triplet (e.g. "#FF0000") or a colour name (e.g. "red").
 
-        Note
-        ----
+        Notes
+        -----
         All methods in Expyriment that have a colour parameter require RGB
-        colours.
-        This class also allows RGB colours to be defined via HSV/HSL values
-        (hue [0-360], saturation [0-100], value/lightness [0-100]).
-        To do so, use the hsv or hls property.
+        colours. This class also allows RGB colours to be defined via HSV/HSL
+        values (hue [0-360], saturation [0-100], value/lightness [0-100]).To
+        do so, use the hsv or hls property.
 
         """
 

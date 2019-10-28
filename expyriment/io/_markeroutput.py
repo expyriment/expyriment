@@ -30,13 +30,6 @@ class MarkerOutput(Output):
         If a default duration is specified, a 0 is sent automatically after
         the specified duration when send() is called without a duration.
 
-        Notes
-        -----
-        EEG/MEG systems:
-        If the system is receiving the markers on a parallel port, the
-        duration between sending a code an the subsequent 0 should be at least
-        1000/samplerate!
-
         Parameters
         ----------
         interface : ``expyriment.io.SerialPort`` or ``expyriment.io.ParallelPort``
@@ -45,6 +38,12 @@ class MarkerOutput(Output):
             default code
         default_duration : int, optional
             default duration (in ms) for sending 0 after a code
+
+        Notes
+        -----
+        EEG/MEG systems: if the system is receiving the markers on a parallel
+        port, the duration between sending a code an the subsequent 0 should
+        be at least 1000/samplerate!
 
         """
 
@@ -92,17 +91,18 @@ class MarkerOutput(Output):
         If a duration is given, a 0 will be sent automatically after each
         code.
 
-        Note for EEG/MEG systems:
-        If the system is receiving the markers on a parallel port, the
-        duration between sending a code an the subsequent 0 should be at least
-        1000/samplerate!
-
         Parameters
         ----------
         code : int, optional
             a specific code
         duration : int, optional
             duration (in ms) for sending a 0 after a code
+
+        Notes
+        -----
+        For EEG/MEG systems: if the system is receiving the markers on a
+        parallel port, the duration between sending a code an the subsequent 0
+        should be at least 1000/samplerate!
 
         """
 

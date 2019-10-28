@@ -169,6 +169,7 @@ Packages
 Functions
 ---------
 .. autofunction:: expyriment.get_version
+.. autofunction:: expyriment.import_all_extras
 .. autofunction:: expyriment.show_documentation
 
 """)

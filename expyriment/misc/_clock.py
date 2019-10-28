@@ -118,7 +118,7 @@ class Clock(object) :
 
         See Also
         --------
-        design.experiment.register_wait_callback_function
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 
@@ -181,7 +181,8 @@ class Clock(object) :
 
         See Also
         --------
-        Clock.wait, design.experiment.register_wait_callback_function
+        wait
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 
@@ -208,7 +209,8 @@ class Clock(object) :
 
         See Also
         --------
-        Clock.wait, design.experiment.register_wait_callback_function
+        wait
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 
