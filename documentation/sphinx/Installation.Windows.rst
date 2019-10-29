@@ -13,7 +13,7 @@ Python 2
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 2.7.13`_ (during installation, also select "Add python.exe to Path"!)
+1. Install `Python 2.7.17`_ (during installation, also select "Add python.exe to Path"!)
 
 2. In a command prompt, run::
 
@@ -32,7 +32,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.13`_ to ``Expyriment_Installation``
+2. Download `Python 2.7.17`_ to ``Expyriment_Installation``
 
 3. In a command prompt, run::
 
@@ -52,7 +52,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation\python-2.7.13.msi``
+2. Install ``Expyriment_Installation\python-2.7.17.msi``
 
 3. In a command prompt, run::
 
@@ -74,7 +74,7 @@ Python 3
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 3.6.0`_ (during installation, also select "Add python.exe to Path"!)
+1. Install `Python 3.8.0`_ (during installation, also select "Add python.exe to Path"!)
 
 2. In a command prompt, run::
 
@@ -93,7 +93,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.6.0`_ to ``Expyriment_Installation``
+2. Download `Python 3.8.0`_ to ``Expyriment_Installation``
 
 3. In a command prompt, run::
 
@@ -113,7 +113,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation\python-3.6.0.exe``
+2. Install ``Expyriment_Installation\python-3.8.0.exe``
 
 3. In a command prompt, run::
 
@@ -149,8 +149,8 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
-.. _`Python 2.7.13`: https://www.python.org/ftp/python/2.7.13/python-2.7.13.msi
-.. _`Python 3.6.0`: https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe
+.. _`Python 2.7.17`: https://www.python.org/ftp/python/2.7.17/python-2.7.17.msi
+.. _`Python 3.8.0`: https://www.python.org/ftp/python/3.8.0/python-3.8.0.exe
 .. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
 .. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
 .. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
