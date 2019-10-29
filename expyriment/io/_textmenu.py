@@ -16,8 +16,10 @@ __date__ = ''
 
 from . import defaults
 from ._keyboard import Keyboard
+from ._mouse import Mouse
 from ._input_output import Input
 from .. import stimuli, misc
+from .. import _internals
 
 
 class TextMenu(Input):
@@ -75,9 +77,9 @@ class TextMenu(Input):
             The background stimulus is a second stimulus that will be presented
             together with the TextMenu. For both stimuli overlap TextMenu
             will appear on top of the background_stimulus
-        mouse : expyriment.io.Mouse object, optional
-            If a mouse object is given, the menu can also be controlled by the
-            mouse
+        mouse : expyriment.io.Mouse object or True, optional
+            If a True or mouse object is given, the menu will be controlled
+            by the mouse
 
         """
 
@@ -129,16 +131,18 @@ class TextMenu(Input):
         stimuli._stimulus.Stimulus._id_counter -= 1
         if background_stimulus is not None:
             if background_stimulus.__class__.__base__ in \
-                     [stimuli._visual.Visual, stimuli.Shape]:
+                    [stimuli._visual.Visual, stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
                 raise TypeError("{0} ".format(type(background_stimulus)) +
-                                     "is not a valid background stimulus. " +
-                                     "Use an expyriment visual stimulus.")
+                                "is not a valid background stimulus. " +
+                                "Use an expyriment visual stimulus.")
         else:
             self._background_stimulus = None
 
-        if mouse is not None:
+        if mouse is True:
+            self._mouse = _internals.active_exp.mouse
+        elif isinstance(mouse, Mouse):
             self._mouse = mouse
         else:
             self._mouse = None
