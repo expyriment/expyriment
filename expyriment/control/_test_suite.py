@@ -98,11 +98,13 @@ After the test, you will be asked to indicate which (if any) of those two square
         #graph2 = _make_graph(range(60), y, [255, 0, 0])
         #graph1.position = (-200, -100)
         #graph2.position = (200, -100)
-        text.present()
+        while True:
+            text.present()
         #graph1.present(clear=False, update=False)
         #graph2.present(clear=False)
-        exp.keyboard.wait([constants.K_RETURN])
-
+            key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+            if key is not None:
+                break
         message = stimuli.TextScreen("Running", "Please wait...")
         message.present()
         message.present()
@@ -203,8 +205,11 @@ After the test, you will be asked to indicate which (if any) of those two square
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
             "[Press 0 (or F1), 1 (or F2), 2 (or F3)]")
-        text.present()
-        key, _rt = exp.keyboard.wait(respkeys)
+        while True:
+            text.present()
+            key, _rt = exp.keyboard.wait(respkeys)
+            if key is not None:
+                break
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
@@ -252,9 +257,11 @@ After the test, you will be asked to indicate which (if any) of those two square
         results5.plot(info)
         info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -160))
         info2.plot(info)
-        info.present()
-        exp.keyboard.wait([constants.K_RETURN])
-
+        while True:
+            info.present()
+            key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+            if key is not None:
+                break
         return to_do_time, actual_time, refresh_rate, inaccuracy, delayed, response
 
 
@@ -363,17 +370,23 @@ def _audio_playback(exp):
 [Press RETURN to continue]
 """
     text = stimuli.TextScreen("Audio playback test", info)
-    text.present()
-    exp.keyboard.wait([constants.K_RETURN])
+    while True:
+        text.present()
+        key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+        if key is not None:
+            break
     exp.screen.clear()
     exp.screen.update()
     a = stimuli.Tone(duration=1000)
     a.present()
     exp.clock.wait(1000)
     text = stimuli.TextScreen("Did you hear the tone?", "[Press Y or N]")
-    text.present()
-    key, _rt = exp.keyboard.wait([constants.K_y,
-                                 constants.K_n])
+    while True:
+        text.present()
+        key, _rt = exp.keyboard.wait([constants.K_y,
+                                      constants.K_n])
+        if key is not None:
+            break
     if key == constants.K_y:
         response = "Yes"
     elif key == constants.K_n:
@@ -511,11 +524,14 @@ def _write_protocol(exp, results):
     filename = os.path.join(os.getcwd(), "test_suite_protocol.xpp")
     with open(filename, 'wb') as f:
         f.write(unicode2byte(rtn))
-    text = stimuli.TextScreen(
-        "Saved as",
-        '"' + filename + '"' + "\n\n[Press RETURN to continue]")
-    text.present()
-    exp.keyboard.wait(constants.K_RETURN)
+    while True:
+        text = stimuli.TextScreen(
+            "Saved as",
+            '"' + filename + '"' + "\n\n[Press RETURN to continue]")
+        text.present()
+        key, rt_ = exp.keyboard.wait(constants.K_RETURN)
+        if key is not None:
+            break
     return []  # required for event loop
 
 def _find_self_tests():
@@ -575,7 +591,7 @@ def run_test_suite():
     pict.plot(background)
 
     v = stimuli.TextLine("Version {0}".format(get_version()), text_size=10,
-            text_colour=constants.C_EXPYRIMENT_PURPLE)
+                         text_colour=constants.C_EXPYRIMENT_PURPLE)
     v.move((0, 205))
     v.plot(background)
     results = get_system_info()

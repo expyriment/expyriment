@@ -483,11 +483,13 @@ class ParallelPort(Input, Output):
                 _message = "Please install the Python package 'PyParallel'."
             else:
                 _message = "Not available on your computer."
-
-            stimuli.TextScreen(
-                "ParallelPort cannot be initialized!",
-                _message + "\n\n[Press RETURN to continue]").present()
-            exp.keyboard.wait(misc.constants.K_RETURN)
+            while True:
+                stimuli.TextScreen(
+                    "ParallelPort cannot be initialized!",
+                    _message + "\n\n[Press RETURN to continue]").present()
+                key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                if key is not None:
+                    break
             return result
 
         else:
@@ -507,35 +509,37 @@ class ParallelPort(Input, Output):
                    "the 'r' key.\n\n\n\n" \
                    "[Press RETURN to continue]"
             t = stimuli.TextScreen("ParallelPort test", text)
-            t.present()
-            exp.keyboard.wait(misc.constants.K_RETURN)
+            while True:
+                t.present()
+                key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                if key is not None:
+                    break
 
             address = io.TextInput("Port address:").get()
             try:
                 pp = io.ParallelPort(address=address)
             except:
-                stimuli.TextScreen(
-                    "Could not open port address {0}!".format(address),
-                    "[Press RETURN to continue]").present()
-                exp.keyboard.wait(misc.constants.K_RETURN)
+                while True:
+                    stimuli.TextScreen(
+                        "Could not open port address {0}!".format(address),
+                        "[Press RETURN to continue]").present()
+                    key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                    if key is not None:
+                        break
                 return result
 
             pin_canvas = stimuli.Canvas((800, 600))
-            poll = stimuli.TextLine("Poll",
-                                               text_colour=[255, 255, 255],
-                                               position=[0, 165])
+            poll = stimuli.TextLine("Poll", text_colour=[255, 255, 255],
+                                    position=[0, 165])
             poll.plot(pin_canvas)
-            poll_line = stimuli.Rectangle((660, 2),
-                                                     colour=[255, 255, 255],
-                                                     position=[0, 120])
+            poll_line = stimuli.Rectangle((660, 2), colour=[255, 255, 255],
+                                          position=[0, 120])
             poll_line.plot(pin_canvas)
-            control = stimuli.TextLine("Control",
-                                                  text_colour=[100, 100, 100],
-                                                  position=[-260, 95])
+            control = stimuli.TextLine("Control", text_colour=[100, 100, 100],
+                                       position=[-260, 95])
             control.plot(pin_canvas)
-            control_line = stimuli.Rectangle((140, 2),
-                                                        colour=[100, 100, 100],
-                                                        position=[-260, 50])
+            control_line = stimuli.Rectangle((140, 2), colour=[100, 100, 100],
+                                             position=[-260, 50])
             control_line.plot(pin_canvas)
             data = stimuli.TextLine(
                 "Data",
@@ -563,9 +567,8 @@ class ParallelPort(Input, Output):
             outputs = {}
             x_pos = -320
             for pin in [17, 16, 14, 1, 9, 8, 7, 6, 5, 4, 3, 2, 11, 10, 12, 13, 15]:
-                inputs[pin] = stimuli.Circle(10,
-                                                        anti_aliasing=10,
-                                                        position=[x_pos, 30])
+                inputs[pin] = stimuli.Circle(10, anti_aliasing=10,
+                                             position=[x_pos, 30])
                 if 1 < pin < 10:
                     colour = misc.constants.C_EXPYRIMENT_ORANGE
                 elif pin in [10, 11, 12, 13, 15]:
@@ -574,13 +577,12 @@ class ParallelPort(Input, Output):
                     colour = [100, 100, 100]
                 if pin in [11, 1, 14, 17]:
                     bg = stimuli.Rectangle((25, 20), colour=colour,
-                                                      position=[x_pos, 0])
+                                           position=[x_pos, 0])
                     bg.plot(pin_canvas)
                     colour = _internals.active_exp._background_colour
-                stim = stimuli.TextLine(repr(pin),
-                                                   text_font="freemono",
-                                                   text_colour=colour,
-                                                   position=[x_pos, 0])
+                stim = stimuli.TextLine(repr(pin), text_font="freemono",
+                                        text_colour=colour,
+                                        position=[x_pos, 0])
                 stim.plot(pin_canvas)
                 pins[pin] = stim
                 if pin < 10 or pin in [14, 16, 17]:
@@ -588,13 +590,11 @@ class ParallelPort(Input, Output):
                         (20, 20), position=[x_pos, -30])
                 x_pos += 40
 
-            control2 = stimuli.TextLine("Control",
-                                                   text_colour=[100, 100, 100],
-                                                   position=[-260, -95])
+            control2 = stimuli.TextLine("Control", text_colour=[100, 100, 100],
+                                        position=[-260, -95])
             control2.plot(pin_canvas)
-            control2_line = stimuli.Rectangle((140, 2),
-                                                         colour=[100, 100, 100],
-                                                         position=[-260, -50])
+            control2_line = stimuli.Rectangle((140, 2), colour=[100, 100, 100],
+                                              position=[-260, -50])
             control2_line.plot(pin_canvas)
 
             data2 = stimuli.TextLine(
@@ -608,13 +608,11 @@ class ParallelPort(Input, Output):
                 position=[-20, -50])
             data2_line.plot(pin_canvas)
 
-            send = stimuli.TextLine("Send",
-                                               text_colour=[255, 255, 255],
-                                               position=[-100, -165])
+            send = stimuli.TextLine("Send", text_colour=[255, 255, 255],
+                                    position=[-100, -165])
             send.plot(pin_canvas)
-            send_line = stimuli.Rectangle((460, 2),
-                                                     colour=[255, 255, 255],
-                                                     position=[-100, -120])
+            send_line = stimuli.Rectangle((460, 2), colour=[255, 255, 255],
+                                          position=[-100, -120])
 
             send_line.plot(pin_canvas)
 
@@ -779,7 +777,7 @@ class ParallelPort(Input, Output):
                 p = pp.poll()
 
                 if p != initial_poll:
-                    result["testsuite_serial_success"] = "Yes"
+                    result["testsuite_parallel_success"] = "Yes"
 
                 for pin, bit in {15:1, 13:2, 12:4, 10:8, 11:16, 2:32, 3:64,
                                  4:128, 5:256, 6:512, 7:1024, 8:2048,
@@ -843,6 +841,6 @@ class ParallelPort(Input, Output):
                 elif misc.constants.K_r in keys:
                     pp.reverse = not pp.reverse
                 elif misc.constants.K_RETURN in keys:
-                    result["testsuite_serial_port"] = address
+                    result["testsuite_parallel_port"] = address
                     return result
                 _update(inputs_states, outputs_states, c, d, s, p)

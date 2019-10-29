@@ -523,7 +523,7 @@ The Python package 'pySerial' is not installed."""
 
     @staticmethod
     def _self_test(exp):
-        """Test the serial port"""
+        """Test the serial port."""
 
         from .. import io, stimuli
         def int2bin(n, count=8):
@@ -538,16 +538,22 @@ The Python package 'pySerial' is not installed."""
 
         ports = io.SerialPort.get_available_ports()
         if ports is None:
-            stimuli.TextScreen(
-                            "The Python package 'pySerial' is not installed!",
-                               "[Press RETURN to continue]").present()
-            exp.keyboard.wait(misc.constants.K_RETURN)
+            while True:
+                stimuli.TextScreen(
+                                "The Python package 'pySerial' is not installed!",
+                                   "[Press RETURN to continue]").present()
+                key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                if key is not None:
+                    break
             return result
 
         elif ports == []:
-            stimuli.TextScreen("No serial ports found!",
-                               "[Press RETURN to continue]").present()
-            exp.keyboard.wait(misc.constants.K_RETURN)
+            while True:
+                stimuli.TextScreen("No serial ports found!",
+                                   "[Press RETURN to continue]").present()
+                key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                if key is not None:
+                    break
             return result
 
         else:
@@ -574,26 +580,30 @@ The Python package 'pySerial' is not installed."""
 
             stopbits = [0, 1, 1.5, 2]
             idx = io.TextMenu("Select Stopbits", [repr(x) for x in stopbits],
-                                         width=200, justification=1,
-                                         scroll_menu=2).get(preselected_item=1)
+                              width=200, justification=1,
+                              scroll_menu=2).get(preselected_item=1)
             stopbit = stopbits[idx]
 
-            stimuli.TextScreen("Serial Port {0}".format(comport),
-                                                                "").present()
             try:
                 ser = io.SerialPort(port=comport, baudrate=baudrate,
-                                               parity=parity, stopbits=stopbit,
-                                               input_history=True)
+                                    parity=parity, stopbits=stopbit,
+                                    input_history=True)
             except serial.SerialException:
-                stimuli.TextScreen("Could not open {0}!".format(comport),
-                                   "[Press RETURN to continue]").present()
-                exp.keyboard.wait(misc.constants.K_RETURN)
+                while True:
+                    stimuli.TextScreen("Could not open {0}!".format(comport),
+                                       "[Press RETURN to continue]").present()
+                    key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
+                    if key is not None:
+                        break
                 result["testsuite_serial_port"] = comport
                 result["testsuite_serial_baudrate"] = baudrate
                 result["testsuite_serial_parity"] = parity
                 result["testsuite_serial_stopbits"] = stopbit
                 result["testsuite_serial_success"] = "No"
                 return result
+
+            s = stimuli.TextScreen("Serial Port {0}".format(comport), "")
+            s.present()
             cnt = 0
             while True:
                 read = ser.read_input()
@@ -604,9 +614,11 @@ The Python package 'pySerial' is not installed."""
                         stimuli.TextScreen("Serial Port {0}".format(comport),
                                       "{0}\n {1} - {2}".format(cnt, byte,
                                        int2bin(byte))).present()
-                key = exp.keyboard.check()
-                if key:
+                key = exp.keyboard.check(misc.constants.K_RETURN)
+                if key is not None:
                     break
+                else:
+                    s.present()
 
             result["testsuite_serial_port"] = comport
             result["testsuite_serial_baudrate"] = baudrate
