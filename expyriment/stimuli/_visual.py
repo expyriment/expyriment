@@ -255,7 +255,8 @@ class Visual(Stimulus):
                            "(experiment defaults won't apply)!"
             print("Warning: " + warn_message)
 
-    _compression_exception_message = "Cannot call {0} on compressed stimuli!"
+    _exception_message = "Cannot call {0} on preloaded " \
+                                     "or compressed stimulus!"
 
     def __del__(self):
         """ Clear surface and ogl_screen when when the objects is deconstructed.
@@ -921,7 +922,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not stimulus._set_surface(stimulus._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "plot()"))
         stimulus.unload(keep_surface=True)
         self._parent = stimulus
@@ -1286,7 +1287,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format( #FIXME exception also raised if preloaded!
+            raise RuntimeError(Visual._exception_message.format(
                 "rotate()"))
         self.unload(keep_surface=True)
         if filter:
@@ -1329,7 +1330,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "scale()"))
         self.unload(keep_surface=True)
         flip = [False, False]
@@ -1381,7 +1382,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "scale_to_fullscreen()"))
         surface_size = self.surface_size
         screen_size = _internals.active_exp.screen.surface.get_size()
@@ -1416,7 +1417,7 @@ class Visual(Stimulus):
 
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "flip()"))
         self.unload(keep_surface=True)
         self._set_surface(pygame.transform.flip(self._get_surface(),
@@ -1485,7 +1486,7 @@ class Visual(Stimulus):
             grain_size = [grain_size, grain_size]
         # Make Rect list
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "scramble()"))
         s = self.surface_size
         source = []
@@ -1537,7 +1538,7 @@ class Visual(Stimulus):
         from . import _rectangle
         start = get_time()
         if not self._set_surface(self._get_surface()):
-            raise RuntimeError(Visual._compression_exception_message.format(
+            raise RuntimeError(Visual._exception_message.format(
                 "add_noise()"))
         self.unload(keep_surface=True)
         number_of_pixel_x = int(self.surface_size[0] // grain_size) + 1
