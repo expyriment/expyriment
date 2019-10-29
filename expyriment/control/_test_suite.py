@@ -651,3 +651,6 @@ def run_test_suite():
 
     if quit_experiment:
         end(goodbye_delay=0, goodbye_text="Quitting test suite")
+    else:
+        exp.screen.clear()
+        exp.screen.update()

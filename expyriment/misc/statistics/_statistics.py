@@ -63,7 +63,7 @@ def mode(data):
 
     """
 
-    freq = frequence_table(data)
+    freq = frequency_table(data)
     Fmax = max(freq.values())
     for x, f in list(freq.items()):
         if f == Fmax:
