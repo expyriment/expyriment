@@ -327,7 +327,6 @@ class TextMenu(Input):
             return selected
         # Mouse
         else:
-            pressed = None
             while True:
                 pressed = None
                 self._redraw(selected)
@@ -344,7 +343,8 @@ class TextMenu(Input):
                             if self._menu_items[cnt].overlapping_with_position(pos):
                                 pressed = cnt
                 if pressed is not None:
-                    if pressed == selected:
+                    if pressed == selected and event <=2:
+                        # selected and not mouse wheel
                         break
                     else:
                         selected = pressed
