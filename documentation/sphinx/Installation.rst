@@ -9,19 +9,18 @@ Dependencies
 
 Expyriment depends on the following Python packages:
 
-* Future_ (>=0.15)
-* Pygame_ (>=1.9)
-* PyOpenGL_ (>=3.0)
+* Future_ (>=0.15,<1)
+* Pygame_ (>=1.9,<2)
+* PyOpenGL_ (>=3.0,<4)
 
 Additional Python packages, which are optional and only required for some features of 
 Expyriment are:
 
-* NumPy_ (>=1.6) (to use data preprocessing)
-* mediadecoder_ (>=0.1) (to use enhanced video playback with support for various formats)
-* sounddevice_ (>=0.3) (to use enhanced video playback with support for various formats with audio)
-* PySerial_ (>=3.0) (to use serial port communication)
-* PyParallel_ (>=0.2) (to use parallel port communication on Linux)
-* Requests_ (>2.0) (to download content from Expyriment stash)
+* NumPy_ (>=1.6,<2) (to use data preprocessing)
+* mediadecoder_ (>=0.1,<1) (to use enhanced video playback with support for various formats)
+* sounddevice_ (>=0.3,<1) (to use enhanced video playback with support for various formats with audio)
+* PySerial_ (>=3.0,<4) (to use serial port communication)
+* PyParallel_ (>=0.2,>1) (to use parallel port communication on Linux)
 
 Please be aware that Expyriment plugins (extras) might have further dependencies.
 
