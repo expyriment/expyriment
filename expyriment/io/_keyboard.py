@@ -34,7 +34,6 @@ from .. import  _internals
 
 quit_key = None
 pause_key = None
-refresh_key = None
 end_function = None
 pause_function = None
 
@@ -82,8 +81,6 @@ class Keyboard(Input):
                         pause_function is not None:
                     pause_function()
                     return True
-                elif key_event.key == refresh_key:
-                    _internals.active_exp.screen.update() # todo: How often? double/triple buffering?
         else:
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion

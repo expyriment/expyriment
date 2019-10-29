@@ -148,7 +148,7 @@ class Mouse(Input):
         if click_position is None:
             # check Pygame queu
             pos = None
-            # pygame.event.pump() # TODO: not sure if it is required!
+            # pygame.event.pump() # not sure if it is required!
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
                 if event.button > 0:
                     screen_size = _internals.active_exp.screen.surface.get_size()

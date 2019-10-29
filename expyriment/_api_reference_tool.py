@@ -63,7 +63,7 @@ def _read_module(mod, doc_dict):
     for cl in classes:
         cl = "{0}.{1}".format(mod.__name__, cl)
         exec("_x =" + cl, namespace)
-        doc_dict[cl], functions = _get_doc_and_function(namespace['_x']) # FIXME should work but is unchecked for python 2/3 compatibility
+        doc_dict[cl], functions = _get_doc_and_function(namespace['_x'])
         for fnc in functions:
             fnc = "{0}.{1}".format(cl, fnc)
             exec("_y =" + fnc, namespace)

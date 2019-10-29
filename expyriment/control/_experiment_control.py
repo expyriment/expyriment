@@ -419,7 +419,6 @@ fullscreen.""")
 
     _keyboard.quit_key = defaults.quit_key
     _keyboard.pause_key = defaults.pause_key
-    _keyboard.refresh_key = defaults.refresh_key
     _keyboard.end_function = end
     _keyboard.pause_function = pause
 

@@ -10,8 +10,6 @@ experimental design. Expyriment provides an easy, but flexible way to
 automate this process with the included data preprocessing module of the misc 
 package (:doc:`expyriment.misc.data_preprocessing`).
 
-.. TODO better docu data preprocessing
-
 Exporting data
 --------------
 In some cases, one might export the recorded data to preprocess it in other programmes.
