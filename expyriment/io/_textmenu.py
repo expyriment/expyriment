@@ -78,7 +78,7 @@ class TextMenu(Input):
             together with the TextMenu. For both stimuli overlap TextMenu
             will appear on top of the background_stimulus
         mouse : expyriment.io.Mouse object or True, optional
-            If a True or mouse object is given, the menu will be controlled
+            If True or a mouse object is given, the menu will be controlled
             by the mouse
 
         """
