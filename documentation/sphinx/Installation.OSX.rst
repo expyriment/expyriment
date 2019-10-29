@@ -47,7 +47,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 2.7.13`_ to ``Expyriment_Installation``
+2. Download `Python 2.7.17`_ to ``Expyriment_Installation``
 
 3. Download Tcl_ to ``Expyriment_Installation``
 
@@ -68,11 +68,11 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation/python-2.7.13-macosx10.5.pkg``
+2. Install ``Expyriment_Installation/python-2.7.17-macosx10.9.pkg``
 
-3. Install ``Expyriment_Installation/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg``
+3. Install ``Expyriment_Installation/ActiveTcl*.dmg``
 
-4. Install ``Expyriment_Installation/XQuartz-2.7.9.dmg``
+4. Install ``Expyriment_Installation/XQuartz-2.7.10.dmg``
 
 5. In a command prompt, run::
 
@@ -84,7 +84,7 @@ Alternative installation (offline)
 
     mkdir -p ~/.local/bin
     cd ~/Desktop/Expyriment_Installation
-    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
+    tar -xf ffmpeg-4.2.1.zip
     mv ffmpeg ffprobe ffserver ~/.local/bin
     echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
     source ~/.bash_profile
@@ -126,7 +126,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.6.0`_ to  ``Expyriment_Installation``
+2. Download `Python 3.7.5`_ to  ``Expyriment_Installation``
 
 3. Download Tcl_ to ``Expyriment_Installation``
 
@@ -147,11 +147,11 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation/python-3.6.0-macosx10.5.pkg``
+2. Install ``Expyriment_Installation/python-3.7.5-macosx10.9.pkg``
 
-3. Install ``Expyriment_Installation/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg``
+3. Install ``Expyriment_Installation/ActiveTcl*.dmg``
 
-4. Install ``Expyriment_Installation/XQuartz-2.7.9.dmg``
+4. Install ``Expyriment_Installation/XQuartz-2.7.10.dmg``
 
 5. In a command prompt, run::
 
@@ -163,7 +163,7 @@ Alternative installation (offline)
 
     mkdir -p ~/.local/bin
     cd ~/Desktop/Expyriment_Installation
-    tar -xf Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
+    tar -xf ffmpeg-4.2.1.zip
     mv ffmpeg ffprobe ffserver ~/.local/bin
     echo 'export PATH=$PATH:~/.local/bin' >> ~/.bash_profile
     source ~/.bash_profile
@@ -192,8 +192,8 @@ Notes
     line when testing participants.
 
 
-.. _`Python 2.7.13`: https://www.python.org/ftp/python/2.7.13/python-2.7.13-macosx10.5.pkg
-.. _`Python 3.6.0`: https://www.python.org/ftp/python/3.6.0/python-3.6.0-macosx10.6.pkg
-.. _Tcl: http://www.activestate.com/activetcl/downloads/thank-you?dl=http://downloads.activestate.com/ActiveTcl/releases/8.4.19.6/ActiveTcl8.4.19.6.295590-macosx-universal-threaded.dmg
-.. _XQuartz: https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.9.dmg
-.. _ffmpeg: http://www.ffmpegmac.net/resources/Lion_Mountain_Lion_Mavericks_Yosemite_El-Captain_08.12.2016.zip
+.. _`Python 2.7.17`: https://www.python.org/ftp/python/2.7.17/python-2.7.17-macosx10.9.pkg
+.. _`Python 3.7.5`: https://www.python.org/ftp/python/3.7.5/python-3.7.5-macosx10.9.pkg
+.. _Tcl: https://www.activestate.com/products/tcl/downloads/
+.. _XQuartz: https://dl.bintray.com/xquartz/downloads/XQuartz-2.7.10.dmg
+.. _ffmpeg: https://evermeet.cx/ffmpeg/ffmpeg-4.2.1.zip
