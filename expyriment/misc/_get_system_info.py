@@ -342,7 +342,7 @@ def get_system_info(as_string=False):
         sounddevice_version = ""
     info["python_sounddevice_version"] = sounddevice_version
     if _pil is not None:
-        pil_version = _pil.VERSION
+        pil_version = _pil.__version__
     else:
         pil_version = ""
     info["python_pil_version"] = pil_version
