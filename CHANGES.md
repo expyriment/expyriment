@@ -31,6 +31,7 @@ New Features:
   keyup events instead of keydown events
 - new class misc.Colour: create colours by names, hex strings or RGB values
   The class can also handle HSV, HSL values. The misc.HSVColour is thus obsolete.
+- data.preprocessing can handle glob wildcard pattern
      
 Changed:
 - Python's time.perf_counter() function will be used as high-precision timer

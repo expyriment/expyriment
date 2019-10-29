@@ -20,7 +20,7 @@ except ImportError:
     _locale = None  # Does not exist on Android
 import sys as _sys
 from types import ModuleType
-from tempfile import mkstemp as _mkstemp
+from glob import glob as _glob
 from copy import copy as _copy
 import codecs as _codecs
 import re as _re
@@ -165,7 +165,8 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
-                            delimiter=',', to_R_data_frame=False):
+                            delimiter=',', to_R_data_frame=False,
+                            names_comprise_glob_pattern =False):
     """Concatenate data and write it to a csv file.
 
     All files that start with this name will be considered for the
@@ -180,9 +181,10 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     Parameters
     ----------
     data_folder : str
-        folder which contains of data of the subjects (str)
+        folder which contains of the data (str)
     file_name : str
-        name of the files
+        name of the files. All files that start with this name will
+        be considered
     output_file : str, optional
         name of data output file.  If no specified data will the save
         to {file_name}.csv
@@ -191,14 +193,19 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     to_R_data_frame: bool, optional
         if True, data will be converted to a R data frame that is saved
         in a RDS file
+    names_comprise_glob_pattern : boolean, optional
+        if True, data_folder and file_name are processed as glob pattern
+        with wildcards such as "*" or "?"
 
     """
 
     if to_R_data_frame:
-        return Aggregator(data_folder=data_folder, file_name=file_name)\
+        return Aggregator(data_folder=data_folder, file_name=file_name,
+                          names_comprise_glob_pattern=names_comprise_glob_pattern)\
         .write_concatenated_data_to_R_data_frame(output_file=output_file)
     else:
-        return Aggregator(data_folder=data_folder, file_name=file_name)\
+        return Aggregator(data_folder=data_folder, file_name=file_name,
+                          names_comprise_glob_pattern=names_comprise_glob_pattern)\
         .write_concatenated_data(output_file=output_file, delimiter=delimiter)
 
 
@@ -275,13 +282,13 @@ class Aggregator(object):
     _default_suffix = ".xpd"
 
     def __init__(self, data_folder, file_name, suffix=_default_suffix,
-                 read_variables=None):
+                 read_variables=None, names_comprise_glob_pattern=False):
         """Create an aggregator.
 
         Parameters
         ----------
         data_folder :str
-            folder which contains of data of the subjects
+            folder which contains the data
         file_name : str
             name of the files. All files that start with this name will
             be considered for the analysis (cf. aggregator.data_files)
@@ -290,6 +297,10 @@ class Aggregator(object):
             suffix will be considered (default=.xpd)
         read_variables : array of str, optional
             array of variable names, read only the specified variables
+        names_comprise_glob_pattern : boolean, optional
+            if True, data_folder and file_name are processed as glob pattern
+            with wildcards such as "*" or "?". The suffix parameter will
+            be ignored.
 
         """
 
@@ -306,7 +317,9 @@ The Python package 'Numpy' is not installed."""
                               "\nPlease install Numpy 1.6 or higher.")
 
         print("** Expyriment Data Preprocessor **")
-        self.reset(data_folder, file_name, suffix, read_variables)
+        self.reset(data_folder, file_name, suffix=suffix,
+                   variables=read_variables,
+                   names_comprise_glob_pattern=names_comprise_glob_pattern)
 
     def __str__(self):
         """Getter for the current design as text string."""
@@ -642,13 +655,13 @@ The Python package 'Numpy' is not installed."""
         return new_variable_names, factor_combinations
 
     def reset(self, data_folder, file_name, suffix=_default_suffix,
-              variables=None):
+              variables=None, names_comprise_glob_pattern=False):
         """Reset the aggregator class and clear design.
 
         Parameters
         ----------
         data_folder : str
-            folder which contains of data of the subjects
+            folder which contains the data
         file_name : str
             name of the files. All files that start with this name
             will be considered for the analysis (cf. aggregator.data_files)
@@ -657,6 +670,10 @@ The Python package 'Numpy' is not installed."""
             will be considered (default=.xpd)
         variables : array of str, optional
             array of variable names, process only the specified variables
+        names_comprise_glob_pattern : boolean, optional
+            if True, data_folder and file_name are processed as glob pattern
+            with wildcards such as "*" or "?". The suffix parameter will
+            be ignored.
 
         """
 
@@ -680,13 +697,18 @@ The Python package 'Numpy' is not installed."""
         self._added_variables = []
         self._suffix = suffix
 
-        for flname in _os.listdir(_os.path.dirname(self._data_folder + "/")):
-            if flname.endswith(self._suffix) and \
-                    flname.startswith(self._file_name):
-                _data, vnames, _subject_info, _comments = \
-                    read_datafile(self._data_folder + "/" + flname,
-                                  read_variables=variables)
+        if names_comprise_glob_pattern:
+            files = _glob(_os.path.join(data_folder, file_name))
+        else:
+            files = []
+            for flname in _os.listdir(_os.path.dirname(
+                    data_folder + _os.path.sep)):
+                if flname.endswith(suffix) and flname.startswith(file_name):
+                    files.append(_os.path.join(data_folder, flname))
 
+        for flname in files:
+                _data, vnames, _subject_info, _comments = \
+                    read_datafile(flname, read_variables=variables)
                 if len(self._variables) < 1:
                     self._variables = vnames
                 else:
@@ -699,18 +721,12 @@ The Python package 'Numpy' is not installed."""
                 self._data_files.append(flname)
 
         if len(self._data_files) < 1:
-            raise Exception(u"No data files found in {0}".format(
-                self._data_folder))
+            raise Exception(u"No data files found")
 
         print(u"found {0} subject_data sets".format(len(self._data_files)))
         print(u"found {0} variables: {1}".format(len(self._variables),
                                                 [x for x in self._variables]))
 
-    @property
-    def data_folder(self):
-        """Getter for data_folder."""
-
-        return self._data_folder
 
     @property
     def data_files(self):
@@ -721,12 +737,6 @@ The Python package 'Numpy' is not installed."""
         """
 
         return self._data_files
-
-    @property
-    def file_name(self):
-        """Getter for file_name."""
-
-        return self._file_name
 
     @property
     def variables(self):
@@ -828,7 +838,7 @@ The Python package 'Numpy' is not installed."""
                 filename))
 
         data, _vnames, subject_info, comments = \
-            read_datafile(self._data_folder + "/" + filename)
+            read_datafile(filename)
         print(u"   reading {0}".format(filename))
 
         if recode_variables:
@@ -1008,21 +1018,17 @@ The Python package 'Numpy' is not installed."""
             self._added_data = _np.concatenate((self._added_data, d), axis=1)
         self._last_data = []
 
-    def write_concatenated_data(self, output_file=None, delimiter=','):
+    def write_concatenated_data(self, output_file, delimiter=','):
         """Concatenates data and writes it to a csv file.
 
         Parameters
         ----------
-        output_file : str, optional
+        output_file : str
             name of data output file
-            If not specified data will the save to {file_name}.csv
         delimiter : str
             delimiter character (default=",")
 
         """
-
-        if output_file is None:
-            output_file = u"{0}.csv".format(self.file_name)
 
         data = self.concatenated_data
         write_csv_file(filename=output_file, data=data[0], varnames=data[1],
@@ -1208,8 +1214,7 @@ The Python package 'Numpy' is not installed."""
             self._computes_txt = compute_syntax
 
         self._computes = []
-        self._variables = read_datafile(self._data_folder + "/" +
-                                        self._data_files[0],
+        self._variables = read_datafile(self._data_files[0],
                                         only_header_and_variable_names=True)[1]  # original variables
         for syntax in self._computes_txt:
             self._add_compute_variable(syntax)
