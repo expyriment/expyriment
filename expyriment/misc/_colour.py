@@ -166,7 +166,7 @@ _colours = {
 }
 
 
-class Colour():
+class Colour(object):
     """Implements a class representing an RGB colour."""
 
     @staticmethod
@@ -290,7 +290,7 @@ class Colour():
 
         """
 
-        return is_hsv(value)
+        return Colour.is_hsv(value)
 
     @staticmethod
     def is_colour(value):
