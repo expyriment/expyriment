@@ -62,8 +62,8 @@ class InputFile(Input):
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            raise IOError("The input file '{0}' does not exist.".format(
-                unicode2byte(self._filename)))
+            raise IOError(u"The input file '{0}' does not exist.".format(
+                self._filename))
 
         if encoding is None:
             with open(filename, 'r') as fl:

@@ -54,8 +54,8 @@ class Audio(Stimulus):
         self._file = None
         self._is_preloaded = False
         if not(os.path.isfile(self._filename)):
-            raise IOError("The audio file {0} does not exists".format(
-                unicode2byte(self._filename)))
+            raise IOError(u"The audio file {0} does not exists".format(
+                self._filename))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
 

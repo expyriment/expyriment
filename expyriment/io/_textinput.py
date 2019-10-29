@@ -513,8 +513,8 @@ class TextInput(Input):
             self._update()
         got = "".join(self._user)
         if self._logging:
-            _internals.active_exp._event_file_log("TextInput,entered,{0}"
-                                                   .format(unicode2byte(got)))
+            _internals.active_exp._event_file_log(
+                "TextInput,entered,{0}".format(got))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
         return got

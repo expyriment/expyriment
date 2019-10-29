@@ -1880,8 +1880,8 @@ class Trial(object):
         """Return all factor names and values as csv string line"""
         all_factors = ""
         for f in self.factor_names:
-            all_factors = all_factors + "{0}={1}, ".format(
-                unicode2byte(f), unicode2byte(str(self.get_factor(f, return_none_if_not_defined=True))))
+            all_factors = all_factors + u"{0}={1}, ".format(
+                f, str(self.get_factor(f, return_none_if_not_defined=True)))
         return all_factors
 
     def compare(self, trial):

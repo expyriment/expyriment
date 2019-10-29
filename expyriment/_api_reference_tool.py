@@ -534,14 +534,10 @@ def show_documentation(docu_type=None):
         docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
         docu_fallback = os.path.join('usr', 'local', 'share', 'expyriment', 'documentation', 'html', 'index.html')
         if os.path.exists(docu):
-            from .misc import unicode2byte
-            webbrowser.open(
-                unicode2byte('file://' + docu),
+            webbrowser.open('file://' + docu,
                 new=1)
         elif os.path.exists(docu_fallback):
-            from .misc import unicode2byte
-            webbrowser.open(
-                unicode2byte('file://' + docu_fallback),
+            webbrowser.open('file://' + docu_fallback,
                 new=1)
         else:
             print("No local documentation found")

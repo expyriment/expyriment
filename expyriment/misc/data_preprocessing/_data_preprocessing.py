@@ -346,8 +346,7 @@ The Python package 'Numpy' is not installed."""
                 break
         if found is None:
             if throw_exception:
-                raise RuntimeError("Incorrect syntax: '{0}'".format(
-                    _unicode2str(syntax)))
+                raise RuntimeError(u"Incorrect syntax: '{0}'".format(syntax))
             else:
                 return None
         else:
@@ -360,8 +359,8 @@ The Python package 'Numpy' is not installed."""
             if variables == v:
                 return cnt
         if (throw_exception):
-            raise RuntimeError("Unknown variable name '{0}'".format(
-                _unicode2str(variables)))
+            raise RuntimeError(u"Unknown variable name '{0}'".format(
+                variables))
         return None
 
     def _add_independent_variable(self, variable):
@@ -378,14 +377,14 @@ The Python package 'Numpy' is not installed."""
                 dv_txt = tmp[1].strip()
             except:
                 raise RuntimeError(
-                    "Incorrect syntax for DV: '{0}'".format(
-                        _unicode2str(variable)))
+                    u"Incorrect syntax for DV: '{0}'".format(variable))
             var_id = self._get_variable_id(dv_txt, True)
             if dv_fnc in self._dv_functions:
                 self._dv.append([dv_fnc, var_id])
             else:
-                raise RuntimeError("Unknown function for dependent variable:" +
-                                   " '{0}'".format(_unicode2str(dv_fnc)))
+                raise RuntimeError(
+                    u"Unknown function for dependent variable:" +
+                    " '{0}'".format(dv_fnc))
 
     def _add_compute_variable(self, compute_syntax):
         """Add a new variable to be computed."""
@@ -399,15 +398,15 @@ The Python package 'Numpy' is not installed."""
             syntax = syntax.replace("@@", "==")
             syntax = syntax.replace("##", "==")
         except:
-            raise RuntimeError("Incorrect compute syntax: '{0}'".format(
-                _unicode2str(compute_syntax)))
+            raise RuntimeError(u"Incorrect compute syntax: '{0}'".format(
+                compute_syntax))
 
         variable_def = self._parse_syntax(syntax, throw_exception=True)
         if variable_def is None:
             variable_def = self._parse_operation(syntax, throw_exception=True)
         if self._get_variable_id(variable_name) is not None:
-            raise RuntimeError("Variable already defined '{0}'".format(
-                _unicode2str(variable_name)))
+            raise RuntimeError(u"Variable already defined '{0}'".format(
+                variable_name))
         else:
             self._variables.append(variable_name)
             self._computes.append([variable_name, variable_def])
@@ -419,8 +418,8 @@ The Python package 'Numpy' is not installed."""
         if relation[1] in self._relations:
             self._exclusions.append(relation)
         else:
-            raise RuntimeError("Incorrect exclusion syntax: '{0}'".format(
-                _unicode2str(relation_syntax)))
+            raise RuntimeError(u"Incorrect exclusion syntax: '{0}'".format(
+                relation_syntax))
 
     def _add_variable_recoding(self, recode_syntax):
         """Add a new variable recoding rule."""
@@ -440,8 +439,8 @@ The Python package 'Numpy' is not installed."""
             error = True
 
         if error:
-            raise RuntimeError("Incorrect recoding syntax: '{0}'".format(
-                _unicode2str(recode_syntax)))
+            raise RuntimeError(u"Incorrect recoding syntax: '{0}'".format(
+                recode_syntax))
         else:
             self._recode.append([var_id, excl_array])
 
@@ -498,20 +497,16 @@ The Python package 'Numpy' is not installed."""
             mean_stds = self._dv_mean_std(data, column_id)
             idx = []
             if relation not in [">", "<", "=>", ">=", "=<", "<="]:
-                raise RuntimeError("Incorrect syntax for " +
-                                   "exception: '{0} {1}'".format(
-                                       _unicode2str(relation),
-                                       _unicode2str(value)))
+                raise RuntimeError(u"Incorrect syntax for " +
+                                   u"exception: '{0} {1}'".format(
+                                       relation, value))
             for cnt, row in enumerate(data):
                 #find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
-                    if isinstance(row[iv], str):
-                        _row_data = _unicode2str(row[iv])
-                    else:
-                        _row_data = row[iv]
+                    _row_data = row[iv]
                     combi_str = combi_str + "_" + \
-                        "{0}{1}".format(_unicode2str(self.variables[iv]),
+                        u"{0}{1}".format(self.variables[iv],
                                         _row_data)
                 deviation = float(row[column_id]) - mean_stds[combi_str][0]
                 if (relation == ">" and
@@ -541,8 +536,8 @@ The Python package 'Numpy' is not installed."""
                 comp = None  # should never occur
             if isinstance(comp, bool):
                 raise RuntimeError(
-                    "Incorrect syntax for " + "exception: '{0} {1}'".format(
-                        _unicode2str(relation), _unicode2str(value)))
+                    u"Incorrect syntax for " + u"exception: '{0} {1}'".format(
+                        relation, value))
             return _np.flatnonzero(comp)
 
     def _dv_mean_std(self, data, column_dv_id):
@@ -646,7 +641,8 @@ The Python package 'Numpy' is not installed."""
 
         return new_variable_names, factor_combinations
 
-    def reset(self, data_folder, file_name, suffix=_default_suffix, variables=None):
+    def reset(self, data_folder, file_name, suffix=_default_suffix,
+              variables=None):
         """Reset the aggregator class and clear design.
 
         Parameters
@@ -661,7 +657,6 @@ The Python package 'Numpy' is not installed."""
             will be considered (default=.xpd)
         variables : array of str, optional
             array of variable names, process only the specified variables
-
 
         """
 
@@ -700,17 +695,16 @@ The Python package 'Numpy' is not installed."""
                         message = message + u"\n{0}".format(vnames)
                         message = message + u"\ninstead of\n{0}".format(
                             self._variables)
-                        raise RuntimeError(_unicode2str(message))
+                        raise RuntimeError(message)
                 self._data_files.append(flname)
 
         if len(self._data_files) < 1:
-            raise Exception("No data files found in {0}".format(
-                _unicode2str(self._data_folder)))
+            raise Exception(u"No data files found in {0}".format(
+                self._data_folder))
 
-        print("found {0} subject_data sets".format(len(self._data_files)))
-        print("found {0} variables: {1}".format(len(self._variables),
-                                                [_unicode2str(x) for x
-                                                 in self._variables]))
+        print(u"found {0} subject_data sets".format(len(self._data_files)))
+        print(u"found {0} variables: {1}".format(len(self._variables),
+                                                [x for x in self._variables]))
 
     @property
     def data_folder(self):
@@ -830,12 +824,12 @@ The Python package 'Numpy' is not installed."""
 
         # check filename
         if filename not in self._data_files:
-            raise RuntimeError("'{0}' is not in the data list\n".format(
-                _unicode2str(filename)))
+            raise RuntimeError(u"'{0}' is not in the data list\n".format(
+                filename))
 
         data, _vnames, subject_info, comments = \
             read_datafile(self._data_folder + "/" + filename)
-        print("   reading {0}".format(_unicode2str(filename)))
+        print(u"   reading {0}".format(filename))
 
         if recode_variables:
             for var_id, recoding in self._recode:
@@ -1247,11 +1241,8 @@ The Python package 'Numpy' is not installed."""
             print("Subject {0}".format(row[0]))
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
-                    if isinstance(row[cnt], str):
-                        _row_data = _unicode2str(row[cnt])
-                    else:
-                        _row_data = row[cnt]
-                    print("\t{0}:\t{1}".format(var[4:], _row_data))
+                    _row_data = row[cnt]
+                    print(u"\t{0}:\t{1}".format(var[4:], _row_data))
         print("\n")
         self._dv = old_dv
         self._iv = old_iv

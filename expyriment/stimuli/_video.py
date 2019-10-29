@@ -129,8 +129,8 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
 
         if not(os.path.isfile(self._filename)):
-            raise IOError("The video file {0} does not exists".format(
-                unicode2byte(self._filename)))
+            raise IOError(u"The video file {0} does not exists".format(
+                self._filename))
 
         if self._backend == "mediadecoder":
             Video.get_ffmpeg_binary()  # in case it still needs to be downloaded
@@ -183,8 +183,8 @@ class Video(_visual.Stimulus):
         else:
             self._filename = value
             if not(os.path.isfile(self._filename)):
-                raise IOError("The video file {0} does not exists".format(
-                              unicode2byte(self._filename)))
+                raise IOError(u"The video file {0} does not exists".format(
+                    self._filename))
 
     @property
     def is_playing(self):
@@ -395,7 +395,7 @@ class Video(_visual.Stimulus):
                 self.preload()
             if self._logging:
                 _internals.active_exp._event_file_log(
-                    "Video,playing,{0}".format(unicode2byte(self._filename)),
+                    "Video,playing,{0}".format(self._filename),
                     log_level=1, log_event_tag=log_event_tag)
             if self._backend == "mediadecoder" and self._file.audioformat and audio:
                 self._audio.start()
