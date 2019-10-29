@@ -284,7 +284,7 @@ class TextLine(Visual):
             _text = self.text
         if self.background_colour:
             surface = _font.render(_text, True, self.text_colour,
-                                self.background_colour)
+                                   self.background_colour)
         else:
             surface = _font.render(_text, True, self.text_colour)
         surface = surface.convert_alpha()
