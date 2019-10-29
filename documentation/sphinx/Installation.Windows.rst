@@ -60,7 +60,7 @@ Alternative installation (offline)
     
    (Omit ``[all]`` to install without additional optional features)
 
-4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
+4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-latest-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
    `add it to the environment variable PATH`_!)
 
@@ -121,7 +121,7 @@ Alternative installation (offline)
 
    (Omit ``[all]`` to install without additional optional features)
    
-4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-20160803-d3426fb-win32-static.zip`` and copy the
+4. To use enhanced video playback, unzip ``Expyriment_Installation\ffmpeg-latest-win32-static.zip`` and copy the
    file ``bin\ffmpeg.exe`` to a directory on the local hard drive (e.g. ``C:\ffmpeg\bin\``) and
    `add it to the environment variable PATH`_!)
 
@@ -151,11 +151,8 @@ Notes
 
 .. _`Python 2.7.17`: https://www.python.org/ftp/python/2.7.17/python-2.7.17.msi
 .. _`Python 3.7.5`: https://www.python.org/ftp/python/3.7.5/python-3.7.5.exe
-.. _PyOpenGL: https://pypi.python.org/packages/any/P/PyOpenGL/PyOpenGL-3.1.0.win32.exe#md5=f175505f4f9e21c8c5c6adc794296d81
-.. _Numpy:  http://sourceforge.net/projects/numpy/files/NumPy/1.9.2/numpy-1.9.2-win32-superpack-python2.7.exe
-.. _PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.7/pyserial-2.7.win32.exe/download
 .. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
 .. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
-.. _ffmpeg: https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-20160803-d3426fb-win32-static.zip
+.. _ffmpeg: https://ffmpeg.zeranoe.com/builds/win32/static/ffmpeg-latest-win32-static.zip
 .. _`add it to the environment variable PATH`: http://www.computerhope.com/issues/ch000549.htm
 .. _`release page`: http://github.com/expyriment/expyriment/releases/
