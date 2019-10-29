@@ -75,6 +75,7 @@ Fixed:
 - bug when drawing textures to screen (OpenGL) leading to 1-pixel inaccuracies
 - bug in Ellipse with uneven line_width
 - io.TextIput background_stimulus now takes all Expyriment stimuli
+- misc.get_system_info() uses PIL.__version__ 
 
 Version 0.9.0 (9 Mar 2017)
 ---------------------------
