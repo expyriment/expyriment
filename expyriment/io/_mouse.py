@@ -87,8 +87,9 @@ class Mouse(Input):
 
     @staticmethod
     def set_quit_corner_location(corner, corner_rect_size=(None, None)):
-        """Activates the possibility to quit the experiment using a mouse
-        event. Defines the corner on which the user has to click to elicit a
+        """Activate the possibility to quit experiment using a mouse event.
+
+        Defines the corner on which the user has to click to elicit a
         quit dialog.
 
         If quit corner location has been defined, clicking quickly three
@@ -104,25 +105,24 @@ class Mouse(Input):
         Parameters
         ----------
         corner: int or None
-            location code (0,1, 2 or 3) of the quit corner.  The default
-            value under Android is 1, otherwise None. See also the notes
+            location code (0,1, 2 or 3) of the quit corner; the default value
+            under Android is 1, otherwise None; see also the notes
             below.
 
        corner_rect_size = tuple (int, int), optional
             size of the field (rect) that detects the quit action in one
-            corner of the screen. default = (30, 30)
+            corner of the screen; default = (30, 30)
 
         Notes
         -----
-
         Mouse quit events are especially useful for experiments on devices
         without hardware keyboard, such as tablet PCs or smartphones.
 
-        Corner location codes:
+        Corner location codes::
 
                 0 = upper left corner,  1 = upper right corner   (0) (1)
                 2 = lower right corner, 3 = lower left corner    (3) (2)
-                otherwise the detection of mouse quit events is deactivated.
+                otherwise the detection of mouse quit events is deactivated
 
         The detection of mouse quit events is activated by default under
         Android.
@@ -144,7 +144,7 @@ class Mouse(Input):
 
     @staticmethod
     def process_quit_event(click_position=None):
-        """Check if mouse exit action has been performed
+        """Check if mouse exit action has been performed.
 
         If quit corner location is has been defined via
         ``Mouse.set_quit_corner_location()``  (i.e. 0, 1, 2 or 3), clicking
@@ -171,7 +171,7 @@ class Mouse(Input):
 
         See Also
         --------
-        ``Mouse.set_quit_rect_location()``
+        set_quit_corner_location
 
         """
 
@@ -489,7 +489,7 @@ class Mouse(Input):
 
         See Also
         --------
-        ``design.Experiment.register_wait_callback_function()``
+        expyriment.design.Experiment.register_wait_callback_function
 
         """
 

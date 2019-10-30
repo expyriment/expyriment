@@ -111,7 +111,7 @@ def create_module_rst(mod_name, no_members=False):
 
 
 def create_change_log_rst():
-    """create well shaped Changelog.rst from CHANGES.md"""
+    """Create well shaped Changelog.rst from CHANGES.md."""
 
     changes_md = os.path.join(p, "CHANGES.md")
     changelog_rst = "Changelog.rst"

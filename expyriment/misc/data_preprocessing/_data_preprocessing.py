@@ -183,10 +183,10 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
     data_folder : str
         folder which contains of the data (str)
     file_name : str
-        name of the files. All files that start with this name will
+        name of the files; all files that start with this name will
         be considered
     output_file : str, optional
-        name of data output file.  If no specified data will the save
+        name of data output file; if no specified data will the save
         to {file_name}.csv
     delimiter : str, optional
         delimiter character (default=",")
@@ -290,7 +290,7 @@ class Aggregator(object):
         data_folder :str
             folder which contains the data
         file_name : str
-            name of the files. All files that start with this name will
+            name of the files, all files that start with this name will
             be considered for the analysis (cf. aggregator.data_files)
         suffix : str, optional
             if specified only files that end with this particular
@@ -299,8 +299,8 @@ class Aggregator(object):
             array of variable names, read only the specified variables
         names_comprise_glob_pattern : boolean, optional
             if True, data_folder and file_name are processed as glob pattern
-            with wildcards such as "*" or "?". The suffix parameter will
-            be ignored.
+            with wildcards such as "*" or "?"; the suffix parameter will
+            be ignored
 
         """
 

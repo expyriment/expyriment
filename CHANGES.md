@@ -1,82 +1,93 @@
-========================
 Expyriment Release Notes
 ========================
 
 Coming up
 ---------
 New Features:
-- Expyriment windows with no frame; set default.window_no_frame=True before
-  initialize
-- download plugins from stash: misc.download_from_stash()
-- stimuli.Shape: A vertex list can be added when creating a shape object
-  using the optional vertex_list parameter
-- visual.get_surface_array & set_surface_arry for direct pixel manipulations
-  with numpy
+- Expyriment windows with no frame; set
+  ``control.defaults.window_no_frame=True`` before initializing
+- download plugins from stash: ``misc.download_from_stash``
+- ``stimuli.Shape``: A vertex list can be added when creating a shape object
+  using the optional ``vertex_list`` parameter
+- all visual stimuli now have ``get_surface_array`` & ``set_surface_array``
+  methods for direct pixel manipulations with numpy
 - all visual stimuli have a getter and setter for the position in polar
-  coordinates: polar_coordiante
-- cartesian2polar & polar2cartesian in misc.geometry
-- trials, blocks and experiment have the method has_factor() to check if a
-  factor is defined
+  coordinates: ``polar_coordiante``
+- ``cartesian2polar`` & ``polar2cartesian`` in ``misc.geometry``
+- ``design``: trials, blocks and experiment objects have the method
+  ``has_factor`` to check if a factor is defined
 - after installation the command line interface will be available from the
-  system command 'expyriment'
-- io.TextInput can now optionally how text right-to-left
-- io.SerialPort has a new method send_line
+  system command ``expyriment``
+- ``io.TextInput`` can now optionally how text right-to-left
+- ``io.SerialPort`` has a new method ``send_line``
 - geometry module has convenience functions for predefined geometrical
-  shapes used for plotting with stimuli.Shape 
-- geometry.lines_intersection_point calculates interscetion point of two lines
-- stimuli.Line is internally based on shape and has the new methods
-  get_shape and get_connected_shape
-- new function misc.round, implementing the old Python 2 rounding behaviour
-- io.keyboard.check now has an argument 'check_for_keyup' which will check for
-  keyup events instead of keydown events
-- new class misc.Colour: create colours by names, hex strings or RGB values
-  The class can also handle HSV, HSL values. The misc.HSVColour is thus obsolete.
-- data.preprocessing can handle glob wildcard pattern
+  shapes used for plotting with ``stimuli.Shape``
+- ``geometry.lines_intersection_point`` calculates interscetion point of two
+  lines
+- ``stimuli.Line`` is internally based on ``stimuli.Shape`` and has the new
+  methods ``get_shape`` and ``get_connected_shape``
+- new function ``misc.round``, implementing the old Python 2 rounding behaviour
+- ``io.keyboard.check`` now has an argument ``check_for_keyup`` which will
+  check for keyup events instead of keydown events
+- new class ``misc.Colour``: create colours by names, Hex strings or RGB values;
+  the class can also handle HSV, HSL values; the ``misc.HSVColour`` class is
+  thus obsolete
+- ``misc.data.preprocessing`` can handle glob wildcard pattern
      
 Changed:
-- Python's time.perf_counter() function will be used as high-precision timer
+- Python's ``time.perf_counter`` function will be used as high-precision timer
   if it exists (that is, for Python 3.3+)
-- major rewrite of stimuli.Shape with several bug fixes
-  e.g. shapes have no line_width, contour_colour is renamed to 
-  debug_contour_colour, Shape.rect is now a pygame.Rect(),
-  see improved documentation
-- extras
+- major rewrite of ``stimuli.Shape`` with several bug fixes; e.g. shapes have no
+  ``line_width``, ``contour_colour`` is renamed to ``debug_contour_colour``,
+  ``Shape.rect`` is now a ``pygame.Rect``; see improved documentation
+- ``extras``
     - extras need to be explicitly imported
     - extras and plugins are not anymore part of expyriment package and can
       be instead downloaded from the Expyriment stash (see
-      misc.download_from_stash())
-    - All installed extras will be installed in the local settings folder
-      (typically .expyriment of the $HOME directory)
-- the option ascii_fiter in io.TextInput has been renamed to character_filter
-- frequence_table in misc.statistics has been renamed to frequency_table
-- points_to_vertices in misc.geometry has been renamed to points2vertices
-- position2coordinate in misc.geometry has been renamed to
-  position2coordinates
-- position2coordinates & coordinates2position have a new optional argument to
-  calculate positions relative to a surfaces
-- Circle.get_polar_coordiantes & Circle.set_polar_coordiantes are obsolete
-  use circle.polar_position
-- trial.get_factor, block.get_factor, experiment.get_bws_factor now raises an
-  exception, if the factor is not defined. This can be suppressed by using the
-  parameter return_none_if_not_defined
-- misc.geometry.points2vertices requires now a list of misc.XYPoints and
-  not a list of tuples. (use misc.geometry.tuples2points to adapt old code)
-- stimuli.Video: attempting to downloaded a missing ffmpeg binary only when
+      ``misc.download_from_stash``)
+    - all installed extras will be installed in the local settings folder
+      (typically ``.expyriment`` in the $HOME directory)
+- the option ``ascii_fiter`` in ``io.TextInput`` has been renamed to
+  ``character_filter``
+- ``frequence_table`` in ``misc.statistics`` has been renamed to
+  ``frequency_table``
+- ``points_to_vertices`` in ``misc.geometry`` has been renamed to
+  ``points2vertices``
+- ``position2coordinate`` in ``misc.geometry`` has been renamed to
+  ``position2coordinates``
+- ``position2coordinates`` & ``coordinates2position`` have a new optional
+  argument to calculate positions relative to a surfaces
+- ``stimuli.Circle``: ``get_polar_coordiantes`` & ``set_polar_coordiantes`` are
+  obsolete; use ``polar_position``
+- ``design``: ``Trial().get_factor``, ``Block().get_factor`` and
+  ``Experiment().get_bws_factor`` now raise an exception if the factor is not
+  defined; this can be suppressed by using the parameter
+  ``return_none_if_not_defined``
+- ``misc.geometry.points2vertices`` requires now a list of ``misc.XYPoints`` and
+  not a list of tuples; (use ``misc.geometry.tuples2points`` to adapt old code)
+- ``stimuli.Video``: attempting to downloaded a missing ffmpeg binary only when
   initializing a Video stimulus with the "mediadecoder" backend
+- ``io.Mouse``: quit events will now be controlled via the method 
+  ``Mouse.set_quit_corner_location``; the class properties
+  ``quit_rect_location`` and ``quit_rect_size`` are obsolete
+- logging of visual stimuli ``present`` method now after screen update
 
 Fixed:
-- Adding field bug in TouchscreenButtonBox
-- 1-pixel bug when converting Expyriment positions to screen (Pygame);
-  positions: position2coordinate & coordinate2position
-- auto_subject_id takes now also existing event files into account
-- io.SerialPort bug with Python 3
-- script path is added to PYTHONPATH
+- Adding field bug in ``io.TouchscreenButtonBox``
+- 1-pixel bug when converting Expyriment positions to screen (Pygame)
+  positions: ``position2coordinate`` & ``coordinate2position``
+- control: ``auto_create_subject_id`` takes now also existing event files into
+  account
+- ``io.SerialPort`` bug with Python 3
+- script path is added to $PYTHONPATH
 - representation lists in output CSV files
-- bug in io.Keyboard.wait
+- bug in ``io.Keyboard.wait``
 - bug when drawing textures to screen (OpenGL) leading to 1-pixel inaccuracies
-- bug in Ellipse with uneven line_width
-- io.TextIput background_stimulus now takes all Expyriment stimuli
-- misc.get_system_info() uses PIL.__version__ 
+- bug in ``stimuli.Ellipse`` with uneven `line_width` argument
+- ``io.TextIput``: argument ``background_stimulus`` now takes all Expyriment
+  stimuli
+- ``misc.get_system_info()`` uses ``PIL.__version__``
+- ``io.TextMenu`` mouse wheel scrolling
 
 Version 0.9.0 (9 Mar 2017)
 ---------------------------
@@ -114,9 +125,6 @@ Changed:
         window is "not responding"
 - control.set_develop_mode: new skip_wait_methods attribute to omit all wait 
   functions in the experiment (for testing)
-- Mouse quit events will be now control via the method 
-  Mouse.set_quit_corner_location(). The class properties quit_rect_location and 
-  quit_rect_size are obsolete.
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
 - move set_skip_wait_functions from misc to io

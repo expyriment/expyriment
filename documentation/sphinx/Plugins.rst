@@ -74,5 +74,5 @@ needs a ``_create_surface`` method that defines what happens when the stimulus i
 plotted or presented.
 
 
-_`Expyriment stash`: http://stash.expyriment.org
-_`Command Line Interface`: CommandLineInterface.html
+.. _`Expyriment stash`: http://stash.expyriment.org
+.. _`Command Line Interface`: CommandLineInterface.html

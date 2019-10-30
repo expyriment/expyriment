@@ -56,7 +56,7 @@ Expyriment Python package), please have a look at the :doc:`API reference pages
 
 Example code
 ------------
-Examples of full experiments can be found :doc:`here <Examples>`
+Examples of full experiments can be found :doc:`here <Examples>`.
 
 Creating experiments, blocks, trials and stimuli::
 

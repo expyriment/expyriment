@@ -3,14 +3,14 @@ Presenting videos in Expyriment
 
 Video formats
 -------------
-Since version 0.9.0 Expyriment uses FFMPEG (https://www.ffmpeg.org) by default to decode video files (the ``mediadecoder`` backend). This means that a large variety of video formats are automatically supported.
+Since version 0.9.0 Expyriment uses FFMPEG (https://www.ffmpeg.org) by default to decode video files (the ``mediadecoder`` backend) if enhanced video playback support has been installed (see :doc:`Installation`). This means that a large variety of video formats are automatically supported.
 
 The old video backend is still available as ``pygame``, and only plays MPEG1 videos with MP3 audio.
 If you have to use the old backend, you can encode any video into this correct format using FFMPEG directly::
 
     ffmpeg -i <inputfile> -vcodec mpeg1video -acodec libmp3lame -intra -qscale 2  <outputfile.mpg>
 
-The -qscale option is the quality setting. It can take values from 1 to 31. 1 is the best quality, but big file size. 31 is the worst quality, but small file size. Play around with this setting to get a good balance between quality and file size.
+The ``-qscale`` option is the quality setting. It can take values from 1 to 31. 1 is the best quality, but big file size. 31 is the worst quality, but small file size. Play around with this setting to get a good balance between quality and file size.
 
 Usage
 -----
