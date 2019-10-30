@@ -94,10 +94,10 @@ if version_info[0] == '':
 release = version_info[0]
 
 # The normal X.Y.Z version.
-version_nr = release[:5]
+version_nr = release.split("-")[0]  #release[:5]
 
 # The short X.Y version.
-version = version_nr[:3]
+version = ".".join(version_nr.split(".")[:2])  #version_nr[:3]
 
 rst_epilog = """
 .. |expyriment-wheel| replace:: expyriment-{0}-py2.py3-none-any.whl
