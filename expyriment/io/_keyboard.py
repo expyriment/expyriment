@@ -222,7 +222,8 @@ class Keyboard(Input):
         if check_for_keyup:
             target_event = pygame.KEYUP
             if check_for_control_keys:
-                Keyboard.process_control_keys()
+                self.check(keys=None, check_for_keyup=False,
+                            check_for_control_keys=True)
                 check_for_control_keys = False
         else:
             target_event = pygame.KEYDOWN
