@@ -299,8 +299,9 @@ class Keyboard(Input):
                     done = True
                     found_key = rtn_callback
                     rt = int((get_time() - start) * 1000)
-                if process_control_events:
-                    _internals.active_exp.mouse.process_quit_event()
+                if process_control_events and \
+                    _internals.active_exp.mouse.process_quit_event():
+                    done = True
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
                 if _internals.active_exp.is_initialized and \
                    process_control_events and \
@@ -385,8 +386,9 @@ class Keyboard(Input):
                     done = True
                     rt = int((get_time() - start) * 1000)
                     found_char = rtn_callback
-                if process_control_events:
-                    _internals.active_exp.mouse.process_quit_event()
+                if process_control_events and  \
+                        _internals.active_exp.mouse.process_quit_event():
+                    done = True
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
                 if _internals.active_exp.is_initialized and \
                    process_control_events and \

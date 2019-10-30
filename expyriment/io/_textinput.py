@@ -344,13 +344,11 @@ class TextInput(Input):
             if isinstance(rtn_callback, CallbackQuitEvent):
                 return rtn_callback, None
 
-            if process_control_events:
-                _internals.active_exp.mouse.process_quit_event()
-
             events = pygame.event.get(pygame.KEYDOWN)
             for event in events:
                 if process_control_events:
-                    if _internals.active_exp.keyboard.process_control_keys(event):
+                    if _internals.active_exp.keyboard.process_control_keys(event) or \
+                            _internals.active_exp.mouse.process_quit_event():
                         self._create()
                         self._update()
                         return None, None
