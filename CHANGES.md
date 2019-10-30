@@ -114,6 +114,9 @@ Changed:
         window is "not responding"
 - control.set_develop_mode: new skip_wait_methods attribute to omit all wait 
   functions in the experiment (for testing)
+- Mouse quit events will be now control via the method 
+  Mouse.set_quit_corner_location(). The class properties quit_rect_location and 
+  quit_rect_size are obsolete.
 - rename method: stimulus.replace --> stimulus.reposition
 - improvements to io.extras.TcpClient
 - move set_skip_wait_functions from misc to io

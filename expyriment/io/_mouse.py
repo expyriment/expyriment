@@ -34,8 +34,8 @@ class Mouse(Input):
     """
 
     #static class properties for quit_events
-    quit_rect_location = None
-    quit_click_rect_size = (30, 30)
+    _quit_corner_location = None
+    _corner_rect_size = (30, 30)
     _quit_action_events = []
 
 
@@ -72,7 +72,7 @@ class Mouse(Input):
 
         Input.__init__(self)
         if is_android_running():
-            Mouse.quit_rect_location = 1
+            Mouse._quit_corner_location = 1
         if show_cursor is None:
             show_cursor = defaults.mouse_show_cursor
         if track_button_events is None:
@@ -86,10 +86,68 @@ class Mouse(Input):
             self.track_motion_events = track_motion_events
 
     @staticmethod
+    def set_quit_corner_location(corner, corner_rect_size=(None, None)):
+        """Activates the possibility to quit the experiment using a mouse
+        event. Defines the corner on which the user has to click to elicit a
+        quit dialog.
+
+        If quit corner location has been defined, clicking quickly three
+        times (i.e., within 1 second) in the specified corner forces
+        experiment to quit.
+
+        To switch off the detection of mouse quit events, please call
+        ``Mouse.set_quit_corner_location(corner=None)``.
+
+        Changing the corner and rect_size always affects all mouse
+        instances.
+
+        Parameters
+        ----------
+        corner: int or None
+            location code (0,1, 2 or 3) of the quit corner.  The default
+            value under Android is 1, otherwise None. See also the notes
+            below.
+
+       corner_rect_size = tuple (int, int), optional
+            size of the field (rect) that detects the quit action in one
+            corner of the screen. default = (30, 30)
+
+        Notes
+        -----
+
+        Mouse quit events are especially useful for experiments on devices
+        without hardware keyboard, such as tablet PCs or smartphones.
+
+        Corner location codes:
+
+                0 = upper left corner,  1 = upper right corner   (0) (1)
+                2 = lower right corner, 3 = lower left corner    (3) (2)
+                otherwise the detection of mouse quit events is deactivated.
+
+        The detection of mouse quit events is activated by default under
+        Android.
+
+        """
+
+        if corner is not None:
+            if not isinstance(corner, int) or corner<0 or corner >3:
+                corner = None
+                print("Warning: {} is an unkown corner location. Mouse quit "
+                                     "event is deactivated.".format(corner))
+        Mouse._quit_corner_location = corner
+
+        try:
+            Mouse._corner_rect_size = (int(corner_rect_size[0]),
+                                       int(corner_rect_size[1]))
+        except:
+            pass
+
+    @staticmethod
     def process_quit_event(click_position=None):
         """Check if mouse exit action has been performed
 
-        If ``Mouse.quit_rect_location`` is defined (i.e. 0, 1, 2 or 3), clicking
+        If quit corner location is has been defined via
+        ``Mouse.set_quit_corner_location()``  (i.e. 0, 1, 2 or 3), clicking
         quickly three times (i.e., within 1 second) in one of the corners of
         the screen forces the experiment to quit.
 
@@ -97,9 +155,6 @@ class Mouse(Input):
         methods (similar to ``Keyboard.process_control_keys``).  If no mouse
         functions are called by your program, this function can be polled to
         ensure quitting experiment by mouse.
-
-        Mouse quit events are especially useful for experiments on devices
-        without hardware keyboard, such as tablet PCs or smartphones.
 
         Parameters
         ----------
@@ -114,35 +169,13 @@ class Mouse(Input):
             True if exit action has been performed
             False otherwise
 
-        Notes
-        -----
-        To switch on or off the detection of mouse quit events, please use the
-        static class property ``quit_rect_location`` (see below).
-
-        The detection of mouse quit events is activated by default under
-        Android.
-
-        Static class properties::
-
-            Mouse.quit_rect_location = int, optional
-                Location of the quit click action field or None.
-
-                0 = upper left corner,  1 = upper right corner   (0) (1)
-                2 = lower right corner, 3 = lower left corner    (3) (2)
-                otherwise the detection of mouse quit events is deactivated.
-
-                Default value under Android is 1, otherwise None
-
-            Mouse.quit_click_rect_size = tuple (int, int)
-                size of the field (rect) that detects the quit action by
-                triple clicking in one corner of the screen. (default = (30, 30))
-
-        Changing the static class properties affects always all mouse
-        instances.
+        See Also
+        --------
+        ``Mouse.set_quit_rect_location()``
 
         """
 
-        if Mouse.quit_rect_location not in [0,1,2,3]:
+        if Mouse._quit_corner_location not in (0, 1, 2, 3):
             return False
 
         if click_position is None:
@@ -162,31 +195,31 @@ class Mouse(Input):
                 return Mouse.process_quit_event(click_position=pos)
 
         # determine threshold x & y
-        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 3: # left
+        if Mouse._quit_corner_location == 0 or Mouse._quit_corner_location == 3: # left
             threshold_x = -_internals.active_exp.screen.center_x + \
-                    Mouse.quit_click_rect_size[0]
+                    Mouse._corner_rect_size[0]
         else:# right
             threshold_x = _internals.active_exp.screen.center_x - \
-                    Mouse.quit_click_rect_size[0]
-        if Mouse.quit_rect_location == 0 or Mouse.quit_rect_location == 1: # upper
+                    Mouse._corner_rect_size[0]
+        if Mouse._quit_corner_location == 0 or Mouse._quit_corner_location == 1: # upper
             threshold_y = _internals.active_exp.screen.center_y - \
-                    Mouse.quit_click_rect_size[1]
+                    Mouse._corner_rect_size[1]
         else:# lower
             threshold_y = -_internals.active_exp.screen.center_y + \
-                    Mouse.quit_click_rect_size[1]
+                    Mouse._corner_rect_size[1]
         # check
-        if (Mouse.quit_rect_location == 0 and \
-                click_position[0] < threshold_x and\
-                click_position[1] > threshold_y) \
-           or (Mouse.quit_rect_location == 1 and \
-                click_position[0] > threshold_x and \
-                click_position[1] > threshold_y) \
-           or (Mouse.quit_rect_location == 2 and \
-                click_position[0] > threshold_x and \
-                click_position[1] < threshold_y) \
-           or (Mouse.quit_rect_location == 3 and \
-                click_position[0] < threshold_x and \
-                click_position[1] < threshold_y):
+        if (Mouse._quit_corner_location == 0 and \
+            click_position[0] < threshold_x and \
+            click_position[1] > threshold_y) \
+           or (Mouse._quit_corner_location == 1 and \
+               click_position[0] > threshold_x and \
+               click_position[1] > threshold_y) \
+           or (Mouse._quit_corner_location == 2 and \
+               click_position[0] > threshold_x and \
+               click_position[1] < threshold_y) \
+           or (Mouse._quit_corner_location == 3 and \
+               click_position[0] < threshold_x and \
+               click_position[1] < threshold_y):
 
             Mouse._quit_action_events.append(get_time())
             if len(Mouse._quit_action_events)>=3:
@@ -301,7 +334,6 @@ class Mouse(Input):
     def get_last_button_up_event(self):
         """Get the last button up event.
         All earlier button up events will be removed from the queue.
-
 
         Returns
         -------
@@ -457,7 +489,7 @@ class Mouse(Input):
 
         See Also
         --------
-        expyriment.design.Experiment.register_wait_callback_function
+        ``design.Experiment.register_wait_callback_function()``
 
         """
 
