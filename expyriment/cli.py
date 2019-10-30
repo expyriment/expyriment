@@ -205,11 +205,17 @@ selection of other common functionality.""",
             branches.append(__version__)
         branch = ""
         while branch not in branches:
-            sys.stdout.write(" from which branch? ([master]{0})? ".format(
-                "/".join(branches[1:])))
+            if len(branches) == 1:
+                sys.stdout.write(" from which branch? ([master])? ")
+            else:
+                sys.stdout.write(" from which branch? (master/[{0}])? ".format(
+                branches[1]))
             branch = input()
             if branch == "":
-                branch = "master"
+                if len(branches) == 1:
+                    branch = "master"
+                else:
+                    branch = branches[1]
         download_from_stash(what, branch)
     if args["J"]:
         d = join_data()

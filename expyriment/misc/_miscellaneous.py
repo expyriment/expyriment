@@ -496,7 +496,7 @@ def download_from_stash(content="all", branch=None):
                 f.write(buffer)
                 show_progress(file_size_dl, file_size,
                               "downloading stash ({0})".format(branch))
-            print("")
+            sys.stdout.write("\n")
         except:
             show_progress(0, 100,
                           "downloading stash ({0})".format(branch))
