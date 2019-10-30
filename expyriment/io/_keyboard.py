@@ -82,9 +82,24 @@ class Keyboard(Input):
                     pause_function()
                     return True
         else:
+            ## -------
             for event in pygame.event.get(pygame.KEYDOWN):
                 # recursion
                 return Keyboard.process_control_keys(event, quit_confirmed_function)
+
+            # code above is as in 0.9. However, it only processes to first key
+            # press and deletes all other keydown events. This is a bug,
+            # but remains unchanged in the current version to keep event polling
+            # in 0.10 identical to 0.9
+            #
+            # TODO for 1.0: Process all keydown events
+            # ...
+            #             for event in pygame.event.get(pygame.KEYDOWN):
+            #                 if Keyboard.process_control_keys(event, quit_confirmed_function):
+            #                     return True
+            #             return False
+            # ...
+            # TODO for 1.0:
 
         return False
 
