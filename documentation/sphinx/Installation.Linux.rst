@@ -13,8 +13,9 @@ All Linux distributions
   * pip or pip3
   * build-essential (or equivalent)
   * libffi-dev
-  * python-dev
+  * python-dev or python3-dev
   * PortAudio
+  * ffmpeg (for enhanced video support, optional)
 
 2. In a command line, run::
 
@@ -25,9 +26,9 @@ All Linux distributions
 
 For example, in Debian run::
 
-    sudo apt-get install python python-setuptools python-pip build-essential libffi-dev python-dev libportaudio2
-    sudo pip install -U pip
-    sudo pip install -U expyriment[optional]
+    sudo apt-get install python3 python3-pip python3-setuptools build-essential libffi-dev python3-dev libportaudio2 ffmpeg
+    sudo pip3 install -U pip
+    sudo pip3 install -U expyriment[all]
     
 
 Notes

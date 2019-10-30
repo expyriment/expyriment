@@ -35,6 +35,48 @@ __revision__ = ''
 __date__ = ''
 
 
+try:
+    import future as _future
+    if int(_future.__version__.split(".")[1]) < 15:
+      raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Future {0}".format(
+                        _future.__version__) +
+                      "\nPlease install Future >= 0.15.")
+except ImportError:
+    raise ImportError("Expyriment {0} ".format(__version__) +
+                      "needs the package 'Future')." +
+                      "\nPlease install Future >= 0.15.")
+
+try:
+    import os
+    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+    import pygame as _pygame
+    if _pygame.vernum < (1, 9, 1):
+        raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Pygame {0}.{1}.{2}.".format(
+                                                    _pygame.vernum) +
+                      "\nPlease install Pygame 1.9.")
+except ImportError:
+    raise ImportError("Expyriment {0} ".format(__version__) +
+                      "needs the package 'Pygame')." +
+                      "\nPlease install Pygame 1.9.")
+
+try:
+    import OpenGL as _OpenGL
+    if int(_OpenGL.version.__version__[0]) < 3:
+        raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
+                        int(_OpenGL.version.__version__[0]),
+                        int(_OpenGL.version.__version__[2]),
+                        int(_OpenGL.version.__version__[4]),
+                          ) +
+                      "\nPlease install PyOpenGL 3.0.")
+except ImportError:
+    print("No OpenGL support!" +
+                    "\nExpyriment {0} ".format(__version__) +
+                      "needs the package 'PyOpenGL'."
+                      "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
+
 import sys as _sys
 from ._internals import get_version, import_all_extras
 from ._internals import PYTHON3 as _PYTHON3
@@ -64,46 +106,6 @@ try:
                     print(_m.format(_tf, _package))
 except:
     pass
-
-try:
-    import future as _future
-    if int(_future.__version__.split(".")[1]) < 15:
-      raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Future {0}".format(
-                        _future.__version__) +
-                      "\nPlease install Future >= 0.15.")
-except ImportError:
-    raise ImportError("Expyriment {0} ".format(__version__) +
-                      "needs the package 'Future')." +
-                      "\nPlease install Future >= 0.15.")
-
-try:
-    import pygame as _pygame
-    if _pygame.vernum < (1, 9, 1):
-        raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Pygame {0}.{1}.{2}.".format(
-                                                    _pygame.vernum) +
-                      "\nPlease install Pygame 1.9.")
-except ImportError:
-    raise ImportError("Expyriment {0} ".format(__version__) +
-                      "needs the package 'Pygame')." +
-                      "\nPlease install Pygame 1.9.")
-
-try:
-    import OpenGL as _OpenGL
-    if int(_OpenGL.version.__version__[0]) < 3:
-        raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
-                        int(_OpenGL.version.__version__[0]),
-                        int(_OpenGL.version.__version__[2]),
-                        int(_OpenGL.version.__version__[4]),
-                          ) +
-                      "\nPlease install PyOpenGL 3.0.")
-except ImportError:
-    print("No OpenGL support!" +
-                    "\nExpyriment {0} ".format(__version__) +
-                      "needs the package 'PyOpenGL'."
-                      "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
 from . import _internals
 from . import design
