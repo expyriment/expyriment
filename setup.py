@@ -130,14 +130,15 @@ class Build(build_py):
                 new_file = open(abs_path, 'wb')
                 old_file = open(f, 'rb')  # was 'rUb'
                 for line in old_file:
-                    if line[0:11] == '__version__':
-                        new_file.write("__version__ = '" + version_nr + "'" +
-                                       '\n')
-                    elif line[0:12] == '__revision__':
-                        new_file.write("__revision__ = '" + revision_nr + "'"
-                                       + '\n')
-                    elif line[0:8] == '__date__':
-                        new_file.write("__date__ = '" + date + "'" + '\n')
+                    if line[0:11] == b'__version__':
+                        new_file.write("__version__ = '{0}'\n".format(
+                            version_nr).encode("utf-8"))
+                    elif line[0:12] == b'__revision__':
+                        new_file.write("__revision__ = '{0}'\n".format(
+                            revision_nr).encode("utf-8"))
+                    elif line[0:8] == b'__date__':
+                        new_file.write("__date__ = '{0}'\n".format(
+                            date).encode("utf-8"))
                     else:
                         new_file.write(line)
                 # Close temp file
@@ -255,10 +256,10 @@ def get_version_info_from_git():
         proc.stdout.read().lstrip(b"v").strip().decode("utf-8"))
     proc = Popen(['git', 'log', '--format=%H', '-1'], \
                         stdout=PIPE, stderr=PIPE)
-    revision_nr = proc.stdout.read().strip()[:7]
+    revision_nr = proc.stdout.read().strip()[:7].decode("utf-8")
     proc = Popen(['git', 'log', '--format=%cd', '-1'],
                      stdout=PIPE, stderr=PIPE)
-    date = proc.stdout.readline().strip()
+    date = proc.stdout.readline().strip().decode("utf-8")
     return version_nr, revision_nr, date
 
 def get_version_info_from_release_info():
