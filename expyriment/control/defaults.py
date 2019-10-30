@@ -165,7 +165,7 @@ goodbye_text = "Ending experiment..."
 goodbye_delay = 3000
 fast_quit = False
 quit_key = _constants.K_ESCAPE
-pause_key = None
+pause_key = None  # TODO for 1.0: Pause events should be removed
 
 open_gl = 2
 window_mode = False

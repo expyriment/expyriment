@@ -191,6 +191,9 @@ class Keyboard(Input):
 
         """
 
+        # TODO for 1.0: Check should not return None. Think about the
+        #               introduction of QuitAttemptEvent!
+
         if keys is None:
             keys = self.default_keys
         else:
