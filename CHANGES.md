@@ -1,8 +1,8 @@
 Expyriment Release Notes
 ========================
 
-Coming up
----------
+Version 0.10.0 (30 Oct 2019)
+----------------------------
 New Features:
 - Expyriment windows with no frame; set
   ``control.defaults.window_no_frame=True`` before initializing
