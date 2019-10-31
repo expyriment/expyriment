@@ -5,7 +5,6 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
-from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -184,7 +183,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = old_div(1000.0, refresh_rate)
+            refresh_time = int(1000 / refresh_rate)
             return refresh_time - (presentation_time % refresh_time)
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
         unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
@@ -195,7 +194,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(misc.round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
+        inaccuracy = int(misc.round( sum(inaccuracies)/ len(inaccuracies)))
         delayed = misc.round(100 * delayed_presentations/180.0, 2)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
@@ -219,7 +218,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(misc.round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
+                        int(misc.round(refresh_rate)), int(1000/refresh_rate)),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
@@ -434,10 +433,18 @@ abcdefghijklmnopqrstuvwxyz äöü
     # rects center, left, right, top, button]
     cl = (20, 20, 20)
     rects = [stimuli.Rectangle(size=bs, position=[0, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[old_div((bs[0] - exp.screen.size[0]), 2.2), 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[old_div((exp.screen.size[0] - bs[0]), 2.2), 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, old_div((bs[1] - exp.screen.size[1]), 2.2)], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, old_div((exp.screen.size[1] - bs [1]), 2.2)], colour=cl)]
+             stimuli.Rectangle(size=bs,
+                    position=[int((bs[0] - exp.screen.size[0])/ 2.2), 0],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[int((exp.screen.size[0] - bs[0])/ 2.2), 0],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[0, int((bs[1] - exp.screen.size[1])/2.2)],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[0, int((exp.screen.size[1] - bs [1])/2.2)],
+                    colour=cl)]
     rect_key_mapping = [constants.K_RETURN, constants.K_LEFT, constants.K_RIGHT,
                         constants.K_UP, constants.K_DOWN]
 
