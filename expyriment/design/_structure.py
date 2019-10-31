@@ -4,8 +4,6 @@ The design._structure module of expyriment.
 This module contains a class implementing the experiment structure.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -31,7 +29,7 @@ from copy import deepcopy
 
 from . import defaults
 from .. import _internals
-from ..misc import constants, Clock, unicode2byte, byte2unicode, py2py3_sort_array
+from ..misc import constants, Clock, unicode2byte, byte2unicode, string_sort_array
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -1183,7 +1181,7 @@ class Block(object):
             for tf in self.get_trial_factor_values(f):
                 if tf not in val:
                     val.append(tf)
-            py2py3_sort_array(val)
+            string_sort_array(val)
             val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(
@@ -1537,10 +1535,8 @@ class Block(object):
                     encoding = re.findall("coding[:=]\s*([-\w.]+)",
                                           second_line)
                     if encoding == []:
-                        if _internals.PYTHON3:
-                            encoding = ['utf-8']
-                        else:
-                            encoding = [None]
+                        encoding = ['utf-8']
+
         else:
             encoding = [encoding]
 

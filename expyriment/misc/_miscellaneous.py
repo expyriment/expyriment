@@ -6,8 +6,6 @@ This module contains miscellaneous functions for expyriment.
 All classes in this module should be called directly via expyriment.misc.*:
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -20,10 +18,11 @@ import sys
 import glob
 import random
 import colorsys
+import math
 
 import pygame
 
-from .._internals import PYTHON3, android, get_settings_folder, get_version
+from .._internals import android, get_settings_folder, get_version
 
 try:
     from locale import getdefaultlocale
@@ -39,14 +38,12 @@ if FS_ENC is None:
     FS_ENC = 'utf-8'
 
 
-_round = round
-
-def round(number, ndigits=0):
+def round(number, ndigits=0): # TODO: overrides Python's round, maybe renaming?
     """Round half away from zero.
 
     This method implements the Python 2 way of rounding.
-    For "bankers rounding" (round half to even), plese use the builtin `round`
-    function in Python 3 or Numpy's `around` function in Python 2.
+    For "bankers rounding" (round half to even), please use the builtin `round`
+    function in Python 3 or Numpy's `around` function.
 
     Parameters
     ----------
@@ -62,16 +59,11 @@ def round(number, ndigits=0):
 
     """
 
-    import math
-
-    if not PYTHON3:
-        return _round(number, ndigits)
+    p = 10 ** ndigits
+    if number > 0:
+        return float(math.floor((number * p) + 0.5))/p
     else:
-        p = 10 ** ndigits
-        if number > 0:
-            return float(math.floor((number * p) + 0.5))/p
-        else:
-            return float(math.ceil((number * p) - 0.5))/p
+        return float(math.ceil((number * p) - 0.5))/p
 
 
 def compare_codes(input_code, standard_codes, bitwise_comparison=True):
@@ -106,8 +98,7 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
 
 
 def byte2unicode(s, fse=False):
-    if (PYTHON3 and isinstance(s, str)) or\
-       (not PYTHON3 and isinstance(s, unicode)):
+    if isinstance(s, str):
         return s
 
     if fse:
@@ -162,6 +153,7 @@ def str2unicode(s, fse=False):
     -------
     A unicode-type string.
     """
+
     return byte2unicode(s, fse)
 
 def unicode2str(u, fse=False):
@@ -460,11 +452,7 @@ def download_from_stash(content="all", branch=None):
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()
 
-    if PYTHON3:
-        from urllib.request import urlopen, Request
-    else:
-        from urllib2 import urlopen
-
+    from urllib.request import urlopen, Request
     from tempfile import TemporaryFile
     from zipfile import ZipFile
     from shutil import copyfileobj
@@ -482,10 +470,7 @@ def download_from_stash(content="all", branch=None):
     with TemporaryFile() as f:
         meta = u.info()
         try:
-            if PYTHON3:
-                file_size = int(u.getheader('Content-Length'))
-            else:
-                file_size = int(u.info().getheaders("Content-Length")[0])
+            file_size = int(u.getheader('Content-Length'))
             file_size_dl = 0
             block_sz = 8192
             while True:
@@ -547,9 +532,9 @@ def download_from_stash(content="all", branch=None):
     print("")
 
 
-def py2py3_sort_array(array):
-    """Sorts an array with different types using the string representation
-    under Python2 and Python3. Sorts in place!
+def string_sort_array(array):
+    """Sorts an array with different types using the string representation.
+    Sorts in place!
 
     Returns
     -------

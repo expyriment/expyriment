@@ -1,10 +1,6 @@
 """
 Get System Information.
 """
-from __future__ import absolute_import, print_function, division
-from future import standard_library
-standard_library.install_aliases()
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -52,13 +48,9 @@ except:
     _pil = None
 import pygame
 
-from .._internals import PYTHON3
-
 def _get_registry_value(key, subkey, value):
-    if PYTHON3:
-        import winreg as _winreg  # TODO check me on Windows
-    else:
-        import _winreg
+    import winreg as _winreg  # TODO check me on Windows
+
     key = getattr(_winreg, key)
     handle = _winreg.OpenKey(key, subkey)
     (value, type) = _winreg.QueryValueEx(handle, value)

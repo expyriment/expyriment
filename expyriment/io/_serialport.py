@@ -5,9 +5,6 @@ This module contains a class implementing serial port input/output.
 
 """
 
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -28,7 +25,7 @@ except:
 from . import defaults
 from ._input_output import Input, Output
 from .. import _internals, misc
-from .._internals import CallbackQuitEvent, PYTHON3
+from .._internals import CallbackQuitEvent
 
 
 class SerialPort(Input, Output):
@@ -498,10 +495,7 @@ The Python package 'pySerial' is not installed."""
 
         """
 
-        if PYTHON3:
-            data = list(data)
-        else:
-            data = [ord(x) for x in data]
+        data = list(data)
 
         if carriage_return:
             data.append(13)

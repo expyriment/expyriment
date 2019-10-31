@@ -9,13 +9,6 @@ that starts with _.
 
 """
 
-
-from __future__ import print_function
-
-import __future__
-import builtins
-
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = '21-11-2011'
@@ -24,12 +17,6 @@ __version__ = '21-11-2011'
 import os
 import sys
 import inspect  
-import types
-import imp
-
-
-exclude = dir(builtins) + dir(__future__) + ['builtins', 'ModuleType',
-                                             'True', 'False']
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
@@ -39,7 +26,7 @@ def inspect_members(item):
     functions = []
     attributes = []
     for member in members:
-        if member[0][0:1] != '_' and member[0] not in exclude:
+        if member[0][0:1] != '_':
             #print(member)
             if inspect.ismodule(member[1]):
                 modules.append(member)

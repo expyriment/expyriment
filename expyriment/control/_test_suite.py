@@ -5,8 +5,6 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \

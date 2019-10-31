@@ -3,11 +3,6 @@
 Setup file for Expyriment
 """
 
-
-from __future__ import print_function
-from builtins import *
-
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
@@ -73,8 +68,7 @@ source_files = ['.release_info',
                 'Makefile',
                 'README.md']
 
-install_requires = ["future>=0.15,<1",
-                    "pygame>=1.9,<2",
+install_requires = ["pygame>=1.9,<2",
                     "pyopengl>=3.0,<4"]
 
 extras_require = {

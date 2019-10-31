@@ -1,4 +1,3 @@
-from __future__ import print_function
 import expyriment
 from pydoc import getdoc
 x = None

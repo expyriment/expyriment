@@ -6,12 +6,6 @@ A text line stimulus.
 This module contains a class implementing a text line stimulus.
 
 """
-from __future__ import absolute_import, division, print_function
-from builtins import (ascii, bytes, chr, dict, filter, hex, input,
-                      int, map, next, oct, pow, range, round,
-                      str, super, zip) # without open, because
-                      # pygame.font.Font needs old file object under PY2
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

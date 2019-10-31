@@ -46,8 +46,6 @@ def get_version():
 
 # GLOBALLY NEEDED STUFF
 
-PYTHON3 = (sys.version_info[0] == 3)
-
 active_exp = None  # expyriment.design.__init__ sets active_exp to
                    # design.Experiment("None")
                    # Provides the access to the currently active experiment
@@ -55,23 +53,15 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
-def is_base_string(s):
-    if PYTHON3:
-        return isinstance(s, (str, bytes))
-    else:
-        return isinstance(s, (unicode, str))
+def is_base_string(s): #TODO
+    return isinstance(s, (str, bytes))
 
 def is_unicode_string(s):
-    if PYTHON3:
-        return isinstance(s, str)
-    else:
-        return isinstance(s, unicode)
+    return isinstance(s, str)
 
 def is_byte_string(s):
-    if PYTHON3:
-        return isinstance(s, bytes)
-    else:
-        return isinstance(s, str)
+    return isinstance(s, bytes)
+
 
 def pump_pygame_events():
     pygame.event.pump()
@@ -142,11 +132,8 @@ class CallbackQuitEvent(object):
 # IMPORTER FUNCTIONS
 
 def run_py_file_command(path):
-    # helper function to generate import command for extras that is Python2/3 compatible
-    if PYTHON3:
-        return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
-    else:
-        return "execfile(r'{0}')\n".format(path)
+    # helper function to generate import command
+    return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
 
 def get_settings_folder():
     """Return for expyriment setting folder in $HOME"""

@@ -9,9 +9,6 @@ Credits and references:
       http://stackoverflow.com/questions/1824399/get-mach-absolute-time-uptime-in-nanoseconds-in-python
       https://mail.python.org/pipermail/python-dev/2009-October/093173.html
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

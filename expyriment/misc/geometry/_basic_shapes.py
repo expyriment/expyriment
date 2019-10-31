@@ -6,9 +6,6 @@ geometrical shapes.
 
 """
 
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''

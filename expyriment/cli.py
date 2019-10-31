@@ -6,8 +6,6 @@ The Expyriment command line interface provides a collection of convenient
 methods helpful for the development and testing of experiments as well as
 functions to join the data output.
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'

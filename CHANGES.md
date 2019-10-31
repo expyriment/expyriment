@@ -1,6 +1,16 @@
 Expyriment Release Notes
 ========================
 
+Coming up
+---------
+New Features:
+
+Changed:
+- Python 2 support was been removed. Expyriment now only works with Python 3
+- renaming: misc.py2py3_sort_array --> misc.string_sort_array
+
+Fixed:
+
 Version 0.10.0 (30 Oct 2019)
 ----------------------------
 New Features:

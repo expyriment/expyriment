@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """Make yaml files for OpenSesame help menu"""
 
-from __future__ import absolute_import, print_function, division
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -10,7 +8,7 @@ __version__ = ''
 import os
 import sys
 
-from create_rst_api_reference import inspect_members, exclude, expyriment
+from .create_rst_api_reference import inspect_members, expyriment
 
 T = "  "
 HOME = "Official Website: /"
@@ -54,40 +52,36 @@ def parse_module(mod_name, tab, doc_path):
     submodels_add_later = []
     if len(modules)>0:
         for m in modules:
-            if m[0] not in exclude:
-                if m[0]=="constants":
-                    rtn.append(tab + m[0] + ":" + doc_path + \
-                                    mod_name + "." + m[0] + ".html")
-                elif m[0] == "extras":
-                    submodels_add_later.append(m[0])
-                elif m[0] != "defaults":
-                    tmp = parse_module(mod_name=mod_name + "." + m[0],\
-                                tab=tab+T, doc_path=doc_path)
-                    if len(tmp)>0:
-                        rtn.append(tab + m[0] + ":")
-                        rtn.extend(tmp)
+            if m[0]=="constants":
+                rtn.append(tab + m[0] + ":" + doc_path + \
+                                mod_name + "." + m[0] + ".html")
+            elif m[0] == "extras":
+                submodels_add_later.append(m[0])
+            elif m[0] != "defaults":
+                tmp = parse_module(mod_name=mod_name + "." + m[0],\
+                            tab=tab+T, doc_path=doc_path)
+                if len(tmp)>0:
+                    rtn.append(tab + m[0] + ":")
+                    rtn.extend(tmp)
 
     if len(classes)>0:
         for cl in classes:
-            if cl[0] not in exclude:
-                rtn.append(tab + cl[0] + ":")
-                rtn.append(tab + T + "__init__:" + doc_path + \
-                        mod_name + ".html#" + mod_name + "." + cl[0])
+            rtn.append(tab + cl[0] + ":")
+            rtn.append(tab + T + "__init__:" + doc_path + \
+                    mod_name + ".html#" + mod_name + "." + cl[0])
 
-                rtn.extend(parse_module(mod_name=mod_name + "." + cl[0], \
-                            tab=tab+ T, doc_path=doc_path))
+            rtn.extend(parse_module(mod_name=mod_name + "." + cl[0], \
+                        tab=tab+ T, doc_path=doc_path))
 
     if len(methods)>0:
         for m in methods:
-            if m[0] not in exclude:
-                rtn.append(tab + m[0] + ":" + doc_path + \
-                            mod_name + ".html#" + mod_name + "." + m[0])
+            rtn.append(tab + m[0] + ":" + doc_path + \
+                        mod_name + ".html#" + mod_name + "." + m[0])
 
     if len(functions)>0:
         for func in functions:
-            if func[0] not in exclude:
-                rtn.append(tab + func[0] + ":" + doc_path + \
-                                mod_name + ".html#" + mod_name + "."+ func[0])
+            rtn.append(tab + func[0] + ":" + doc_path + \
+                            mod_name + ".html#" + mod_name + "."+ func[0])
 
     for m in submodels_add_later:
         tmp = parse_module(mod_name=mod_name + "." + m, \

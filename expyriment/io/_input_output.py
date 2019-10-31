@@ -7,8 +7,6 @@ All classes in this module should be called directly via expyriment.io.*.
 
 """
 
-from __future__ import absolute_import, print_function, division
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
