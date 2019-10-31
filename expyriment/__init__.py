@@ -35,6 +35,19 @@ __revision__ = ''
 __date__ = ''
 
 
+
+import sys as _sys
+
+if _sys.version_info[0] != 3 or _sys.version_info[1]<=3:
+
+    raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Python {0}.{1}.".format(
+                                                    _sys.version_info[0],
+                                                    _sys.version_info[1]) +
+                      "\n\n  Please use Python 3.3+. Note, the last major "
+                      "release compatible with Python 2.7\n" 
+                      "  is Expyriment 0.10.")
+
 try:
     import future as _future
     if int(_future.__version__.split(".")[1]) < 15:
@@ -77,25 +90,15 @@ except ImportError:
                       "needs the package 'PyOpenGL'."
                       "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
 
-import sys as _sys
-from ._internals import get_version, import_all_extras
-from ._internals import PYTHON3 as _PYTHON3
 
-if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
-        (_PYTHON3 and _sys.version_info[1] >= 3) ):
-    raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Python {0}.{1}.".format(
-                                                    _sys.version_info[0],
-                                                    _sys.version_info[1]) +
-                      "\nPlease use Python 2.6+ or Python 3.3+.")
-else:
-    print("Expyriment {0} ".format(get_version()))
+from ._internals import get_version, import_all_extras
+print("Expyriment {0} ".format(get_version()))
+
 
 # Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
 try:
     import imp as _imp
     import os as _os
-    import sys as _sys
     for _package in ["test"]:
         _tf = _os.path.abspath(_imp.find_module(_package)[1])
         _mf = _os.path.abspath(_os.path.abspath(_sys.argv[0]))
