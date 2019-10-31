@@ -54,9 +54,6 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
 
-def pump_pygame_events():
-    pygame.event.pump()
-
 class Expyriment_object(object):
     """A class implementing a general Expyriment object.
 
