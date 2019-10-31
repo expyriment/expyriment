@@ -49,12 +49,15 @@ except:
 import pygame
 
 def _get_registry_value(key, subkey, value):
-    import winreg as _winreg  # TODO check me on Windows
+    try:
+        import winreg as _winreg  # TODO check me on Windows
+    except:
+        return ""
 
     key = getattr(_winreg, key)
     handle = _winreg.OpenKey(key, subkey)
     (value, type) = _winreg.QueryValueEx(handle, value)
-    return value
+    return str(value)
 
 
 def get_system_info(as_string=False):
@@ -170,13 +173,10 @@ def get_system_info(as_string=False):
         os_details = platform.win32_ver()[2]
         os_version = platform.win32_ver()[1]
 
-        try:
-            hardware_cpu_details = str(_get_registry_value(
-                "HKEY_LOCAL_MACHINE",
-                "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
-                "ProcessorNameString"))
-        except:
-            hardware_cpu_details = ""
+        hardware_cpu_details = _get_registry_value(
+            "HKEY_LOCAL_MACHINE",
+            "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+            "ProcessorNameString")
 
         try:
             import ctypes
@@ -217,16 +217,16 @@ def get_system_info(as_string=False):
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        try:
-            tmp = str(_get_registry_value("HKEY_LOCAL_MACHINE",
-                                          "HARDWARE\\DEVICEMAP\\VIDEO",
-                                          "\Device\Video0"))
-            idx = tmp.find("System")
-            card = str(_get_registry_value("HKEY_LOCAL_MACHINE",
+        tmp = _get_registry_value("HKEY_LOCAL_MACHINE",
+                                      "HARDWARE\\DEVICEMAP\\VIDEO",
+                                      "\Device\Video0")
+        idx = tmp.find("System")
+        if idx>=0:
+            # under windows
+            hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
                                            tmp[idx:].replace("\\", "\\\\"),
-                                           "Device Description"))
-            hardware_video_card = card
-        except:
+                                           "Device Description")
+        else:
             hardware_video_card = ""
 
         hardware_audio_card = ""  # TODO
