@@ -99,7 +99,9 @@ class Expyriment_object(object):
 
         return self._logging
 
+
 class CallbackQuitEvent(object):
+
     """A CallbackQuitEvent.
 
     If a callback function returns a CallbackQuitEvent object the currently processed

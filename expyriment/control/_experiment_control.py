@@ -415,9 +415,7 @@ fullscreen.""")
     experiment.set_log_level(0)  # switch off for the first screens
 
     _keyboard.quit_key = defaults.quit_key
-    _keyboard.pause_key = defaults.pause_key
     _keyboard.end_function = end
-    _keyboard.pause_function = pause
 
     mixer.pre_init(defaults.audiosystem_sample_rate,
                    defaults.audiosystem_bit_depth,

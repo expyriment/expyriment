@@ -566,8 +566,7 @@ class Video(_visual.Stimulus):
                 if _internals.active_exp.is_initialized and \
                    process_control_events and \
                    event.type == pygame.KEYDOWN and (
-                       event.key == self.Keyboard.get_quit_key() or
-                       event.key == self.Keyboard.get_pause_key()):
+                       event.key == self.Keyboard.get_quit_key()):
                     self.pause()
                     self.Keyboard.process_control_keys(event, self.stop)
                     self.play()

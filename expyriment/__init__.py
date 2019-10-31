@@ -91,7 +91,6 @@ try:
     # TODO: currently 3.3+. What to do?
 
     for _package in ["test"]:
-        print(_find_spec(_package).submodule_search_locations)
         if _find_spec(_package).submodule_search_locations is None:
             _m = "Warning: '{0}.py' is shadowing package '{1}'!"
             print(_m.format(_package, _package))

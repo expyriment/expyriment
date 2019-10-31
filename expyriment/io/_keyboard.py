@@ -31,9 +31,7 @@ from  ._input_output import Input
 from .. import  _internals
 
 quit_key = None
-pause_key = None
 end_function = None
-pause_function = None
 
 class Keyboard(Input):
     """A class implementing a keyboard input.
@@ -45,7 +43,7 @@ class Keyboard(Input):
 
     @staticmethod
     def process_control_keys(key_event=None, quit_confirmed_function=None):
-        """Check if quit_key or pause_key has been pressed.
+        """Check if quit_key has been pressed.
 
         Reads pygame event cue if no key_event is specified.
 
@@ -74,10 +72,6 @@ class Keyboard(Input):
                         pre_quit_function=quit_confirmed_function)
                     if confirm:
                         sys.exit()
-                    return True
-                elif key_event.key == pause_key and \
-                        pause_function is not None:
-                    pause_function()
                     return True
         else:
             ## -------
@@ -138,11 +132,6 @@ class Keyboard(Input):
 
         return quit_key
 
-    @staticmethod
-    def get_pause_key():
-        """Returns the currently defined pause key"""
-
-        return pause_key
 
     @staticmethod
     def set_quit_key(value):
@@ -150,13 +139,6 @@ class Keyboard(Input):
 
         global quit_key
         quit_key = value
-
-    @staticmethod
-    def set_pause_key(value):
-        """Set the currently defined pause key"""
-
-        global pause_key
-        pause_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""

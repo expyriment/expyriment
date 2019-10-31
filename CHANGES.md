@@ -8,6 +8,7 @@ New Features:
 Changed:
 - Python 2 support was been removed. Expyriment now only works with Python 3
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
+- pause_key has been removed 
 
 Fixed:
 
