@@ -255,7 +255,7 @@ class OutputFile(Output):
 
         # NOTE: Do not print here recursion due to std_out logging
 
-        if not _internals.is_base_string(content):
+        if not isinstance(content, (str, bytes)):
             content = str(content)
         self._buffer.append(content)
 
@@ -425,7 +425,7 @@ class DataFile(OutputFile):
             for counter, elem in enumerate(data):
                 if counter > 0:
                     line = line + self.delimiter
-                if not _internals.is_base_string(elem):
+                if not isinstance(elem, (str, bytes)):
                     elem = str(elem)
                 if '"' in byte2unicode(elem):
                     elem = byte2unicode(elem).replace('"', '""')
@@ -434,7 +434,7 @@ class DataFile(OutputFile):
                 line = line + elem
             self.write_line(line)
         else:
-            if not _internals.is_base_string(data):
+            if not isinstance(data, (str, bytes)):
                 data = str(data)
             self.write_line(data)
 
@@ -682,7 +682,7 @@ class EventFile(OutputFile):
         """
 
         log_time = self._clock.time
-        if not _internals.is_base_string(event):
+        if not isinstance(event, (str, bytes)):
             event = str(event)
         self.write_line(repr(log_time) + self.delimiter + event)
         if log_event_tag is not None:

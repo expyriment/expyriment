@@ -53,15 +53,6 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
-def is_base_string(s): #TODO
-    return isinstance(s, (str, bytes))
-
-def is_unicode_string(s):
-    return isinstance(s, str)
-
-def is_byte_string(s):
-    return isinstance(s, bytes)
-
 
 def pump_pygame_events():
     pygame.event.pump()
