@@ -22,6 +22,8 @@ except:
     serial = None
     list_com_ports = None
 
+import pygame
+
 from . import defaults
 from ._input_output import Input, Output
 from .. import _internals, misc
@@ -426,7 +428,7 @@ The Python package 'pySerial' is not installed."""
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
 
             byte = self.poll()
             if byte:

@@ -13,9 +13,9 @@ __date__ = ''
 
 
 from types import FunctionType
+import pygame
 
 from .. import _internals, stimuli
-from ._keyboard import Keyboard
 from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
@@ -283,7 +283,7 @@ class TouchScreenButtonBox(Input):
                         pressed_button_field, rt = None, None
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
             pressed_button_field, touch_time = self.check(button_fields)
             if pressed_button_field is not None:
                 rt = int((get_time()-start)*1000)
