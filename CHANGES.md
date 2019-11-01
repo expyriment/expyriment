@@ -11,6 +11,8 @@ Changed:
 - pause_key has been removed 
 
 Fixed:
+- bug in colour.is_hex & colour.is_colour
+
 
 Version 0.10.0 (30 Oct 2019)
 ----------------------------
