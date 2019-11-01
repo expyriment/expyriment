@@ -55,7 +55,8 @@ try:
     if _pygame.vernum < (2, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
-                                                    _pygame.vernum) +
+                          _pygame.vernum[0], _pygame.vernum[1],
+                          _pygame.vernum[2]) +
                       "\nPlease install Pygame(>=2,<3)).")
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
