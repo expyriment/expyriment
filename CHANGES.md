@@ -1,6 +1,13 @@
 Expyriment Release Notes
 ========================
 
+
+Bug fixes upcoming minor version
+---------------------------------
+Fixed:
+- bug in color.is_hex & colour.is_colour
+
+
 Version 0.10.0 (30 Oct 2019)
 ----------------------------
 New Features:

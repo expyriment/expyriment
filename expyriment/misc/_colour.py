@@ -238,14 +238,17 @@ class Colour(object):
 
         """
 
-        if not len(value) == 3:
+        if not isinstance(value, str):
             return False
-        elif False in [isinstance(x, int) for x in value]:
-            return False
-        elif False in [0 <= x <= 100 for x in value]:
+
+        value = value.lstrip("#")
+        if len(value) != 6:
             return False
         else:
-            return True
+            for x in value.upper():
+                if x not in "0123456789ABCDEF":
+                    return False
+        return True
 
     @staticmethod
     def is_hsv(value):
@@ -311,8 +314,8 @@ class Colour(object):
         return Colour.is_rgb(value) or\
             Colour.is_name(value) or \
             Colour.is_hex(value) or \
-            Colour.is_hlv(value) or\
-            Colour.is_hls(value)
+            Colour.is_hsv(value) or\
+            Colour.is_hsl(value)
 
     def __init__(self, colour):
         """Create an RGB colour.
