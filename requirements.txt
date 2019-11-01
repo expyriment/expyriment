@@ -19,7 +19,7 @@ packaging==19.2
 Pillow==6.2.1
 proglog==0.1.9
 pycparser==2.19
-pygame==1.9.6
+pygame>=2.0.0.dev6
 Pygments==2.4.2
 PyOpenGL==3.1.0
 pyparallel==0.2.2

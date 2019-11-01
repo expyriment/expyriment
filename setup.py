@@ -68,7 +68,7 @@ source_files = ['.release_info',
                 'Makefile',
                 'README.md']
 
-install_requires = ["pygame>=1.9,<2",
+install_requires = ["pygame>=2,<3",
                     "pyopengl>=3.0,<4"]
 
 extras_require = {
