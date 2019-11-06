@@ -52,7 +52,7 @@ try:
     import os
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
     import pygame as _pygame
-    if _pygame.vernum < (2, 0, 0):
+    if _pygame.vernum < (1, 9, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
                           _pygame.vernum[0], _pygame.vernum[1],
@@ -114,4 +114,3 @@ if _internals.get_plugins_folder() is not None:
 
 # post import hook
 exec(_internals.post_import_hook())
-

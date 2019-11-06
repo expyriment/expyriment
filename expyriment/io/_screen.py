@@ -118,6 +118,10 @@ OpenGL will be deactivated!"
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
                 ogl_extensions = ogl.glGetString(ogl.GL_EXTENSIONS)
+                if hasattr(ogl_extensions, 'decode'):
+                    # In case a bytes object is returned, which doesn't allow
+                    # for comparison with str objects. Applies to Python 3.
+                    ogl_extensions = ogl_extensions.decode()
                 if "ARB_texture_non_power_of_two" not in ogl_extensions:
                     raise RuntimeError("OpenGL mode is not supported on this \
 machine!")
