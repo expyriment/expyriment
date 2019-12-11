@@ -38,13 +38,13 @@ __date__ = ''
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1]<3:
+if _sys.version_info[0] != 3 or _sys.version_info[1]<5:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.3+. Note, the last major "
+                      "\n\n  Please use Python 3.5+. Note, the last major "
                       "release compatible with Python 2.7\n"
                       "  is Expyriment 0.10.")
 

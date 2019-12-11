@@ -6,7 +6,8 @@ Coming up
 New Features:
 
 Changed:
-- Python 2 support was been removed. Expyriment now only works with Python 3
+- Python 2 support was been removed. 
+  Expyriment now only works with Python 3 (>3.5).
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - pause_key has been removed 
 

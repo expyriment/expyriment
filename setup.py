@@ -356,6 +356,6 @@ if __name__=="__main__":
     print("")
     print("Expyriment Version: [{0}] ({1})".format(version_nr, message))
     try:
-        print("Warning:", warning)
+        print("Warning:", warning) #FIXME: warning is never defined!
     except:
         pass
