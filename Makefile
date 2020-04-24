@@ -7,7 +7,7 @@
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
-release: wheel tarball 
+release: wheel sdist 
 wheel: dist build/wheel_version
 
 tarball: dist build/wheel_version
@@ -43,6 +43,9 @@ dist:
 build/wheel_version: dist 
 	@grep "Expyriment Version:" build/wheel.log | awk -F'[' '{print $$2}' \
 				| awk -F']' '{print $$1}' > build/wheel_version 
+
+sdist: 
+	python3 setup.py sdist
 
 install:
 	python3 setup.py install
