@@ -266,7 +266,7 @@ def get_version_info_from_release_info():
             lines.append(line)
     for x in lines[0].split(","):
         if "tag:" in x:
-            version_nr = x.replace("tag:","").strip().lstrip(b"v")
+            version_nr = x.replace("tag:","").strip().lstrip("v")
         else:
             version_nr = ""
     revision_nr = lines[1].strip()[:7]
