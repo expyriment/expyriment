@@ -72,13 +72,22 @@ def get_system_info(as_string=False):
 
     from ..io import SerialPort, ParallelPort
     from .._internals import get_settings_folder
+    try:
+        from platform import linux_distribution
+    except:
+        try:
+            from distro import linux_distribution #TODO: only avaiable for Linux, should it be a suggested package dependency?
+        except:
+            def linux_distribution():
+                return ("Linux", "?", "?")
 
     info = {}
 
     # Get platform specific info for Linux
     if sys.platform.startswith("linux"):
         os_platform = "Linux"
-        os_name = platform.linux_distribution()[0]
+        os_name = linux_distribution()[0]
+
         details = []
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
@@ -88,7 +97,7 @@ def get_system_info(as_string=False):
             os_details = ", ".join(details)
         else:
             os_details = ""
-        os_version = platform.linux_distribution()[1]
+        os_version = linux_distribution()[1]
 
         try:
             hardware_cpu_details = ""
