@@ -640,29 +640,72 @@ class Experiment(object):
         else:
             return False
 
-    def shuffle_blocks(self, max_repetitions=None, n_segments=None):
+    def shuffle_blocks(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all blocks.
+
+        The function returns False if no randomization could be found that
+        fulfills the max immediate block repetition criterion. The different
+        type of blocks are only defined by the factors. Shuffle does not
+        take into account the added trials.
+
+        The following randomization methods are defined:
+
+                0 = total randomization of block order (default)
+
+                1 = randomization within small miniblocks. Each miniblock
+                contains one block of each type (only defined by factors!);
+                in other words, copies of one block type are always in
+                different miniblocks
 
         Parameters
         ----------
+        method : int, optional
+            method of block randomization (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomize.shuffle_list` (default = None)
         n_segments : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            this parameter will be only considered for randomization method 0;
+            see documentation of `randomize.shuffle_list` (default = None)
 
         Returns
         -------
-        success : bool
+        succeeded : bool
             returns if randomization was successful and fulfilled the specified
             constrains (see max_repetitions)
 
-        See Also
-        --------
-        expyriment.design.randomize.shuffle_list
-
         """
 
-        return shuffle_list(self._blocks)
+        if method == 1: # make segments
+            tmp = self._blocks
+            self._blocks = []
+            types_occured = []
+            cnt = 0
+            n_segments = 1
+            while len(tmp) > 0:
+                is_new = True
+                tr_type = tmp[cnt].factors_as_text
+                for occ in types_occured:
+                    if tr_type == occ:
+                        is_new = False
+                        break
+                if is_new:
+                    self._blocks.append(tmp.pop(cnt))
+                    types_occured.append(tr_type)
+                    cnt = 0
+                else:
+                    cnt = cnt + 1
+                    if cnt >= len(tmp):
+                        types_occured = []
+                        cnt = 0
+                        if len(tmp)>0:
+                            n_segments += 1
+
+        rtn = shuffle_list(self._blocks, max_repetitions=max_repetitions,
+                           n_segments=n_segments)
+        if rtn == False:
+            print("Warning: Could not find an appropriate block " + \
+                  "randomization!")
+        return rtn
 
     def permute_blocks(self, permutation_type, factor_names=None,
                        subject_id=None):
@@ -1654,8 +1697,7 @@ class Block(object):
                 cnt = 0
         return max_reps
 
-    def shuffle_trials(self, method=0, max_repetitions=None,
-                       n_segments=None):
+    def shuffle_trials(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all trials.
 
         The function returns False if no randomization could be found that
@@ -1685,6 +1727,8 @@ class Block(object):
         Returns
         -------
         succeeded : bool
+            returns if randomization was successful and fulfilled the specified
+            constrains (see max_repetitions)
 
         """
 
@@ -1713,12 +1757,11 @@ class Block(object):
                         if len(tmp)>0:
                             n_segments += 1
 
-        rtn = shuffle_list(self._trials,
-                                   max_repetitions=max_repetitions,
-                                   n_segments=n_segments)
+        rtn = shuffle_list(self._trials, max_repetitions=max_repetitions,
+                           n_segments=n_segments)
         if rtn == False:
             print("Warning: Could not find an appropriate trial " + \
-                          "randomization!")
+                  "randomization!")
         return rtn
 
     def sort_trials(self):
