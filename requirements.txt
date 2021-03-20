@@ -9,7 +9,7 @@ idna==2.8
 imageio==2.6.1
 imageio-ffmpeg==0.3.0
 imagesize==1.1.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 mediadecoder==0.1.5
 moviepy==1.0.1
