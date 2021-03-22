@@ -509,25 +509,28 @@ class Visual(Stimulus):
 
         """
 
-        if self.has_surface:
+        has_surface = self.has_surface
+        is_preloaded = self.is_preloaded
+        is_compressed = self.is_compressed
+        if has_surface:
             surface_backup = self._get_surface()
             surface_copy = self._get_surface().copy()
             self._surface = None
         rtn = Stimulus.copy(self)
-        if self.has_surface:
+        if has_surface:
             self._surface = surface_backup
             rtn._surface = surface_copy
             rtn._is_preloaded = False
             rtn._ogl_screen = None
             rtn._is_compressed = False
             rtn._compression_filename = None
-        if self.is_preloaded:
+        if is_preloaded:
             if _internals.active_exp.screen.open_gl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
             rtn.preload()
-        if self.is_compressed:
+        if is_compressed:
             rtn.compress()
         rtn._was_compressed_before_preload = \
                 self._was_compressed_before_preload
