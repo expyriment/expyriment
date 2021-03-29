@@ -20,7 +20,7 @@ Pillow==6.2.1
 proglog==0.1.9
 pycparser==2.19
 pygame>=2.0.0.dev6
-Pygments==2.4.2
+Pygments==2.7.4
 PyOpenGL==3.1.0
 pyparallel==0.2.2
 pyparsing==2.4.2
