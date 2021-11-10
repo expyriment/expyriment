@@ -13,10 +13,10 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = '21-11-2011'
 
-
 import os
 import sys
-import inspect  
+import inspect
+
 
 def inspect_members(item):
     members = inspect.getmembers(eval(item))
@@ -61,14 +61,16 @@ def format_doc(doc):
         doc = doc + "\n\n"
     return doc
 
+
 def create_module_section(modules, item):
     section = ""
     for m in modules:
-        section = section + "<span class='separator'>[</span><span class='module_name'><a href='" +\
-        item + "." + m[0] + ".html'>" + m[0] + "</a></span><span class='separator'>] </span>"
+        section = section + "<span class='separator'>[</span><span class='module_name'><a href='" \
+                  + item + "." + m[0] + ".html'>" + m[0] + "</a></span><span class='separator'>] </span>"
     if section != "":
         section = "</pre><code><span class='section_heading'>Modules</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
     return section
+
 
 def create_classes_section(classes, item):
     section = ""
@@ -77,6 +79,7 @@ def create_classes_section(classes, item):
     if section != "":
         section = "</pre><code><span class='section_heading'>Classes</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
     return section
+
 
 def create_classes_details_section(classes, item):
     section = ""
@@ -101,6 +104,7 @@ def create_classes_details_section(classes, item):
         section = "<span class='section_heading'>Details (Classes)</span><br /><br />" + section + "<br />"
     return section
 
+
 def create_methods_section(methods):
     section = ""
     for m in methods:
@@ -108,6 +112,7 @@ def create_methods_section(methods):
     if section != "":
         section = "</pre><code><span class='section_heading'>Methods</span><br /><br />" + section + "<br /><br /><br /><br /></code><pre>"
     return section
+
 
 def create_methods_details_section(methods):
     section = ""
@@ -130,6 +135,7 @@ def create_methods_details_section(methods):
         section = "<span class='section_heading'>Details (Methods)</span><br /><br />" + section + "<br />"
     return section
 
+
 def create_functions_section(functions):
     section = ""
     for f in functions:
@@ -137,6 +143,7 @@ def create_functions_section(functions):
     if section != "":
         section = "</pre><code><span class='section_heading'>Functions</span><br /><br />" + section + "<br /> <br /><br /><br /></code><pre>"
     return section
+
 
 def create_functions_details_section(functions):
     section = ""
@@ -151,24 +158,34 @@ def create_functions_details_section(functions):
         if doc is None:
             doc = ""
         doc = format_doc(doc)
-        section = section + "<span class='function_name'><a name='" + f[0] + \
-             "'></a>" + f[0] + "</span><span class='function_call'>(" + call + \
-             ")</span><br /><br />" + "<span class='definition'>" + doc + \
-             "</span><br />"
+        section = (
+            section + "<span class='function_name'><a name='" + f[0]
+            + "'></a>" + f[0] + "</span><span class='function_call'>(" + call
+            + ")</span><br /><br />" + "<span class='definition'>" + doc
+            + "</span><br />"
+        )
     if section != "":
-        section = "<span class='section_heading'>Details (Functions)</span>" + \
-                    "<br /><br />" + section + "<br /> "
+        section = (
+            "<span class='section_heading'>Details (Functions)</span>"
+            + "<br /><br />" + section + "<br /> "
+        )
     return section
+
 
 def create_attributes_section(attributes):
     section = ""
     for a in attributes:
-        section = section + "<span class='separator'>[</span><span class='attribute_name'>" + \
-        a[0] + "</span><span class='separator'>] </span>"
+        section = (
+            section + "<span class='separator'>[</span><span class='attribute_name'>"
+            + a[0] + "</span><span class='separator'>] </span>"
+        )
     if section != "":
-         section = "</pre><code><span class='section_heading'>Attributes</span><br /><br />" + \
-          section + "<br /><br /><br /><br /></code><pre>"
+        section = (
+            "</pre><code><span class='section_heading'>Attributes</span><br /><br />"
+            + section + "<br /><br /><br /><br /></code><pre>"
+        )
     return section
+
 
 def create_page(item):
     modules, classes, methods, functions, attributes = inspect_members(item)
@@ -195,7 +212,7 @@ def create_page(item):
     with open(p) as f:
         for line in f:
             if line[0:8].lower() == "upcoming":
-                 version_nr += "+"
+                version_nr += "+"
             if line[0:7] == "Version":
                 version_nr = version_nr.format(line[8:13])
                 break
