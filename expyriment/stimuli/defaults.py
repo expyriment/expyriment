@@ -117,7 +117,6 @@ try:
     tempdir = _mkdtemp(prefix="expyriment_")
 except:
     tempdir = None
-    pass
 
 def _remove_tempdir():
     global tempdir
