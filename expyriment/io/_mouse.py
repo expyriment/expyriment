@@ -129,7 +129,7 @@ class Mouse(Input):
         if corner is not None:
             if not isinstance(corner, int) or corner<0 or corner >3:
                 corner = None
-                print("Warning: {} is an unkown corner location. Mouse quit "
+                print("Warning: {} is an unknown corner location. Mouse quit "
                                      "event is deactivated.".format(corner))
         Mouse._quit_corner_location = corner
 
@@ -176,7 +176,7 @@ class Mouse(Input):
             return False
 
         if click_position is None:
-            # check Pygame queu
+            # check Pygame queue
             pos = None
             # pygame.event.pump() # not sure if it is required!
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):

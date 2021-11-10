@@ -404,7 +404,7 @@ class TextInput(Input):
         self._canvas.plot(background)
         background.present()
         background.present()  # for flipping with double buffer
-        background.present()  # for flipping with tripple buffer
+        background.present()  # for flipping with triple buffer
 
     def _update(self):
         """Update the input box."""

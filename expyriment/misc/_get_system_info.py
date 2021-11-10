@@ -76,7 +76,7 @@ def get_system_info(as_string=False):
         from platform import linux_distribution
     except Exception:
         try:
-            from distro import linux_distribution #TODO: only avaiable for Linux, should it be a suggested package dependency?
+            from distro import linux_distribution #TODO: only available for Linux, should it be a suggested package dependency?
         except Exception:
             def linux_distribution():
                 return ("Linux", "?", "?")

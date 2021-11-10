@@ -61,7 +61,7 @@ def position2coordinates(position, surface_size=None):
         position (x,y) to convert
     surface_size: (int, int), optional
         size of the surface one which coordinates should be calculated
-        if None (default), the coordinats will be calculated relative
+        if None (default), the coordinates will be calculated relative
         to the screen
 
     Returns
@@ -295,7 +295,7 @@ class XYPoint(object):
 
         Notes
         -----
-        use `x`, `y` values (two numberic) or the tuple xy=(x,y)
+        use `x`, `y` values (two numbers) or the tuple xy=(x,y)
 
         """
 
@@ -370,7 +370,7 @@ class XYPoint(object):
         return self
 
     def distance(self, p):
-        """Return euclidian distance to the points (p).
+        """Return euclidean distance to the points (p).
 
         Parameters
         ----------
