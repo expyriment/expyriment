@@ -29,7 +29,7 @@ class PParallelInpOut32(object):
             self.base = address
         try:
             self.port = windll.inpout32
-        except:
+        except Exception:
             self.port = windll.inpoutx64
 
         #BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)

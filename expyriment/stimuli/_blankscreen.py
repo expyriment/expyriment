@@ -35,7 +35,7 @@ class BlankScreen(Canvas):
             self._colour = _internals.active_exp.background_colour
         try:
             size = _internals.active_exp.screen.surface.get_size()
-        except:
+        except Exception:
             raise RuntimeError("Could not get size of screen!")
         Canvas.__init__(self, size, colour=self._colour)
 

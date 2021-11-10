@@ -19,7 +19,7 @@ from types import FunctionType
 import pygame
 try:
     import android.mixer as mixer
-except:
+except Exception:
     import pygame.mixer as mixer
 
 from . import defaults
@@ -73,7 +73,7 @@ class Video(_visual.Stimulus):
                     assert has_internet_connection()
                     imageio.plugins.ffmpeg.download()
                     return imageio.plugins.ffmpeg.get_exe()
-                except:
+                except Exception:
                     os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
         except ImportError:
             pass

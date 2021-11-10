@@ -147,7 +147,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 try:
                     experiment._subject = int(subject_id)
                     break
-                except:
+                except Exception:
                     pass
 
     else:
@@ -338,7 +338,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                          text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                          text_size=int(_internals.active_exp.text_size * 1.2)).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-    except:
+    except Exception:
         pass
 
     if not fast_quit:

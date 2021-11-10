@@ -53,11 +53,11 @@ class TouchScreenButtonBox(Input):
 
         try:
             button_fields = list(button_fields)
-        except:
+        except Exception:
             button_fields = [button_fields]
         try:
             stimuli = list(stimuli)
-        except:
+        except Exception:
             stimuli = [stimuli]
 
         self._mouse = _internals.active_exp.mouse
@@ -201,7 +201,7 @@ class TouchScreenButtonBox(Input):
         if button_fields is not None:
             try:
                 button_fields = list(button_fields)
-            except:
+            except Exception:
                 button_fields = [button_fields]
 
         pressed_button_field = None

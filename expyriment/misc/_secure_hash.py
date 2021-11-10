@@ -21,7 +21,7 @@ def _make_secure_hash(filename):
     try:
         with open(filename, 'br') as f:
             return sha1(f.read()).hexdigest()[:6]
-    except:
+    except Exception:
         return None
 
 def get_experiment_secure_hash():
@@ -96,7 +96,7 @@ def _append_hashes_from_imported_modules(hash_dict, filename):
                             hash_dict[pyfile] = sha
                             hash_dict = _append_hashes_from_imported_modules(
                                         hash_dict, pyfile) #recursion
-    except:
+    except Exception:
         pass
     return hash_dict
 

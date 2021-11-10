@@ -39,7 +39,7 @@ def sum(data):
         try:
             s += v
             elem_found = True
-        except:
+        except Exception:
             pass
     if elem_found:
         return s
@@ -94,7 +94,7 @@ def mean(data):
         try:
             s += v
             cnt += 1
-        except:
+        except Exception:
             pass
     if cnt == 0:
         return None

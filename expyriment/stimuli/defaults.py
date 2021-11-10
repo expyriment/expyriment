@@ -115,7 +115,7 @@ tone_amplitude = 0.5
 # Create tmp for compressed stimuli folder
 try:
     tempdir = _mkdtemp(prefix="expyriment_")
-except:
+except Exception:
     tempdir = None
     pass
 
@@ -123,7 +123,7 @@ def _remove_tempdir():
     global tempdir
     try:
         _rmtree(tempdir)
-    except:
+    except Exception:
         pass
 
 _atexit.register(_remove_tempdir)

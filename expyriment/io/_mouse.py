@@ -136,7 +136,7 @@ class Mouse(Input):
         try:
             Mouse._corner_rect_size = (int(corner_rect_size[0]),
                                        int(corner_rect_size[1]))
-        except:
+        except Exception:
             pass
 
     @staticmethod
@@ -503,7 +503,7 @@ class Mouse(Input):
         else:
             try:
                 buttons = list(buttons)
-            except:
+            except Exception:
                 buttons = [buttons]
         while True:
             if isinstance(callback_function, FunctionType):

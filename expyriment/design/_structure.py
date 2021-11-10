@@ -259,7 +259,7 @@ class Experiment(object):
             return
         try:
             variable_names = list(variable_names)
-        except:
+        except Exception:
             variable_names = [variable_names]
         self._data_variable_names.extend(variable_names)
         if self.data is not None:
@@ -288,7 +288,7 @@ class Experiment(object):
         else:
             try:
                 text = list(text)
-            except:
+            except Exception:
                 text = [text]
 
         self._experiment_info.extend(text)
@@ -343,7 +343,7 @@ class Experiment(object):
 
         try:
             conditions = list(conditions)
-        except:
+        except Exception:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
@@ -384,7 +384,7 @@ class Experiment(object):
 
         try:
             cond = self._bws_factors[factor_name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:
@@ -432,7 +432,7 @@ class Experiment(object):
                     try:
                         cond_idx = self._randomized_condition_for_subject[
                             factor_name][subject_id]
-                    except:  # If not yet randomized for this subject, do it
+                    except Exception:  # If not yet randomized for this subject, do it
                         cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
                         self._randomized_condition_for_subject[
@@ -856,7 +856,7 @@ type".format(permutation_type))
         with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
-            except:
+            except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
             f.write(unicode2byte(header + self.design_as_text))
@@ -948,12 +948,12 @@ type".format(permutation_type))
                             if val.find(".") >= 0:
                                 try:
                                     val = float(val)
-                                except:
+                                except Exception:
                                     pass
                             else:
                                 try:
                                     val = int(val)
-                                except:
+                                except Exception:
                                     pass
 
                             # set value to block or trial
@@ -1261,7 +1261,7 @@ class Block(object):
 
         try:
             rtn = self._factors[name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:
@@ -1462,7 +1462,7 @@ class Block(object):
         with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
-            except:
+            except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
             f.write(unicode2byte(header + self.design_as_text))
@@ -1847,7 +1847,7 @@ class Trial(object):
 
         try:
             rtn = self._factors[name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:

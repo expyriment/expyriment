@@ -200,7 +200,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
                         return shuffle_list(list_=list_,
                                 max_repetitions=max_repetitions,
                                 n_segments=n_segments)
-                    except:  # maximum recursion depth reached
+                    except Exception:  # maximum recursion depth reached
                         return False
             else:
                 reps = 0

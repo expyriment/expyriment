@@ -101,7 +101,7 @@ OpenGL will be deactivated!"
         else:
             try:
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
-            except:
+            except Exception:
                 pass
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
@@ -207,7 +207,7 @@ machine!")
 
         try:
             stimuli = list(stimuli)
-        except:
+        except Exception:
             stimuli = [stimuli]
 
         if not self._open_gl:
