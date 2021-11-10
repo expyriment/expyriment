@@ -48,7 +48,7 @@ Here is a brief explanation of the available options:
     screen; if two buffers (double buffer) are used, new stimuli will be drawn to
     an additional page, and a screen update will replace the screen with this page
     and put the screen contents into the page (i.e. the two buffers are swapped);
-    if three buffers (tripple buffer) are used, new stimuli will be drawn to a third
+    if three buffers (triple buffer) are used, new stimuli will be drawn to a third
     page, and a screen update will replace the screen with this page, and put the
     screen contents into the second page (i.e. a history of 2 former screens is
     kept)

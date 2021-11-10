@@ -19,7 +19,7 @@ CSV format
 ~~~~~~~~~~
 The method ``misc.data_preprocessing.write_concatenated_data()`` in
 :doc:`Data Preprocessing <expyriment.misc.data_preprocessing>`
-allows to export the concatenated data as a CSV (comman separated values) file.
+allows to export the concatenated data as a CSV (comma separated values) file.
 
 R data frame
 ~~~~~~~~~~~~
