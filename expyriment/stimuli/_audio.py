@@ -16,7 +16,7 @@ import os
 
 try:
     import android.mixer as mixer
-except:
+except Exception:
     import pygame.mixer as mixer
 from .. import _internals
 from ..misc import unicode2byte

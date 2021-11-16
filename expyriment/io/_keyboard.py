@@ -182,7 +182,7 @@ class Keyboard(Input):
         else:
             try:
                 keys = list(keys)
-            except:
+            except Exception:
                 keys = [keys]
 
         pygame.event.pump()
@@ -265,7 +265,7 @@ class Keyboard(Input):
         else:
             try:
                 keys = list(keys)
-            except:
+            except Exception:
                 keys = [keys]
         if wait_for_keyup:
             target_event = pygame.KEYUP
@@ -355,7 +355,7 @@ class Keyboard(Input):
         self.clear()
         try:
             char = list(char)
-        except:
+        except Exception:
             char = [char]
         pygame.event.pump()
         done = False

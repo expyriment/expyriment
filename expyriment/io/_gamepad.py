@@ -254,7 +254,7 @@ class GamePad(Input, Output):
             buttons = list(range(self.get_numbuttons()))
         try:
             buttons = list(buttons)
-        except:
+        except Exception:
             buttons = [buttons]
         done = False
         while not done:

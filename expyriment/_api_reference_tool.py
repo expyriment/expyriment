@@ -27,7 +27,7 @@ from ._internals import get_version
 
 try:
     import tkinter as _tk  # future (Python 3)
-except:
+except Exception:
     _tk = None
 
 try:
@@ -35,7 +35,7 @@ try:
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
-except:
+except Exception:
     _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
 
 def _get_doc_and_function(obj):
@@ -357,7 +357,7 @@ The Python package 'Tkinter' is not installed""")
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)
-            except:
+            except Exception:
                 pass
 
     # Position the GUI elements

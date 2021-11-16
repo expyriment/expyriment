@@ -111,7 +111,7 @@ class TextBox(Visual):
         try:
             with open(self.text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
-        except:
+        except Exception:
             raise IOError("Font '{0}' not found!".format(text_font))
         if text_bold is not None:
             self._text_bold = text_bold
@@ -458,7 +458,7 @@ class TextBox(Visual):
         # Look at first line to see how much indentation to trim
         try:
             ws = re.match(r'\s*', lines[0]).group(0)
-        except:
+        except Exception:
             ws = None
         if ws:
             lines = [x.replace(ws, '', 1) for x in lines]

@@ -18,7 +18,7 @@ import os
 import pygame
 try:
     import OpenGL.GL as ogl
-except:
+except Exception:
     ogl = None
 
 from . import defaults, initialize, end
@@ -469,7 +469,7 @@ abcdefghijklmnopqrstuvwxyz äöü
                 text_italic=italic,
                 text_bold=bold,
                 text_colour=(255, 255, 255)).plot(canvas)
-        except:
+        except Exception:
             stimuli.TextLine(text="Sorry, I can't display the text with " +
                 "{0}".format(font_description),
                 text_colour=constants.C_EXPYRIMENT_ORANGE).plot(canvas)
@@ -650,7 +650,7 @@ def run_test_suite():
                 results["testsuite_audio_frequency"] = str(pygame.mixer.get_init()[0]) + " Hz"
                 results["testsuite_audio_bitdepth"] = str(abs(pygame.mixer.get_init()[1])) + " bit"
                 results["testsuite_audio_channels"] = pygame.mixer.get_init()[2]
-            except:
+            except Exception:
                 results["testsuite_audio_frequency"] = ""
                 results["testsuite_audio_bitdepth"] = ""
                 results["testsuite_audio_channels"] = ""

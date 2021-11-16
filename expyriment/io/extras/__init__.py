@@ -27,5 +27,5 @@ for name, code in _internals.import_plugins_code("io").items():
 
 try:
     del (name, code)
-except:
+except Exception:
     pass

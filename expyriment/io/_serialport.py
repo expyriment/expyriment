@@ -18,7 +18,7 @@ from types import ModuleType, FunctionType
 try:
     import serial
     from serial.tools.list_ports import comports as list_com_ports
-except:
+except Exception:
     serial = None
     list_com_ports = None
 
@@ -264,7 +264,7 @@ The Python package 'pySerial' is not installed."""
 
         try:
             self._serial.close()
-        except:
+        except Exception:
             pass
 
     @property

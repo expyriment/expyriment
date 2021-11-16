@@ -25,11 +25,11 @@ try:
 
     get_time()
 
-except:
+except Exception:
 
     try:
         import ctypes
-    except:
+    except Exception:
         ctypes = None  # Does not exist on Android
     import os
     from sys import platform
@@ -58,7 +58,7 @@ except:
                 _mac_abs_time.restype = ctypes.c_ulonglong
                 return float(_mac_abs_time()) * _time_base.numer / (_time_base.denom * 1e9)
             get_time()
-        except:
+        except Exception:
             _fallback_time_module = True
 
     elif platform.startswith('linux'):
@@ -84,7 +84,7 @@ except:
                     raise OSError(errno_, os.strerror(errno_))
                 return t.tv_sec + t.tv_nsec * 1e-9
             get_time()
-        except:
+        except Exception:
             _fallback_time_module = True
 
     elif platform == 'win32':
@@ -101,7 +101,7 @@ except:
                 _winQPC(ctypes.byref(_fcounter))
                 return  _fcounter.value / _qpfreq
             get_time()
-        except:
+        except Exception:
             _fallback_time_module = True
     else:
         # Android or something else

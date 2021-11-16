@@ -181,7 +181,7 @@ class OutputFile(Output):
         fl.close()
         try:
             locale_enc = locale.getdefaultlocale()[1]
-        except:
+        except Exception:
             locale_enc = "UTF-8"
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
             _internals.get_version(), self._suffix,
@@ -338,7 +338,7 @@ class OutputFile(Output):
                             # large numbers are probably timestamps (normally the current event has no subject id
                             # yet and only a timestamp)
                             subject_number = num + 1
-                    except:
+                    except Exception:
                         pass
         return subject_number
 
@@ -516,7 +516,7 @@ class DataFile(OutputFile):
             return
         try:
             variable_names = list(variable_names)
-        except:
+        except Exception:
             variable_names = [variable_names]
         self._variable_names.extend(variable_names)
         self._variable_names_changed = True
@@ -634,7 +634,7 @@ class EventFile(OutputFile):
             display = repr(_internals.active_exp.screen.window_size)
             window_mode = repr(_internals.active_exp.screen.window_mode)
             open_gl = repr(_internals.active_exp.screen.open_gl)
-        except:
+        except Exception:
             display = "unknown"
             window_mode = "unknown"
             open_gl = "unknown"
@@ -730,7 +730,7 @@ class _InterEventIntervallLog():
 
         try:
             self.log_dict[event_tag].append(time)
-        except:
+        except Exception:
             self.log_dict[event_tag] = [time]
 
 
@@ -741,7 +741,7 @@ class _InterEventIntervallLog():
         try:
             time_from = sorted(self.log_dict[from_tag])
             time_to = sorted(self.log_dict[to_tag])
-        except:
+        except Exception:
             return rtn
 
         for f in time_from:

@@ -238,12 +238,12 @@ letter arguments run single commands""",
 Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
         try:
             import readline
-        except:
+        except Exception:
             pass
         try:
             import IPython
             IPython.embed(header=banner)
-        except:
+        except Exception:
             import code
             code.interact(local=locals(), banner=banner)
 

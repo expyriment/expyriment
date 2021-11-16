@@ -26,7 +26,7 @@ import re as _re
 
 try:
     import numpy as _np
-except:
+except Exception:
     _np = None
 from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
@@ -142,7 +142,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
     _sys.stdout.write("write file: {0}".format(filename))
     try:
         _locale_enc = _locale.getdefaultlocale()[1]
-    except:
+    except Exception:
         _locale_enc = "UTF-8"
     with open(filename, 'wb') as f:
         header = "# -*- coding: {0} -*-\n".format(_locale_enc)
@@ -389,7 +389,7 @@ The Python package 'Numpy' is not installed."""
             dv_fnc = tmp[0].strip()
             try:
                 dv_txt = tmp[1].strip()
-            except:
+            except Exception:
                 raise RuntimeError(
                     u"Incorrect syntax for DV: '{0}'".format(variable))
             var_id = self._get_variable_id(dv_txt, True)
@@ -411,7 +411,7 @@ The Python package 'Numpy' is not installed."""
             syntax = tmp[1].strip()
             syntax = syntax.replace("@@", "==")
             syntax = syntax.replace("##", "==")
-        except:
+        except Exception:
             raise RuntimeError(u"Incorrect compute syntax: '{0}'".format(
                 compute_syntax))
 
@@ -488,7 +488,7 @@ The Python package 'Numpy' is not installed."""
         # _add_exclusion
         try:
             col = _np.float64(data[:, column_id])
-        except:
+        except Exception:
             # handling strings
             col = data[:, column_id]
         try:
@@ -496,7 +496,7 @@ The Python package 'Numpy' is not installed."""
                 val = _np.float64(data[:, second_var_id])
             else:
                 val = _np.float64(value)
-        except:
+        except Exception:
             # handling strings
             if second_var_id is not None:
                 val = data[:, second_var_id]
@@ -871,7 +871,7 @@ The Python package 'Numpy' is not installed."""
                                 [data[:, second_var_id]]).transpose()
                         else:
                             b = _np.float64(var_def[2])
-                    except:
+                    except Exception:
                         msg = "Error while computing new variable {0}. " + \
                               "Non-number in variables of {1}"
                         msg.format(new_var_name, filename)
@@ -892,7 +892,7 @@ The Python package 'Numpy' is not installed."""
         for sv in self.subject_variables:
             try:
                 info = subject_info[sv]
-            except:
+            except Exception:
                 info = "nan"
             col = _np.array([[info for _x in range(data.shape[0])]])
             data = _np.c_[data, col.transpose()]
@@ -975,7 +975,7 @@ The Python package 'Numpy' is not installed."""
         data = self.concatenated_data[0]
         try:
             data = _np.float64(data[:, cols])
-        except:
+        except Exception:
             data = data[:, cols]
 
         return data

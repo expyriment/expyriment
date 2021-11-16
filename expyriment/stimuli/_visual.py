@@ -88,7 +88,7 @@ class _LaminaPanelSurface(object):
         if getattr(self, '_txtr', None) is not None:
             try:
                 ogl.glDeleteTextures([self._txtr])
-            except:
+            except Exception:
                 pass
 
     def convertMousePos(self, pos):
@@ -262,12 +262,12 @@ class Visual(Stimulus):
 
         try:
             self.clear_surface()
-        except:
+        except Exception:
             pass
         if self._compression_filename is not None:
             try:
                 os.remove(self._compression_filename)
-            except:
+            except Exception:
                 pass
 
     @property

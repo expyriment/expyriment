@@ -364,7 +364,7 @@ def has_internet_connection():
         host = socket.gethostbyname("google.com")
         socket.create_connection((host, 80), 2)
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -464,7 +464,7 @@ def download_from_stash(content="all", branch=None):
     try:
         r = Request(url, headers={"Accept-Encoding": "gzip; deflate"})
         u = urlopen(r)
-    except:
+    except Exception:
         raise RuntimeError("Download of {0} failed!".format(url))
 
     with TemporaryFile() as f:
@@ -482,7 +482,7 @@ def download_from_stash(content="all", branch=None):
                 show_progress(file_size_dl, file_size,
                               "downloading stash ({0})".format(branch))
             sys.stdout.write("\n")
-        except:
+        except Exception:
             show_progress(0, 100,
                           "downloading stash ({0})".format(branch))
             chunk = u.read()
@@ -517,7 +517,7 @@ def download_from_stash(content="all", branch=None):
             if not filename:
                 try:
                     os.mkdir(os.path.join(path, os.path.relpath(member, root)))
-                except:
+                except Exception:
                     pass
                 files_installed += 1
                 continue

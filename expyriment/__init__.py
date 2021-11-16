@@ -95,7 +95,7 @@ try:
         if _find_spec(_package).submodule_search_locations is None:
             _m = "Warning: '{0}.py' is shadowing package '{1}'!"
             print(_m.format(_package, _package))
-except:
+except Exception:
     pass
 
 from . import _internals
