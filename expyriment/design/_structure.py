@@ -775,7 +775,7 @@ type".format(permutation_type))
         factors = []
         for bl in self.blocks:
             factors.extend(bl.trial_factor_names)
-        return list(set(factors))
+        return sorted(set(factors))
 
     @property
     def block_list_factor_names(self):
@@ -788,7 +788,7 @@ type".format(permutation_type))
         factors = []
         for bl in self.blocks:
             factors.extend(bl.factor_names)
-        return list(set(factors))
+        return sorted(set(factors))
 
     @property
     def design_as_text(self):
