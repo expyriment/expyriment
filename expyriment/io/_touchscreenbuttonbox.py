@@ -24,7 +24,7 @@ from ._input_output import Input
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
 
-    def __init__(self, button_fields, stimuli=[], background_stimulus=None):
+    def __init__(self, button_fields, stimuli=None, background_stimulus=None):
         """Initialize a touchscreen button box.
 
         Parameters
@@ -55,10 +55,14 @@ class TouchScreenButtonBox(Input):
             button_fields = list(button_fields)
         except Exception:
             button_fields = [button_fields]
-        try:
-            stimuli = list(stimuli)
-        except Exception:
-            stimuli = [stimuli]
+
+        if stimuli is None:
+            stimuli = []
+        else:
+            try:
+                stimuli = list(stimuli)
+            except Exception:
+                stimuli = [stimuli]
 
         self._mouse = _internals.active_exp.mouse
         self._last_touch_position = None
