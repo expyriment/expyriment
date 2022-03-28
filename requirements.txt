@@ -13,7 +13,7 @@ Jinja2==2.10.3
 MarkupSafe==1.1.1
 mediadecoder==0.1.5
 moviepy==1.0.1
-numpy==1.17.3
+numpy==1.21.0
 numpydoc==0.8.0
 packaging==19.2
 Pillow==6.2.1
