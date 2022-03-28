@@ -429,7 +429,7 @@ def which(programme):
 def download_from_stash(content="all", branch=None):
     """Download content from the Expyriment stash.
 
-    Content will be stored in an Expyriment settings diretory (`.expyriment`
+    Content will be stored in an Expyriment settings directory (`.expyriment`
     or `~expyriment`, located in the current user's home directory).
 
     Parameters

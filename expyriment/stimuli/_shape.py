@@ -128,7 +128,7 @@ class Shape(Visual):
             list of vertices (int, int)
         debug_contour_colour : (int, int, int), optional
             The colour of the contour of the shape.
-            If None (default), contour colour is not displyed.
+            If None (default), contour colour is not displayed.
             Use this option only for debugging. The resulting surface size
             might be enlarged by one pixel large depending on the shape.
 

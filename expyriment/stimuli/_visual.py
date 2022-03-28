@@ -310,7 +310,7 @@ class Visual(Stimulus):
         Notes
         -----
         The absolute position differs for instance from the (relative) position, if the
-        stimulus is plotted ontop of another stimulus, which has not the position (0,0).
+        stimulus is plotted on top of another stimulus, which has not the position (0,0).
 
         """
 
@@ -976,7 +976,7 @@ class Visual(Stimulus):
         stimululs is written to.
         The surface will now be read from the disk to free memory.
         Compressed stimuli cannot do surface operations!
-        Preloading comressed stimuli is possible and highly recommended.
+        Preloading compressed stimuli is possible and highly recommended.
         Depending on the size of the stimulus, this method may take some time
         to compute!
 
@@ -1452,7 +1452,7 @@ class Visual(Stimulus):
         self.scale((level, level))
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,blured,{0}, level={1}".format(self.id, level), 2)
+                "Stimulus,blurred,{0}, level={1}".format(self.id, level), 2)
         return int((get_time() - start) * 1000)
 
     def scramble(self, grain_size):

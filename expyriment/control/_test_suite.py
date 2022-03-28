@@ -311,7 +311,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 #         info = """This will test the video card's settings for multiple buffers and page flipping.
 # If none of the following squares are constantly blinking, page flipping is not activated and buffer contents are copied.
 # If only the left square is constantly blinking, page flipping is activated and a double buffer is used.
-# If additionally the right square is constantly blinking, page flipping is activated and a tripple buffer is used.
+# If additionally the right square is constantly blinking, page flipping is activated and a triple buffer is used.
 #
 # [Press RETURN to continue]"""
 #

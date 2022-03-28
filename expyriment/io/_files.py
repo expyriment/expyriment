@@ -672,7 +672,7 @@ class EventFile(OutputFile):
             the event to be logged (anything, will be casted to str)
         log_event_tag : numeral or string, optional
             if log_event_tag is defined, event file logs the inter-event-intervalls
-            and adds a summary of the intervalls at the end of the file
+            and adds a summary of the intervals at the end of the file
 
         Returns
         -------
@@ -703,7 +703,7 @@ class EventFile(OutputFile):
         self.write_line(line)
 
     def _write_inter_event_intervall_summary(self):
-        """appending the inter event intervall summary to event file, if log_event_tag have been set while presentation
+        """appending the inter event interval summary to event file, if log_event_tag have been set while presentation
         this function will be called at exit"""
 
         for l in self._inter_event_intervall_log.summary():
@@ -712,7 +712,7 @@ class EventFile(OutputFile):
 
 
 class _InterEventIntervallLog():
-    """This class is used to log the intervalls of tagged events to get a
+    """This class is used to log the intervals of tagged events to get a
     summary of the timing at the end of the event file
     """
 
@@ -735,7 +735,7 @@ class _InterEventIntervallLog():
 
 
     def _get_iei_intervalls(self, from_tag, to_tag):
-        """helper function: get the intervalls between two events"""
+        """helper function: get the intervals between two events"""
 
         rtn = []
         try:
