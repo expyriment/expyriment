@@ -81,8 +81,7 @@ extras_require = {
                            "pyserial>=3,<4",
                            "pyparallel>=0.2,<1",
                            "sounddevice>=0.3,<1",
-                           "mediadecoder>=0.1,<1"],
-    'dev':                ["codespell"],
+                           "mediadecoder>=0.1,<1"]
     }
 
 entry_points = {
