@@ -38,13 +38,13 @@ __date__ = ''
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1]<5:
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 6:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.5+. Note, the last major "
+                      "\n\n  Please use Python 3.6+. Note, the last major "
                       "release compatible with Python 2.7\n"
                       "  is Expyriment 0.10.")
 
@@ -52,20 +52,20 @@ try:
     import os
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
     import pygame as _pygame
-    if _pygame.vernum < (2, 0, 0):
+    if _pygame.vernum < (1, 9, 1) or _pygame.vernum >= (3, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
                           _pygame.vernum[0], _pygame.vernum[1],
                           _pygame.vernum[2]) +
-                      "\nPlease install Pygame(>=2,<3)).")
+                      "\nPlease install Pygame(>=1.9,<3)).")
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
                       "needs the package 'Pygame')." +
-                      "\nPlease install Pygame(>=2,<3).")
+                      "\nPlease install Pygame(>=1.9,<3).")
 
 try:
     import OpenGL as _OpenGL
-    if int(_OpenGL.version.__version__[0]) < 3:
+    if not int(_OpenGL.version.__version__[0]) == 3:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
