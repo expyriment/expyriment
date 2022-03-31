@@ -16,8 +16,14 @@ try:
     from setuptools.command.sdist import sdist
     from setuptools.command.build_py import build_py
     from setuptools.command.install import install
-    from setuptools.command.install_data import install_data
-    from setuptools.command.bdist_wininst import bdist_wininst
+    try:
+        from setuptools.command.install_data import install_data
+    except ImportError:
+        from setuptools._distutils.command.install_data import install_data
+    try:
+        from setuptools.command.bdist_wininst import bdist_wininst
+    except ImportError:
+        from setuptools._distutils.command.bdist_wininst import bdist_wininst
 except ImportError:
     from distutils.core import setup
     from distutils.command.sdist import sdist
