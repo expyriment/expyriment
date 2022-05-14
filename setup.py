@@ -13,9 +13,18 @@ import sys
 from subprocess import Popen, PIPE, call
 try:
     from setuptools import setup
-    from setuptools.command.sdist import sdist
-    from setuptools.command.build_py import build_py
-    from setuptools.command.install import install
+    try:
+        from setuptools.command.sdist import sdist
+    except ImportError:
+        from setuptools._distutils.command.sdist import sdist
+    try:
+        from setuptools.command.build_py import build_py
+    except ImportError:
+        from setuptools._distutils.command.build_py import build_py
+    try:
+        from setuptools.command.install import install
+    except ImportError:
+        from setuptools._distutils.command.install import install
     try:
         from setuptools.command.install_data import install_data
     except ImportError:
