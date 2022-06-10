@@ -596,8 +596,15 @@ def _find_self_tests():
                     rtn.append([module, cl])
     return rtn
 
-def run_test_suite():
-    """Run the Expyriment test suite."""
+def run_test_suite(item=None):
+    """Run the Expyriment test suite.
+
+    Parameters
+    ----------
+    item : int, optional
+        the item to run; runs all tests if None (default=None)
+
+    """
 
     # test imports
     from ..design import extras as _test1
@@ -653,9 +660,14 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = io.TextMenu("Test suite",
-            menu, width=350, justification=0, text_size=18,
-            background_stimulus=background, mouse=mouse).get(preselected_item)
+        if item is not None:
+            go_on = False
+            select = item
+        else:
+            select = io.TextMenu("Test suite", menu, width=350,
+                                 justification=0, text_size=18,
+                                 background_stimulus=background,
+                                 mouse=mouse).get(preselected_item)
 
         if select == 0:
             rtn = _stimulus_timing(exp)
@@ -720,3 +732,5 @@ def run_test_suite():
     else:
         exp.screen.clear()
         exp.screen.update()
+
+    return results
