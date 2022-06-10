@@ -11,6 +11,7 @@ __version__ = ''
 __revision__ = ''
 __date__ = ''
 
+from ...misc.constants import P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE
 
 def _empty_square(n):
     square = []
@@ -49,10 +50,7 @@ def is_permutation_type(type_str):
 
     """
 
-    from ...misc import constants
-    return (type_str == constants.P_RANDOM or \
-            type_str == constants.P_CYCLED_LATIN_SQUARE or \
-            type_str == constants.P_BALANCED_LATIN_SQUARE)
+    return type_str == P_RANDOM or type_str == P_CYCLED_LATIN_SQUARE or type_str == P_BALANCED_LATIN_SQUARE
 
 
 def _cycle_list(arr):
@@ -102,7 +100,14 @@ def balanced_latin_square(elements):
 
 
 def cycled_latin_square(elements):
-    """A cycled latin square permutation of elements.
+    """"OBSOLETE METHOD: Please use 'latin_square'."""
+    # TODO: make deprecated with 1.0
+
+    return latin_square(elements, permutation_type=P_CYCLED_LATIN_SQUARE)
+
+
+def latin_square(elements, permutation_type=P_RANDOM):
+    """A latin square permutation of elements.
 
     If elements is a integer the elements=[0,..., elements] is used.
 
@@ -110,14 +115,62 @@ def cycled_latin_square(elements):
     ----------
     elements : int or list
         list of elements or a number
+    permutation_type : str (default='random')
+        type of permutation (permutation type); 'random', 'cycled' or 'balanced'
+        permutation types defined in misc.constants and design.permute:
+        P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, and P_RANDOM
+
+
 
     """
 
-    if isinstance(elements, (tuple, list)):
-        idx = cycled_latin_square(len(elements))
-        square = _square_of_elements(elements, idx)
+    if not is_permutation_type(permutation_type):
+        raise AttributeError("'{0}' is an unknown permutation type".format(permutation_type))
+
+    assert isinstance(elements, (list, tuple, int))
+
+    if isinstance(elements, int):
+        n = elements
     else:
-        square = [list(range(0, elements))]
-        for r in range(0, elements - 1):
+        n = len(elements)
+
+    if permutation_type == P_CYCLED_LATIN_SQUARE:
+        # cycled square
+        # Make n cycled columns [0,1,2,...n-1][1,2,3,...n-1,0][...]
+        square = [list(range(0, n))]
+        for r in range(0, n - 1):
             square.append(_cycle_list(square[r]))
-    return square
+
+    elif permutation_type == P_BALANCED_LATIN_SQUARE:
+        # balanced square
+
+        return "TODO"
+
+    else:
+        # random
+        # Make n cycled columns [0,1,2,...n-1][1,2,3,...n-1,0][...]
+        columns = latin_square(n, permutation_type=P_CYCLED_LATIN_SQUARE)
+
+        # Make index list to sort columns [0,1,n-1,3,n-2,4,...]
+        c_idx = [0, 1]
+        take_last = True
+        tmp = list(range(2, n))
+        for _i in range(2, n):
+            if take_last:
+                c_idx.append(tmp.pop())
+            else:
+                c_idx.append(tmp.pop(0))
+            take_last = not take_last
+
+        # Write sorted columns to square
+        square = _empty_square(n)
+        for c in range(0, n):
+            for r in range(0, n):
+                square[r][c] = columns[c_idx[c]][r]
+
+    if isinstance(elements, int):
+        return square
+    else:
+        return _square_of_elements(elements, square)
+
+
