@@ -307,6 +307,14 @@ class OutputFile(Output):
         """Renames the output file."""
         self.save()
         new_fullpath = self.directory + "{0}{1}".format(os.path.sep, new_filename)
+        if os.path.isfile(new_fullpath):
+            cnt = 1
+            while True:
+                old = new_fullpath[:-4] + f"_bak{cnt}" + new_fullpath[-4:]
+                cnt += 1
+                if not os.path.isfile(old):
+                    os.rename(new_fullpath, old)
+                    break
         os.rename(self._fullpath, new_fullpath)
         self._filename = new_filename
         self._fullpath = new_fullpath
