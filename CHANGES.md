@@ -21,6 +21,7 @@ Fixed:
 - bug when reusing subject id within a minute
 - test suite: close serial port after test
 - io.Keyboard: 0.5 ms timing inaccuracy in wait methods
+- Visual stimuli: don't clear the original canvas when copying
 
 
 Version 0.10.0 (30 Oct 2019)
