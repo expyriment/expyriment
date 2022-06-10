@@ -616,6 +616,8 @@ The Python package 'pySerial' is not installed."""
                 else:
                     s.present()
 
+            ser.close()
+
             result["testsuite_serial_port"] = comport
             result["testsuite_serial_baudrate"] = baudrate
             result["testsuite_serial_parity"] = parity
