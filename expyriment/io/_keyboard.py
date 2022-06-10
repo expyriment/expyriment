@@ -306,7 +306,8 @@ class Keyboard(Input):
                         done = True
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
-            time.sleep(0.0005)
+            if not done:
+                time.sleep(0.0005)
         if self._logging:
             _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
