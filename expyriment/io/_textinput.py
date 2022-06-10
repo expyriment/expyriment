@@ -339,6 +339,7 @@ class TextInput(Input):
                 return rtn_callback, None
 
             events = pygame.event.get(pygame.KEYDOWN)
+            keys = []
             for event in events:
                 if process_control_events:
                     if _internals.active_exp.keyboard.process_control_keys(event) or \
@@ -346,7 +347,8 @@ class TextInput(Input):
                         self._create()
                         self._update()
                         return None, None
-                return event.key, event.unicode
+                keys.append((event.key, event.unicode))
+            return keys
 
     def _create(self):
         """Create the input box."""
@@ -440,7 +442,8 @@ class TextInput(Input):
             user_canvas._get_surface().blit(user_text._get_surface(), (0, 2))
         user_canvas.present(clear=False)
 
-    def get(self, default_input="", process_control_events=True):
+    def get(self, default_input="", clear_event_cue=True,
+            process_control_events=True):
         """Get input from user.
 
         Notes
@@ -452,6 +455,8 @@ class TextInput(Input):
         ----------
         default_input : str, optional
             default input in the textbox
+        clear_event_cue : bool, optional
+            clear keyboard events from the event cue (default = True)
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
@@ -469,6 +474,9 @@ class TextInput(Input):
 
         """
 
+        if clear_event_cue:
+            _internals.active_exp.keyboard.clear()
+
         if android_show_keyboard is not None:
             android_show_keyboard()
         self._user = []
@@ -482,26 +490,28 @@ class TextInput(Input):
             filter = self._character_filter
 
         while True:
-            inkey, string = self._get_key(process_control_events)
-            if isinstance(inkey, CallbackQuitEvent):
-                return None
-            elif inkey == pygame.K_BACKSPACE:
-                self._user = self._user[0:-1]
-            elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
-                break
-            elif inkey not in (pygame.K_LCTRL, pygame.K_RCTRL, pygame.K_TAB):
-                if not self._user_text_surface_size[0] >= self._max_size[0]:
-                    if android is not None:
-                        if inkey in filter:
+            keys = self._get_key(process_control_events)
+            for inkey, string in keys:
+                if isinstance(inkey, CallbackQuitEvent):
+                    return None
+                elif inkey == pygame.K_BACKSPACE:
+                    self._user = self._user[0:-1]
+                elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
+                    break
+                elif inkey not in (pygame.K_LCTRL, pygame.K_RCTRL,
+                                   pygame.K_TAB):
+                    if not self._user_text_surface_size[0] >= self._max_size[0]:
+                        if android is not None:
+                            if inkey in filter:
+                                if inkey in constants.K_ALL_KEYPAD_DIGITS:
+                                    inkey = numpad_digit_code2ascii(inkey)
+                                self._user.append(chr(inkey))
+                        else:
                             if inkey in constants.K_ALL_KEYPAD_DIGITS:
-                                inkey = numpad_digit_code2ascii(inkey)
-                            self._user.append(chr(inkey))
-                    else:
-                        if inkey in constants.K_ALL_KEYPAD_DIGITS:
-                            self._user.append(chr(numpad_digit_code2ascii(
-                                inkey)))
-                        elif string and ord(string) in filter:
-                            self._user.append(string)
+                                self._user.append(chr(numpad_digit_code2ascii(
+                                    inkey)))
+                            elif string and ord(string) in filter:
+                                self._user.append(string)
             self._update()
         got = "".join(self._user)
         if self._logging:
