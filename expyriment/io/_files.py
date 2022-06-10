@@ -226,7 +226,7 @@ class OutputFile(Output):
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
         if _internals.active_exp.is_started:
-            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(2)
+            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(3)
         if self._time_stamp:
             rtn = rtn + '_' + strftime(
                 "%Y%m%d%H%M", _internals.active_exp.clock.init_localtime)
