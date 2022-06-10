@@ -20,6 +20,7 @@ Fixed:
 - bug in colour.is_hex & colour.is_colour
 - bug when reusing subject id within a minute
 - test suite: close serial port after test
+- io.Keyboard: 0.5 ms timing inaccuracy in wait methods
 
 
 Version 0.10.0 (30 Oct 2019)
