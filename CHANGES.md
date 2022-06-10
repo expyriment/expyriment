@@ -9,15 +9,16 @@ New Features:
 - test suite: option to run single tests
 
 Changed:
-- Python 2 support was been removed (Python > 3.5 needed)
-- three digit subject id in output files
+- Python 2 support was been removed. 
+  Expyriment now only works with Python 3 (>3.5).
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - pause_key has been removed 
 - test suite: improved audio test
-- command line interface: option ``-J`` will save with ``.csv`` if no extension is given
+- rewrite permutation module
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
+- data_preprocessing: adds suffix ".csv" to filename when writing csv files
 - bug when reusing subject id within a minute
 - test suite: close serial port after test
 - io.Keyboard: 0.5 ms timing inaccuracy in wait methods

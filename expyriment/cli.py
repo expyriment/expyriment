@@ -59,16 +59,18 @@ xpy.control.end(goodbye_text="Thank you for participating!")
     f.write(template_file)
     f.close()
 
+
 def join_data():
     from .misc import data_preprocessing
     print("Joining data")
     sys.stdout.write(" data subfolder [optional, default=data]? ")
     folder = input()
-    if len(folder)<=0:
+    if len(folder) <= 0:
         folder = "data"
     start_with = input(" data files start with [optional]? ")
     d = data_preprocessing.Aggregator(folder, start_with)
     return d
+
 
 def main():
     import argparse
@@ -224,7 +226,7 @@ letter arguments run single commands""",
         xpy.misc.download_from_stash(what, branch)
     elif args["J"]:
         d = join_data()
-        output =""
+        output = ""
         while len(output) <= 1:
             sys.stdout.write(" name of output csv file? ")
             output = input()

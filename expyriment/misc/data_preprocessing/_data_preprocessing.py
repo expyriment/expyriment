@@ -139,6 +139,8 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
     """
 
+    if len(_os.path.splitext(filename)[1]) == 0:
+        filename = filename + ".csv"
     _sys.stdout.write("write file: {0}".format(filename))
     try:
         _locale_enc = _locale.getdefaultlocale()[1]
