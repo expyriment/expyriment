@@ -13,6 +13,7 @@ Changed:
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
+- data_preprocessing: adds suffix ".csv" to filename when writing csv files
 
 
 Version 0.10.0 (30 Oct 2019)
