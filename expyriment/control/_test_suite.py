@@ -22,7 +22,7 @@ except Exception:
     ogl = None
 
 from . import defaults, initialize, end
-from .. import stimuli, io, _internals, design
+from .. import stimuli, io, _internals, design, control
 import expyriment
 
 from .. import misc
@@ -362,11 +362,53 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    info = """This will test the audio playback. A test tone will be played.
+    audio_formats = []
+    hz = (44100, 48000, 96000)
+    bits = (-16, -24, -32)
+    for x in bits:
+        for y in hz:
+            try:
+                pygame.mixer.quit()
+                pygame.mixer.pre_init(y, x, 2, 512, allowedchanges=pygame.AUDIO_ALLOW_FREQUENCY_CHANGE)
+                pygame.mixer.init()
+                audio_formats.append((y, x))
+            except:
+                break
+    buffer_sizes = [32, 64, 128, 256, 512, 1024, 2048, 4096]
+
+    # Get samplerate, bitrate
+    options = [f"{x[0]} Hz, {x[1] * -1} bit" for x in audio_formats]
+    default = (control.defaults.audiosystem_sample_rate,
+               control.defaults.audiosystem_bit_depth)
+    if default in audio_formats:
+        index = audio_formats.index(default)
+    else:
+        index = 0
+    menu = io.TextMenu("Audio format", menu_items=options, width=350)
+    audio_format = audio_formats[menu.get(index)]
+
+    # Get buffer size
+    options = [f"{x} samples" for x in buffer_sizes]
+    default = control.defaults.audiosystem_buffer_size
+    if default in buffer_sizes:
+        index = buffer_sizes.index(default)
+    else:
+        index = 0
+    menu = io.TextMenu("Buffer size", menu_items=options, width=350)
+    buffer_size = buffer_sizes[menu.get(index)]
+
+    settings = \
+        f"{audio_formats[0]} Hz, {audio_format[1]} bit, {buffer_size} samples"
+    pygame.mixer.quit()
+    pygame.mixer.pre_init(audio_format[0], audio_format[1], 2, buffer_size)
+    pygame.mixer.init()
+    pygame.mixer.init()
+
+    info = f"""This will test the audio playback. A test tone will be played.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen("Audio playback test", info)
+    text = stimuli.TextScreen(f"Audio playback test [settings]", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -389,7 +431,7 @@ def _audio_playback(exp):
     elif key == constants.K_n:
         response = "No"
 
-    return response
+    return response, buffer_size
 
 def _font_viewer(exp):
     all_fonts = list(list_fonts().keys())
@@ -554,8 +596,15 @@ def _find_self_tests():
                     rtn.append([module, cl])
     return rtn
 
-def run_test_suite():
-    """Run the Expyriment test suite."""
+def run_test_suite(item=None):
+    """Run the Expyriment test suite.
+
+    Parameters
+    ----------
+    item : int, optional
+        the item to run; runs all tests if None (default=None)
+
+    """
 
     # test imports
     from ..design import extras as _test1
@@ -611,9 +660,14 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = io.TextMenu("Test suite",
-            menu, width=350, justification=0, text_size=18,
-            background_stimulus=background, mouse=mouse).get(preselected_item)
+        if item is not None:
+            go_on = False
+            select = item
+        else:
+            select = io.TextMenu("Test suite", menu, width=350,
+                                 justification=0, text_size=18,
+                                 background_stimulus=background,
+                                 mouse=mouse).get(preselected_item)
 
         if select == 0:
             rtn = _stimulus_timing(exp)
@@ -645,15 +699,18 @@ def run_test_suite():
             results["testsuite_visual_pygame_screensize"] = exp.screen.size
             preselected_item = select + 1
         elif select == 1:
-            results["testsuite_audio_user"] = _audio_playback(exp)
+            audio_results = _audio_playback(exp)
+            results["testsuite_audio_user"] = audio_results[0]
             try:
                 results["testsuite_audio_frequency"] = str(pygame.mixer.get_init()[0]) + " Hz"
                 results["testsuite_audio_bitdepth"] = str(abs(pygame.mixer.get_init()[1])) + " bit"
                 results["testsuite_audio_channels"] = pygame.mixer.get_init()[2]
+                results["testsuite_audio_buffersize"] = audio_results[1]
             except Exception:
                 results["testsuite_audio_frequency"] = ""
                 results["testsuite_audio_bitdepth"] = ""
                 results["testsuite_audio_channels"] = ""
+                results["testsuite_audio_buffersize"] = ""
             preselected_item = select + 1
         elif select == 2:
             _font_viewer(exp)
@@ -675,3 +732,5 @@ def run_test_suite():
     else:
         exp.screen.clear()
         exp.screen.update()
+
+    return results
