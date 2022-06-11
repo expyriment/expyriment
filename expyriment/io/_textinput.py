@@ -339,6 +339,10 @@ class TextInput(Input):
                 return rtn_callback, None
 
             events = pygame.event.get(pygame.KEYDOWN)
+            # Clear keyup events to prevent limit on unicode field storage:
+            # https://github.com/pygame/pygame/issues/3229
+            pygame.event.get(pygame.KEYUP)
+
             keys = []
             for event in events:
                 if process_control_events:
