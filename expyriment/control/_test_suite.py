@@ -184,7 +184,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
             refresh_time = int(1000 / refresh_rate)
-            if refresh_time < 1000:
+            if refresh_time >= 1:
                 return refresh_time - (presentation_time % refresh_time)
             else:
                 return 0
