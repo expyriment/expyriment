@@ -184,7 +184,10 @@ After the test, you will be asked to indicate which (if any) of those two square
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
             refresh_time = int(1000 / refresh_rate)
-            return refresh_time - (presentation_time % refresh_time)
+            if refresh_time < 1000:
+                return refresh_time - (presentation_time % refresh_time)
+            else:
+                return 0
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
         unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
