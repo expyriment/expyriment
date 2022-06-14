@@ -9,41 +9,19 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import stat
 import os
+from os import remove, close, chmod, path
 import sys
 from subprocess import Popen, PIPE, call
-try:
-    from setuptools import setup
-    try:
-        from setuptools.command.sdist import sdist
-    except ImportError:
-        from setuptools._distutils.command.sdist import sdist
-    try:
-        from setuptools.command.build_py import build_py
-    except ImportError:
-        from setuptools._distutils.command.build_py import build_py
-    try:
-        from setuptools.command.install import install
-    except ImportError:
-        from setuptools._distutils.command.install import install
-    try:
-        from setuptools.command.install_data import install_data
-    except ImportError:
-        from setuptools._distutils.command.install_data import install_data
-    try:
-        from setuptools.command.bdist_wininst import bdist_wininst
-    except ImportError:
-        from setuptools._distutils.command.bdist_wininst import bdist_wininst
-except ImportError:
-    from distutils.core import setup
-    from distutils.command.sdist import sdist
-    from distutils.command.build_py import build_py
-    from distutils.command.install import install
-    from distutils.command.install_data import install_data
-    from distutils.command.bdist_wininst import bdist_wininst
-from os import remove, close, chmod, path
 from shutil import move, copytree, rmtree
 from tempfile import mkstemp
 from glob import glob
+
+from setuptools import setup
+from setuptools.command.sdist import sdist
+from setuptools.command.build_py import build_py
+from setuptools.command.install import install
+from distutils.command.install_data import install_data
+from distutils.command.bdist_wininst import bdist_wininst
 
 
 # Settings
@@ -261,8 +239,8 @@ def get_version_info_from_git():
 
     proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
-    version_nr = "{0}".format(
-        proc.stdout.read().lstrip(b"v").strip().decode("utf-8"))
+    version_nr = "{0}+{1}.{2}".format(
+        *proc.stdout.read().lstrip(b"v").strip().decode("utf-8").split("-"))
     proc = Popen(['git', 'log', '--format=%H', '-1'], \
                         stdout=PIPE, stderr=PIPE)
     revision_nr = proc.stdout.read().strip()[:7].decode("utf-8")
