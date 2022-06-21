@@ -4,8 +4,6 @@ The design._structure module of expyriment.
 This module contains a class implementing the experiment structure.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -31,7 +29,7 @@ from copy import deepcopy
 
 from . import defaults
 from .. import _internals
-from ..misc import constants, Clock, unicode2byte, byte2unicode, py2py3_sort_array
+from ..misc import constants, Clock, unicode2byte, byte2unicode, string_sort_array
 from .randomize import rand_int, shuffle_list
 from . import permute
 
@@ -261,7 +259,7 @@ class Experiment(object):
             return
         try:
             variable_names = list(variable_names)
-        except:
+        except Exception:
             variable_names = [variable_names]
         self._data_variable_names.extend(variable_names)
         if self.data is not None:
@@ -290,7 +288,7 @@ class Experiment(object):
         else:
             try:
                 text = list(text)
-            except:
+            except Exception:
                 text = [text]
 
         self._experiment_info.extend(text)
@@ -345,7 +343,7 @@ class Experiment(object):
 
         try:
             conditions = list(conditions)
-        except:
+        except Exception:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
@@ -386,7 +384,7 @@ class Experiment(object):
 
         try:
             cond = self._bws_factors[factor_name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:
@@ -434,7 +432,7 @@ class Experiment(object):
                     try:
                         cond_idx = self._randomized_condition_for_subject[
                             factor_name][subject_id]
-                    except:  # If not yet randomized for this subject, do it
+                    except Exception:  # If not yet randomized for this subject, do it
                         cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
                         self._randomized_condition_for_subject[
@@ -820,7 +818,7 @@ type".format(permutation_type))
         factors = []
         for bl in self.blocks:
             factors.extend(bl.trial_factor_names)
-        return list(set(factors))
+        return sorted(set(factors))
 
     @property
     def block_list_factor_names(self):
@@ -833,7 +831,7 @@ type".format(permutation_type))
         factors = []
         for bl in self.blocks:
             factors.extend(bl.factor_names)
-        return list(set(factors))
+        return sorted(set(factors))
 
     @property
     def design_as_text(self):
@@ -901,7 +899,7 @@ type".format(permutation_type))
         with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
-            except:
+            except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
             f.write(unicode2byte(header + self.design_as_text))
@@ -993,12 +991,12 @@ type".format(permutation_type))
                             if val.find(".") >= 0:
                                 try:
                                     val = float(val)
-                                except:
+                                except Exception:
                                     pass
                             else:
                                 try:
                                     val = int(val)
-                                except:
+                                except Exception:
                                     pass
 
                             # set value to block or trial
@@ -1226,7 +1224,7 @@ class Block(object):
             for tf in self.get_trial_factor_values(f):
                 if tf not in val:
                     val.append(tf)
-            py2py3_sort_array(val)
+            string_sort_array(val)
             val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
             rtn = rtn + u"{0} = [{1}]\n                   ".format(
@@ -1306,7 +1304,7 @@ class Block(object):
 
         try:
             rtn = self._factors[name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:
@@ -1507,7 +1505,7 @@ class Block(object):
         with open(filename, 'wb') as f:
             try:
                 locale_enc = locale.getdefaultlocale()[1]
-            except:
+            except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
             f.write(unicode2byte(header + self.design_as_text))
@@ -1580,10 +1578,8 @@ class Block(object):
                     encoding = re.findall("coding[:=]\s*([-\w.]+)",
                                           second_line)
                     if encoding == []:
-                        if _internals.PYTHON3:
-                            encoding = ['utf-8']
-                        else:
-                            encoding = [None]
+                        encoding = ['utf-8']
+
         else:
             encoding = [encoding]
 
@@ -1894,7 +1890,7 @@ class Trial(object):
 
         try:
             rtn = self._factors[name]
-        except:
+        except Exception:
             if return_none_if_not_defined:
                 return None
             else:

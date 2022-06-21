@@ -19,8 +19,6 @@ Each instance of the class can provide access to a different parallel
 port.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -40,7 +38,7 @@ if sys.platform.startswith('linux'):
         from ._linux import PParallelLinux
         _ParallelPort = PParallelLinux
         _ParallelPort._driver = "pyparallel"
-    except:
+    except Exception:
         _ParallelPort = None
 elif sys.platform == 'win32':
     try:
@@ -50,17 +48,17 @@ elif sys.platform == 'win32':
         try:
             windll.inpout32
             _ParallelPort._driver = "inpout32"
-        except:
+        except Exception:
             windll.inpoutx64
             _ParallelPort._driver = "inpoutx64"
-    except:
+    except Exception:
         try:
             from ._dlportio import PParallelDLPortIO
             _ParallelPort = PParallelDLPortIO
             from ctypes import windll
             windll.dlportio
             _ParallelPort._driver = "dlportio"
-        except:
+        except Exception:
             _ParallelPort = None
 else: # MAC
     _ParallelPort = None
@@ -146,7 +144,7 @@ class ParallelPort(Input, Output):
         self._address = address
         try:
             self._parallel = _ParallelPort(address=address)
-        except:
+        except Exception:
             raise RuntimeError(
                 "Could not initiate parallel port at {0}".format(address))
         self.input_history = False  # dummy
@@ -518,7 +516,7 @@ class ParallelPort(Input, Output):
             address = io.TextInput("Port address:").get()
             try:
                 pp = io.ParallelPort(address=address)
-            except:
+            except Exception:
                 while True:
                     stimuli.TextScreen(
                         "Could not open port address {0}!".format(address),

@@ -4,8 +4,6 @@ This module contains several classes and functions that help
 to handle, preprocessing and aggregate Expyriment data files.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -14,6 +12,7 @@ __revision__ = ''
 __date__ = ''
 
 import os as _os
+
 try:
     import locale as _locale
 except ImportError:
@@ -24,13 +23,14 @@ from glob import glob as _glob
 from copy import copy as _copy
 import codecs as _codecs
 import re as _re
+
 try:
     import numpy as _np
-except:
+except Exception:
     _np = None
 from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
-from ...misc import py2py3_sort_array as _py2py3_sort_array
+from ...misc import string_sort_array as _py2py3_sort_array
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
@@ -89,16 +89,17 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
     for ln in fl:
         # parse infos
         ln = _str2unicode(ln.strip())
-        if not(ln.startswith("#")):
+        if not (ln.startswith("#")):
             if variables is None:
                 variables = ln.split(delimiter)
                 if only_header_and_variable_names:
                     break
                 if read_variables is not None:
-                    read_in_columns = [variables.index(x) for x in read_variables]
+                    read_in_columns = [variables.index(x) for x in
+                                       read_variables]
                     variables = [variables[x] for x in read_in_columns]
             else:
-                row =ln.split(delimiter)
+                row = ln.split(delimiter)
                 if read_in_columns is not None:
                     row = [row[x] for x in read_in_columns]
                 data.append(row)
@@ -138,10 +139,12 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
     """
 
+    if len(_os.path.splitext(filename)[1]) == 0:
+        filename = filename + ".csv"
     _sys.stdout.write("write file: {0}".format(filename))
     try:
         _locale_enc = _locale.getdefaultlocale()[1]
-    except:
+    except Exception:
         _locale_enc = "UTF-8"
     with open(filename, 'wb') as f:
         header = "# -*- coding: {0} -*-\n".format(_locale_enc)
@@ -166,7 +169,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
                             delimiter=',', to_R_data_frame=False,
-                            names_comprise_glob_pattern =False):
+                            names_comprise_glob_pattern=False):
     """Concatenate data and write it to a csv file.
 
     All files that start with this name will be considered for the
@@ -201,13 +204,13 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
 
     if to_R_data_frame:
         return Aggregator(data_folder=data_folder, file_name=file_name,
-                          names_comprise_glob_pattern=names_comprise_glob_pattern)\
-        .write_concatenated_data_to_R_data_frame(output_file=output_file)
+                          names_comprise_glob_pattern=names_comprise_glob_pattern) \
+            .write_concatenated_data_to_R_data_frame(output_file=output_file)
     else:
         return Aggregator(data_folder=data_folder, file_name=file_name,
-                          names_comprise_glob_pattern=names_comprise_glob_pattern)\
-        .write_concatenated_data(output_file=output_file, delimiter=delimiter)
-
+                          names_comprise_glob_pattern=names_comprise_glob_pattern) \
+            .write_concatenated_data(output_file=output_file,
+                                     delimiter=delimiter)
 
 
 def get_experiment_duration(event_filename):
@@ -231,12 +234,12 @@ def get_experiment_duration(event_filename):
     start = end = None
     for r in data:
         if r[1] == "Experiment":
-            if r[2]=="started":
+            if r[2] == "started":
                 start = int(r[0])
-            elif r[2]=="ended":
+            elif r[2] == "ended":
                 stop = int(r[0])
 
-    sec = (stop-start) / 1000.0
+    sec = (stop - start) / 1000.0
     return sec / 60.0
 
 
@@ -388,7 +391,7 @@ The Python package 'Numpy' is not installed."""
             dv_fnc = tmp[0].strip()
             try:
                 dv_txt = tmp[1].strip()
-            except:
+            except Exception:
                 raise RuntimeError(
                     u"Incorrect syntax for DV: '{0}'".format(variable))
             var_id = self._get_variable_id(dv_txt, True)
@@ -410,7 +413,7 @@ The Python package 'Numpy' is not installed."""
             syntax = tmp[1].strip()
             syntax = syntax.replace("@@", "==")
             syntax = syntax.replace("##", "==")
-        except:
+        except Exception:
             raise RuntimeError(u"Incorrect compute syntax: '{0}'".format(
                 compute_syntax))
 
@@ -487,7 +490,7 @@ The Python package 'Numpy' is not installed."""
         # _add_exclusion
         try:
             col = _np.float64(data[:, column_id])
-        except:
+        except Exception:
             # handling strings
             col = data[:, column_id]
         try:
@@ -495,7 +498,7 @@ The Python package 'Numpy' is not installed."""
                 val = _np.float64(data[:, second_var_id])
             else:
                 val = _np.float64(value)
-        except:
+        except Exception:
             # handling strings
             if second_var_id is not None:
                 val = data[:, second_var_id]
@@ -514,23 +517,23 @@ The Python package 'Numpy' is not installed."""
                                    u"exception: '{0} {1}'".format(
                                        relation, value))
             for cnt, row in enumerate(data):
-                #find name of combination
+                # find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
                     _row_data = row[iv]
                     combi_str = combi_str + "_" + \
-                        u"{0}{1}".format(self.variables[iv],
-                                        _row_data)
+                                u"{0}{1}".format(self.variables[iv],
+                                                 _row_data)
                 deviation = float(row[column_id]) - mean_stds[combi_str][0]
                 if (relation == ">" and
                     deviation > fac * mean_stds[combi_str][1]) or \
-                   (relation == "=>" or relation == ">=" and
-                    deviation >= fac * mean_stds[combi_str][1]) or \
-                   (relation == "<" and
-                    deviation < -fac * mean_stds[combi_str][1]) or \
-                   (relation == "=<" or relation == "<=" and
-                        deviation <= -fac * mean_stds[combi_str][1]):
-                        idx.append(cnt)
+                        (relation == "=>" or relation == ">=" and
+                         deviation >= fac * mean_stds[combi_str][1]) or \
+                        (relation == "<" and
+                         deviation < -fac * mean_stds[combi_str][1]) or \
+                        (relation == "=<" or relation == "<=" and
+                         deviation <= -fac * mean_stds[combi_str][1]):
+                    idx.append(cnt)
             return idx
         else:
             if relation == "!=":
@@ -580,10 +583,10 @@ The Python package 'Numpy' is not installed."""
                         idx = idx & tmp
             # calc std over idx
             if len(idx) > 0:
-                result[new_variable_names[cnt+1]] = [
+                result[new_variable_names[cnt + 1]] = [
                     _np.mean(_np.float64(data[idx, column_dv_id])),
                     _np.std(_np.float64(data[idx, column_dv_id]))]
-                    # ignore first new var name, which is subject_id
+                # ignore first new var name, which is subject_id
         return result
 
     def _get_new_variables(self, iv_values):
@@ -608,9 +611,11 @@ The Python package 'Numpy' is not installed."""
                 if pos <= 0:  # end reached
                     return None
                 else:
-                    for x in range(pos, len(comb)):  # set to zero & all pos. behind
+                    for x in range(pos,
+                                   len(comb)):  # set to zero & all pos. behind
                         comb[x] = 0
-                    return increase_combination(comb, maxima, pos - 1)  # increase position before
+                    return increase_combination(comb, maxima,
+                                                pos - 1)  # increase position before
             else:
                 return comb
 
@@ -632,7 +637,7 @@ The Python package 'Numpy' is not installed."""
                     if len(txt) > 0:
                         txt = txt + "_"
                     txt = txt + u"{0}{1}".format(self.variables[self._iv[c]],
-                                comb_values[-1])
+                                                 comb_values[-1])
                 names.append(txt)
                 factor_combinations.append(comb_values)
                 tmp_comb = increase_combination(tmp_comb, n_levels)
@@ -707,26 +712,25 @@ The Python package 'Numpy' is not installed."""
                     files.append(_os.path.join(data_folder, flname))
 
         for flname in files:
-                _data, vnames, _subject_info, _comments = \
-                    read_datafile(flname, read_variables=variables)
-                if len(self._variables) < 1:
-                    self._variables = vnames
-                else:
-                    if vnames != self._variables:
-                        message = u"Different variables in ".format(flname)
-                        message = message + u"\n{0}".format(vnames)
-                        message = message + u"\ninstead of\n{0}".format(
-                            self._variables)
-                        raise RuntimeError(message)
-                self._data_files.append(flname)
+            _data, vnames, _subject_info, _comments = \
+                read_datafile(flname, read_variables=variables)
+            if len(self._variables) < 1:
+                self._variables = vnames
+            else:
+                if vnames != self._variables:
+                    message = u"Different variables in ".format(flname)
+                    message = message + u"\n{0}".format(vnames)
+                    message = message + u"\ninstead of\n{0}".format(
+                        self._variables)
+                    raise RuntimeError(message)
+            self._data_files.append(flname)
 
         if len(self._data_files) < 1:
             raise Exception(u"No data files found")
 
         print(u"found {0} subject_data sets".format(len(self._data_files)))
         print(u"found {0} variables: {1}".format(len(self._variables),
-                                                [x for x in self._variables]))
-
+                                                 [x for x in self._variables]))
 
     @property
     def data_files(self):
@@ -869,7 +873,7 @@ The Python package 'Numpy' is not installed."""
                                 [data[:, second_var_id]]).transpose()
                         else:
                             b = _np.float64(var_def[2])
-                    except:
+                    except Exception:
                         msg = "Error while computing new variable {0}. " + \
                               "Non-number in variables of {1}"
                         msg.format(new_var_name, filename)
@@ -890,7 +894,7 @@ The Python package 'Numpy' is not installed."""
         for sv in self.subject_variables:
             try:
                 info = subject_info[sv]
-            except:
+            except Exception:
                 info = "nan"
             col = _np.array([[info for _x in range(data.shape[0])]])
             data = _np.c_[data, col.transpose()]
@@ -973,7 +977,7 @@ The Python package 'Numpy' is not installed."""
         data = self.concatenated_data[0]
         try:
             data = _np.float64(data[:, cols])
-        except:
+        except Exception:
             data = data[:, cols]
 
         return data
@@ -1033,7 +1037,6 @@ The Python package 'Numpy' is not installed."""
         data = self.concatenated_data
         write_csv_file(filename=output_file, data=data[0], varnames=data[1],
                        delimiter=delimiter)
-
 
     def set_independent_variables(self, variables):
         """Set the independent variables.
@@ -1215,7 +1218,8 @@ The Python package 'Numpy' is not installed."""
 
         self._computes = []
         self._variables = read_datafile(self._data_files[0],
-                                        only_header_and_variable_names=True)[1]  # original variables
+                                        only_header_and_variable_names=True)[
+            1]  # original variables
         for syntax in self._computes_txt:
             self._add_compute_variable(syntax)
         self._last_data = []

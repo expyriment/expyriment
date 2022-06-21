@@ -2,9 +2,6 @@
 The control._miscellaneous module of expyriment.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -197,7 +194,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
             defaults._mode_settings = None
             try:
                 defaults.event_logging = defaults._mode_settings[5]
-            except:
+            except Exception:
                 pass
             set_skip_wait_methods(False)
         else:

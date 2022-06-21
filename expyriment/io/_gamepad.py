@@ -3,8 +3,6 @@
 This module contains a class implementing a pygame gamepad.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -256,7 +254,7 @@ class GamePad(Input, Output):
             buttons = list(range(self.get_numbuttons()))
         try:
             buttons = list(buttons)
-        except:
+        except Exception:
             buttons = [buttons]
         done = False
         while not done:

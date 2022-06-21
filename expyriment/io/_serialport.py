@@ -5,9 +5,6 @@ This module contains a class implementing serial port input/output.
 
 """
 
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 __version__ = ''
@@ -21,14 +18,16 @@ from types import ModuleType, FunctionType
 try:
     import serial
     from serial.tools.list_ports import comports as list_com_ports
-except:
+except Exception:
     serial = None
     list_com_ports = None
+
+import pygame
 
 from . import defaults
 from ._input_output import Input, Output
 from .. import _internals, misc
-from .._internals import CallbackQuitEvent, PYTHON3
+from .._internals import CallbackQuitEvent
 
 
 class SerialPort(Input, Output):
@@ -265,7 +264,7 @@ The Python package 'pySerial' is not installed."""
 
         try:
             self._serial.close()
-        except:
+        except Exception:
             pass
 
     @property
@@ -429,7 +428,7 @@ The Python package 'pySerial' is not installed."""
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
 
             byte = self.poll()
             if byte:
@@ -498,10 +497,7 @@ The Python package 'pySerial' is not installed."""
 
         """
 
-        if PYTHON3:
-            data = list(data)
-        else:
-            data = [ord(x) for x in data]
+        data = list(data)
 
         if carriage_return:
             data.append(13)
@@ -619,6 +615,8 @@ The Python package 'pySerial' is not installed."""
                     break
                 else:
                     s.present()
+
+            ser.close()
 
             result["testsuite_serial_port"] = comport
             result["testsuite_serial_baudrate"] = baudrate

@@ -1,9 +1,6 @@
 """
 This module contains the base classes for visual stimuli.
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -91,7 +88,7 @@ class _LaminaPanelSurface(object):
         if getattr(self, '_txtr', None) is not None:
             try:
                 ogl.glDeleteTextures([self._txtr])
-            except:
+            except Exception:
                 pass
 
     def convertMousePos(self, pos):
@@ -265,12 +262,12 @@ class Visual(Stimulus):
 
         try:
             self.clear_surface()
-        except:
+        except Exception:
             pass
         if self._compression_filename is not None:
             try:
                 os.remove(self._compression_filename)
-            except:
+            except Exception:
                 pass
 
     @property
@@ -313,7 +310,7 @@ class Visual(Stimulus):
         Notes
         -----
         The absolute position differs for instance from the (relative) position, if the
-        stimulus is plotted ontop of another stimulus, which has not the position (0,0).
+        stimulus is plotted on top of another stimulus, which has not the position (0,0).
 
         """
 
@@ -509,25 +506,28 @@ class Visual(Stimulus):
 
         """
 
-        if self.has_surface:
+        has_surface = self.has_surface
+        is_preloaded = self.is_preloaded
+        is_compressed = self.is_compressed
+        if has_surface:
             surface_backup = self._get_surface()
             surface_copy = self._get_surface().copy()
             self._surface = None
         rtn = Stimulus.copy(self)
-        if self.has_surface:
+        if has_surface:
             self._surface = surface_backup
             rtn._surface = surface_copy
             rtn._is_preloaded = False
             rtn._ogl_screen = None
             rtn._is_compressed = False
             rtn._compression_filename = None
-        if self.is_preloaded:
+        if is_preloaded:
             if _internals.active_exp.screen.open_gl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
             rtn.preload()
-        if self.is_compressed:
+        if is_compressed:
             rtn.compress()
         rtn._was_compressed_before_preload = \
                 self._was_compressed_before_preload
@@ -888,9 +888,6 @@ class Visual(Stimulus):
                 sy += 1
             selfrect.center = (sx, sy)
             p = geometry.coordinates2position(position, screen_size)
-            p = (position[0] + screen_size[0] // 2,
-                 position[1] + screen_size[1] // 2)
-            p = geometry.coordinates2position(position, screen_size)
             if selfrect.collidepoint(p):
                 return True
             else:
@@ -979,7 +976,7 @@ class Visual(Stimulus):
         stimululs is written to.
         The surface will now be read from the disk to free memory.
         Compressed stimuli cannot do surface operations!
-        Preloading comressed stimuli is possible and highly recommended.
+        Preloading compressed stimuli is possible and highly recommended.
         Depending on the size of the stimulus, this method may take some time
         to compute!
 
@@ -1455,7 +1452,7 @@ class Visual(Stimulus):
         self.scale((level, level))
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,blured,{0}, level={1}".format(self.id, level), 2)
+                "Stimulus,blurred,{0}, level={1}".format(self.id, level), 2)
         return int((get_time() - start) * 1000)
 
     def scramble(self, grain_size):

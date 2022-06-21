@@ -2,9 +2,6 @@
 The control._experiment_control module of expyriment.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -150,7 +147,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                 try:
                     experiment._subject = int(subject_id)
                     break
-                except:
+                except Exception:
                     pass
 
     else:
@@ -184,7 +181,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         stimuli._stimulus.Stimulus._id_counter -= 1
         text.present()
         text.present()  # for flipping with double buffer
-        text.present()  # for flipping with tripple buffer
+        text.present()  # for flipping with triple buffer
     default_textline_size = stimuli.TextLine(text="").text_size
     while number > 0:
         counter = stimuli.TextLine(
@@ -341,7 +338,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                          text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                          text_size=int(_internals.active_exp.text_size * 1.2)).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-    except:
+    except Exception:
         pass
 
     if not fast_quit:
@@ -418,9 +415,7 @@ fullscreen.""")
     experiment.set_log_level(0)  # switch off for the first screens
 
     _keyboard.quit_key = defaults.quit_key
-    _keyboard.pause_key = defaults.pause_key
     _keyboard.end_function = end
-    _keyboard.pause_function = pause
 
     mixer.pre_init(defaults.audiosystem_sample_rate,
                    defaults.audiosystem_bit_depth,

@@ -4,8 +4,6 @@ A touchscreen button box.
 This module contains a class implementing a touchscreen button box.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,9 +13,9 @@ __date__ = ''
 
 
 from types import FunctionType
+import pygame
 
 from .. import _internals, stimuli
-from ._keyboard import Keyboard
 from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
@@ -26,7 +24,7 @@ from ._input_output import Input
 class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
 
-    def __init__(self, button_fields, stimuli=[], background_stimulus=None):
+    def __init__(self, button_fields, stimuli=None, background_stimulus=None):
         """Initialize a touchscreen button box.
 
         Parameters
@@ -55,12 +53,16 @@ class TouchScreenButtonBox(Input):
 
         try:
             button_fields = list(button_fields)
-        except:
+        except Exception:
             button_fields = [button_fields]
-        try:
-            stimuli = list(stimuli)
-        except:
-            stimuli = [stimuli]
+
+        if stimuli is None:
+            stimuli = []
+        else:
+            try:
+                stimuli = list(stimuli)
+            except Exception:
+                stimuli = [stimuli]
 
         self._mouse = _internals.active_exp.mouse
         self._last_touch_position = None
@@ -203,7 +205,7 @@ class TouchScreenButtonBox(Input):
         if button_fields is not None:
             try:
                 button_fields = list(button_fields)
-            except:
+            except Exception:
                 button_fields = [button_fields]
 
         pressed_button_field = None
@@ -285,7 +287,7 @@ class TouchScreenButtonBox(Input):
                         pressed_button_field, rt = None, None
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
             pressed_button_field, touch_time = self.check(button_fields)
             if pressed_button_field is not None:
                 rt = int((get_time()-start)*1000)

@@ -124,9 +124,6 @@ Default settings for the control package. ::
         former mode does not work correctly (due to different video card
         driver implementations).
 
-    pause_key : int
-        the key to be used for pausing an experiment
-
     quit_key : int
         the key to be used for ending an experiment
 
@@ -165,7 +162,6 @@ goodbye_text = "Ending experiment..."
 goodbye_delay = 3000
 fast_quit = False
 quit_key = _constants.K_ESCAPE
-pause_key = None  # TODO for 1.0: Pause events should be removed
 
 open_gl = 2
 window_mode = False

@@ -133,7 +133,7 @@ The new official Expyriment support forum can be found at http://forum.expyrimen
 
 Matrix/IRC channel
 ------------------
-To ask questions or to have real-time discussions with other users and the developers you can also use our `Matrix chat <https://riot.im/app/#/room/#expyriment:matrix.org>`_. The room is also accesible from IRC::
+To ask questions or to have real-time discussions with other users and the developers you can also use our `Matrix chat <https://riot.im/app/#/room/#expyriment:matrix.org>`_. The room is also accessible from IRC::
 
     Server: irc.freenode.org
     Channel: #expyriment

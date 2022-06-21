@@ -1,11 +1,28 @@
 Expyriment Release Notes
 ========================
 
+Coming up
+---------
+New Features:
+- command line iterface: option ``-I`` starts an interactive session
+- io.TextInput: ``get`` method now has parameter `clear_event_cue`
+- test suite: option to run single tests
 
-Bug fixes upcoming minor version
----------------------------------
+Changed:
+- Python 2 support was been removed. 
+  Expyriment now only works with Python 3 (>3.5).
+- renaming: misc.py2py3_sort_array --> misc.string_sort_array
+- pause_key has been removed 
+- test suite: improved audio test
+- rewrite permutation module
+
 Fixed:
-- bug in color.is_hex & colour.is_colour
+- bug in colour.is_hex & colour.is_colour
+- data_preprocessing: adds suffix ".csv" to filename when writing csv files
+- bug when reusing subject id within a minute
+- test suite: close serial port after test
+- io.Keyboard: 0.5 ms timing inaccuracy in wait methods
+- Visual stimuli: don't clear the original canvas when copying
 
 
 Version 0.10.0 (30 Oct 2019)
@@ -29,7 +46,7 @@ New Features:
 - ``io.SerialPort`` has a new method ``send_line``
 - geometry module has convenience functions for predefined geometrical
   shapes used for plotting with ``stimuli.Shape``
-- ``geometry.lines_intersection_point`` calculates interscetion point of two
+- ``geometry.lines_intersection_point`` calculates intersection point of two
   lines
 - ``stimuli.Line`` is internally based on ``stimuli.Shape`` and has the new
   methods ``get_shape`` and ``get_connected_shape``
@@ -113,7 +130,7 @@ New Features:
 - randomize.rand_norm() normally distributed random numbers
 - statistics module: std & variance
 - Eventfile.log has an optional log_event_tag for the logging of
-  inter-event-intervalls. If this is defined a summary of the intervalls
+  inter-event-intervals. If this is defined a summary of the intervals
   will be added to the event file.
 - All present methods have an optional log_event_tag that will be passed
   to Eventfile.log (see above)
@@ -475,7 +492,7 @@ Fixed:
 - major bug in keyboard.check()
 - (possibly) fixed is_playing() method in Audio
 - ordering of serial ports in SerialPort.get_available_ports()
-- visual problems when graphics card is set to do flipping with tripple buffer
+- visual problems when graphics card is set to do flipping with triple buffer
 
 Version 0.4.0 (22 Nov 2011)
 ---------------------------

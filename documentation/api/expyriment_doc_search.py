@@ -1,4 +1,3 @@
-from __future__ import print_function
 import expyriment
 from pydoc import getdoc
 x = None
@@ -12,6 +11,7 @@ def _get_doc_and_function(obj):
             rtn.append(var)
     return getdoc(obj), rtn
 
+
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
     for cl in classes:
@@ -23,15 +23,15 @@ def _read_module(mod, doc_dict):
             exec("y =" + fnc)
             doc_dict[fnc], _tmp = _get_doc_and_function(y)
 
+
 def search_doc(search_str, doc_dict):
 
     for k in doc_dict.keys():
-        if k.lower().find(search_str.lower()) > 0 or\
-            doc_dict[k].lower().find(search_str.lower()) > 0:
+        if k.lower().find(search_str.lower()) > 0 \
+                or doc_dict[k].lower().find(search_str.lower()) > 0:
             print("\n-------------------------------------------------------------------------------")
             print("[ {0} ]\n".format(k))
             print("{0}".format(doc_dict[k]))
-
 
 
 doc_dict = {}
@@ -47,4 +47,3 @@ while True:
     else:
         search_doc(search, doc_dict)
         print("\n")
-

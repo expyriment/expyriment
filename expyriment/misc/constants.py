@@ -169,8 +169,8 @@ C_EXPYRIMENT_ORANGE = _Colour((255, 150, 50))
 C_EXPYRIMENT_PURPLE = _Colour((160, 70, 250))
 
 # Permutation types
-P_BALANCED_LATIN_SQUARE = 'balanced-latin-square'
-P_CYCLED_LATIN_SQUARE = 'cycled-latin-square'
+P_BALANCED_LATIN_SQUARE = 'balanced'
+P_CYCLED_LATIN_SQUARE = 'cycled'
 P_RANDOM = 'random'
 
 # Misc

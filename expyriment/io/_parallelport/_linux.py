@@ -5,8 +5,6 @@
 
 # This is necessary to stop the local parallel.py masking the module
 # we actually want to find!
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 # We duck-type the parallel port objects
 class PParallelLinux(object):

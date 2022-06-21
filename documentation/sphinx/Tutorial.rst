@@ -408,7 +408,7 @@ Let's see why this is:
     directory where your first_example.py is located). The "data" directory 
     contains data log files, named according to the experiment name, the 
     subject number and a timestamp. The file ending is .xpd. (Note: To 
-    disable time stamps in output filenames, you have change the defauls of
+    disable time stamps in output filenames, you have change the defaults of
     the io module before you initialize your experiment: 
     ``expyriment.io.defaults.outputfile_time_stamp = False``).  The event 
     directory contains event log files with the ending .xpe.

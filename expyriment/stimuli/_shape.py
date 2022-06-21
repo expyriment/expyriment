@@ -6,9 +6,6 @@ A Shape stimulus.
 This module contains a class implementing a shape stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -131,7 +128,7 @@ class Shape(Visual):
             list of vertices (int, int)
         debug_contour_colour : (int, int, int), optional
             The colour of the contour of the shape.
-            If None (default), contour colour is not displyed.
+            If None (default), contour colour is not displayed.
             Use this option only for debugging. The resulting surface size
             might be enlarged by one pixel large depending on the shape.
 

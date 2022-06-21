@@ -6,8 +6,6 @@ A circle stimulus.
 This module contains a class implementing a circle stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -36,7 +34,7 @@ class Circle(Ellipse):
         colour : (int,int,int), optional
             colour of the circle
         line_width : int, optional
-            line width in pixels betwee >= 0 and < radius,
+            line width in pixels between >= 0 and < radius,
             0 will result in a filled circle
         position : (int, int), optional
             position of the stimulus

@@ -1,10 +1,6 @@
 """
 Get System Information.
 """
-from __future__ import absolute_import, print_function, division
-from future import standard_library
-standard_library.install_aliases()
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -36,33 +32,32 @@ except WindowsError:
     _parallel = None
 try:
     import numpy as _numpy
-except:
+except Exception:
     _numpy = None
 try:
     import mediadecoder as _mediadecoder
-except:
+except Exception:
     _mediadecoder = None
 try:
     import sounddevice as _sounddevice
-except:
+except Exception:
     _sounddevice = None
 try:
     import PIL.Image as _pil
-except:
+except Exception:
     _pil = None
 import pygame
 
-from .._internals import PYTHON3
-
 def _get_registry_value(key, subkey, value):
-    if PYTHON3:
+    try:
         import winreg as _winreg  # TODO check me on Windows
-    else:
-        import _winreg
+    except Exception:
+        return ""
+
     key = getattr(_winreg, key)
     handle = _winreg.OpenKey(key, subkey)
     (value, type) = _winreg.QueryValueEx(handle, value)
-    return value
+    return str(value)
 
 
 def get_system_info(as_string=False):
@@ -79,10 +74,10 @@ def get_system_info(as_string=False):
     from .._internals import get_settings_folder
     try:
         from platform import linux_distribution
-    except:
+    except Exception:
         try:
-            from distro import linux_distribution #TODO: only avaiable for Linux, should it be a suggested package dependency?
-        except:
+            from distro import linux_distribution #TODO: only available for Linux, should it be a suggested package dependency?
+        except Exception:
             def linux_distribution():
                 return ("Linux", "?", "?")
 
@@ -102,15 +97,15 @@ def get_system_info(as_string=False):
             os_details = ", ".join(details)
         else:
             os_details = ""
-
         os_version = linux_distribution()[1]
+        
         try:
             hardware_cpu_details = ""
             with open('/proc/cpuinfo') as f:
                 for line in f:
                     if line.startswith("model name"):
                         hardware_cpu_details = line.split(":")[1].strip()
-        except:
+        except Exception:
             hardware_cpu_details = ""
 
         try:
@@ -132,7 +127,7 @@ def get_system_info(as_string=False):
             hardware_memory_free = str(mem_free + mem_buffers + mem_cached) + \
                                    " MB"
 
-        except:
+        except Exception:
             hardware_memory_total = ""
             hardware_memory_free = ""
 
@@ -145,7 +140,7 @@ def get_system_info(as_string=False):
                     cards.append(line.split(":")[-1].strip())
             p.wait()
             hardware_audio_card = ", ".join(cards)
-        except:
+        except Exception:
             try:
                 hardware_audio_card = ""
                 cards = []
@@ -154,7 +149,7 @@ def get_system_info(as_string=False):
                         if line.startswith(" 0"):
                             cards.append(line.split(":")[1].strip())
                 hardware_audio_card = ", ".join(cards)
-            except:
+            except Exception:
                 hardware_audio_card = ""
 
         try:
@@ -164,7 +159,7 @@ def get_system_info(as_string=False):
             disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
-        except:
+        except Exception:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
@@ -177,7 +172,7 @@ def get_system_info(as_string=False):
                     cards.append(line.split(":")[-1].strip())
             p.wait()
             hardware_video_card = ", ".join(cards)
-        except:
+        except Exception:
             hardware_video_card = ""
 
     # Get platform specific info for Windows
@@ -187,13 +182,10 @@ def get_system_info(as_string=False):
         os_details = platform.win32_ver()[2]
         os_version = platform.win32_ver()[1]
 
-        try:
-            hardware_cpu_details = str(_get_registry_value(
-                "HKEY_LOCAL_MACHINE",
-                "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
-                "ProcessorNameString"))
-        except:
-            hardware_cpu_details = ""
+        hardware_cpu_details = _get_registry_value(
+            "HKEY_LOCAL_MACHINE",
+            "HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+            "ProcessorNameString")
 
         try:
             import ctypes
@@ -217,7 +209,7 @@ def get_system_info(as_string=False):
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
             hardware_memory_total = str(stat.ullTotalPhys // 1024 ** 2) + " MB"
             hardware_memory_free = str(stat.ullAvailPhys // 1024 ** 2) + " MB"
-        except:
+        except Exception:
             hardware_memory_total = ""
             hardware_memory_free = ""
 
@@ -230,20 +222,20 @@ def get_system_info(as_string=False):
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
             hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
             hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
-        except:
+        except Exception:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        try:
-            tmp = str(_get_registry_value("HKEY_LOCAL_MACHINE",
-                                          "HARDWARE\\DEVICEMAP\\VIDEO",
-                                          "\Device\Video0"))
-            idx = tmp.find("System")
-            card = str(_get_registry_value("HKEY_LOCAL_MACHINE",
+        tmp = _get_registry_value("HKEY_LOCAL_MACHINE",
+                                      "HARDWARE\\DEVICEMAP\\VIDEO",
+                                      "\Device\Video0")
+        idx = tmp.find("System")
+        if idx>=0:
+            # under windows
+            hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
                                            tmp[idx:].replace("\\", "\\\\"),
-                                           "Device Description"))
-            hardware_video_card = card
-        except:
+                                           "Device Description")
+        else:
             hardware_video_card = ""
 
         hardware_audio_card = ""  # TODO
@@ -260,7 +252,7 @@ def get_system_info(as_string=False):
                                     stdin=subprocess.PIPE)
             hardware_cpu_details = \
                     proc.stdout.readline().split(":")[1].strip()
-        except:
+        except Exception:
             hardware_cpu_details = ""
         try:
             proc = subprocess.Popen(['sysctl', '-a', 'hw.memsize'],
@@ -268,7 +260,7 @@ def get_system_info(as_string=False):
                                     stdin=subprocess.PIPE)
             mem_total = int(proc.stdout.readline().split(":")[1].strip()) // 1024 ** 2
             hardware_memory_total = str(mem_total) + " MB"
-        except:
+        except Exception:
             hardware_memory_total = ""
 
         try:
@@ -288,7 +280,7 @@ def get_system_info(as_string=False):
                     page = int(non_decimal.sub('', item).strip("."))
             hardware_memory_free = str(mem_total - (active * page) // 1024 ** 2) + " MB"
 
-        except:
+        except Exception:
             hardware_memory_free = ""
 
         try:
@@ -298,7 +290,7 @@ def get_system_info(as_string=False):
             disk_free = int((s.f_frsize * s.f_bavail) // 1024 ** 2)
             hardware_disk_space_total = str(disk_total) + " MB"
             hardware_disk_space_free = str(disk_free) + " MB"
-        except:
+        except Exception:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
@@ -308,7 +300,7 @@ def get_system_info(as_string=False):
                                     stdin=subprocess.PIPE)
             hardware_audio_card = \
                 proc.stdout.read().split("\n")[2].strip(":").strip()
-        except:
+        except Exception:
             hardware_audio_card = ""
 
         try:
@@ -321,7 +313,7 @@ def get_system_info(as_string=False):
             hardware_video_card = []
             for card in pl[0]['_items']:
                 hardware_video_card.append(card['sppci_model'])
-        except:
+        except Exception:
             hardware_video_card = ""
 
     # Fill in info
@@ -384,7 +376,7 @@ def get_system_info(as_string=False):
     try:
         socket.gethostbyname("google.com")
         hardware_internet_connection = "Yes"
-    except:
+    except Exception:
         hardware_internet_connection = "No"
     info["hardware_internet_connection"] = hardware_internet_connection
     info["hardware_memory_total"] = hardware_memory_total
@@ -394,7 +386,7 @@ def get_system_info(as_string=False):
     info["hardware_ports_parallel_driver"] = ParallelPort.get_driver()
     try:
         info["hardware_ports_serial"] = [x.device for x in _com_port_list]
-    except:
+    except Exception:
         info["hardware_ports_serial"] = _com_port_list
     info["hardware_video_card"] = hardware_video_card
 

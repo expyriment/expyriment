@@ -1,7 +1,7 @@
 Installation
 ============
 
-Expyriment works with `Python`_ 2 and 3.
+Expyriment works with `Python 3` (>3.5).
 
 
 Dependencies
@@ -9,8 +9,7 @@ Dependencies
 
 Expyriment depends on the following Python packages:
 
-* Future_ (>=0.15,<1)
-* Pygame_ (>=1.9,<2)
+* Pygame_ (<2)
 * PyOpenGL_ (>=3.0,<4)
 
 Additional Python packages, which are optional and only required for some features of 
@@ -46,12 +45,8 @@ where ``FEATURE`` is one (or several, separated by commas) of:
     `Parallel port <expyriment.io.ParallelPort>`_ communication on Linux (for Windows, please install one of the following parallel port drivers instead: inpout32_ or dlportio_)
 ``video``
     Enhanced `video playback <Video>`_ with support for various formats
-``stash``
-    Download content from Expyriment stash
 ``all``
     All of the above
-
-Replace ``pip`` with ``pip3`` when using Python 3.
 
 
 Platform-specific instructions

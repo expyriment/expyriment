@@ -3,8 +3,6 @@
 This module contains various functions for randomizing data
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
@@ -202,7 +200,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
                         return shuffle_list(list_=list_,
                                 max_repetitions=max_repetitions,
                                 n_segments=n_segments)
-                    except:  # maximum recursion depth reached
+                    except Exception:  # maximum recursion depth reached
                         return False
             else:
                 reps = 0

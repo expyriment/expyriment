@@ -7,10 +7,6 @@ This script contains an API reference browser and search GUI interface (TK), as
 well as a function to call this browser or the online documentation.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-from future import standard_library
-standard_library.install_aliases()
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -30,20 +26,17 @@ from ._internals import get_version
 
 
 try:
-    import tkinter as _tk
-except:
-    try:
-        import tkinter as _tk  # for future (Python 3)
-    except:
-        _tk = None
+    import tkinter as _tk  # future (Python 3)
+except Exception:
+    _tk = None
 
 try:
     import tkinter.ttk as _ttk
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
-except:
-    _ttk = _tk  # for Python < 2.7
+except Exception:
+    _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -364,7 +357,7 @@ The Python package 'Tkinter' is not installed""")
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)
-            except:
+            except Exception:
                 pass
 
     # Position the GUI elements

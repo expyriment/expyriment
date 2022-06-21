@@ -6,9 +6,6 @@ A Line stimulus.
 This module contains a class implementing a line stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -287,7 +284,7 @@ class Line(Visual):
                                                               b_long_edge[0], b_long_edge[1])
                 if sharp_corner_point is not None:
                     a_modified.insert(id_insert, sharp_corner_point)
-                    id_insert +=1 # because it is later used to determin the join point
+                    id_insert +=1 # because it is later used to determine the join point
             rtn = Shape(colour=line_shape_a.colour,
                         anti_aliasing=line_shape_a.anti_aliasing,
                         vertex_list=tuple(points2vertices(a_modified)))

@@ -4,8 +4,6 @@ File input and output.
 This module contains classes implementing file input and output.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -183,7 +181,7 @@ class OutputFile(Output):
         fl.close()
         try:
             locale_enc = locale.getdefaultlocale()[1]
-        except:
+        except Exception:
             locale_enc = "UTF-8"
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
             _internals.get_version(), self._suffix,
@@ -228,7 +226,7 @@ class OutputFile(Output):
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
         if _internals.active_exp.is_started:
-            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(2)
+            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(3)
         if self._time_stamp:
             rtn = rtn + '_' + strftime(
                 "%Y%m%d%H%M", _internals.active_exp.clock.init_localtime)
@@ -257,7 +255,7 @@ class OutputFile(Output):
 
         # NOTE: Do not print here recursion due to std_out logging
 
-        if not _internals.is_base_string(content):
+        if not isinstance(content, (str, bytes)):
             content = str(content)
         self._buffer.append(content)
 
@@ -309,6 +307,14 @@ class OutputFile(Output):
         """Renames the output file."""
         self.save()
         new_fullpath = self.directory + "{0}{1}".format(os.path.sep, new_filename)
+        if os.path.isfile(new_fullpath):
+            cnt = 1
+            while True:
+                old = new_fullpath[:-4] + f"_bak{cnt}" + new_fullpath[-4:]
+                cnt += 1
+                if not os.path.isfile(old):
+                    os.rename(new_fullpath, old)
+                    break
         os.rename(self._fullpath, new_fullpath)
         self._filename = new_filename
         self._fullpath = new_fullpath
@@ -340,7 +346,7 @@ class OutputFile(Output):
                             # large numbers are probably timestamps (normally the current event has no subject id
                             # yet and only a timestamp)
                             subject_number = num + 1
-                    except:
+                    except Exception:
                         pass
         return subject_number
 
@@ -427,7 +433,7 @@ class DataFile(OutputFile):
             for counter, elem in enumerate(data):
                 if counter > 0:
                     line = line + self.delimiter
-                if not _internals.is_base_string(elem):
+                if not isinstance(elem, (str, bytes)):
                     elem = str(elem)
                 if '"' in byte2unicode(elem):
                     elem = byte2unicode(elem).replace('"', '""')
@@ -436,7 +442,7 @@ class DataFile(OutputFile):
                 line = line + elem
             self.write_line(line)
         else:
-            if not _internals.is_base_string(data):
+            if not isinstance(data, (str, bytes)):
                 data = str(data)
             self.write_line(data)
 
@@ -518,7 +524,7 @@ class DataFile(OutputFile):
             return
         try:
             variable_names = list(variable_names)
-        except:
+        except Exception:
             variable_names = [variable_names]
         self._variable_names.extend(variable_names)
         self._variable_names_changed = True
@@ -636,7 +642,7 @@ class EventFile(OutputFile):
             display = repr(_internals.active_exp.screen.window_size)
             window_mode = repr(_internals.active_exp.screen.window_mode)
             open_gl = repr(_internals.active_exp.screen.open_gl)
-        except:
+        except Exception:
             display = "unknown"
             window_mode = "unknown"
             open_gl = "unknown"
@@ -674,7 +680,7 @@ class EventFile(OutputFile):
             the event to be logged (anything, will be casted to str)
         log_event_tag : numeral or string, optional
             if log_event_tag is defined, event file logs the inter-event-intervalls
-            and adds a summary of the intervalls at the end of the file
+            and adds a summary of the intervals at the end of the file
 
         Returns
         -------
@@ -684,7 +690,7 @@ class EventFile(OutputFile):
         """
 
         log_time = self._clock.time
-        if not _internals.is_base_string(event):
+        if not isinstance(event, (str, bytes)):
             event = str(event)
         self.write_line(repr(log_time) + self.delimiter + event)
         if log_event_tag is not None:
@@ -705,7 +711,7 @@ class EventFile(OutputFile):
         self.write_line(line)
 
     def _write_inter_event_intervall_summary(self):
-        """appending the inter event intervall summary to event file, if log_event_tag have been set while presentation
+        """appending the inter event interval summary to event file, if log_event_tag have been set while presentation
         this function will be called at exit"""
 
         for l in self._inter_event_intervall_log.summary():
@@ -714,7 +720,7 @@ class EventFile(OutputFile):
 
 
 class _InterEventIntervallLog():
-    """This class is used to log the intervalls of tagged events to get a
+    """This class is used to log the intervals of tagged events to get a
     summary of the timing at the end of the event file
     """
 
@@ -732,18 +738,18 @@ class _InterEventIntervallLog():
 
         try:
             self.log_dict[event_tag].append(time)
-        except:
+        except Exception:
             self.log_dict[event_tag] = [time]
 
 
     def _get_iei_intervalls(self, from_tag, to_tag):
-        """helper function: get the intervalls between two events"""
+        """helper function: get the intervals between two events"""
 
         rtn = []
         try:
             time_from = sorted(self.log_dict[from_tag])
             time_to = sorted(self.log_dict[to_tag])
-        except:
+        except Exception:
             return rtn
 
         for f in time_from:

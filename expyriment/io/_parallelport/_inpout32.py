@@ -1,5 +1,3 @@
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 # We deliberately delay importing the inpout32 module until we try
 # to use it - this allows us to import the class on machines
@@ -31,7 +29,7 @@ class PParallelInpOut32(object):
             self.base = address
         try:
             self.port = windll.inpout32
-        except:
+        except Exception:
             self.port = windll.inpoutx64
 
         #BYTEMODEMASK = uint8(1 << 5 | 1 << 6 | 1 << 7)

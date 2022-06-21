@@ -4,8 +4,6 @@ Keyboard input.
 This module contains a class implementing pygame keyboard input.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -33,9 +31,7 @@ from  ._input_output import Input
 from .. import  _internals
 
 quit_key = None
-pause_key = None
 end_function = None
-pause_function = None
 
 class Keyboard(Input):
     """A class implementing a keyboard input.
@@ -47,7 +43,7 @@ class Keyboard(Input):
 
     @staticmethod
     def process_control_keys(key_event=None, quit_confirmed_function=None):
-        """Check if quit_key or pause_key has been pressed.
+        """Check if quit_key has been pressed.
 
         Reads pygame event cue if no key_event is specified.
 
@@ -77,31 +73,13 @@ class Keyboard(Input):
                     if confirm:
                         sys.exit()
                     return True
-                elif key_event.key == pause_key and \
-                        pause_function is not None:
-                    pause_function()
-                    return True
         else:
-            ## -------
+            # process all key-down events
             for event in pygame.event.get(pygame.KEYDOWN):
-                # recursion
-                return Keyboard.process_control_keys(event,
-                                                     quit_confirmed_function)
-
-            # code above is as in 0.9. However, it only processes to first key
-            # press and deletes all other keydown events. This is a bug,
-            # but remains unchanged in the current version to keep event
-            # polling in 0.10 identical to 0.9
-            #
-            # TODO for 1.0: Process all keydown events
-            # ...
-            #             for event in pygame.event.get(pygame.KEYDOWN):
-            #                 if Keyboard.process_control_keys(event,
-            #                                                  quit_confirmed_function):
-            #                     return True
-            #             return False
-            # ...
-            ## -------
+                if Keyboard.process_control_keys(event,
+                                                 quit_confirmed_function):
+                    return True
+            return False
 
         return False
 
@@ -140,11 +118,6 @@ class Keyboard(Input):
 
         return quit_key
 
-    @staticmethod
-    def get_pause_key():
-        """Returns the currently defined pause key"""
-
-        return pause_key
 
     @staticmethod
     def set_quit_key(value):
@@ -152,13 +125,6 @@ class Keyboard(Input):
 
         global quit_key
         quit_key = value
-
-    @staticmethod
-    def set_pause_key(value):
-        """Set the currently defined pause key"""
-
-        global pause_key
-        pause_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""
@@ -216,7 +182,7 @@ class Keyboard(Input):
         else:
             try:
                 keys = list(keys)
-            except:
+            except Exception:
                 keys = [keys]
 
         pygame.event.pump()
@@ -299,7 +265,7 @@ class Keyboard(Input):
         else:
             try:
                 keys = list(keys)
-            except:
+            except Exception:
                 keys = [keys]
         if wait_for_keyup:
             target_event = pygame.KEYUP
@@ -340,7 +306,8 @@ class Keyboard(Input):
                         done = True
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
-            time.sleep(0.0005)
+            if not done:
+                time.sleep(0.0005)
         if self._logging:
             _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
@@ -389,7 +356,7 @@ class Keyboard(Input):
         self.clear()
         try:
             char = list(char)
-        except:
+        except Exception:
             char = [char]
         pygame.event.pump()
         done = False
@@ -422,7 +389,8 @@ class Keyboard(Input):
                         done = True
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
-            time.sleep(0.0005)
+            if not done:
+                time.sleep(0.0005)
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(

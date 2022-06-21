@@ -4,8 +4,6 @@ The statistics module.
 This module contains miscellaneous stastistical functions for expyriment.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -41,7 +39,7 @@ def sum(data):
         try:
             s += v
             elem_found = True
-        except:
+        except Exception:
             pass
     if elem_found:
         return s
@@ -96,7 +94,7 @@ def mean(data):
         try:
             s += v
             cnt += 1
-        except:
+        except Exception:
             pass
     if cnt == 0:
         return None

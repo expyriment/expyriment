@@ -5,9 +5,6 @@ This module contains several functions to test the machine expyriment is
 running on.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-from past.utils import old_div
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -21,11 +18,11 @@ import os
 import pygame
 try:
     import OpenGL.GL as ogl
-except:
+except Exception:
     ogl = None
 
 from . import defaults, initialize, end
-from .. import stimuli, io, _internals, design
+from .. import stimuli, io, _internals, design, control
 import expyriment
 
 from .. import misc
@@ -186,8 +183,11 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = old_div(1000.0, refresh_rate)
-            return refresh_time - (presentation_time % refresh_time)
+            refresh_time = int(1000 / refresh_rate)
+            if refresh_time >= 1:
+                return refresh_time - (presentation_time % refresh_time)
+            else:
+                return 0
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
         unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
@@ -197,7 +197,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(misc.round(old_div(sum(inaccuracies), float(len(inaccuracies)))))
+        inaccuracy = int(misc.round( sum(inaccuracies)/ len(inaccuracies)))
         delayed = misc.round(100 * delayed_presentations/180.0, 2)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
@@ -221,7 +221,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(misc.round(refresh_rate)), int(old_div(1000.0, refresh_rate))),
+                        int(misc.round(refresh_rate)), int(1000/refresh_rate)),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
@@ -314,7 +314,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 #         info = """This will test the video card's settings for multiple buffers and page flipping.
 # If none of the following squares are constantly blinking, page flipping is not activated and buffer contents are copied.
 # If only the left square is constantly blinking, page flipping is activated and a double buffer is used.
-# If additionally the right square is constantly blinking, page flipping is activated and a tripple buffer is used.
+# If additionally the right square is constantly blinking, page flipping is activated and a triple buffer is used.
 #
 # [Press RETURN to continue]"""
 #
@@ -365,11 +365,53 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    info = """This will test the audio playback. A test tone will be played.
+    audio_formats = []
+    hz = (44100, 48000, 96000)
+    bits = (-16, -24, -32)
+    for x in bits:
+        for y in hz:
+            try:
+                pygame.mixer.quit()
+                pygame.mixer.pre_init(y, x, 2, 512, allowedchanges=pygame.AUDIO_ALLOW_FREQUENCY_CHANGE)
+                pygame.mixer.init()
+                audio_formats.append((y, x))
+            except:
+                break
+    buffer_sizes = [32, 64, 128, 256, 512, 1024, 2048, 4096]
+
+    # Get samplerate, bitrate
+    options = [f"{x[0]} Hz, {x[1] * -1} bit" for x in audio_formats]
+    default = (control.defaults.audiosystem_sample_rate,
+               control.defaults.audiosystem_bit_depth)
+    if default in audio_formats:
+        index = audio_formats.index(default)
+    else:
+        index = 0
+    menu = io.TextMenu("Audio format", menu_items=options, width=350)
+    audio_format = audio_formats[menu.get(index)]
+
+    # Get buffer size
+    options = [f"{x} samples" for x in buffer_sizes]
+    default = control.defaults.audiosystem_buffer_size
+    if default in buffer_sizes:
+        index = buffer_sizes.index(default)
+    else:
+        index = 0
+    menu = io.TextMenu("Buffer size", menu_items=options, width=350)
+    buffer_size = buffer_sizes[menu.get(index)]
+
+    settings = \
+        f"{audio_formats[0]} Hz, {audio_format[1]} bit, {buffer_size} samples"
+    pygame.mixer.quit()
+    pygame.mixer.pre_init(audio_format[0], audio_format[1], 2, buffer_size)
+    pygame.mixer.init()
+    pygame.mixer.init()
+
+    info = f"""This will test the audio playback. A test tone will be played.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen("Audio playback test", info)
+    text = stimuli.TextScreen(f"Audio playback test [settings]", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -392,7 +434,7 @@ def _audio_playback(exp):
     elif key == constants.K_n:
         response = "No"
 
-    return response
+    return response, buffer_size
 
 def _font_viewer(exp):
     all_fonts = list(list_fonts().keys())
@@ -436,10 +478,18 @@ abcdefghijklmnopqrstuvwxyz äöü
     # rects center, left, right, top, button]
     cl = (20, 20, 20)
     rects = [stimuli.Rectangle(size=bs, position=[0, 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[old_div((bs[0] - exp.screen.size[0]), 2.2), 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[old_div((exp.screen.size[0] - bs[0]), 2.2), 0], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, old_div((bs[1] - exp.screen.size[1]), 2.2)], colour=cl),
-             stimuli.Rectangle(size=bs, position=[0, old_div((exp.screen.size[1] - bs [1]), 2.2)], colour=cl)]
+             stimuli.Rectangle(size=bs,
+                    position=[int((bs[0] - exp.screen.size[0])/ 2.2), 0],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[int((exp.screen.size[0] - bs[0])/ 2.2), 0],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[0, int((bs[1] - exp.screen.size[1])/2.2)],
+                    colour=cl),
+             stimuli.Rectangle(size=bs,
+                    position=[0, int((exp.screen.size[1] - bs [1])/2.2)],
+                    colour=cl)]
     rect_key_mapping = [constants.K_RETURN, constants.K_LEFT, constants.K_RIGHT,
                         constants.K_UP, constants.K_DOWN]
 
@@ -464,7 +514,7 @@ abcdefghijklmnopqrstuvwxyz äöü
                 text_italic=italic,
                 text_bold=bold,
                 text_colour=(255, 255, 255)).plot(canvas)
-        except:
+        except Exception:
             stimuli.TextLine(text="Sorry, I can't display the text with " +
                 "{0}".format(font_description),
                 text_colour=constants.C_EXPYRIMENT_ORANGE).plot(canvas)
@@ -549,8 +599,15 @@ def _find_self_tests():
                     rtn.append([module, cl])
     return rtn
 
-def run_test_suite():
-    """Run the Expyriment test suite."""
+def run_test_suite(item=None):
+    """Run the Expyriment test suite.
+
+    Parameters
+    ----------
+    item : int, optional
+        the item to run; runs all tests if None (default=None)
+
+    """
 
     # test imports
     from ..design import extras as _test1
@@ -606,9 +663,14 @@ def run_test_suite():
     preselected_item = 0
     go_on = True
     while go_on:
-        select = io.TextMenu("Test suite",
-            menu, width=350, justification=0, text_size=18,
-            background_stimulus=background, mouse=mouse).get(preselected_item)
+        if item is not None:
+            go_on = False
+            select = item
+        else:
+            select = io.TextMenu("Test suite", menu, width=350,
+                                 justification=0, text_size=18,
+                                 background_stimulus=background,
+                                 mouse=mouse).get(preselected_item)
 
         if select == 0:
             rtn = _stimulus_timing(exp)
@@ -640,15 +702,18 @@ def run_test_suite():
             results["testsuite_visual_pygame_screensize"] = exp.screen.size
             preselected_item = select + 1
         elif select == 1:
-            results["testsuite_audio_user"] = _audio_playback(exp)
+            audio_results = _audio_playback(exp)
+            results["testsuite_audio_user"] = audio_results[0]
             try:
                 results["testsuite_audio_frequency"] = str(pygame.mixer.get_init()[0]) + " Hz"
                 results["testsuite_audio_bitdepth"] = str(abs(pygame.mixer.get_init()[1])) + " bit"
                 results["testsuite_audio_channels"] = pygame.mixer.get_init()[2]
-            except:
+                results["testsuite_audio_buffersize"] = audio_results[1]
+            except Exception:
                 results["testsuite_audio_frequency"] = ""
                 results["testsuite_audio_bitdepth"] = ""
                 results["testsuite_audio_channels"] = ""
+                results["testsuite_audio_buffersize"] = ""
             preselected_item = select + 1
         elif select == 2:
             _font_viewer(exp)
@@ -670,3 +735,5 @@ def run_test_suite():
     else:
         exp.screen.clear()
         exp.screen.update()
+
+    return results

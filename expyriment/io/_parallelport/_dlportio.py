@@ -33,9 +33,6 @@
 # SOFTWARE.
 #
 
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 class PParallelDLPortIO(object):
     """
     This class provides read/write access to the parallel port on a PC.

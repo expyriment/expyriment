@@ -6,8 +6,6 @@ A blank screen stimulus.
 This module contains a class implementing a blank screen stimulus.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -37,7 +35,7 @@ class BlankScreen(Canvas):
             self._colour = _internals.active_exp.background_colour
         try:
             size = _internals.active_exp.screen.surface.get_size()
-        except:
+        except Exception:
             raise RuntimeError("Could not get size of screen!")
         Canvas.__init__(self, size, colour=self._colour)
 

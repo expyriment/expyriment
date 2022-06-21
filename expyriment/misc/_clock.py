@@ -3,8 +3,6 @@
 This module contains an experimental clock.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -13,9 +11,9 @@ __revision__ = ''
 __date__ = ''
 
 
-import sys
 import time
 from types import FunctionType
+import pygame
 
 from ._timer import get_time
 from .. import _internals
@@ -142,7 +140,7 @@ class Clock(object) :
                             break
                         _internals.active_exp.mouse.process_quit_event()
                     else:
-                        _internals.pump_pygame_events()
+                        pygame.event.pump()
         else:
             looptime = 200
             if (waiting_time > looptime):
@@ -153,7 +151,6 @@ class Clock(object) :
                                _internals.active_exp.keyboard.process_control_keys():
                                 break
                         else:
-                            import pygame
                             pygame.event.pump()
                 else:
                     time.sleep((waiting_time - looptime) // 1000)

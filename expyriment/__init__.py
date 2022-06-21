@@ -35,76 +35,67 @@ __revision__ = ''
 __date__ = ''
 
 
-try:
-    import future as _future
-    if int(_future.__version__.split(".")[1]) < 15:
-      raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Future {0}".format(
-                        _future.__version__) +
-                      "\nPlease install Future >= 0.15.")
-except ImportError:
-    raise ImportError("Expyriment {0} ".format(__version__) +
-                      "needs the package 'Future')." +
-                      "\nPlease install Future >= 0.15.")
+
+import sys as _sys
+
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 6:
+
+    raise RuntimeError("Expyriment {0} ".format(__version__) +
+                      "is not compatible with Python {0}.{1}.".format(
+                                                    _sys.version_info[0],
+                                                    _sys.version_info[1]) +
+                      "\n\n  Please use Python 3.6+. Note, the last major "
+                      "release compatible with Python 2.7\n"
+                      "  is Expyriment 0.10.")
 
 try:
     import os
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
     import pygame as _pygame
-    if _pygame.vernum < (1, 9, 1):
+    if _pygame.vernum < (1, 9, 1) or _pygame.vernum >= (3, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
-                                                    _pygame.vernum) +
-                      "\nPlease install Pygame 1.9.")
+                          _pygame.vernum[0], _pygame.vernum[1],
+                          _pygame.vernum[2]) +
+                      "\nPlease install Pygame(>=1.9,<3)).")
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
                       "needs the package 'Pygame')." +
-                      "\nPlease install Pygame 1.9.")
+                      "\nPlease install Pygame(>=1.9,<3).")
 
 try:
     import OpenGL as _OpenGL
-    if int(_OpenGL.version.__version__[0]) < 3:
+    if not int(_OpenGL.version.__version__[0]) == 3:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
                         int(_OpenGL.version.__version__[2]),
                         int(_OpenGL.version.__version__[4]),
                           ) +
-                      "\nPlease install PyOpenGL 3.0.")
+                      "\nPlease install PyOpenGL(>=3,<4).")
 except ImportError:
     print("No OpenGL support!" +
                     "\nExpyriment {0} ".format(__version__) +
                       "needs the package 'PyOpenGL'."
-                      "\nPlease install PyOpenGL 3.0 for OpenGL functionality.")
+                      "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
 
-import sys as _sys
+
 from ._internals import get_version, import_all_extras
-from ._internals import PYTHON3 as _PYTHON3
+print("Expyriment {0} ".format(get_version()))
 
-if not( (_sys.version_info[0] == 2 and _sys.version_info[1] >= 6) or
-        (_PYTHON3 and _sys.version_info[1] >= 3) ):
-    raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Python {0}.{1}.".format(
-                                                    _sys.version_info[0],
-                                                    _sys.version_info[1]) +
-                      "\nPlease use Python 2.6+ or Python 3.3+.")
-else:
-    print("Expyriment {0} ".format(get_version()))
 
-# Check if local 'test.py{c|o|d}' shadows 'test' package of standard library
+# Check if local 'test.py{c|o}' shadows 'test' package of standard library
 try:
-    import imp as _imp
-    import os as _os
-    import sys as _sys
+    from importlib.util import find_spec as _find_spec
+    # TODO: previously used 'imp' module is deprecated
+    # TODO: new method only works with Python 3.4+, but requirements are
+    # TODO: currently 3.3+. What to do?
+
     for _package in ["test"]:
-        _tf = _os.path.abspath(_imp.find_module(_package)[1])
-        _mf = _os.path.abspath(_os.path.abspath(_sys.argv[0]))
-        if _os.path.split(_tf)[0] == _os.path.split(_mf)[0] or \
-                _os.path.split(_tf)[0] == _os.path.abspath(_os.path.curdir):
-                    _m = "Warning: "
-                    _m += "'{0}' is shadowing package '{1}'!"
-                    print(_m.format(_tf, _package))
-except:
+        if _find_spec(_package).submodule_search_locations is None:
+            _m = "Warning: '{0}.py' is shadowing package '{1}'!"
+            print(_m.format(_package, _package))
+except Exception:
     pass
 
 from . import _internals

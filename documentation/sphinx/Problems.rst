@@ -9,7 +9,7 @@ No native 3D stimuli
 --------------------
 Right now Expyriment only offers static 2D visual stimuli.
 
-While PyOpenGL can be used direclty to create dynamic 3D stimuli, we are 
+While PyOpenGL can be used directly to create dynamic 3D stimuli, we are 
 planning to add a dedicated 3D stimulus class in the future, to facilitate the 
 creation of 3D stimuli.
 

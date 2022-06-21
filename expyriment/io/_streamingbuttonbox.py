@@ -4,8 +4,6 @@ A streaming button box.
 This module contains a class implementing a streaming button box.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -15,6 +13,7 @@ __date__ = ''
 
 
 from types import FunctionType
+import pygame
 
 from . import defaults
 from .. import _internals
@@ -182,7 +181,7 @@ class StreamingButtonBox(Input, Output):
                        _internals.active_exp.keyboard.process_control_keys():
                         break
                 else:
-                    _internals.pump_pygame_events()
+                    pygame.event.pump()
             if duration is not None:
                 if int((get_time() - start) * 1000) > duration:
                     return None, None

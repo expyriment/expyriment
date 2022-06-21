@@ -4,9 +4,6 @@ Mouse input.
 This module contains a class implementing pygame mouse input.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -132,14 +129,14 @@ class Mouse(Input):
         if corner is not None:
             if not isinstance(corner, int) or corner<0 or corner >3:
                 corner = None
-                print("Warning: {} is an unkown corner location. Mouse quit "
+                print("Warning: {} is an unknown corner location. Mouse quit "
                                      "event is deactivated.".format(corner))
         Mouse._quit_corner_location = corner
 
         try:
             Mouse._corner_rect_size = (int(corner_rect_size[0]),
                                        int(corner_rect_size[1]))
-        except:
+        except Exception:
             pass
 
     @staticmethod
@@ -179,7 +176,7 @@ class Mouse(Input):
             return False
 
         if click_position is None:
-            # check Pygame queu
+            # check Pygame queue
             pos = None
             # pygame.event.pump() # not sure if it is required!
             for event in pygame.event.get(pygame.MOUSEBUTTONDOWN):
@@ -506,7 +503,7 @@ class Mouse(Input):
         else:
             try:
                 buttons = list(buttons)
-            except:
+            except Exception:
                 buttons = [buttons]
         while True:
             if isinstance(callback_function, FunctionType):

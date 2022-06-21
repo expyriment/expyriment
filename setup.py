@@ -3,37 +3,25 @@
 Setup file for Expyriment
 """
 
-
-from __future__ import print_function
-from builtins import *
-
-
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
 import stat
 import os
+from os import remove, close, chmod, path
 import sys
 from subprocess import Popen, PIPE, call
-try:
-    from setuptools import setup
-    from setuptools.command.sdist import sdist
-    from setuptools.command.build_py import build_py
-    from setuptools.command.install import install
-    from setuptools.command.install_data import install_data
-    from setuptools.command.bdist_wininst import bdist_wininst
-except ImportError:
-    from distutils.core import setup
-    from distutils.command.sdist import sdist
-    from distutils.command.build_py import build_py
-    from distutils.command.install import install
-    from distutils.command.install_data import install_data
-    from distutils.command.bdist_wininst import bdist_wininst
-from os import remove, close, chmod, path
 from shutil import move, copytree, rmtree
 from tempfile import mkstemp
 from glob import glob
+
+from setuptools import setup
+from setuptools.command.sdist import sdist
+from setuptools.command.build_py import build_py
+from setuptools.command.install import install
+from distutils.command.install_data import install_data
+from distutils.command.bdist_wininst import bdist_wininst
 
 
 # Settings
@@ -73,8 +61,7 @@ source_files = ['.release_info',
                 'Makefile',
                 'README.md']
 
-install_requires = ["future>=0.15,<1",
-                    "pygame>=1.9,<2",
+install_requires = ["pygame>=1.9,<3",
                     "pyopengl>=3.0,<4"]
 
 extras_require = {
@@ -87,7 +74,7 @@ extras_require = {
                            "pyserial>=3,<4",
                            "pyparallel>=0.2,<1",
                            "sounddevice>=0.3,<1",
-                           "mediadecoder>=0.1,<1"],
+                           "mediadecoder>=0.1,<1"]
     }
 
 entry_points = {
@@ -252,8 +239,8 @@ def get_version_info_from_git():
 
     proc = Popen(['git', 'describe', '--tags', '--dirty', '--always'], \
                         stdout=PIPE, stderr=PIPE)
-    version_nr = "{0}".format(
-        proc.stdout.read().lstrip(b"v").strip().decode("utf-8"))
+    version_nr = "{0}+{1}.{2}".format(
+        *proc.stdout.read().lstrip(b"v").strip().decode("utf-8").split("-"))
     proc = Popen(['git', 'log', '--format=%H', '-1'], \
                         stdout=PIPE, stderr=PIPE)
     revision_nr = proc.stdout.read().strip()[:7].decode("utf-8")
@@ -362,6 +349,6 @@ if __name__=="__main__":
     print("")
     print("Expyriment Version: [{0}] ({1})".format(version_nr, message))
     try:
-        print("Warning:", warning)
+        print("Warning:", warning) #FIXME: warning is never defined!
     except:
         pass

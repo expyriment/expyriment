@@ -4,9 +4,6 @@ Video playback.
 This module contains a class implementing video playback.
 
 """
-from __future__ import absolute_import, print_function, division
-from builtins import *
-
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
@@ -22,7 +19,7 @@ from types import FunctionType
 import pygame
 try:
     import android.mixer as mixer
-except:
+except Exception:
     import pygame.mixer as mixer
 
 from . import defaults
@@ -76,7 +73,7 @@ class Video(_visual.Stimulus):
                     assert has_internet_connection()
                     imageio.plugins.ffmpeg.download()
                     return imageio.plugins.ffmpeg.get_exe()
-                except:
+                except Exception:
                     os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
         except ImportError:
             pass
@@ -569,8 +566,7 @@ class Video(_visual.Stimulus):
                 if _internals.active_exp.is_initialized and \
                    process_control_events and \
                    event.type == pygame.KEYDOWN and (
-                       event.key == self.Keyboard.get_quit_key() or
-                       event.key == self.Keyboard.get_pause_key()):
+                       event.key == self.Keyboard.get_quit_key()):
                     self.pause()
                     self.Keyboard.process_control_keys(event, self.stop)
                     self.play()
