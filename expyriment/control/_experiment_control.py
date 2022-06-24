@@ -246,7 +246,7 @@ def pause():
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
     if android is None:
-        experiment.keyboard.wait()
+        experiment.keyboard.wait(keys=[misc.constants.K_RETURN])
     else:
         experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
