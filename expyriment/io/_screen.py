@@ -10,6 +10,10 @@ __revision__ = ''
 __date__ = ''
 
 
+import os
+import ctypes
+import platform
+
 import pygame
 try:
     import OpenGL.GL as ogl
@@ -89,6 +93,14 @@ OpenGL will be deactivated!"
             self._window_size = self._monitor_resolution
         else:
             self._window_size = window_size
+
+        # Change icon to Expyriment logo
+        if platform.system() == "Windows":
+            id_ = 'mycompany.myproduct.subproduct.version'  # arbitrary string
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(id_)
+        icon = pygame.image.load(
+            os.path.join(os.path.split(__file__)[0], "..", "xpy_icon.png"))
+        pygame.display.set_icon(icon)
 
         if not self._open_gl:
             if self._fullscreen:
