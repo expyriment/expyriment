@@ -202,6 +202,9 @@ def write_concatenated_data(data_folder, file_name, output_file=None,
 
     """
 
+    if output_file is None:
+        output_file = _os.path.splitext(file_name)[0] + ".csv"
+
     if to_R_data_frame:
         return Aggregator(data_folder=data_folder, file_name=file_name,
                           names_comprise_glob_pattern=names_comprise_glob_pattern) \
