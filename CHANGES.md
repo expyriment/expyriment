@@ -15,6 +15,8 @@ Changed:
 - pause_key has been removed 
 - test suite: improved audio test
 - rewrite permutation module
+- io.Keyboard.wait and io.Keyboard.wait_char: added parameter `low_performance`
+- io.GamePad.wait_press: removed `time.sleep(0.0005)`
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
