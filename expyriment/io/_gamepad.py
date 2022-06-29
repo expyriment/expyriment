@@ -288,8 +288,6 @@ class GamePad(Input, Output):
                         done = True
                         break
 
-            time.sleep(0.0005)
-
         if self._logging:
             _internals.active_exp._event_file_log(
                             "Gamepad,received,{0},wait_press".format(_button))
