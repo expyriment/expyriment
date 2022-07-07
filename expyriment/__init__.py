@@ -87,10 +87,6 @@ print("Expyriment {0} ".format(get_version()))
 # Check if local 'test.py{c|o}' shadows 'test' package of standard library
 try:
     from importlib.util import find_spec as _find_spec
-    # TODO: previously used 'imp' module is deprecated
-    # TODO: new method only works with Python 3.4+, but requirements are
-    # TODO: currently 3.3+. What to do?
-
     for _package in ["test"]:
         if _find_spec(_package).submodule_search_locations is None:
             _m = "Warning: '{0}.py' is shadowing package '{1}'!"
