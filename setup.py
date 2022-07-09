@@ -46,7 +46,8 @@ packages = ['expyriment',
             'expyriment.design.randomize',
             'expyriment.design.permute']
 
-package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
+package_data = {'expyriment': ['expyriment_logo.png', 'xpy_icon.png',
+                               '_fonts/*.*']}
 
 data_files = [('share/expyriment/documentation/api',
                glob('documentation/api/*.*')),
