@@ -99,7 +99,7 @@ OpenGL will be deactivated!"
             id_ = 'mycompany.myproduct.subproduct.version'  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(id_)
         icon = pygame.image.load(
-            os.path.join(os.path.split(__file__)[0], "..", "xpy_icon.png"))
+            os.path.join(os.path.split(__file__)[0], "..", "expyriment_logo.png"))
         pygame.display.set_icon(icon)
 
         if not self._open_gl:
