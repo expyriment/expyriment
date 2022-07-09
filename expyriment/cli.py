@@ -15,6 +15,7 @@ __date__ = ''
 
 import sys, os
 from importlib import import_module
+from importlib.util import find_spec
 
 #from . import control, io, show_documentation
 #from .misc import _secure_hash, get_system_info, download_from_stash
@@ -238,14 +239,12 @@ letter arguments run single commands""",
         #exp = xpy.control.initialize()
         banner = """Expyriment is available as both 'expyriment' and 'xpy'.
 Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
-        try:
+        if find_spec("readline") is not None:
             import readline
-        except Exception:
-            pass
-        try:
+        if find_spec("IPython") is not None:
             import IPython
             IPython.embed(header=banner)
-        except Exception:
+        else:
             import code
             code.interact(local=locals(), banner=banner)
 
