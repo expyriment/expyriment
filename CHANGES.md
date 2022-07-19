@@ -7,6 +7,7 @@ New Features:
 - command line iterface: option ``-I`` starts an interactive session
 - io.TextInput: ``get`` method now has parameter `clear_event_cue`
 - test suite: option to run single tests
+- control.pause: added ` text` and `key` parameters
 
 Changed:
 - Python 2 support was been removed. 
