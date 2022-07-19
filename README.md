@@ -55,3 +55,10 @@ and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.
 http://dx.doi.org/10.3758/s13428-013-0390-6
 
 [details]: https://github.com/expyriment/expyriment/blob/master/COPYING.txt
+
+Contributing
+============
+Join other
+[contributors](https://github.com/expyriment/expyriment/graphs/contributors)
+and help us out with Expyriment development! We are very happy to receive pull
+requests on GitHub. 

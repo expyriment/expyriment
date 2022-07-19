@@ -102,6 +102,14 @@ GitHub. Get a local copy of this repository with this command::
     git clone https://github.com/expyriment/expyriment.git    
 
 
+Contributing
+------------
+Join other
+`contributors <https://github.com/expyriment/expyriment/graphs/contributors>`
+and help us out with Expyriment development! We are very happy to receive pull
+requests on GitHub. 
+
+
 Suggestions and bug tracking
 ----------------------------
 If you want to make suggestions to improve Expyriment or you found a bug, 
