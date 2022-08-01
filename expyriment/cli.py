@@ -236,6 +236,8 @@ letter arguments run single commands""",
         print("Interactive session")
         print("")
         expyriment = xpy
+        xpy.control.defaults.window_mode = True
+        xpy.control.defaults.stdout_logging = False
         #exp = xpy.control.initialize()
         banner = """Expyriment is available as both 'expyriment' and 'xpy'.
 Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""

@@ -460,7 +460,7 @@ fullscreen.""")
     experiment._data = None
     experiment._subject = None
     experiment._is_initialized = True  # required before EventFile
-    if old_logging> 0:
+    if old_logging > 0:
         experiment._events = EventFile(
             additional_suffix=experiment.filename_suffix, time_stamp=True)
         if stdout_logging:
