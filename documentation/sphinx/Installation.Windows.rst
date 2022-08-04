@@ -80,7 +80,7 @@ Notes
 
 .. _`Python 3.10.6`: https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
 .. _inpout32: https://www.highrez.co.uk/Downloads/InpOut32/
-.. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
+.. _dlportio: https://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
 .. _ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip
 .. _`add it to the environment variable PATH`: https://www.computerhope.com/issues/ch000549.htm
 .. _`release page`: https://github.com/expyriment/expyriment/releases/
