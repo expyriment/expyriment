@@ -8,12 +8,12 @@ All Linux distributions
 
 1. Use your distribution's package manager to install
 
-  * Python or Python3
+  * Python3
   * setuptools
-  * pip or pip3
+  * pip3
   * build-essential (or equivalent)
   * libffi-dev
-  * python-dev or python3-dev
+  * python3-dev
   * PortAudio
   * ffmpeg (for enhanced video support, optional)
 
