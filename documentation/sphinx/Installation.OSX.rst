@@ -21,7 +21,7 @@ Default installation (online)
 
     sudo python3 -m pip install -U expyriment[all]
    
-  (Omit ``[all]`` to install without additional optional features)
+   (Omit ``[all]`` to install without additional optional features)
 
     
 Alternative installation (offline)
