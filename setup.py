@@ -49,13 +49,6 @@ packages = ['expyriment',
 package_data = {'expyriment': ['expyriment_logo.png', 'xpy_icon.png',
                                '_fonts/*.*']}
 
-data_files = [('share/expyriment/documentation/api',
-               glob('documentation/api/*.*')),
-              ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/*.*')),
-              ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/Makefile'))]
-
 source_files = ['.release_info',
                 'CHANGES.MD',
                 'COPYING.txt',
@@ -182,52 +175,6 @@ if os.path.isdir(old_installation):
         bdist_wininst.run(self)
 
 
-# Build Sphinx HTML documentation and add them to data_files
-class InstallData(install_data):
-    def run(self):
-
-        # Try to build/add documentation
-        try:
-            cwd = os.getcwd()
-            copytree('expyriment', 'documentation/sphinx/expyriment')
-            os.chdir('documentation/sphinx/')
-            call([sys.executable, "./create_rst_api_reference.py"])
-            call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
-            os.chdir(cwd)
-            self.data_files.append(('share/expyriment/documentation/html',
-                               glob('documentation/sphinx/_build/html/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_downloads',
-                               glob('documentation/sphinx/_build/html/_downloads/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_images',
-                               glob('documentation/sphinx/_build/html/_images/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_sources',
-                               glob('documentation/sphinx/_build/html/_sources/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static',
-                               glob('documentation/sphinx/_build/html/_static/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/css',
-                               glob('documentation/sphinx/_build/html/_static/css/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/fonts',
-                               glob('documentation/sphinx/_build/html/_static/fonts/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/js',
-                               glob('documentation/sphinx/_build/html/_static/js/*.*')))
-        except:
-            html_created = False
-            warning = "HTML documentation NOT created! (sphinx and numpydoc installed?)"
-            os.chdir(cwd)
-
-        # Install data
-        install_data.run(self)
-
-        # Clean up Sphinx folder
-        rmtree("documentation/sphinx/expyriment", ignore_errors=True)
-        rmtree("documentation/sphinx/_build", ignore_errors=True)
-        for file_ in glob("documentation/sphinx/expyriment.*"):
-            remove_file(file_)
-        remove_file("documentation/sphinx/Changelog.rst")
-        #remove_file("documentation/sphinx/CommandLineInterface.rst")
-        remove_file("documentation/sphinx/sitemap.yml")
-
-
 # Helper functions
 def remove_file(file_):
     try:
@@ -313,8 +260,7 @@ if __name__=="__main__":
     version_nr, revision_nr, date = get_version_info_from_file("expyriment/__init__.py")
     if not version_nr == '':
         cmdclass={'install': Install,
-                  'bdist_wininst': Wininst,
-                  'install_data': InstallData,}
+                  'bdist_wininst': Wininst}
         run()
         message = "from built archive/distribution"
 
@@ -323,8 +269,7 @@ if __name__=="__main__":
         cmdclass={'sdist': Sdist,
                   'build_py': Build,
                   'install': Install,
-                  'bdist_wininst': Wininst,
-                  'install_data': InstallData}
+                  'bdist_wininst': Wininst}
 
         # Are we building/installing from a source archive/distribution?
         version_nr, revision_nr, date = get_version_info_from_release_info()
