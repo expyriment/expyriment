@@ -26,6 +26,8 @@ from distutils.command.bdist_wininst import bdist_wininst
 
 # Settings
 description='A Python library for cognitive and neuroscientific experiments'
+with open("README.md", "r", encoding="utf-8") as f:
+    long_description = f.read()
 author='Florian Krause, Oliver Lindemann'
 author_email='florian@expyriment.org, oliver@expyriment.org'
 license='GNU GPLv3'
@@ -241,6 +243,7 @@ def run():
     setup(name='expyriment',
           version=version_nr,
           description=description,
+          long_description=long_description,
           author=author,
           author_email=author_email,
           license=license,
