@@ -179,7 +179,7 @@ def get_plugins_folder():
     """Return plugin folder in Expyriment settings folder, if it exists"""
 
     settings_folder = get_settings_folder()
-    if settings_folder is None:
+    if not os.path.isdir(settings_folder):
         return None
     path = os.path.join(settings_folder, "extras")
     if os.path.isdir(path):
