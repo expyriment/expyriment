@@ -251,7 +251,6 @@ def run():
           packages=packages,
           package_dir=package_dir,
           package_data=package_data,
-          data_files=data_files,
           install_requires=install_requires,
           extras_require=extras_require,
           cmdclass=cmdclass,
