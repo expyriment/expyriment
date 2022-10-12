@@ -22,7 +22,7 @@ import math
 
 import pygame
 
-from .._internals import android, get_settings_folder, get_version
+from .._internals import android, get_settings_folder, get_version, is_venv
 
 try:
     from locale import getdefaultlocale
@@ -319,27 +319,6 @@ def get_monitor_resolution():
         pygame.display.init()
         return (pygame.display.Info().current_w,
                 pygame.display.Info().current_h)
-
-
-def is_venv():
-    """Check whether running in virtual environment.
-
-    Returns
-    -------
-    venv : bool
-        whether or not running in virtual environment
-
-    Note
-    ----
-    Only covers virual environments created with `virtualenv`, `venv`, and
-    `pyvnenv`.
-
-    """
-
-    real_prefix = getattr(sys, "real_prefix", None)
-    base_prefix = getattr(sys, "base_prefix", sys.prefix)
-
-    return (base_prefix or real_prefix) != sys.prefix
 
 
 def is_ipython_running():
