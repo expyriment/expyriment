@@ -128,22 +128,55 @@ def run_py_file_command(path):
     # helper function to generate import command
     return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
 
+def is_venv():
+    """Return if Exyriment is running in a virtual environment.
+
+    Returns
+    -------
+    venv : bool
+        whether or not running in virtual environment
+
+    Note
+    ----
+    Only covers virual environments created with `virtualenv`, `venv`, and
+    `pyvnenv`.
+
+    """
+
+    real_prefix = getattr(sys, "real_prefix", None)
+    base_prefix = getattr(sys, "base_prefix", sys.prefix)
+
+    return (base_prefix or real_prefix) != sys.prefix
+                        
 def get_settings_folder():
-    """Return for expyriment setting folder in $HOME"""
+    """Return Expyriment settings folder
+
+    If running in a virtual environment, the Expyriment settings folder is
+    `/path/to/environment/.expyriment/`, otherwise it is `$HOME/.expyriment`
+    (or `$HOME/~expyriment/` if it exists).
+
+    Returns
+    -------
+    settings_folder : str
+        the Expyriment settings folder
+
+    """
+
     home = os.getenv('USERPROFILE')
     if home is None:
         if android is not None:
             home = "/storage/sdcard0/"
         else:
             home = os.getenv('HOME')
-    for expy_homefolder in [".expyriment", "~expyriment"]:
-        path = home + os.sep + expy_homefolder
-        if os.path.isdir(path):
-            return path
-    return None
+    if is_venv():
+        home = sys.prefix
+    if os.path.isdir(os.path.join(home, "~expyriment")):
+        return os.path.join(home, "~expyriment")
+    else:
+        return os.path.join(home, ".expyriment")
 
 def get_plugins_folder():
-    """Return for expyriment plugin folder in $HOME if it exists"""
+    """Return plugin folder in Expyriment settings folder, if it exists"""
 
     settings_folder = get_settings_folder()
     if settings_folder is None:
