@@ -492,8 +492,8 @@ def download_from_stash(content="all", branch=None):
             show_progress(100, 100,
                           "downloading stash ({0})".format(branch))
 
-        if get_settings_folder() is None:
-            os.makedirs(os.path.join(os.path.expanduser("~"), ".expyriment"))
+        if not os.path.isdir(get_settings_folder()):
+            os.makedirs(get_settings_folder())
         path = get_settings_folder()
 
         f_zip = ZipFile(f)
