@@ -18,6 +18,10 @@ Changed:
 - rewrite permutation module
 - io.Keyboard.wait and io.Keyboard.wait_char: added parameter `low_performance`
 - io.GamePad.wait_press: removed `time.sleep(0.0005)`
+- When running in virtual environment, Expyriment settings folder will be local
+  to that environment
+- Documentation not shipped with Expyriment anymore (i.e. no offline
+  documentation available, only online)
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
