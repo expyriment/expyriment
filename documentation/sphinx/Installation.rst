@@ -1,7 +1,7 @@
 Installation
 ============
 
-Expyriment works with `Python 3` (>3.5).
+Expyriment works with `Python 3` (>=3.6).
 
 
 Dependencies
@@ -9,7 +9,7 @@ Dependencies
 
 Expyriment depends on the following Python packages:
 
-* Pygame_ (<3)
+* Pygame_ (>=1.9,<3)
 * PyOpenGL_ (>=3.0,<4)
 
 Additional Python packages, which are optional and only required for some features of 
