@@ -21,7 +21,6 @@ from setuptools.command.sdist import sdist
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
 from distutils.command.install_data import install_data
-from distutils.command.bdist_wininst import bdist_wininst
 
 
 # Settings
@@ -156,34 +155,6 @@ class Install(install):
         install.run(self)
 
 
-# Clear old installation when installing (for bdist_wininst)
-class Wininst(bdist_wininst):
-    """Specialized installer."""
-
-    def run(self):
-        fh, abs_path = mkstemp(".py")
-        new_file = open(abs_path, 'w')
-        # Clear old installation
-        new_file.write("""
-from distutils import sysconfig
-import os, shutil
-old_installation = os.path.join(sysconfig.get_python_lib(), 'expyriment')
-if os.path.isdir(old_installation):
-    shutil.rmtree(old_installation)
-""")
-        new_file.close()
-        close(fh)
-        self.pre_install_script = abs_path
-        bdist_wininst.run(self)
-
-
-# Helper functions
-def remove_file(file_):
-    try:
-        os.remove(file_)
-    except:
-        pass
-
 def get_version_info_from_git():
     """Get version number, revision number and date from git repository."""
 
@@ -261,8 +232,7 @@ if __name__=="__main__":
     # Check if we are building/installing from a built archive/distribution
     version_nr, revision_nr, date = get_version_info_from_file("expyriment/__init__.py")
     if not version_nr == '':
-        cmdclass={'install': Install,
-                  'bdist_wininst': Wininst}
+        cmdclass={'install': Install}
         run()
         message = "from built archive/distribution"
 
@@ -270,8 +240,7 @@ if __name__=="__main__":
     else:
         cmdclass={'sdist': Sdist,
                   'build_py': Build,
-                  'install': Install,
-                  'bdist_wininst': Wininst}
+                  'install': Install}
 
         # Are we building/installing from a source archive/distribution?
         version_nr, revision_nr, date = get_version_info_from_release_info()
