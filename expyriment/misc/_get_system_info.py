@@ -231,10 +231,14 @@ def get_system_info(as_string=False):
                                       "\Device\Video0")
         idx = tmp.find("System")
         if idx>=0:
-            # under windows
-            hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
+            try:
+                hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
                                            tmp[idx:].replace("\\", "\\\\"),
                                            "Device Description")
+            except Exception:
+                hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
+                                           tmp[idx:].replace("\\", "\\\\"),
+                                           "DriverDesc")
         else:
             hardware_video_card = ""
 
