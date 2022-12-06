@@ -19,6 +19,9 @@ Default settings for the control package. ::
     auto_create_subject_id : bool
         create a subject id automatically when starting an experiment
 
+    display : int
+        the display index to show the screen on
+
     event_logging : int or bool
         O/False = no event logging
         1       = normal event logging (logging of all input & output events)
@@ -163,6 +166,7 @@ goodbye_delay = 3000
 fast_quit = False
 quit_key = _constants.K_ESCAPE
 
+display = 0
 open_gl = 2
 window_mode = False
 window_size = (800, 600)

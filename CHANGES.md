@@ -5,9 +5,10 @@ Coming up
 ---------
 New Features:
 - command line iterface: option ``-I`` starts an interactive session
-- io.TextInput: ``get`` method now has parameter `clear_event_cue`
+- io.TextInput: ``get`` method now has parameter ``clear_event_cue``
 - test suite: option to run single tests
-- control.pause: added ` text` and `key` parameters
+- control.pause: added ``text`` and ``key`` parameters
+- control.defaults: added ``display`` to set display index for showing screen on
 
 Changed:
 - Python 2 support was been removed. 
@@ -16,8 +17,8 @@ Changed:
 - pause_key has been removed 
 - test suite: improved audio test
 - rewrite permutation module
-- io.Keyboard.wait and io.Keyboard.wait_char: added parameter `low_performance`
-- io.GamePad.wait_press: removed `time.sleep(0.0005)`
+- io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
+- io.GamePad.wait_press: removed ``time.sleep(0.0005)``
 - When running in virtual environment, Expyriment settings folder will be local
   to that environment
 - Documentation not shipped with Expyriment anymore (i.e. no offline

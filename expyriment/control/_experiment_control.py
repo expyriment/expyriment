@@ -440,7 +440,8 @@ fullscreen.""")
                                 open_gl=defaults.open_gl,
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size,
-                                no_frame=defaults.window_no_frame)
+                                no_frame=defaults.window_no_frame,
+                                display=defaults.display)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
     if misc.is_idle_running() and sys.argv[0] != "":
         try:
