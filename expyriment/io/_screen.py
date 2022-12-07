@@ -109,7 +109,7 @@ OpenGL will be deactivated!"
 
         if not self._open_gl:
             if self._fullscreen:
-                if pygame.version.ver[0] > 1:
+                if int(pygame.version.ver[0]) > 1:
                     self._surface = pygame.display.set_mode(
                         self._window_size, pygame.FULLSCREEN,
                         display=self._display)
@@ -117,7 +117,7 @@ OpenGL will be deactivated!"
                     self._surface = pygame.display.set_mode(self._window_size,
                                                             pygame.FULLSCREEN)
             else:
-                if pygame.version.ver[0] > 1:
+                if int(pygame.version.ver[0]) > 1:
                     self._surface = pygame.display.set_mode(
                         self._window_size, display=self._display)
                 else:
@@ -132,7 +132,7 @@ OpenGL will be deactivated!"
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
             if self._fullscreen:
-                if pygame.version.ver[0] > 1:
+                if int(pygame.version.ver[0]) > 1:
                     self._surface = pygame.display.set_mode(
                         self._window_size, pygame_mode | pygame.FULLSCREEN,
                         display=self._display, vsync=1)
@@ -142,7 +142,7 @@ OpenGL will be deactivated!"
             else:
                 if no_frame:
                     pygame_mode = pygame_mode | pygame.NOFRAME
-                if pygame.version.ver[0] > 1:
+                if int(pygame.version.ver[0]) > 1:
                     self._surface = pygame.display.set_mode(
                         self._window_size, pygame_mode, display=self._display,
                         vsync=1)
