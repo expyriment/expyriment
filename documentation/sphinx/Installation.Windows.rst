@@ -10,7 +10,7 @@ alternative method.
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 3.10.6`_ (during installation, also select "Install launcher [...]"!)
+1. Install `Python 3.10.9`_ (during installation, also select "Install launcher [...]"!)
 
 2. In a command prompt, run::
 
@@ -29,7 +29,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.10.6`_ to ``Expyriment_Installation``
+2. Download `Python 3.10.9`_ to ``Expyriment_Installation``
 
 3. In a command prompt, run::
 
@@ -49,7 +49,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation\python-3.10.6-amd64.exe``
+2. Install ``Expyriment_Installation\python-3.10.9-amd64.exe``
 
 3. In a command prompt, run::
 
@@ -78,7 +78,7 @@ Notes
     We therefore strongly suggest to run Expyriment programmes from the command 
     line when testing participants.
 
-.. _`Python 3.10.6`: https://www.python.org/ftp/python/3.10.6/python-3.10.6-amd64.exe
+.. _`Python 3.10.9`: https://www.python.org/ftp/python/3.10.9/python-3.10.9-amd64.exe
 .. _inpout32: https://www.highrez.co.uk/Downloads/InpOut32/
 .. _dlportio: https://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
 .. _ffmpeg: https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip

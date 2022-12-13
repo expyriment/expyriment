@@ -19,15 +19,15 @@ All Linux distributions
 
 2. In a command line, run::
 
-    sudo pip install -U pip
-    sudo pip install -U expyriment[all]
+    sudo pip3 install -U pip wheel
+    sudo pip3 install -U expyriment[all]
     
-   (Omit ``[all]`` to install without additional optional features; replace ``pip`` with ``pip3`` when using Python 3)
+   (Omit ``[all]`` to install without additional optional features)
 
 For example, in Debian run::
 
     sudo apt-get install python3 python3-pip python3-setuptools build-essential libffi-dev python3-dev libportaudio2 ffmpeg
-    sudo pip3 install -U pip
+    sudo pip3 install -U pip wheel
     sudo pip3 install -U expyriment[all]
     
 
