@@ -180,6 +180,12 @@ machine!")
         return self._surface
 
     @property
+    def display(self):
+        """Getter for display."""
+
+    return self._display
+
+    @property
     def open_gl(self):
         """Getter for open_gl."""
 
