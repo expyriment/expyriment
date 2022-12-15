@@ -183,7 +183,7 @@ machine!")
     def display(self):
         """Getter for display."""
 
-    return self._display
+        return self._display
 
     @property
     def open_gl(self):
