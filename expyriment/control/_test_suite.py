@@ -149,7 +149,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             start = get_time()
             s2.present(clear=False)
             tmp.append(get_time() - start)
-        refresh_rate = 1000 // (statistics.mean(tmp) * 1000)
+        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
 
         #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         #graph = _make_graph(to_do_time, actual_time, [150, 150, 150])
@@ -213,9 +213,9 @@ After the test, you will be asked to indicate which (if any) of those two square
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
-        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 120:
+        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
-        elif int(misc.round(refresh_rate)) not in (60, 120):
+        elif int(misc.round(refresh_rate)) not in (60, 75, 120, 144, 240):
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
@@ -230,7 +230,7 @@ After the test, you will be asked to indicate which (if any) of those two square
                     text_justification=0, position=(0, 20))
         if inaccuracy > 2:
             results3_colour = [255, 0, 0]
-        elif incaccuracy in (1, 2):
+        elif inaccuracy in (1, 2):
             results3_colour = [255, 255, 0]
         else:
             results3_colour = [0, 255, 0]
