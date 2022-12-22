@@ -84,123 +84,139 @@ selection of other common functionality.
 Note: non-capitalized letter arguments are (chainable) options, capitalized
 letter arguments run single commands""",
         epilog="(c) F. Krause & O. Lindemann",
-        add_help=False)
+        add_help=True)
 
     parser.add_argument("SCRIPT", action='store', default=None,
                         help="the experiment script to be executed",
                         nargs='?')
-    parser.add_argument("-h", "--help", action="store_true",
-                        help=argparse.SUPPRESS)
 
-    parser.add_argument("-0", "-g", action="store_true",
+    parser.add_argument("-0", "-g", "--no-opengl", action="store_true",
                         help="no OpenGL (no vsync / no blocking)")
 
-    parser.add_argument("-1", action="store_true",
+    parser.add_argument("-1", "--no-blocking", action="store_true",
                         help="OpenGL (vsync / no blocking)")
 
-    parser.add_argument("-2", action="store_true",
+    parser.add_argument("-2", "--blocking", action="store_true",
                         help="OpenGL (vsync / blocking)")
 
-    parser.add_argument("-3", action="store_true",
+    parser.add_argument("-3", "--alternative-blocking",
+                        action="store_true",
                         help="OpenGL (vsync / alternative blocking)")
 
-    parser.add_argument("-a", action="store_true",
+    parser.add_argument("--display", metavar="INDEX",
+                        type=int, default=-1,
+                    help="show the screen on specific display  (multi-monitor setting)")
+
+    parser.add_argument("-a", "--auto-subject-id",
+                        action="store_true",
                         help="auto create subject ID")
 
-    parser.add_argument("-d", action="store_true",
+    parser.add_argument("-d", "--develop",
+                        action="store_true",
                         help="develop mode (equivalent to -wfat)")
 
-    parser.add_argument("-f", action="store_true",
+    parser.add_argument("-f", "--fast",
+                        action="store_true",
                         help="fast mode (no initialize delay and fast quitting)")
 
-    parser.add_argument("-i", action="store_true",
+    parser.add_argument("-i", "--intensive-logging",
+                        action="store_true",
                         help="intensive logging (log level 2)")
 
-    parser.add_argument("-t", action="store_true",
+    parser.add_argument("-t", "--no-time-stamps",
+                        action="store_true",
                         help="no time stamps for output files")
 
-    parser.add_argument("-w", action="store_true",
+    parser.add_argument("-w", "--window",
+                        action="store_true",
                         help="window mode")
 
-    parser.add_argument("-A", action="store_true",
+    parser.add_argument("-A", "--Api",
+                        action="store_true",
                         help="start the API reference tool")
 
-    parser.add_argument("-B", action="store_true",
+    parser.add_argument("-B", "--Browser-api",
+                        action="store_true",
                         help="open browser with API reference")
 
-    parser.add_argument("-C", action="store_true",
+    parser.add_argument("-C", "--Create-exp",
+                        action="store_true",
                         help="create experiment template")
 
-    parser.add_argument("-D", action="store_true",
+    parser.add_argument("-D", "--Download-stash",
+                        action="store_true",
                         help="download from Expyriment stash")
 
-    parser.add_argument("-I", action="store_true",
+    parser.add_argument("-I", "--Interactive",
+                        action="store_true",
                         help="start an interactive session")
 
-    parser.add_argument("-J", action="store_true",
+    parser.add_argument("-J", "--Join-data",
+                        action="store_true",
                         help="join data files to one single csv file")
 
-    parser.add_argument("-S", action="store_true",
+    parser.add_argument("-S", "--System-info",
+                        action="store_true",
                         help="print system information")
 
-    parser.add_argument("-T", action="store_true",
+    parser.add_argument("-T", "--Testsuite",
+                        action="store_true",
                         help="run the Expyriment test suite")
 
     # parse
     args = vars(parser.parse_args())
-    if len(sys.argv[1:]) == 0 or args['help']:
-        parser.print_help()
-        parser.exit()
-
     import expyriment as xpy
 
     # options
-    if args['d']:
+    if args['develop']:
         xpy.control.set_develop_mode(True)
-    if args['i']:
+    if args['intensive_logging']:
         print("* Intensive logging")
         xpy.control.defaults.event_logging = 2
-    if args['f']:
+    if args['fast']:
         print("* Fast mode")
         xpy.control.defaults.initialize_delay = 0
         xpy.control.defaults.fast_quit = False
-    if args['w']:
+    if args['window']:
         print("* Window mode")
         xpy.control.defaults.window_mode = True
-    if args['0']:
+    if args['no_opengl']:
         print("* No OpenGL (no vsync / no blocking)")
         xpy.control.defaults.open_gl = False
-    if args['1']:
+    if args['no_blocking']:
         print("* OpenGL (vsync / no blocking)")
         xpy.control.defaults.open_gl = 1
-    if args['2']:
+    if args['blocking']:
         print("* OpenGL (vsync / blocking)")
         xpy.control.defaults.open_gl = 2
-    if args['3']:
+    if args['alternative_blocking']:
         print("* OpenGL (vsync / alternative blocking)")
         xpy.control.defaults.open_gl = 3
-    if args['t']:
+    if args['no_time_stamps']:
         print("* No time stamps")
         xpy.io.defaults.outputfile_time_stamp = False
-    if args['a']:
+    if args['auto_subject_id']:
         print("* Auto create subject id")
         xpy.control.defaults.auto_create_subject_id = True
+    if args["display"]>=0:
+        print("* Using display #{}".format(args["display"]))
+        xpy.control.defaults.display = args["display"]
 
     # commands
-    if args["S"]:
+    if args["System_info"]:
         print("System info")
         print(xpy.misc.get_system_info(as_string=True))
-    elif args["T"]:
+    elif args["Testsuite"]:
         print("Run test suite")
         xpy.control.run_test_suite()
-    elif args["B"]:
+    elif args["Browser_api"]:
         xpy.show_documentation(2)
-    elif args["A"]:
+    elif args["Api"]:
         print("Start API reference tool")
         xpy.show_documentation(3)
-    elif args["C"]:
+    elif args["Create_exp"]:
         create_template()
-    elif args["D"]:
+    elif args["Download_stash"]:
         print("Download from stash")
         what = ""
         while what not in ["all", "examples", "extras", "tools"]:
@@ -225,14 +241,14 @@ letter arguments run single commands""",
                 else:
                     branch = branches[1]
         xpy.misc.download_from_stash(what, branch)
-    elif args["J"]:
+    elif args["Join_data"]:
         d = join_data()
         output = ""
         while len(output) <= 1:
             sys.stdout.write(" name of output csv file? ")
             output = input()
         d.write_concatenated_data(output)
-    elif args["I"]:
+    elif args["Interactive"]:
         print("Interactive session")
         print("")
         expyriment = xpy
@@ -277,6 +293,9 @@ Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
             with open(filepath, 'rb') as file:
                 exec(compile(file.read(), filepath, 'exec'), globals, locals)
         execfile(pyfile)
+
+    else:
+        parser.print_usage()
 
     sys.exit()
 
