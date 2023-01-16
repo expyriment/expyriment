@@ -307,20 +307,21 @@ def get_display_info():
 
     Return
     ------
-    info : list of dicts
+    info : tuple of dicts
         the information for each available display in the form
             {"number": ...,              # display number, int
              "maximal_resolution": ...,  # highest possible or "native", tuple
              "desktop_resolution": ...}  # might differ (e.g. scaled), tuple
     """
 
+    pygame.display.init()
     info = []
     for x in range(pygame.display.get_num_displays()):
         info.append(
             {"number": x,
              "maximal_resolution": pygame.display.list_modes(display=x)[0],
              "desktop_resolution": pygame.display.get_desktop_sizes()[x]})
-    return info
+    return tuple(info)
 
 
 def get_monitor_resolution():
@@ -334,6 +335,8 @@ def get_monitor_resolution():
         monitor resolution, screen resolution
 
     """
+
+    pygame.display.init()
     if _internals.active_exp.is_initialized:
         return _internals.active_exp.screen.display_resolution
     else:
