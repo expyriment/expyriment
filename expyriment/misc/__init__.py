@@ -16,7 +16,7 @@ __date__ = ''
 from . import defaults
 from ._miscellaneous import compare_codes, add_fonts, list_fonts, find_font
 from ._miscellaneous import unicode2byte, byte2unicode, numpad_digit_code2ascii
-from ._miscellaneous import get_display_resolution, get_monitor_resolution, \
+from ._miscellaneous import get_monitor_resolution, get_display_info, \
                             is_idle_running, is_ipython_running, \
                             is_android_running, is_interactive_mode, \
                             create_colours, has_internet_connection, which, \

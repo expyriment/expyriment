@@ -9,7 +9,7 @@ New Features:
 - test suite: option to run single tests
 - control.pause: added ``text`` and ``key`` parameters
 - control.defaults: added ``display`` to set display index for showing screen on
-- io.Screen.get_display_resolution and misc.get_display_resolution
+- io.Screen.get_display_resolution and misc.get_display_info
 - control.defaults.display
 - control.defaults.display_resolution
 
@@ -26,7 +26,7 @@ Changed:
   to that environment
 - Documentation not shipped with Expyriment anymore (i.e. no offline
   documentation available, only online)
-- Deprecated io.Screen.get_monitor_resolution and misc.get_display_resolution
+- Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
 - Always use maximal display resolution by default for fullscreen mode (unless
   overwritten by control.defaults.display_resolution)
 
