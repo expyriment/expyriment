@@ -167,6 +167,7 @@ fast_quit = False
 quit_key = _constants.K_ESCAPE
 
 display = 0
+display_resolution = None
 open_gl = 2
 window_mode = False
 window_size = (800, 600)

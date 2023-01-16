@@ -302,8 +302,32 @@ def find_font(font):
         return ""
 
 
+def get_display_resolution(display=0):
+    """Return the display resolution.
+
+    Parameters
+    ----------
+    display : int, optional
+        the display to get the resolution from (default=0)
+
+    Returns
+    -------
+    resolution : (int, int)
+        the display resolution
+
+    """
+
+    from .. import _internals
+    if _internals.active_exp.is_initialized:
+        return _internals.active_exp.screen.display_resolution
+    else:
+        pygame.display.init()
+        return pygame.display.list_modes(display=display)[0]
+
 def get_monitor_resolution():
     """Returns the monitor resolution
+
+    DEPRECATED! Use get_display_resolution instead.
 
     Returns
     -------
@@ -312,13 +336,7 @@ def get_monitor_resolution():
 
     """
 
-    from .. import _internals
-    if _internals.active_exp.is_initialized:
-        return _internals.active_exp.screen.monitor_resolution
-    else:
-        pygame.display.init()
-        return (pygame.display.Info().current_w,
-                pygame.display.Info().current_h)
+    return get_display_resolution(display=0)
 
 
 def is_ipython_running():

@@ -38,7 +38,7 @@ class Screen(Output):
     """
 
     def __init__(self, colour, open_gl, window_mode, window_size, no_frame,
-                 display):
+                 display, display_resolution):
         """Create and set up a screen output.
 
         Notes
@@ -55,16 +55,17 @@ class Screen(Output):
             2/True  - OpenGL (vsync / blocking)
             3       - OpenGL (vsync / alternative blocking)
         window_mode : bool
-             if screen should be a window
+             if screen should be a window, fullscreen otherwise
         window_size : (int, int)
             size of the window in window_mode,
-            full screen mode if size of window_mode[0]<=0
         no_frame : bool
             set True for windows (in window mode) with no frame;
             this parameter does not affect fullscreen mode
         display : int
             the display index to show the screen on (only has an effect if
             Pygame version >= 2)
+        display_resolution : list or None
+            the resolution of the display
 
         """
 
@@ -89,13 +90,16 @@ OpenGL will be deactivated!"
 
         pygame.display.init()
         if _internals.active_exp.is_initialized:
-            self._monitor_resolution = \
-                        _internals.active_exp.screen.monitor_resolution
+            self._display_resolution = \
+                        _internals.active_exp.screen.display_resolution
         else:
-            self._monitor_resolution = (pygame.display.Info().current_w,
-                                        pygame.display.Info().current_h)
+            if display_resolution is not None:
+                self._display_resolution = display_resolution
+            else:
+                self._display_resolution = pygame.display.list_modes(
+                    display=display)[0]
         if self._fullscreen:
-            self._window_size = self._monitor_resolution
+            self._window_size = self._display_resolution
         else:
             self._window_size = window_size
 
@@ -132,10 +136,20 @@ OpenGL will be deactivated!"
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
             if self._fullscreen:
+                if platform.system() == "Windows":
+                    user32 = ctypes.windll.user32
+                    user32.SetProcessDPIAware()
+
                 if int(pygame.version.ver[0]) > 1:
+                    # hack for Pygame2 "real" fullscreen
+                    # (https://github.com/pygame/pygame/issues/3619)
+                    if platform.system() != "Darwin":  # does not work
+                        window_size = [self._window_size[0],
+                                       self._window_size[1] + 1]  # TODO: test Linux
                     self._surface = pygame.display.set_mode(
-                        self._window_size, pygame_mode | pygame.FULLSCREEN,
+                        window_size, pygame_mode | pygame.FULLSCREEN,
                         display=self._display, vsync=1)
+
                 else:
                     self._surface = pygame.display.set_mode(
                         self._window_size, pygame_mode | pygame.FULLSCREEN)
@@ -210,10 +224,20 @@ machine!")
         return self._window_size
 
     @property
-    def monitor_resolution(self):
-        """Getter for monitor_resolution."""
+    def display_resolution(self):
+        """Getter for display_resolution."""
 
-        return self._monitor_resolution
+        return self._display_resolution
+
+    @property
+    def monitor_resolution(self):
+        """Getter for monitor_resolution.
+
+        DEPRECATED! Use display_resolution instead.
+
+        """
+
+        return self._display_resolution
 
     def update(self):
         """Update the screen.
