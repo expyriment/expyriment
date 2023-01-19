@@ -144,10 +144,12 @@ OpenGL will be deactivated!"
                     # hack for Pygame2 "real" fullscreen
                     # (https://github.com/pygame/pygame/issues/3619)
                     if platform.system() != "Darwin":  # does not work
-                        window_size = [self._window_size[0],
-                                       self._window_size[1] + 1]  # TODO: test Linux
+                        fullscreen_size = [self._window_size[0],
+                                           self._window_size[1] + 1]  # TODO: test Linux
+                    else:
+                        fullscreen_size = self._window_size
                     self._surface = pygame.display.set_mode(
-                        window_size, pygame_mode | pygame.FULLSCREEN,
+                        fullscreen_size, pygame_mode | pygame.FULLSCREEN,
                         display=self._display, vsync=1)
 
                 else:
