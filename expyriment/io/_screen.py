@@ -129,12 +129,12 @@ OpenGL will be deactivated!"
                 pygame.display.set_caption('Expyriment')
 
         else:
-            os.environ["SDL_RENDER_VSYNC"] = "1"
             os.environ["SDL_RENDER_DRIVER"] = "opengl"
             os.environ["SDL_FRAMEBUFFER_ACCELERATION"] = "opengl"
-            os.environ["SDL_VIDEO_MAC_FULLSCREEN_SPACES"] = "0"
-            os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
+            os.environ["SDL_RENDER_VSYNC"] = "1"
             os.environ["SDL_HINT_RENDER_BATCHING"] = "0"
+            os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
+            os.environ["SDL_VIDEO_MAC_FULLSCREEN_SPACES"] = "0"
 
             try:
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
