@@ -3,8 +3,13 @@ import pygame
 
 
 xpy.control.defaults.display = 0
+<<<<<<< Updated upstream
 xpy.control.defaults.open_gl = 3
 #xpy.control.defaults.display_resolution = (1536, 864) #(1920, 1080)
+=======
+#xpy.control.defaults.opengl = 0
+#xpy.control.defaults.display_resolution = (1440, 900)
+>>>>>>> Stashed changes
 
 exp = xpy.control.initialize()
 
