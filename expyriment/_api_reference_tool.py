@@ -47,10 +47,10 @@ def _get_doc_and_function(obj):
 
 def _read_module(mod, doc_dict):
     doc_dict[mod.__name__], classes = _get_doc_and_function(mod)
-  
+
     p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..'))
     sys.path.insert(0, p)
-   
+
     import expyriment
     namespace = locals()
     for cl in classes:
@@ -503,9 +503,8 @@ def show_documentation(docu_type=None):
     def call_info():
         print("")
         print("Call show_documentation with the following arguments to get further information:")
-        print("     show_documentation(1) -- Open local documentation in web browser")
-        print("     show_documentation(2) -- Open online documentation in web browser")
-        print("     show_documentation(3) -- Open API Reference Tool")
+        print("     show_documentation(1) -- Open online documentation in web browser")
+        print("     show_documentation(2) -- Open API Reference Tool")
         print("")
 
     import subprocess
@@ -524,21 +523,10 @@ def show_documentation(docu_type=None):
         print("Authors: {0}".format(author))
         call_info()
     elif docu_type == 1:
-        docu = os.path.join(sys.prefix, 'share', 'expyriment', 'documentation', 'html', 'index.html')
-        docu_fallback = os.path.join('usr', 'local', 'share', 'expyriment', 'documentation', 'html', 'index.html')
-        if os.path.exists(docu):
-            webbrowser.open('file://' + docu,
-                new=1)
-        elif os.path.exists(docu_fallback):
-            webbrowser.open('file://' + docu_fallback,
-                new=1)
-        else:
-            print("No local documentation found")
-    elif docu_type == 2:
         webbrowser.open(
             "http://docs.expyriment.org/",
             new=1)
-    elif docu_type == 3:
+    elif docu_type == 2:
         python_executable = sys.executable.replace("pythonw.exe", "python.exe")
         call = '"' + "{0}".format(python_executable) + \
                 '" -m expyriment._api_reference_tool'

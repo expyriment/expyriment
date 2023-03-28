@@ -218,11 +218,20 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     return experiment
 
 
-def pause():
+def pause(text="Paused", key=misc.constants.K_RETURN):
     """Pause a running experiment.
 
-    This will show a pause screen and waits for ENTER to be pressed to
-    continue.
+    This will show a pause screen and waits for a key (default=ENTER) to be
+    pressed to continue.
+
+    Parameters
+    ----------
+    text : str, optional
+        the text to be shown at the pause screen (default="Paused")
+
+    key : int, optional
+        the key to be pressed for continueing (default=misc.constants.K_RETURN)
+
 
     """
 
@@ -238,15 +247,16 @@ def pause():
         position = (0, 200)
     else:
         position = (0, 0)
-    stimuli.TextLine("Paused", position=position,
-                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
-                     text_size=int(_internals.active_exp.text_size * 1.2)).present()
+    stimuli.TextLine(
+        text, position=position,
+        text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+        text_size=int(_internals.active_exp.text_size * 1.2)).present()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
     if android is None:
-        experiment.keyboard.wait()
+        experiment.keyboard.wait(keys=(key))
     else:
         experiment.mouse.wait_press()
     experiment._event_file_log("Experiment,resumed")
@@ -430,7 +440,8 @@ fullscreen.""")
                                 open_gl=defaults.open_gl,
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size,
-                                no_frame=defaults.window_no_frame)
+                                no_frame=defaults.window_no_frame,
+                                display=defaults.display)
     # Hack for IDLE: quit pygame and call atexit functions when crashing
     if misc.is_idle_running() and sys.argv[0] != "":
         try:
@@ -450,7 +461,7 @@ fullscreen.""")
     experiment._data = None
     experiment._subject = None
     experiment._is_initialized = True  # required before EventFile
-    if old_logging> 0:
+    if old_logging > 0:
         experiment._events = EventFile(
             additional_suffix=experiment.filename_suffix, time_stamp=True)
         if stdout_logging:

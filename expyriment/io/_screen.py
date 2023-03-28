@@ -37,7 +37,8 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size, no_frame):
+    def __init__(self, colour, open_gl, window_mode, window_size, no_frame,
+                 display):
         """Create and set up a screen output.
 
         Notes
@@ -61,6 +62,9 @@ class Screen(Output):
         no_frame : bool
             set True for windows (in window mode) with no frame;
             this parameter does not affect fullscreen mode
+        display : int
+            the display index to show the screen on (only has an effect if
+            Pygame version >= 2)
 
         """
 
@@ -74,6 +78,7 @@ class Screen(Output):
         self._fullscreen = not window_mode
         self._window_size = window_size
         self._no_frame = no_frame
+        self._display = display
 
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
@@ -104,10 +109,19 @@ OpenGL will be deactivated!"
 
         if not self._open_gl:
             if self._fullscreen:
-                self._surface = pygame.display.set_mode(self._window_size,
-                                                       pygame.FULLSCREEN)
+                if int(pygame.version.ver[0]) > 1:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame.FULLSCREEN,
+                        display=self._display)
+                else:
+                    self._surface = pygame.display.set_mode(self._window_size,
+                                                            pygame.FULLSCREEN)
             else:
-                self._surface = pygame.display.set_mode(self._window_size)
+                if int(pygame.version.ver[0]) > 1:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, display=self._display)
+                else:
+                    self._surface = pygame.display.set_mode(self._window_size)
                 pygame.display.set_caption('Expyriment')
 
         else:
@@ -118,13 +132,24 @@ OpenGL will be deactivated!"
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
             if self._fullscreen:
-                self._surface = pygame.display.set_mode(
-                    self._window_size, pygame_mode | pygame.FULLSCREEN)
+                if int(pygame.version.ver[0]) > 1:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame_mode | pygame.FULLSCREEN,
+                        display=self._display, vsync=1)
+                else:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame_mode | pygame.FULLSCREEN)
             else:
                 if no_frame:
                     pygame_mode = pygame_mode | pygame.NOFRAME
-                self._surface = pygame.display.set_mode(
-                    self._window_size, pygame_mode)
+                if int(pygame.version.ver[0]) > 1:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame_mode, display=self._display,
+                        vsync=1)
+                else:
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame_mode)
+
                 pygame.display.set_caption('Expyriment')
 
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
@@ -153,6 +178,12 @@ machine!")
         """Getter for surface."""
 
         return self._surface
+
+    @property
+    def display(self):
+        """Getter for display."""
+
+        return self._display
 
     @property
     def open_gl(self):

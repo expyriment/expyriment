@@ -493,7 +493,8 @@ class TextInput(Input):
         else:
             filter = self._character_filter
 
-        while True:
+        done = False
+        while not done:
             keys = self._get_key(process_control_events)
             for inkey, string in keys:
                 if isinstance(inkey, CallbackQuitEvent):
@@ -501,6 +502,7 @@ class TextInput(Input):
                 elif inkey == pygame.K_BACKSPACE:
                     self._user = self._user[0:-1]
                 elif inkey == pygame.K_RETURN or inkey == pygame.K_KP_ENTER:
+                    done = True
                     break
                 elif inkey not in (pygame.K_LCTRL, pygame.K_RCTRL,
                                    pygame.K_TAB):

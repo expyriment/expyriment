@@ -21,11 +21,12 @@ from setuptools.command.sdist import sdist
 from setuptools.command.build_py import build_py
 from setuptools.command.install import install
 from distutils.command.install_data import install_data
-from distutils.command.bdist_wininst import bdist_wininst
 
 
 # Settings
 description='A Python library for cognitive and neuroscientific experiments'
+with open("README.md", "r", encoding="utf-8") as f:
+    long_description = f.read()
 author='Florian Krause, Oliver Lindemann'
 author_email='florian@expyriment.org, oliver@expyriment.org'
 license='GNU GPLv3'
@@ -46,14 +47,8 @@ packages = ['expyriment',
             'expyriment.design.randomize',
             'expyriment.design.permute']
 
-package_data = {'expyriment': ['expyriment_logo.png', '_fonts/*.*']}
-
-data_files = [('share/expyriment/documentation/api',
-               glob('documentation/api/*.*')),
-              ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/*.*')),
-              ('share/expyriment/documentation/sphinx',
-               glob('documentation/sphinx/Makefile'))]
+package_data = {'expyriment': ['expyriment_logo.png', 'xpy_icon.png',
+                               '_fonts/*.*']}
 
 source_files = ['.release_info',
                 'CHANGES.MD',
@@ -160,80 +155,6 @@ class Install(install):
         install.run(self)
 
 
-# Clear old installation when installing (for bdist_wininst)
-class Wininst(bdist_wininst):
-    """Specialized installer."""
-
-    def run(self):
-        fh, abs_path = mkstemp(".py")
-        new_file = open(abs_path, 'w')
-        # Clear old installation
-        new_file.write("""
-from distutils import sysconfig
-import os, shutil
-old_installation = os.path.join(sysconfig.get_python_lib(), 'expyriment')
-if os.path.isdir(old_installation):
-    shutil.rmtree(old_installation)
-""")
-        new_file.close()
-        close(fh)
-        self.pre_install_script = abs_path
-        bdist_wininst.run(self)
-
-
-# Build Sphinx HTML documentation and add them to data_files
-class InstallData(install_data):
-    def run(self):
-
-        # Try to build/add documentation
-        try:
-            cwd = os.getcwd()
-            copytree('expyriment', 'documentation/sphinx/expyriment')
-            os.chdir('documentation/sphinx/')
-            call([sys.executable, "./create_rst_api_reference.py"])
-            call(["sphinx-build", "-b", "html", "-d", "_build/doctrees", ".", "_build/html"])
-            os.chdir(cwd)
-            self.data_files.append(('share/expyriment/documentation/html',
-                               glob('documentation/sphinx/_build/html/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_downloads',
-                               glob('documentation/sphinx/_build/html/_downloads/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_images',
-                               glob('documentation/sphinx/_build/html/_images/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_sources',
-                               glob('documentation/sphinx/_build/html/_sources/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static',
-                               glob('documentation/sphinx/_build/html/_static/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/css',
-                               glob('documentation/sphinx/_build/html/_static/css/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/fonts',
-                               glob('documentation/sphinx/_build/html/_static/fonts/*.*')))
-            self.data_files.append(('share/expyriment/documentation/html/_static/js',
-                               glob('documentation/sphinx/_build/html/_static/js/*.*')))
-        except:
-            html_created = False
-            warning = "HTML documentation NOT created! (sphinx and numpydoc installed?)"
-            os.chdir(cwd)
-
-        # Install data
-        install_data.run(self)
-
-        # Clean up Sphinx folder
-        rmtree("documentation/sphinx/expyriment", ignore_errors=True)
-        rmtree("documentation/sphinx/_build", ignore_errors=True)
-        for file_ in glob("documentation/sphinx/expyriment.*"):
-            remove_file(file_)
-        remove_file("documentation/sphinx/Changelog.rst")
-        #remove_file("documentation/sphinx/CommandLineInterface.rst")
-        remove_file("documentation/sphinx/sitemap.yml")
-
-
-# Helper functions
-def remove_file(file_):
-    try:
-        os.remove(file_)
-    except:
-        pass
-
 def get_version_info_from_git():
     """Get version number, revision number and date from git repository."""
 
@@ -293,6 +214,7 @@ def run():
     setup(name='expyriment',
           version=version_nr,
           description=description,
+          long_description=long_description,
           author=author,
           author_email=author_email,
           license=license,
@@ -300,7 +222,6 @@ def run():
           packages=packages,
           package_dir=package_dir,
           package_data=package_data,
-          data_files=data_files,
           install_requires=install_requires,
           extras_require=extras_require,
           cmdclass=cmdclass,
@@ -311,9 +232,7 @@ if __name__=="__main__":
     # Check if we are building/installing from a built archive/distribution
     version_nr, revision_nr, date = get_version_info_from_file("expyriment/__init__.py")
     if not version_nr == '':
-        cmdclass={'install': Install,
-                  'bdist_wininst': Wininst,
-                  'install_data': InstallData,}
+        cmdclass={'install': Install}
         run()
         message = "from built archive/distribution"
 
@@ -321,9 +240,7 @@ if __name__=="__main__":
     else:
         cmdclass={'sdist': Sdist,
                   'build_py': Build,
-                  'install': Install,
-                  'bdist_wininst': Wininst,
-                  'install_data': InstallData}
+                  'install': Install}
 
         # Are we building/installing from a source archive/distribution?
         version_nr, revision_nr, date = get_version_info_from_release_info()

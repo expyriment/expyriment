@@ -1,7 +1,7 @@
 Installation
 ============
 
-Expyriment works with `Python 3` (>3.5).
+Expyriment works with `Python 3` (>=3.6).
 
 
 Dependencies
@@ -9,7 +9,7 @@ Dependencies
 
 Expyriment depends on the following Python packages:
 
-* Pygame_ (<2)
+* Pygame_ (>=1.9,<3)
 * PyOpenGL_ (>=3.0,<4)
 
 Additional Python packages, which are optional and only required for some features of 
@@ -65,17 +65,16 @@ Expyriment here:
    Android <Installation.Android>
 
 
-.. _`Python`: http://www.python.org/
-.. _Future: https://pypi.python.org/pypi/future
-.. _Pygame: http://www.pygame.org/
+.. _`Python`: https://www.python.org/
+.. _Pygame: https://www.pygame.org/
 .. _PyOpenGl: http://www.pyopengl.sourceforge.net
-.. _sounddevice: http://python-sounddevice.readthedocs.io/en/0.3.3/
-.. _mediadecoder: http://dschreij.github.io/python-mediadecoder/
+.. _sounddevice: https://python-sounddevice.readthedocs.io
+.. _mediadecoder: https://dschreij.github.io/projects/python-mediadecoder
 .. _PyParallel: http://pyserial.sourceforge.net
 .. _PySerial: http://pyserial.sourceforge.net/pyparallel.html
-.. _Numpy: http://numpy.org/
-.. _Requests: http://docs.python-requests.org/en/master/
+.. _Numpy: https://numpy.org/
+.. _Requests: https://requests.readthedocs.io/
 .. _`release page`: https://github.com/expyriment/expyriment/releases
 .. _pip: https://en.wikipedia.org/wiki/Pip_(package_manager)
-.. _inpout32: http://www.highrez.co.uk/Downloads/InpOut32/
-.. _dlportio: http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/
+.. _inpout32: https://www.highrez.co.uk/Downloads/InpOut32/
+.. _dlportio: https://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/

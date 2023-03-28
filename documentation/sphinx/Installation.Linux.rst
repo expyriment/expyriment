@@ -8,26 +8,26 @@ All Linux distributions
 
 1. Use your distribution's package manager to install
 
-  * Python or Python3
+  * Python3
   * setuptools
-  * pip or pip3
+  * pip3
   * build-essential (or equivalent)
   * libffi-dev
-  * python-dev or python3-dev
+  * python3-dev
   * PortAudio
   * ffmpeg (for enhanced video support, optional)
 
 2. In a command line, run::
 
-    sudo pip install -U pip
-    sudo pip install -U expyriment[all]
+    sudo pip3 install -U pip wheel
+    sudo pip3 install -U expyriment[all]
     
-   (Omit ``[all]`` to install without additional optional features; replace ``pip`` with ``pip3`` when using Python 3)
+   (Omit ``[all]`` to install without additional optional features)
 
 For example, in Debian run::
 
     sudo apt-get install python3 python3-pip python3-setuptools build-essential libffi-dev python3-dev libportaudio2 ffmpeg
-    sudo pip3 install -U pip
+    sudo pip3 install -U pip wheel
     sudo pip3 install -U expyriment[all]
     
 

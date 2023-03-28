@@ -49,7 +49,7 @@ def _histogram(data):
 
     hist = {}
     for x in data: # make histogram
-        x = int(x)
+        x = int(round(x))
         if x in hist:
             hist[x] += 1
         else:
@@ -149,7 +149,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             start = get_time()
             s2.present(clear=False)
             tmp.append(get_time() - start)
-        refresh_rate = 1000 // (statistics.mean(tmp) * 1000)
+        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
 
         #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
         #graph = _make_graph(to_do_time, actual_time, [150, 150, 150])
@@ -183,7 +183,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
-            refresh_time = int(1000 / refresh_rate)
+            refresh_time = 1000 / refresh_rate
             if refresh_time >= 1:
                 return refresh_time - (presentation_time % refresh_time)
             else:
@@ -213,23 +213,25 @@ After the test, you will be asked to indicate which (if any) of those two square
         response = respkeys[key]
 
         info = stimuli.TextScreen("Results", "")
-        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 120:
+        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
-        elif int(misc.round(refresh_rate)) != 60:
+        elif int(misc.round(refresh_rate)) not in (60, 75, 120, 144, 240):
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(misc.round(refresh_rate)), int(1000/refresh_rate)),
+                        int(misc.round(refresh_rate)), misc.round(1000/refresh_rate, 2)),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, text_colour=results1_colour, position=(0, 40))
         results2 = stimuli.TextScreen("",
                     "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
                     text_font="freemono", text_size = 16, text_bold=True,
                     text_justification=0, position=(0, 20))
-        if inaccuracy != 0:
+        if inaccuracy > 2:
             results3_colour = [255, 0, 0]
+        elif inaccuracy in (1, 2):
+            results3_colour = [255, 255, 0]
         else:
             results3_colour = [0, 255, 0]
         results3 = stimuli.TextScreen("",
