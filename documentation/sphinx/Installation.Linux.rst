@@ -40,4 +40,36 @@ Notes
     presentation it is important to switch off desktop effects in your window
     manager!
 
+**Use Python 3.7.6 with pyenv**
+
+    If ``pip install expyriment`` fails, this may be because there is no wheel for your specific version of Python. 
+    In that case, a solution is to install Python 3.7.6 in a virtual environment using `pyenv <https://github.com/pyenv/pyenv>`__. In a nutshell::
+
+    curl https://pyenv.run | bash
+
+    cat >> .bashrc <<'EOF'
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+    EOF
+
+    source .bashrc
+
+    pyenv install 3.7.6
+    pyenv virtualenv 3.7.6 expyriment
+
+    pyenv activate expyriment
+    pip install expyriment[all]
+
+
+**Use Python 3.7 with anaconda**
+ 
+   If you use the `anaconda distribution <https://www.anaconda/com>`__, you can create an environment for expyriment in the following way (works also for Windows & MacOS)::
+
+   conda create -n expyriment python=3.7
+   conda activate expyriment
+   pip install expyriment[all]
+
+
+
 .. _`release page`: http://github.com/expyriment/expyriment/releases/latest
