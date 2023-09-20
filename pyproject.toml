@@ -1,0 +1,47 @@
+[project]
+authors = [
+  {name = "Florian Krause", email = "florian@expyriment.org"},
+  {name = "Oliver Lindemann", email = "oliver@expyriment.org"},
+]
+description = 'A Python library for cognitive and neuroscientific experiments'
+license = {file = "COPYING.txt"}
+name = "expyriment"
+readme = "README.md"
+requires-python = ">=3.6"
+version = "XX.XX.XX"
+keywords = ["XX", "XX"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "License :: OSI Approved :: GNU GPLv3",
+  "XXX",
+]
+
+dependencies = [
+  "pygame>=1.9,<3",
+  "pyopengl>=3.0,<4",
+]
+
+[project.optional-dependencies]
+all = [
+  "numpy>=1.6,<2",
+  "pyserial>=3,<4",
+  "pyparallel>=0.2,<1",
+  "sounddevice>=0.3,<1",
+  "mediadecoder>=0.1,<1",
+]
+data_preprocessing = ["numpy>=1.6,<2"]
+parallelport_linux = ["pyparallel>=0.2,<1"]
+serialport = ["pyserial>=3,<4"]
+video = [
+  "sounddevice>=0.3,<1",
+  "mediadecoder>=0.1,<1",
+]
+
+[project.urls]
+"Bug Tracker" = "XXX"
+"Documentation" = "XXX"
+"Homepage" = 'http://www.expyriment.org'
+
+[project.scripts]
+expyriment="expyriment.cli:main"
