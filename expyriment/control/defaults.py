@@ -22,6 +22,14 @@ Default settings for the control package. ::
     display : int
         the display index to show the screen on
 
+    display_resolution : (int, int) or None
+        the resolution of the display the screen is shown on
+
+        NOTES
+        =====
+        When set to None, Expyriment will attempt to set the resolution to the
+        highest available resolution for that display.
+
     event_logging : int or bool
         O/False = no event logging
         1       = normal event logging (logging of all input & output events)

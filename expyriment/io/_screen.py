@@ -111,6 +111,8 @@ OpenGL will be deactivated!"
             os.path.join(os.path.split(__file__)[0], "..", "xpy_icon.png"))
         pygame.display.set_icon(icon)
 
+        #os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "0"
+
         if not self._open_gl:
             if self._fullscreen:
                 if int(pygame.version.ver[0]) > 1:
@@ -133,7 +135,6 @@ OpenGL will be deactivated!"
             os.environ["SDL_FRAMEBUFFER_ACCELERATION"] = "opengl"
             os.environ["SDL_RENDER_VSYNC"] = "1"
             os.environ["SDL_HINT_RENDER_BATCHING"] = "0"
-            os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
             os.environ["SDL_VIDEO_MAC_FULLSCREEN_SPACES"] = "0"
 
             try:
@@ -141,10 +142,12 @@ OpenGL will be deactivated!"
             except Exception:
                 pass
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
+            if platform.system() == "Windows":
+                user32 = ctypes.windll.user32
+                user32.SetProcessDPIAware()
+
             if self._fullscreen:
-                if platform.system() == "Windows":
-                    user32 = ctypes.windll.user32
-                    user32.SetProcessDPIAware()
+                os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
 
                 if int(pygame.version.ver[0]) > 1:
                     fullscreen_size = self._window_size
