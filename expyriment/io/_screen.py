@@ -364,4 +364,16 @@ machine!")
 
         """
 
-        pygame.image.save(self._surface, filename)
+        if self._open_gl:
+            size = self._surface.get_size()
+            ogl.glReadBuffer(ogl.GL_FRONT)
+            buffer = ogl.glReadPixels(0, 0, size[0], size[1], ogl.GL_RGB,
+                                      ogl.GL_UNSIGNED_BYTE)
+            ogl.glReadBuffer(ogl.GL_BACK)
+            surf = self._surface.copy()
+            content = pygame.image.fromstring(buffer, size, "RGB", True)
+            rect = pygame.Rect((0, 0), size)
+            surf.blit(content, rect)
+        else:
+            surf = self._surface
+        pygame.image.save(surf, filename)
