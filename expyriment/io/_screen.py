@@ -151,9 +151,8 @@ OpenGL will be deactivated!"
                 os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
 
                 if int(pygame.version.ver[0]) > 1:
-                    fullscreen_size = self._window_size
                     self._surface = pygame.display.set_mode(
-                        fullscreen_size, pygame_mode | pygame.FULLSCREEN,
+                        self._window_size, pygame_mode | pygame.FULLSCREEN,
                         display=self._display, vsync=1)
 
                 else:
