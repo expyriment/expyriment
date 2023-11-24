@@ -107,8 +107,9 @@ OpenGL will be deactivated!"
         if platform.system() == "Windows":
             id_ = 'mycompany.myproduct.subproduct.version'  # arbitrary string
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(id_)
-        icon = pygame.image.load(
-            os.path.join(os.path.split(__file__)[0], "..", "xpy_icon.png"))
+        icon = pygame.image.load(os.path.join(os.path.split(__file__)[0],
+                                              "..", "xpy_icon.png"))
+        icon = pygame.transform.smoothscale(icon, (32, 32))
         pygame.display.set_icon(icon)
 
         #os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "0"
