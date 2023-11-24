@@ -8,17 +8,15 @@ license = {file = "COPYING.txt"}
 name = "expyriment"
 readme = "README.md"
 requires-python = ">=3.6"
-version = "XX.XX.XX"
+dynamic = ["version"]
 keywords = ["XX", "XX"]
 classifiers = [
   "Programming Language :: Python :: 3",
-  "Operating System :: OS Independent",
-  "License :: OSI Approved :: GNU GPLv3",
-  "XXX",
+  "Operating System :: OS Independent"
 ]
 
 dependencies = [
-  "pygame>=1.9,<3",
+  "pygame>=2.5,<3",
   "pyopengl>=3.0,<4",
 ]
 
@@ -39,8 +37,8 @@ video = [
 ]
 
 [project.urls]
-"Bug Tracker" = "XXX"
-"Documentation" = "XXX"
+"Bug Tracker" = "https://github.com/expyriment/expyriment/issues"
+"Documentation" = "http://docs.expyriment.org"
 "Homepage" = 'http://www.expyriment.org'
 
 [project.scripts]
