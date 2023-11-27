@@ -33,7 +33,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 __version__ = '0.10.dev0'
 
-
 import sys as _sys
 
 if _sys.version_info[0] != 3 or _sys.version_info[1] < 6:
