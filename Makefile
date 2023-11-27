@@ -2,7 +2,7 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: install clean build
+.PHONY: install clean build testpypi publish
 
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
@@ -13,6 +13,13 @@ build:
 
 install:
 	flit install
+
+testpypi:
+	flit --repository testpypi publish
+
+publish:
+	flit publish
+
 
 documentation/html:
 	make --directory=documentation/sphinx rst html sitemap
