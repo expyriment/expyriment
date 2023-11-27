@@ -20,7 +20,6 @@ testpypi:
 publish:
 	flit publish
 
-
 documentation/html:
 	make --directory=documentation/sphinx rst html sitemap
 	mv documentation/sphinx/_build/html documentation/html
