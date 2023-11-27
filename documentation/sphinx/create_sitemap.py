@@ -8,7 +8,8 @@ __version__ = ''
 import os
 import sys
 
-from .create_rst_api_reference import inspect_members, expyriment
+sys.path.append(os.getcwd())
+from create_rst_api_reference import inspect_members, expyriment
 
 T = "  "
 HOME = "Official Website: /"

@@ -12,5 +12,5 @@ html: venv
 clean:
 	rm -rf _build
 	rm -rf venv
-	rm *.html
+	rm -f *.html
 
