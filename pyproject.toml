@@ -9,7 +9,8 @@ name = "expyriment"
 readme = "README.md"
 requires-python = ">=3.6"
 dynamic = ["version"]
-keywords = ["XX", "XX"]
+keywords = ["experiment control", "open science",
+            "neuroscience", "experimental psychology"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent"
