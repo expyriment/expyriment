@@ -3,7 +3,6 @@
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
 
 import os
 import sys

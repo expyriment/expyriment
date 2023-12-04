@@ -1,4 +1,4 @@
-"""Python library for cognitive and neuroscientific experiments.
+"""A Python library for cognitive and neuroscientific experiments
 
 Expyriment is an open-source and platform independent light-weight Python
 library for designing and conducting timing-critical behavioural and

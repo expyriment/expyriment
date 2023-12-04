@@ -211,9 +211,10 @@ def create_page(item):
     version_nr = "{0}"
     with open(p) as f:
         for line in f:
-            if line[0:8].lower() == "upcoming":
+            l = line.lower().lstrip()
+            if l.startswith("upcoming") or l.startswith("coming up"):
                 version_nr += "+"
-            if line[0:7] == "Version":
+            if l.startswith("version"):
                 version_nr = version_nr.format(line[8:13])
                 break
     page = """
