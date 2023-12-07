@@ -7,9 +7,6 @@ This module contains miscellaneous geometry functions for expyriment.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from ._geometry import coordinates2position, position2coordinates, position2coordinate

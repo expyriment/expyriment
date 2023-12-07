@@ -5,9 +5,6 @@ The control._experiment_control module of expyriment.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 import sys
 import os

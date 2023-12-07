@@ -5,9 +5,6 @@ Get System Information.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 import sys
 import os
@@ -330,8 +327,6 @@ def get_system_info(as_string=False):
     info["os_release"] = platform.release()
     info["os_version"] = os_version
     info["settings_folder"] = get_settings_folder()
-    info["python_expyriment_build_date"] = __date__
-    info["python_expyriment_revision"] = __revision__
     info["python_expyriment_version"] = __version__
     if _numpy is not None:
         numpy_version = _numpy.version.version

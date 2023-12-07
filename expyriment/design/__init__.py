@@ -7,9 +7,6 @@ experiment.  See also expyriment.design.extras for more design.
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
               Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from . import defaults

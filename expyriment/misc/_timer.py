@@ -12,9 +12,6 @@ Credits and references:
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 # use perf_counter if it exists and works
 try:

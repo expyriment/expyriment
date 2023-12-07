@@ -10,10 +10,6 @@ well as a function to call this browser or the online documentation.
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import os
 import sys

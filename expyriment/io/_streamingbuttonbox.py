@@ -7,9 +7,6 @@ This module contains a class implementing a streaming button box.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from types import FunctionType

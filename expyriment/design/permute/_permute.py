@@ -7,9 +7,6 @@ This module implements permutation of blocks, trials and conditions.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 from ...misc.constants import P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE
 from ..randomize import rand_int_sequence

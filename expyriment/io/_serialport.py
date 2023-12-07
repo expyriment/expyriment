@@ -7,10 +7,6 @@ This module contains a class implementing serial port input/output.
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import atexit
 from types import ModuleType, FunctionType

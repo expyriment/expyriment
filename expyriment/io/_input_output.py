@@ -9,9 +9,6 @@ All classes in this module should be called directly via expyriment.io.*.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from . import defaults

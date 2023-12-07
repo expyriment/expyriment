@@ -9,9 +9,7 @@ functions to join the data output.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
+
 
 import sys, os
 from importlib import import_module

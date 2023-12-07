@@ -22,10 +22,6 @@ port.
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import sys
 import os
@@ -283,11 +279,11 @@ class ParallelPort(Input, Output):
             Pin:  17    16    14     1     9     8     7     6     5
                    |     |     |     |     |     |     |     |     |
             Bit: 65536 32768 16384 8192  4096  2048  1024   512   256
-             
+
             Pin:  4    3    2   11   10   12   13   15
                   |    |    |    |    |    |    |    |
             Bit: 128  64   32   16    8    4    2    1
-             
+
         Returns
         -------
         data : int (0-65535)
@@ -424,18 +420,18 @@ class ParallelPort(Input, Output):
     @staticmethod
     def get_driver():
         """Return the driver used for interacting with parallel ports.
-        
+
         On Windows, one of the following parallel port drivers needs to
         be installed: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or
         'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/).
         On Linux, the Python package 'PyParallel'
         (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
-    
+
         """
-        
+
         if _ParallelPort is not None:
             return _ParallelPort._driver
-        
+
     @staticmethod
     def get_available_ports():
         """Return an array of strings representing available parallel ports.

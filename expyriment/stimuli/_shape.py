@@ -9,9 +9,6 @@ This module contains a class implementing a shape stimulus.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 import copy
 from math import sqrt
@@ -501,8 +498,8 @@ class Shape(Visual):
 
         """
 
-        # shape and other shape do not overlap if 
-        # (a) no point of shape is inside other shape 
+        # shape and other shape do not overlap if
+        # (a) no point of shape is inside other shape
         # (b) AND no point of other shape is inside shape
         # (c) AND lines do not intersect
 

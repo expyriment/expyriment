@@ -4,10 +4,6 @@ This module contains the base classes for visual stimuli.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import tempfile
 import os

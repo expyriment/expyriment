@@ -9,10 +9,6 @@ This module contains a class implementing a tone stimulus.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import os
 import math

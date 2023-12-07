@@ -141,9 +141,6 @@ Default settings for the control package. ::
 
 __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from ..misc import constants as _constants

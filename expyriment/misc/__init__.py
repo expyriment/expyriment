@@ -8,10 +8,6 @@ See also expyriment.misc.extras for more misc.
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
               Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from . import defaults
 from ._miscellaneous import compare_codes, add_fonts, list_fonts, find_font

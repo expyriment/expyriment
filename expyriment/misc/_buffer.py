@@ -7,10 +7,6 @@ This module contains a class implementing an event buffer.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from ._clock import Clock
 from .. import _internals
@@ -85,29 +81,29 @@ class Buffer(object):
 
     def get_size(self):
         """Return the number of elements in the buffer.
-        
+
         Returns
         -------
         size : int
             the size of the buffer
-    
+
         """
 
         return len(self._memory)
 
     def get_element(self, position):
-        """Get an element (code, rt) from the buffer. 
+        """Get an element (code, rt) from the buffer.
 
         Parameters
         ----------
         position : int
             the position to get the element from
-            
+
         Returns
         -------
         element : (anything, float)
             The element to get from the buffer
-            
+
         """
 
         if position < len(self._memory) and position >= 0:
@@ -123,12 +119,12 @@ class Buffer(object):
 
     def get_last_event(self):
         """Get the last event (code, rt) in the buffer.
-        
+
         Returns
         -------
         element : (anything, float)
             the last element of the buffer
-            
+
         """
 
         if len(self._memory) > 0:
@@ -139,12 +135,12 @@ class Buffer(object):
 
     def get_whole_buffer(self):
         """Get a copy of the buffer.
-        
+
         Returns
         -------
         copy : list
             the copy of the buffer
-            
+
         """
 
         bcopy = self._memory[:]
@@ -183,12 +179,12 @@ class ByteBuffer(Buffer):
             the byte to search for
         search_start_position : int (optional)
             position to start search from (int)
-        
+
         Returns
         -------
         position : int
             the position of element with set bits
-            
+
         """
 
         found_pos = 0
@@ -210,7 +206,7 @@ class ByteBuffer(Buffer):
             the byte to search for
         search_start_position : int (optional)
             position to start search from
-            
+
         Returns
         -------
         position : int
@@ -237,7 +233,7 @@ class ByteBuffer(Buffer):
             the value to check
         search_start_position : int (optional)
             position to start search from
-            
+
         Returns
         -------
         position : int

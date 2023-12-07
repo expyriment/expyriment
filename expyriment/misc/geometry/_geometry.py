@@ -7,9 +7,6 @@ This module contains miscellaneous geometry functions for expyriment.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 import math as _math
 from ... import _internals
@@ -142,7 +139,7 @@ def tuples2points(list_of_tuples):
 
 def points_to_vertices(points):
     """OBSOLETE FUNCTION! Please use `points2vertices`!"""
-    
+
     raise DeprecationWarning("points_to_vertices is an obsolete function. Please use points2vertices.")
 
 def points2vertices(points):

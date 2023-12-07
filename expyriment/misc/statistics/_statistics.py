@@ -7,9 +7,6 @@ This module contains miscellaneous stastistical functions for expyriment.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 import math as _math
@@ -135,9 +132,9 @@ def median(data):
 
 def frequence_table(data):
     """OBSOLETE FUNCTION! Please use `frequency_table`!"""
-    
+
     raise DeprecationWarning("frequence_table is an obsolete function. Please use frequency_table.")
-    
+
     frequency_table(data)
 
 def frequency_table(data):

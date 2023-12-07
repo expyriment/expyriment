@@ -7,10 +7,6 @@ This module contains the base classes for stimuli.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from copy import deepcopy
 

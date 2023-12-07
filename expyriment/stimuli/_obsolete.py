@@ -9,9 +9,6 @@ Calls are merely defined to give user appropriate error feedback
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 class Dot(object):
     """OBSOLETE CLASS: Please use Circle!"""

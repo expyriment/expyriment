@@ -7,10 +7,6 @@ See also expyriment.stimuli.extras for more stimuli.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 from . import defaults
 from ._audio import Audio

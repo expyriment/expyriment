@@ -7,9 +7,6 @@ to handle, preprocessing and aggregate Expyriment data files.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
 
 
 from ._data_preprocessing import read_datafile, get_experiment_duration
