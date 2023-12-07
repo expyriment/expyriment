@@ -74,6 +74,12 @@ class Screen(Output):
             open_gl = 0
         elif open_gl == True:
             open_gl = 2
+        elif open_gl >= 2:
+            warn_message = "OpenGL mode '{0}' does not exist. \
+                OpenGL will be set to '2' (default)".format(open_gl)
+            print("Warning: " + warn_message)
+            _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
+            open_gl = 2
         self._open_gl = open_gl
         self._fullscreen = not window_mode
         self._window_size = window_size

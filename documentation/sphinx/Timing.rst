@@ -53,18 +53,34 @@ Coming back to the example of the small dot in the center of the screen:
 Expyriment will correctly report a longer presentation time when the redraw
 has been just over the center line when the screen update was issued.
 
-In some rare cases, this blocking mechanism will not work. This is due to
-specifics of the video card driver implementation. Should blocking on the
-vertical retrace indeed not work (as can be revealed by the
-:doc:`Expyriment test suite <Testsuite>`), an alternative blocking mechanism
-is available by using OpenGL set to "vsync / alternative blocking"
-(``control.defaults.open_gl=3``; see :doc:`Defaults`).
+*For the OpenGL modes to work correctly, it is important to set the graphic
+card's driver settings to support synchronizing to the vertical retrace ("Sync
+to VBlank" or "V-sync") and to switch off any power saving schemes on the
+graphic card.*
 
-*It is important to set your graphic card's driver settings to support 
-synchronizing to the vertical retrace ("Sync to VBlank" or "V-sync") and to 
-switch off any power saving schemes on the graphic card.*
-*Also, please be aware that blocking on the vertical retrace is not accurate
-in window mode!*
+*Vsync and blocking on the vertical retrace are only functioning as intended in
+fullscreen mode. Presentation times will not be accurate in window mode!*
+
+*Even with working vsync and blocking, there can be scenarios where visual
+stimulus presentations are still physically delayed by one or two frames (i.e.
+the display draws them later than it reports). These cases entail the presence
+of an additional invisible in-between buffer, either at the level of the
+operating system (e.g.  a "compositing" window manager) or at the level of the
+display driver (e.g.  "intelligent" gaming displays). While these delays are
+NOT captured by the visual test in the test suite and have to be measured
+externally, they should at least be stable across different visual stimulus
+presentations and should hence not introduce any differences between
+experimental conditions.*
+
+*When using high-DPI displays, Expyriment will attempt to use the full native
+resulution for fullscreen mode with OpenGL (if the nativive resolution is not
+guessed correctly, it can be manually overwritten by setting 
+``control.defaults.display_resolution``. In all other cases (i.e. no OpenGL
+and/or window mode) Expyriment might return a screen with a scaled resolution,
+according to the operating system's scaling settings. To get a non-scaled
+screen in these cases, scaling has to be deactivated on the operating system
+level.*
+
 
 **Test results**
 
@@ -97,7 +113,7 @@ Visual stimuli can be presented each refresh rate.
 
 
 Audio
------
+~~~~~
 Playing back audio is handled by PyGame. The present() and play() methods of 
 auditory stimuli will return immediately. Since the audio stream has to be sent 
 to the hardware, there will still be a delay before the audio can be heard.  

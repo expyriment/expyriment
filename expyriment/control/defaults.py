@@ -67,7 +67,6 @@ Default settings for the control package. ::
         0/False = no OpenGL (no vsync / no blocking)
         1       = OpenGL (vsync / no blocking)
         2       = OpenGL (vsync / blocking)
-        3       = OpenGL (vsync / alternative blocking)
 
         NOTES
         =====
@@ -110,30 +109,13 @@ Default settings for the control package. ::
             at the left top corner
         * Accurate presentation time reporting
             present() method will only return when all drawing has been
-            finished
+            finished and the then empty back buffer is available for drawing
+            on it again
 
         This can be useful for static stimulus presentation, where getting an
         accurate  presentation time report is of highest priority. Since this
         will be the case for most psychological and neuroscientific settings,
         it is the default mode used by Expyriment.
-
-        OpenGL (vsync / alternative blocking)
-        -------------------------------------
-        * Longer preloading times
-            OpenGL is used to write to the display and a conversion to an
-            OpenGL texture is needed
-        * Synchronized display updating
-            Pixels are starting to change always when the vertical retrace is
-            at the left top corner
-        * Accurate presentation time reporting (alternative method)
-            present() method will only return when all drawing has been
-            finished and the then empty back buffer is available for drawing
-            on it again
-
-        This can be useful for static stimulus presentation, where getting an
-        accurate presentation time report is of highest priority and the
-        former mode does not work correctly (due to different video card
-        driver implementations).
 
     quit_key : int
         the key to be used for ending an experiment
