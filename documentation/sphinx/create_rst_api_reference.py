@@ -6,7 +6,7 @@ import sys
 import inspect
 
 p = os.path.abspath(os.path.join(os.path.split(sys.argv[0])[0], '..', '..'))
-#sys.path.insert(0, p)
+sys.path.insert(0, p)
 
 import expyriment
 import expyriment.io.extras
@@ -109,7 +109,7 @@ def create_change_log_rst():
     fl = open(changes_md, 'r')
     out = open(changelog_rst, 'w')
 
-    out.write("""Changelog
+    out.write("""Changelogkk
 ==========
 
 """)

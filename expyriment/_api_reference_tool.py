@@ -495,8 +495,7 @@ def show_documentation(docu_type=None):
     docu_type : int
         the documentation type:
         1 = open online documentation
-        2 = open online API reference
-        3 = open API reference and search tool
+        2 = open API reference and search tool
 
     """
 
@@ -537,7 +536,7 @@ def show_documentation(docu_type=None):
             stdout=None,
             cwd=path)
     else:
-        print("Unknown documentation type")
+        print(f"Unknown documentation type: {docu_type}")
         call_info()
 
 if __name__ == "__main__":

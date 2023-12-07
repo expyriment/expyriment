@@ -210,10 +210,10 @@ letter arguments run single commands""",
         print("Run test suite")
         xpy.control.run_test_suite()
     elif args["Browser_api"]:
-        xpy.show_documentation(2)
+        xpy.show_documentation(1)
     elif args["Api"]:
         print("Start API reference tool")
-        xpy.show_documentation(3)
+        xpy.show_documentation(2)
     elif args["Create_exp"]:
         create_template()
     elif args["Download_stash"]:

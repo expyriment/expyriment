@@ -2,58 +2,30 @@
 # (c) Florian Krause <florian@expyriment.org> &
 # 	  Oliver Lindemann <oliver@expyriment.org>
 
-.PHONY: install clean
+.PHONY: install clean build testpypi publish
 
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 api_ref_html: documentation/api_ref_html
-release: wheel sdist 
-wheel: dist build/wheel_version
 
-tarball: dist build/wheel_version
-	@VER=$$(cat build/wheel_version);\
-		DIR=expyriment-$$VER;\
-		TAR=expyriment_$$VER.tar.gz;\
-		ZIP=expyriment_$$VER.zip;\
-		mkdir -p build/$$DIR ;\
-		mkdir -p build/tmp ;\
-		unzip dist/* -d build/tmp ;\
-		mv build/tmp/expyriment build/$$DIR ;\
-		rm -Rf build/tmp ;\
-		rm -Rf build/$$DIR/expyriment/_fonts ;\
-		cp -Ra documentation build/$$DIR ;\
-		rm -R build/$$DIR/documentation/sphinx/_build  ;\
-		cp -a CHANGES.md build/$$DIR ;\
-		cp -a COPYING.txt build/$$DIR ;\
-		cp -a README.md build/$$DIR ;\
-		cp -a setup.py build/$$DIR ;\
-		find build/$$DIR -type f -name '*.swp' -o -name '*~' -o -name '*.bak'\
-		-o -name '*.py[co]' -o -iname '#*#' | xargs -L 5 rm -f ;\
-		cd build ;\
-		rm -f $$TAR;\
-		tar cfz $$TAR $$DIR;\
-		zip -r $$ZIP $$DIR;\
-		mv $$TAR ../dist/;\
-		mv $$ZIP ../dist/
-
-dist:
-	mkdir -p build
-	python3 setup.py bdist_wheel --universal | tee build/wheel.log
-
-build/wheel_version: dist 
-	@grep "Expyriment Version:" build/wheel.log | awk -F'[' '{print $$2}' \
-				| awk -F']' '{print $$1}' > build/wheel_version 
-
-sdist: 
-	python3 setup.py sdist
+build:
+	flit build
 
 install:
-	python3 setup.py install
+	flit install
+
+testpypi:
+	flit --repository testpypi publish
+
+publish:
+	flit publish
 
 documentation/html:
-	make --directory=documentation/sphinx rst html sitemap
+	make --directory=documentation/sphinx rst html
 	mv documentation/sphinx/_build/html documentation/html
-	mv documentation/sphinx/sitemap.yml documentation/html/
+# FIXME SITEMAP DOES NOT WORK
+#make --directory=documentation/sphinx sitemap
+#mv documentation/sphinx/sitemap.yml documentation/html/
 
 documentation/Expyriment.pdf:
 	make --directory=documentation/sphinx rst latexpdf

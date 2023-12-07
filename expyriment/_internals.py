@@ -8,10 +8,6 @@ from builtins import object
 
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
-__version__ = ''
-__revision__ = ''
-__date__ = ''
-
 
 import sys
 import os
@@ -22,6 +18,7 @@ try:
 except ImportError:
     android = None
 
+from . import __version__
 
 def get_version():
     """
@@ -53,9 +50,6 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
-
-def pump_pygame_events():
-    pygame.event.pump()
 
 class Expyriment_object(object):
     """A class implementing a general Expyriment object.
@@ -124,7 +118,7 @@ class CallbackQuitEvent(object):
 
 # IMPORTER FUNCTIONS
 
-def run_py_file_command(path):
+def _run_py_file_command(path):
     # helper function to generate import command
     return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
 
@@ -147,7 +141,7 @@ def is_venv():
     base_prefix = getattr(sys, "base_prefix", sys.prefix)
 
     return (base_prefix or real_prefix) != sys.prefix
-                        
+
 def get_settings_folder():
     """Return Expyriment settings folder
 
@@ -243,7 +237,7 @@ def post_import_hook():
     filename = home + os.sep + "post_import.py"
     if os.path.isfile(filename):
         print("process {0}".format(filename))
-        return run_py_file_command(filename)
+        return _run_py_file_command(filename)
     else:
         return ""
 
