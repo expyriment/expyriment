@@ -43,7 +43,7 @@ class Screen(Output):
 
         Notes
         -----
-        CAUTION: We discourage from creating a screen instance manually!
+        CAUTION: We discourage creating a screen instance manually!
 
         Parameters
         ----------
@@ -53,7 +53,6 @@ class Screen(Output):
             0/False - No OpenGL (no vsync / no blocking)
             1       - OpenGL (vsync / no blocking)
             2/True  - OpenGL (vsync / blocking)
-            3       - OpenGL (vsync / alternative blocking)
         window_mode : bool
              if screen should be a window, fullscreen otherwise
         window_size : (int, int)
@@ -98,10 +97,6 @@ OpenGL will be deactivated!"
             else:
                 self._display_resolution = pygame.display.list_modes(
                     display=display)[0]
-        if self._fullscreen:
-            self._window_size = self._display_resolution
-        else:
-            self._window_size = window_size
 
         # Change icon to Expyriment logo
         if platform.system() == "Windows":
@@ -112,23 +107,14 @@ OpenGL will be deactivated!"
         icon = pygame.transform.smoothscale(icon, (32, 32))
         pygame.display.set_icon(icon)
 
-        #os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "0"
-
         if not self._open_gl:
             if self._fullscreen:
-                if int(pygame.version.ver[0]) > 1:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, pygame.FULLSCREEN,
-                        display=self._display)
-                else:
-                    self._surface = pygame.display.set_mode(self._window_size,
-                                                            pygame.FULLSCREEN)
+                self._surface = pygame.display.set_mode(
+                    self._display_resolution, pygame.FULLSCREEN,
+                    display=self._display)
             else:
-                if int(pygame.version.ver[0]) > 1:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, display=self._display)
-                else:
-                    self._surface = pygame.display.set_mode(self._window_size)
+                self._surface = pygame.display.set_mode(
+                    self._window_size, display=self._display)
                 pygame.display.set_caption('Expyriment')
 
         else:
@@ -136,38 +122,32 @@ OpenGL will be deactivated!"
             os.environ["SDL_FRAMEBUFFER_ACCELERATION"] = "opengl"
             os.environ["SDL_RENDER_VSYNC"] = "1"
             os.environ["SDL_HINT_RENDER_BATCHING"] = "0"
-            os.environ["SDL_VIDEO_MAC_FULLSCREEN_SPACES"] = "0"
 
             try:
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
             except Exception:
                 pass
+
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
+
             if platform.system() == "Windows":
                 user32 = ctypes.windll.user32
                 user32.SetProcessDPIAware()
 
             if self._fullscreen:
                 os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "1"
+                os.environ["SDL_VIDEO_MAC_FULLSCREEN_SPACES"] = "0"
 
-                if int(pygame.version.ver[0]) > 1:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, pygame_mode | pygame.FULLSCREEN,
-                        display=self._display, vsync=1)
+                self._surface = pygame.display.set_mode(
+                    self._display_resolution, pygame_mode | pygame.FULLSCREEN,
+                    display=self._display, vsync=1)
 
-                else:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, pygame_mode | pygame.FULLSCREEN)
             else:
                 if no_frame:
                     pygame_mode = pygame_mode | pygame.NOFRAME
-                if int(pygame.version.ver[0]) > 1:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, pygame_mode, display=self._display,
-                        vsync=1)
-                else:
-                    self._surface = pygame.display.set_mode(
-                        self._window_size, pygame_mode)
+                self._surface = pygame.display.set_mode(
+                    self._window_size, pygame_mode, display=self._display,
+                    vsync=1)
 
                 pygame.display.set_caption('Expyriment')
 
@@ -254,11 +234,10 @@ machine!")
         pygame.event.pump()
         pygame.display.flip()
         if self._open_gl >= 2:
-            if self._open_gl == 3:
-                ogl.glBegin(ogl.GL_POINTS)
-                ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!
-                ogl.glVertex2i(0, 0)
-                ogl.glEnd()
+            ogl.glBegin(ogl.GL_POINTS)
+            ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!
+            ogl.glVertex2i(0, 0)
+            ogl.glEnd()
             ogl.glFinish()
         if self._logging:
             _internals.active_exp._event_file_log("Screen,updated", 2)
@@ -303,12 +282,12 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen). Please use always the
-        screen of your current  experiment.
+        Each initialized experiment has its one screen (exp.screen).
+        Please use always the screen of your current experiment.
 
         """
 
-        return self._window_size[0] // 2
+        return self.size[0] // 2
 
     @property
     def center_y(self):
@@ -316,12 +295,12 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen). Please use always the
-        screen of your current  experiment.
+        Each initialized experiment has its one screen (exp.screen).
+        Please use always the screen of your current experiment.
 
         """
 
-        return self._window_size[1] // 2
+        return self.size[1] // 2
 
     @property
     def size(self):
@@ -329,12 +308,12 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen). Please use always the
-        screen of your current  experiment.
+        Each initialized experiment has its one screen (exp.screen).
+        Please use always the screen of your current experiment.
 
         """
 
-        return self._window_size
+        return self._surface.get_size()
 
     def clear(self):
         """Clear the screen.
