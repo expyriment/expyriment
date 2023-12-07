@@ -1,4 +1,5 @@
 """
+info["hardware_displays"] =
 Get System Information.
 """
 
@@ -72,6 +73,7 @@ def get_system_info(as_string=False):
 
     from ..io import SerialPort, ParallelPort
     from .._internals import get_settings_folder
+    from ._miscellaneous import get_display_info
     try:
         from platform import linux_distribution
     except Exception:
@@ -98,7 +100,7 @@ def get_system_info(as_string=False):
         else:
             os_details = ""
         os_version = linux_distribution()[1]
-        
+
         try:
             hardware_cpu_details = ""
             with open('/proc/cpuinfo') as f:
@@ -377,6 +379,8 @@ def get_system_info(as_string=False):
     info["hardware_cpu_type"] = platform.processor()
     info["hardware_disk_space_free"] = hardware_disk_space_free
     info["hardware_disk_space_total"] = hardware_disk_space_total
+    display_info = get_display_info()
+    info["hardware_displays"] = get_display_info()
     try:
         socket.gethostbyname("google.com")
         hardware_internet_connection = "Yes"

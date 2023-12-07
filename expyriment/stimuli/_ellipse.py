@@ -152,29 +152,30 @@ class Ellipse(Visual):
             line_width = self._line_width * aa_scaling
             if line_width % 2 == 0:
                 surface_size = [x + line_width for x in size]
+                tmp_hole_size = [x - line_width for x in size]
             else:
                 surface_size = [x + line_width - 1 for x in size]
+                tmp_hole_size = [x - line_width - 1 for x in size]
             surface = pygame.surface.Surface(surface_size,
                 pygame.SRCALPHA).convert_alpha()
             pygame.draw.ellipse(surface, (0, 0, 0), pygame.Rect(
                 (0, 0),
                 surface_size))#[x + line_width for x in size]))
-            tmp = pygame.surface.Surface(
-                [x - line_width for x in size])
-            hole = pygame.surface.Surface(
-                [x - line_width for x in size],
-                pygame.SRCALPHA).convert_alpha()
+            tmp = pygame.surface.Surface(tmp_hole_size)
+            hole = pygame.surface.Surface(tmp_hole_size,
+                                          pygame.SRCALPHA).convert_alpha()
+
             tmp.fill([0, 0, 0])
             pygame.draw.ellipse(tmp, (255, 255, 255), pygame.Rect(
-                (0, 0), [x - line_width for x in size]))
+                (0, 0), tmp_hole_size))
             tmp.set_colorkey([255, 255, 255])
             hole.blit(tmp, (0, 0))
             surface.blit(hole, (line_width, line_width),
                          special_flags=pygame.BLEND_RGBA_MIN)
             if aa_scaling != 1:
                 surface = pygame.transform.smoothscale(surface,
-                                (int((size[0] + line_width) / aa_scaling),
-                                 int((size[1] + line_width) / aa_scaling)))
+                                (int(surface_size[0] / aa_scaling),
+                                 int(surface_size[1] / aa_scaling)))
             surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         return surface

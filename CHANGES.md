@@ -4,15 +4,18 @@ Expyriment Release Notes
 Coming up
 ---------
 New Features:
-- command line iterface: option ``-I`` starts an interactive session
+- command line interface: option ``-I`` starts an interactive session
 - io.TextInput: ``get`` method now has parameter ``clear_event_cue``
 - test suite: option to run single tests
 - control.pause: added ``text`` and ``key`` parameters
 - control.defaults: added ``display`` to set display index for showing screen on
+- io.Screen.get_display_resolution and misc.get_display_info
+- control.defaults.display
+- control.defaults.display_resolution
 
 Changed:
-- Python 2 support was been removed.
-  Expyriment now only works with Python 3 (>3.5).
+- Python 2 support has been removed
+  Expyriment now only works with Python 3.5 or higher
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - pause_key has been removed
 - test suite: improved audio test
@@ -23,6 +26,11 @@ Changed:
   to that environment
 - Documentation not shipped with Expyriment anymore (i.e. no offline
   documentation available, only online)
+- Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
+- Always use maximal display resolution by default for fullscreen mode (unless
+  overwritten by control.defaults.display_resolution)
+- open_gl mode "3" has been removed: open_gl mode "2" (default) now does what
+  "3" used to do (i.e. "alternative blocking")
 - updated cli options
 
 Fixed:
@@ -32,6 +40,10 @@ Fixed:
 - test suite: close serial port after test
 - io.Keyboard: 0.5 ms timing inaccuracy in wait methods
 - Visual stimuli: don't clear the original canvas when copying
+- stimuli.Ellipse: bug when using uneven `line_width` values
+- io.Screen: bug in saving screenshots with `save` when using OpenGL
+- io.Screen: bug in showing Expyriment logo in task bar
+- bug in `misc.get_display_info`
 
 
 Version 0.10.0 (30 Oct 2019)

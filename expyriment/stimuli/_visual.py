@@ -1197,6 +1197,7 @@ class Visual(Stimulus):
                 y += 1
             rect.center = (x, y)
             screen.blit(self._get_surface(), rect)
+
         if self._logging:
             _internals.active_exp._event_file_log("Stimulus,drawn,{0}"\
                                    .format(self.id), 2,
