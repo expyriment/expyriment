@@ -329,7 +329,7 @@ def get_display_info():
                 {"number": x,
                  "maximal_resolution": pygame.display.list_modes(display=x)[0]})
 
-        return tuple(info)
+    return tuple(info)
 
 
 def get_monitor_resolution():
