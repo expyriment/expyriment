@@ -46,6 +46,8 @@ except Exception:
     _pil = None
 import pygame
 
+from . import __version__
+
 def _get_registry_value(key, subkey, value):
     try:
         import winreg as _winreg  # TODO check me on Windows
