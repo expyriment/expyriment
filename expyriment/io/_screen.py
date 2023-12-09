@@ -70,7 +70,7 @@ class Screen(Output):
             open_gl = 0
         elif open_gl == True:
             open_gl = 2
-        elif open_gl >= 2:
+        elif open_gl > 2:
             warn_message = "OpenGL mode '{0}' does not exist. \
                 OpenGL will be set to '2' (default)".format(open_gl)
             print("Warning: " + warn_message)
