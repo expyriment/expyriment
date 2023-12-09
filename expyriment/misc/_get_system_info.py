@@ -46,7 +46,7 @@ except Exception:
     _pil = None
 import pygame
 
-from . import __version__
+from .._internals import get_version
 
 def _get_registry_value(key, subkey, value):
     try:
@@ -329,7 +329,7 @@ def get_system_info(as_string=False):
     info["os_release"] = platform.release()
     info["os_version"] = os_version
     info["settings_folder"] = get_settings_folder()
-    info["python_expyriment_version"] = __version__
+    info["python_expyriment_version"] = get_version.split(" ")[0]
     if _numpy is not None:
         numpy_version = _numpy.version.version
     else:
