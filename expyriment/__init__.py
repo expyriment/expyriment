@@ -48,6 +48,7 @@ if _sys.version_info[0] != 3 or _sys.version_info[1] < 6:
 try:
     import os
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+
     import pygame as _pygame
     if _pygame.vernum < (1, 9, 1) or _pygame.vernum >= (3, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
@@ -61,6 +62,11 @@ except ImportError:
                       "\nPlease install Pygame(>=1.9,<3).")
 
 try:
+    import logging
+    logging.basicConfig(level=logging.INFO)
+    logging.getLogger('OpenGL.plugins').setLevel(logging.ERROR)
+    logging.getLogger('OpenGL.acceleratesupport').setLevel(logging.ERROR)
+
     import OpenGL as _OpenGL
     if not int(_OpenGL.version.__version__[0]) == 3:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
