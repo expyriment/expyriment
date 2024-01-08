@@ -8,24 +8,36 @@ mode should work with all drivers that use an OpenGL specification >=
 2.0.  Drivers implementing an older OpenGL specification (>= 1.4) should work 
 when the 'GL_ARB_texture_non_power_of_two' extension is present.
 
-On some some integrated Intel cards syncing to the vertical retrace does not seem
-to work with the default settings! In those cases, please try using OpenGL set to
-"vsync / alternative blocking" (``control.defaults.open_gl=3``).
-
-Working configurations
-~~~~~~~~~~~~~~~~~~~~~~
-Here are some configurations we observed to work:
-
-* GeForce GT 520 (Linux-x86; Debian default driver)
-* GeForce GT 520 (Windows XP; NIVIDA driver 285.62)
-* Nvidia GTX 650 (Linux-x86; NVIDIA driver 310.14)
-* Nvidia Quadro NVS 290 (Linux-x86; NVIDIA driver 295.40)
-* Nvidia Quadro NVS 290 (Windows XP SP3; NVIDIA driver)
-* Toshiba Satellite Pro Laptop (Windows 7)
-* Apple MacBook Pro 2013 (OS X 10.10; using alternative blocking!)
-
 **We recommend to always use the Expyriment test suite to check the
 performance of your specific configuration!**
+
+*For the OpenGL modes to work correctly, it is important to set the graphic
+card's driver settings to support synchronizing to the vertical retrace ("Sync
+to VBlank" or "V-sync") and to switch off any power saving schemes on the
+graphic card.*
+
+*Vsync and blocking on the vertical retrace are only functioning as intended in
+fullscreen mode. Presentation times will not be accurate in window mode!*
+
+*Even with working vsync and blocking, there can be scenarios where visual
+stimulus presentations are still physically delayed by one or two frames (i.e.
+the display draws them later than it reports). These cases entail the presence
+of an additional invisible in-between buffer, either at the level of the
+operating system (e.g. a "compositing" window manager) or at the level of the
+display driver (e.g. "intelligent" gaming displays). While these delays are
+NOT captured by the visual test in the test suite and have to be measured
+externally, they should at least be stable across different visual stimulus
+presentations and should hence not introduce any differences between
+experimental conditions.*
+
+*When using high-DPI displays, Expyriment will attempt to use the full native
+resolution for fullscreen mode with OpenGL (if the nativive resolution is not
+guessed correctly, it can be manually overwritten by setting 
+``control.defaults.display_resolution``. In all other cases (i.e. no OpenGL
+and/or window mode) Expyriment might return a screen with a scaled resolution,
+according to the operating system's scaling settings. To get a non-scaled
+screen in these cases, scaling has to be deactivated on the operating system
+level.*
 
 External devices
 ----------------

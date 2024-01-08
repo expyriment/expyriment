@@ -87,33 +87,43 @@ letter arguments run single commands""",
     parser.add_argument("SCRIPT", action='store', default=None,
                         help="the experiment script to be executed",
                         nargs='?')
-
+    # DEPRECATED
     parser.add_argument("-0", "-g", "--no-opengl", action="store_true",
-                        help="no OpenGL (no vsync / no blocking)")
+                        help="DEPRECATED: no OpenGL (no vsync / no blocking)")
 
     parser.add_argument("-1", "--no-blocking", action="store_true",
-                        help="OpenGL (vsync / no blocking)")
+                        help="DEPRECATED: OpenGL (vsync / no blocking)")
 
     parser.add_argument("-2", "--blocking", action="store_true",
-                        help="OpenGL (vsync / blocking)")
+                        help="DEPRECATED: OpenGL (vsync / blocking)")
 
     parser.add_argument("-3", "--alternative-blocking",
                         action="store_true",
-                        help="OpenGL (vsync / alternative blocking)")
+                        help="DEPRECATED: OpenGL (vsync / alternative blocking)")
+    # END DEPRECATED
 
-    parser.add_argument("--display", metavar="INDEX",
-                        type=int, default=-1,
-                    help="show the screen on specific display  (multi-monitor setting)")
+    parser.add_argument("--display", metavar="INDEX", type=int,
+                        help="show the screen on specific display (multi-monitor setting)")
+    parser.add_argument("--display-resolution", metavar="WIDTHxHEIGHT",
+                        help="set the display resolution (only in fullscreen mode)")
+    parser.add_argument("--opengl", metavar="MODE", type=int,
+                        help="set the OpenGL mode: "\
+                        "0 = No OpenGL (no vsync / no blocking), " +\
+                        "1 = OpenGL (vsync / no blocking), "\
+                        "2 = OpenGL (vsync / blocking)"
+
+    parser.add_argument("--window_size", metavar="WIDTHxHEIGHT",
+                        help="set the window size (only in window mode)")
 
     parser.add_argument("-a", "--auto-subject-id",
                         action="store_true",
                         help="auto create subject ID")
 
-    parser.add_argument("-d", "--develop",
+    parser.add_argument("-d", "--develop-mode",
                         action="store_true",
                         help="develop mode (equivalent to -wfat)")
 
-    parser.add_argument("-f", "--fast",
+    parser.add_argument("-f", "--fast-mode",
                         action="store_true",
                         help="fast mode (no initialize delay and fast quitting)")
 
@@ -125,7 +135,7 @@ letter arguments run single commands""",
                         action="store_true",
                         help="no time stamps for output files")
 
-    parser.add_argument("-w", "--window",
+    parser.add_argument("-w", "--window-mode",
                         action="store_true",
                         help="window mode")
 
@@ -166,30 +176,36 @@ letter arguments run single commands""",
     import expyriment as xpy
 
     # options
-    if args['develop']:
+    if args['develop-mode']:
         xpy.control.set_develop_mode(True)
     if args['intensive_logging']:
         print("* Intensive logging")
         xpy.control.defaults.event_logging = 2
-    if args['fast']:
+    if args['fast-mode']:
         print("* Fast mode")
         xpy.control.defaults.initialize_delay = 0
         xpy.control.defaults.fast_quit = False
-    if args['window']:
+    if args['window-mode']:
         print("* Window mode")
         xpy.control.defaults.window_mode = True
-    if args['no_opengl']:
-        print("* No OpenGL (no vsync / no blocking)")
-        xpy.control.defaults.open_gl = False
-    if args['no_blocking']:
-        print("* OpenGL (vsync / no blocking)")
-        xpy.control.defaults.open_gl = 1
-    if args['blocking']:
-        print("* OpenGL (vsync / blocking)")
-        xpy.control.defaults.open_gl = 2
-    if args['alternative_blocking']:
-        print("* OpenGL (vsync / alternative blocking)")
-        xpy.control.defaults.open_gl = 3
+
+    for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
+        if x in args:
+            raise DeprecationWarning(
+                "'{0}' is deprecated! Please use 'opengl'. " +\
+                "See '-h' or '--help' for more information".format())
+
+    if args['opengl']:
+        mode = args['opengl']
+        if mode == 0:
+            xpy.control.defaults.opengl = 0
+            print("* No OpenGL (no vsync / no blocking)")
+        elif mode == 1:
+            xpy.control.defaults.opengl = 1
+            print("* OpenGL (vsync / no blocking)")
+        elif mode == 2:
+            xpy.control.defaults.opengl = 2
+            print("* OpenGL (vsync / blocking")
     if args['no_time_stamps']:
         print("* No time stamps")
         xpy.io.defaults.outputfile_time_stamp = False

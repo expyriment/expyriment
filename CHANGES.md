@@ -31,7 +31,8 @@ Changed:
 - Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
 - Always use maximal display resolution by default for fullscreen mode (unless
   overwritten by control.defaults.display_resolution)
-- open_gl mode "3" has been removed: open_gl mode "2" (default) now does what
+- ``expyriment.control.defaults.openg_gl`` is now called ``expyriment.control.defaults.opengl``
+- OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
 - updated cli options
 

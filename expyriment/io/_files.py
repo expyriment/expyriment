@@ -637,18 +637,18 @@ class EventFile(OutputFile):
         try:
             display = repr(_internals.active_exp.screen.window_size)
             window_mode = repr(_internals.active_exp.screen.window_mode)
-            open_gl = repr(_internals.active_exp.screen.open_gl)
+            opengl = repr(_internals.active_exp.screen.opengl)
         except Exception:
             display = "unknown"
             window_mode = "unknown"
-            open_gl = "unknown"
+            opengl = "unknown"
 
         self.write_comment("sha1: {0}".format(
                                     get_experiment_secure_hash()))
         self.write_comment("modules: {0}".format(
                             module_hashes_as_string()))
-        self.write_comment("display: size={0}, window_mode={1}, open_gl={2}".format(
-            display, window_mode, open_gl))
+        self.write_comment("display: size={0}, window_mode={1}, opengl={2}".format(
+            display, window_mode, opengl))
         self.write_comment("os: {0}".format(uname()))
 
         self.write_line("Time,Type,Event,Value,Detail,Detail2")
