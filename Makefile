@@ -33,7 +33,6 @@ documentation/Expyriment.pdf:
 
 clean:
 	@make --directory=documentation/sphinx clean
-	@make --directory=documentation/api clean
 	@rm -rf build \
 			dist \
 			expyriment.egg-info \
