@@ -102,19 +102,6 @@ letter arguments run single commands""",
                         help="DEPRECATED: OpenGL (vsync / alternative blocking)")
     # END DEPRECATED
 
-    parser.add_argument("--display", metavar="INDEX", type=int,
-                        help="show the screen on specific display (multi-monitor setting)")
-    parser.add_argument("--display-resolution", metavar="WIDTHxHEIGHT",
-                        help="set the display resolution (only in fullscreen mode)")
-    parser.add_argument("--opengl", metavar="MODE", type=int,
-                        help="set the OpenGL mode: "\
-                        "0 = No OpenGL (no vsync / no blocking), " +\
-                        "1 = OpenGL (vsync / no blocking), "\
-                        "2 = OpenGL (vsync / blocking)"
-
-    parser.add_argument("--window_size", metavar="WIDTHxHEIGHT",
-                        help="set the window size (only in window mode)")
-
     parser.add_argument("-a", "--auto-subject-id",
                         action="store_true",
                         help="auto create subject ID")
@@ -138,6 +125,21 @@ letter arguments run single commands""",
     parser.add_argument("-w", "--window-mode",
                         action="store_true",
                         help="window mode")
+
+    parser.add_argument("--display", metavar="INDEX", type=int,
+                        help="show the screen on specific display (multi-monitor setting)")
+
+    parser.add_argument("--display-resolution", metavar="WIDTHxHEIGHT",
+                        help="set the display resolution (only in fullscreen mode)")
+
+    parser.add_argument("--opengl", metavar="MODE", type=int,
+                        help="set the OpenGL mode: "\
+                        "0 = No OpenGL (no vsync / no blocking), " +\
+                        "1 = OpenGL (vsync / no blocking), "\
+                        "2 = OpenGL (vsync / blocking)")
+
+    parser.add_argument("--window-size", metavar="WIDTHxHEIGHT",
+                        help="set the window size (only in window mode)")
 
     parser.add_argument("-A", "--Api",
                         action="store_true",
@@ -167,7 +169,7 @@ letter arguments run single commands""",
                         action="store_true",
                         help="print system information")
 
-    parser.add_argument("-T", "--Testsuite",
+    parser.add_argument("-T", "--Test-suite",
                         action="store_true",
                         help="run the Expyriment test suite")
 
@@ -176,26 +178,29 @@ letter arguments run single commands""",
     import expyriment as xpy
 
     # options
-    if args['develop-mode']:
+    if args['develop_mode']:
         xpy.control.set_develop_mode(True)
+
     if args['intensive_logging']:
         print("* Intensive logging")
         xpy.control.defaults.event_logging = 2
-    if args['fast-mode']:
+
+    if args['fast_mode']:
         print("* Fast mode")
         xpy.control.defaults.initialize_delay = 0
         xpy.control.defaults.fast_quit = False
-    if args['window-mode']:
+
+    if args['window_mode']:
         print("* Window mode")
         xpy.control.defaults.window_mode = True
 
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
-        if x in args:
+        if args[x] is True:
             raise DeprecationWarning(
                 "'{0}' is deprecated! Please use 'opengl'. " +\
-                "See '-h' or '--help' for more information".format())
+                "See '-h' or '--help' for more information".format(x))
 
-    if args['opengl']:
+    if args['opengl'] is not None:
         mode = args['opengl']
         if mode == 0:
             xpy.control.defaults.opengl = 0
@@ -206,30 +211,50 @@ letter arguments run single commands""",
         elif mode == 2:
             xpy.control.defaults.opengl = 2
             print("* OpenGL (vsync / blocking")
+
     if args['no_time_stamps']:
         print("* No time stamps")
         xpy.io.defaults.outputfile_time_stamp = False
+
     if args['auto_subject_id']:
         print("* Auto create subject id")
         xpy.control.defaults.auto_create_subject_id = True
-    if args["display"]>=0:
-        print("* Using display #{}".format(args["display"]))
+
+    if args["display"] is not None and args["display"] >= 0:
+        print("* Using display #{0}".format(args["display"]))
         xpy.control.defaults.display = args["display"]
+
+    if args["display_resolution"] is not None:
+        res = [int(x) for x in args["display_resolution"].split("x")]
+        xpy.control.defaults.display_resolution = res
+        print("* Setting display resolution to {0}".format(
+            args["display_resolution"]))
+
+    if args["window_size"] is not None:
+        res = [int(x) for x in args["window_size"].split("x")]
+        xpy.control.defaults.display_resolution = res
+        print("* Setting window size to {0}".format(
+            args["window_size"]))
 
     # commands
     if args["System_info"]:
         print("System info")
         print(xpy.misc.get_system_info(as_string=True))
-    elif args["Testsuite"]:
+
+    elif args["Test_suite"]:
         print("Run test suite")
         xpy.control.run_test_suite()
+
     elif args["Browser_api"]:
         xpy.show_documentation(1)
+
     elif args["Api"]:
         print("Start API reference tool")
         xpy.show_documentation(2)
+
     elif args["Create_exp"]:
         create_template()
+
     elif args["Download_stash"]:
         print("Download from stash")
         what = ""
@@ -255,6 +280,7 @@ letter arguments run single commands""",
                 else:
                     branch = branches[1]
         xpy.misc.download_from_stash(what, branch)
+
     elif args["Join_data"]:
         d = join_data()
         output = ""
@@ -262,6 +288,7 @@ letter arguments run single commands""",
             sys.stdout.write(" name of output csv file? ")
             output = input()
         d.write_concatenated_data(output)
+
     elif args["Interactive"]:
         print("Interactive session")
         print("")
