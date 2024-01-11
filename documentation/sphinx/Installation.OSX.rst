@@ -15,7 +15,7 @@ not alter the Python environment provided by Apple.
 Default installation (online)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-1. Install `Python 3.10.9`_
+1. Install `Python 3.12.1`_
 
 2. In a terminal, run::
 
@@ -31,7 +31,7 @@ Alternative installation (offline)
 
 1. On the Desktop, create a directory called ``Expyriment_Installation``
 
-2. Download `Python 3.10.9`_ to  ``Expyriment_Installation``
+2. Download `Python 3.12.1`_ to  ``Expyriment_Installation``
 
 3. In a terminal, run::
 
@@ -48,7 +48,7 @@ Alternative installation (offline)
 
 1. Copy the directory ``Expyriment_Installation`` from the portable storage device to the Desktop
 
-2. Install ``Expyriment_Installation/python-3.10.9-macos11.pkg``
+2. Install ``Expyriment_Installation/python-3.12.1-macos11.pkg``
 
 3. In a command prompt, run::
 
@@ -89,5 +89,5 @@ Notes
     line when testing participants.
 
 
-.. _Python 3.10.9: https://www.python.org/ftp/python/3.10.9/python-3.10.9-macos11.pkg
+.. _Python 3.12.1: https://www.python.org/ftp/python/3.12.1/python-3.12.1-macos11.pkg
 .. _ffmpeg: https://evermeet.cx/ffmpeg/ffmpeg-5.1.zip
