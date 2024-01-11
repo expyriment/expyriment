@@ -17,7 +17,7 @@ Changed:
 - package building with flit and pyproject.toml
 - removed: revision number and build data (`__revision__`, `__date__`)
 - Python 2 support has been removed
-  Expyriment now only works with Python 3.5 or higher
+  Expyriment now only works with Python 3.8 or higher
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - pause_key has been removed
 - test suite: improved audio test
