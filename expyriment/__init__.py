@@ -35,13 +35,13 @@ __version__ = '0.11.dev1'
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1] < 6:
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 8:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.6+. Note, the last major "
+                      "\n\n  Please use Python 3.8+. Note, the last major "
                       "release compatible with Python 2.7\n"
                       "  is Expyriment 0.10.")
 
@@ -50,16 +50,16 @@ try:
     os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
     import pygame as _pygame
-    if _pygame.vernum < (1, 9, 1) or _pygame.vernum >= (3, 0, 0):
+    if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
                           _pygame.vernum[0], _pygame.vernum[1],
                           _pygame.vernum[2]) +
-                      "\nPlease install Pygame(>=1.9,<3)).")
+                      "\nPlease install Pygame(>=2.5.2,<3)).")
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
                       "needs the package 'Pygame')." +
-                      "\nPlease install Pygame(>=1.9,<3).")
+                      "\nPlease install Pygame(>=2.5.2,<3).")
 
 try:
     import logging
@@ -68,19 +68,19 @@ try:
     logging.getLogger('OpenGL.acceleratesupport').setLevel(logging.ERROR)
 
     import OpenGL as _OpenGL
-    if not int(_OpenGL.version.__version__[0]) == 3:
+    if not int(_OpenGL.version.__version__[0]) == 3 and float(_OpenGL.version.__version__[2:]) < 1.7:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
                         int(_OpenGL.version.__version__[2]),
                         int(_OpenGL.version.__version__[4]),
                           ) +
-                      "\nPlease install PyOpenGL(>=3,<4).")
+                      "\nPlease install PyOpenGL(>=3,<3.1.7).")
 except ImportError:
     print("No OpenGL support!" +
                     "\nExpyriment {0} ".format(__version__) +
                       "needs the package 'PyOpenGL'."
-                      "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
+                      "\nPlease install PyOpenGL(>=3,<3.1.7) for OpenGL functionality.")
 
 
 from ._internals import get_version, import_all_extras
