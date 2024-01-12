@@ -7,11 +7,9 @@
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
 
-build:
-	flit build
 
-install:
-	flit install
+release:
+	flit build
 
 testpypi:
 	flit --repository testpypi publish
