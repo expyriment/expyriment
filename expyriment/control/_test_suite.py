@@ -681,8 +681,8 @@ def run_test_suite(item=None):
             delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_to_do"],
                                results["testsuite_visual_timing_actual"])]
             results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
-            results["testsuite_visual_opengl"] = exp.screen.open_gl
-            if ogl is not None and exp.screen.open_gl:
+            results["testsuite_visual_opengl"] = exp.screen.opengl
+            if ogl is not None and exp.screen.opengl:
                 results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
                 results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
                 results["testsuite_visual_opengl_version"] = ogl.glGetString(ogl.GL_VERSION)

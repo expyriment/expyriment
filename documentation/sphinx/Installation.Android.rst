@@ -51,7 +51,7 @@ Notes
 **OpenGL not supported**
 Currently, OpenGL mode is not supported on Android. This will affect the timing
 of visual stimuli as blocking on the vertical retrace is not possible (see also
-`Timing`_). To run a script without OpenGL mode, ``expyriment.control.defaults.open_gl`` needs to be set to ``0``.
+`Timing`_). To run a script without OpenGL mode, ``expyriment.control.defaults.opengl`` needs to be set to ``0``.
 
 **Extras not supported**
 Currently, extras are not supported on Android. This also means that the plugin

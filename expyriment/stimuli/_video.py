@@ -295,7 +295,7 @@ class Video(_visual.Stimulus):
                 from mediadecoder.decoder import Decoder
                 self._file = Decoder(mediafile=self._filename,
                                      videorenderfunc=self._update_surface)
-                if _internals.active_exp._screen.open_gl:
+                if _internals.active_exp._screen.opengl:
                     import moviepy.video.fx.all as vfx
                     self._file.clip = vfx.mirror_y(self._file.clip)
                 if self._file.audioformat:
@@ -497,7 +497,7 @@ class Video(_visual.Stimulus):
             return
         start = Clock.monotonic_time()
         self._surface_locked = True
-        if not _internals.active_exp._screen.open_gl:
+        if not _internals.active_exp._screen.opengl:
             _internals.active_exp._screen.surface.blit(
                 pygame.surfarray.make_surface(self._surface.swapaxes(0,1)),
                 self._pos)

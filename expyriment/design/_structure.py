@@ -494,7 +494,7 @@ class Experiment(object):
         - 2 intensive logging; logs much more; please use this only for
           debugging proposes
 
-        In most cases, it should be avoided to switch of logging (loglevel=0).
+        In most cases, it should be avoided to switch off logging (loglevel=0).
         If log files become to big due to certain repetitive events, it is
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)

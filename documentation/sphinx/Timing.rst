@@ -25,8 +25,8 @@ update occurs immediately, leading to parts of both, the new and the old screen
 content, being visible. What is even worse is that you will never know in which 
 phase of the redrawing the new redraw was started. Thus, you cannot be sure 
 when exactly the new content is fully visible on screen. This should be the
-behaviour of Expyriment, when OpenGL is switched off
-(``control.defaults.open_gl=0``; see :doc:`Defaults`)
+behaviour of Expyriment, when OpenGL is not used
+(``control.defaults.opengl=0``; see :doc:`Defaults`)
 
 The first step towards getting around this problem is to synchronize the actual 
 redraw to the vertical retrace of the screen. This means that a change in 
@@ -34,13 +34,13 @@ content will never happen immediately, but always only when the retrace is at
 the top left position. When synchronizing to the vertical retrace, the graphic 
 card is told to update the screen the next time it starts redrawing the first 
 line. This should be the behaviour of Expyriment, when OpenGL is switched on
-and set to "vsync / no blocking" (``control.defaults.open_gl=1``; see :doc:`Defaults`).
+and set to "vsync / no blocking" (``control.defaults.opengl=1``; see :doc:`Defaults`).
 While this will solve the problem of artifacts, you will still face the
 problem of not knowing when exactly something was visible on the screen, since
 the graphic card handles this synchronization itself in the background.
 
 Solving this problem is the exact (and only) reason why Expyriment will use
-OpenGL set to "vsync / blocking" (``control.defaults.open_gl=2``; see :doc:`Defaults`) by default.
+OpenGL set to "vsync / blocking" (``control.defaults.opengl=2``; see :doc:`Defaults`) by default.
 It allows to wait for the vertical retrace to actually happen before
 proceeding with the code that tells the graphics card to update the screen
 (this is also known as blocking on the vertical retrace). This means that
@@ -65,15 +65,15 @@ fullscreen mode. Presentation times will not be accurate in window mode!*
 stimulus presentations are still physically delayed by one or two frames (i.e.
 the display draws them later than it reports). These cases entail the presence
 of an additional invisible in-between buffer, either at the level of the
-operating system (e.g.  a "compositing" window manager) or at the level of the
-display driver (e.g.  "intelligent" gaming displays). While these delays are
+operating system (e.g. a "compositing" window manager) or at the level of the
+display driver (e.g. "intelligent" gaming displays). While these delays are
 NOT captured by the visual test in the test suite and have to be measured
 externally, they should at least be stable across different visual stimulus
 presentations and should hence not introduce any differences between
 experimental conditions.*
 
 *When using high-DPI displays, Expyriment will attempt to use the full native
-resulution for fullscreen mode with OpenGL (if the nativive resolution is not
+resolution for fullscreen mode with OpenGL (if the nativive resolution is not
 guessed correctly, it can be manually overwritten by setting 
 ``control.defaults.display_resolution``. In all other cases (i.e. no OpenGL
 and/or window mode) Expyriment might return a screen with a scaled resolution,
@@ -91,7 +91,7 @@ After each screen presentation, a marker was send via the serial port to the
 oscilloscope. Testing was done on an Intel Core Duo PC with an Nvidia Quadro 
 NVS 290 graphics card, running Microsoft Windows XP SP3. The monitor used was a 
 Samsung SyncMaster 2233. Expyriment was running in the default OpenGL mode
-(``control.defaults.open_gl=2``; see :doc:`Defaults`).
+(``control.defaults.opengl=2``; see :doc:`Defaults`).
 
 The results revealed:
 

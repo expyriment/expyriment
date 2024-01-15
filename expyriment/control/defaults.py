@@ -32,7 +32,7 @@ Default settings for the control package. ::
 
     event_logging : int or bool
         O/False = no event logging
-        1       = normal event logging (logging of all input & output events)
+        1/True  = normal event logging (logging of all input & output events)
         2       = intensive logging; logs much more; use only for debugging
                   purposes
 
@@ -63,10 +63,10 @@ Default settings for the control package. ::
         Python needs about 10 seconds to start up properly. Before that,
         timing accuracy can be worse.
 
-    open_gl : int or bool
+    opengl : int or bool
         0/False = no OpenGL (no vsync / no blocking)
         1       = OpenGL (vsync / no blocking)
-        2       = OpenGL (vsync / blocking)
+        2/True  = OpenGL (vsync / blocking)
 
         NOTES
         =====
@@ -155,7 +155,7 @@ quit_key = _constants.K_ESCAPE
 
 display = 0
 display_resolution = None
-open_gl = 2
+opengl = 2
 window_mode = False
 window_size = (800, 600)
 window_no_frame = False

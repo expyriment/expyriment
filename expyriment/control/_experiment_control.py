@@ -433,8 +433,13 @@ fullscreen.""")
         mixer.init()  # Needed on some systems
 
     experiment._clock = misc.Clock()
+    if hasattr(defaults, "open_gl"):
+        raise DeprecationWarning("'expyriment.control.defaults.open_gl' is " +\
+                                 "deprecated! Please use " + \
+                                 "'expyriment.control.defaults.opengl'.")
+        defaults.opengl = defaults.open_gl
     experiment._screen = Screen(colour=(0, 0, 0),
-                                open_gl=defaults.open_gl,
+                                opengl=defaults.opengl,
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size,
                                 no_frame=defaults.window_no_frame,
