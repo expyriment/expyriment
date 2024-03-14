@@ -34,7 +34,7 @@ jobs:
           echo "**For installation instructions, please see https://docs.expyriment.org/Installation.html!**\n\n" > release_message.md
           awk '/Version ${{ steps.release_info.outputs.version }}/{flag=1;print;next}/Version/{flag=0}flag' CHANGES.md >> release_message.md
       - name: Make GitHub release
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           name: ${{ steps.release_info.outputs.name }}
           bodyFile: "release_message.md"
