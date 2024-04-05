@@ -3,15 +3,9 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'  # TODO: Test if this doesn't trigger with dev releases as well!
 jobs:
-  build-and-deploy-dev:
-    name: Build and deploy a development release
+  build:
+    name: Build a final release
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://test.pypi.org/p/expyriment  # TODO: Change to PyPi after testing!
-    permissions:
-      id-token: write
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,21 +17,27 @@ jobs:
           pip install flit
       - name: Build
         run: |
-          make build
-      - name: Get release info
-        run: | 
-          echo "version=${GITHUB_REF_NAME:1}" >> $GITHUB_OUTPUT
-          echo "name=Expyriment ${GITHUB_REF_NAME:1}" >> $GITHUB_OUTPUT
-        id: release_info
-      - name: Create release message  # TODO: Have same formatting as current release messages!
-        run: |
-          echo "**For installation instructions, please see https://docs.expyriment.org/Installation.html!**\n\n" > release_message.md
-          awk '/Version ${{ steps.release_info.outputs.version }}/{flag=1;print;next}/Version/{flag=0}flag' CHANGES.md >> release_message.md
-      - name: Make GitHub release
-        uses: ncipollo/release-action@v1
+          flit build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.release_info.outputs.name }}
-          bodyFile: "release_message.md"
-      - name: Publish to PyPI
+          name: python-package-distributions
+          path: dist/
+  deploy:
+    name: Deploy release to PyPi
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/expyriment
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-      
