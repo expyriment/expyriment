@@ -3,14 +3,9 @@ on:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+.dev[0-9]+'
 jobs:
-  build-and-deploy-dev:
-    name: Build and deploy a development release
+  build:
+    name: Build a development release
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://test.pypi.org/p/expyriment
-    permissions:
-      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,5 +18,28 @@ jobs:
       - name: Build
         run: |
           flit build
-      - name: Publish to PyPI
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+  deploy:
+    name: Deploy release to Test PyPi
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/expyriment
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
