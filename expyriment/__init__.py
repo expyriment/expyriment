@@ -81,11 +81,11 @@ try:
 
     # Try patching PyOpenGL <= 3.1.7 for Python >= 3.12:
     # https://github.com/mcfletch/pyopengl/pull/100 
-    if True:
+    try:
       if pyopengl_version <= (3, 1, 7) and _sys.version_info >= (3, 12):
           _OpenGL.FormatHandler.by_name("ctypesparameter").check.append(
               "_ctypes.CArgObject")
-    else:#except Exception:
+    except Exception:
       pass
 
 except ImportError:
