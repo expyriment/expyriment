@@ -85,7 +85,7 @@ try:
       if pyopengl_version <= (3, 1, 7) and sys.version_info >= (3, 12):
           _OpenGL.FormatHandler.by_name("ctypesparameter").check.append(
               "_ctypes.CArgObject")
-    except Error:
+    except Exception:
       pass
       
 except ImportError:
