@@ -70,7 +70,7 @@ try:
     import OpenGL as _OpenGL
     pyopengl_version = tuple(map(int, (OpenGL.__version__.split("."))))
   
-    if not pyopengl_version[0] == 3 and pyopengl_version[1:] <= 1.7:
+    if not pyopengl_version[0] == 3 and pyopengl_version[1:] <= (1, 7):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
@@ -82,7 +82,7 @@ try:
     # Try patching PyOpenGL <= 3.1.7 for Python >= 3.12:
     # https://github.com/mcfletch/pyopengl/pull/100 
     try:
-      if pyopengl_version <= (3.1.7) and sys.version_info >= (3, 12):
+      if pyopengl_version <= (3, 1, 7) and sys.version_info >= (3, 12):
           _OpenGL.FormatHandler.by_name("ctypesparameter").check.append(
               "_ctypes.CArgObject")
     except Error:
