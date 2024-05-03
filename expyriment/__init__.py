@@ -68,7 +68,7 @@ try:
     logging.getLogger('OpenGL.acceleratesupport').setLevel(logging.ERROR)
 
     import OpenGL as _OpenGL
-    pyopengl_version = tuple(map(int, (OpenGL.__version__.split("."))))
+    pyopengl_version = tuple(map(int, (_OpenGL.__version__.split("."))))
   
     if not pyopengl_version[0] == 3 and pyopengl_version[1:] <= (1, 7):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
