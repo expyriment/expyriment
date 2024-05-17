@@ -6,7 +6,6 @@
 
 html_documentation: documentation/html
 pdf_documentation: documentation/Expyriment.pdf
-api_ref_html: documentation/api_ref_html
 
 build:
 	flit build
@@ -31,13 +30,9 @@ documentation/Expyriment.pdf:
 	make --directory=documentation/sphinx rst latexpdf
 	mv documentation/sphinx/_build/latex/Expyriment.pdf documentation/
 
-documentation/api_ref_html:
-	make --directory=documentation/api html
-	mv documentation/api/_build documentation/api_ref_html
 
 clean:
 	@make --directory=documentation/sphinx clean
-	@make --directory=documentation/api clean
 	@rm -rf build \
 			dist \
 			expyriment.egg-info \

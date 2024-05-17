@@ -1,0 +1,43 @@
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'  # TODO: Test if this doesn't trigger with dev releases as well!
+jobs:
+  build:
+    name: Build a final release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install flit
+      - name: Build
+        run: |
+          flit build
+      - name: Store the distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+  deploy:
+    name: Deploy release to PyPi
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/expyriment
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dists
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+      - name: Publish to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
