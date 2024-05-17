@@ -518,7 +518,7 @@ class Visual(Stimulus):
             rtn._is_compressed = False
             rtn._compression_filename = None
         if is_preloaded:
-            if _internals.active_exp.screen.open_gl:
+            if _internals.active_exp.screen.opengl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
@@ -1064,7 +1064,7 @@ class Visual(Stimulus):
             raise RuntimeError(message)
         self._was_compressed_before_preload = self.is_compressed
         if not self.is_preloaded:
-            if _internals.active_exp.screen.open_gl:
+            if _internals.active_exp.screen.opengl:
                 self._ogl_screen = _LaminaPanelSurface(
                     self._get_surface(),
                     position=self.position)
@@ -1111,7 +1111,7 @@ class Visual(Stimulus):
         """
 
         start = get_time()
-        if _internals.active_exp.screen.open_gl:
+        if _internals.active_exp.screen.opengl:
             self._ogl_screen = None
             if self.is_preloaded and not self._was_compressed_before_preload \
                 and keep_surface:
@@ -1180,7 +1180,7 @@ class Visual(Stimulus):
             keep_surface = self.has_surface
             self.preload(inhibit_ogl_compress=True)
 
-        if _internals.active_exp.screen.open_gl:
+        if _internals.active_exp.screen.opengl:
             self._ogl_screen.display()
         else:
             screen = _internals.active_exp.screen.surface

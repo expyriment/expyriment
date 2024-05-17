@@ -33,7 +33,7 @@ class Screen(Output):
 
     """
 
-    def __init__(self, colour, open_gl, window_mode, window_size, no_frame,
+    def __init__(self, colour, opengl, window_mode, window_size, no_frame,
                  display, display_resolution):
         """Create and set up a screen output.
 
@@ -45,7 +45,7 @@ class Screen(Output):
         ----------
         colour : (int, int, int)
             colour of the screen
-        open_gl : int or bool
+        opengl : int or bool
             0/False - No OpenGL (no vsync / no blocking)
             1       - OpenGL (vsync / no blocking)
             2/True  - OpenGL (vsync / blocking)
@@ -66,17 +66,17 @@ class Screen(Output):
 
         Output.__init__(self)
         self._colour = colour
-        if open_gl == False:
-            open_gl = 0
-        elif open_gl == True:
-            open_gl = 2
-        elif open_gl > 2:
+        if opengl == False:
+            opengl = 0
+        elif opengl == True:
+            opengl = 2
+        elif opengl > 2:
             warn_message = "OpenGL mode '{0}' does not exist. \
-                OpenGL will be set to '2' (default)".format(open_gl)
+                OpenGL will be set to '2' (default)".format(opengl)
             print("Warning: " + warn_message)
             _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
-            open_gl = 2
-        self._open_gl = open_gl
+            opengl = 2
+        self._opengl = opengl
         self._fullscreen = not window_mode
         self._window_size = window_size
         self._no_frame = no_frame
@@ -87,7 +87,7 @@ class Screen(Output):
 OpenGL will be deactivated!"
             print("Warning: " + warn_message)
             _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
-            self._open_gl = False
+            self._opengl = False
 
         pygame.display.init()
         if _internals.active_exp.is_initialized:
@@ -109,7 +109,7 @@ OpenGL will be deactivated!"
         icon = pygame.transform.smoothscale(icon, (32, 32))
         pygame.display.set_icon(icon)
 
-        if not self._open_gl:
+        if not self._opengl:
             if self._fullscreen:
                 self._surface = pygame.display.set_mode(
                     self._display_resolution, pygame.FULLSCREEN,
@@ -179,10 +179,10 @@ machine!")
         return self._display
 
     @property
-    def open_gl(self):
-        """Getter for open_gl."""
+    def opengl(self):
+        """Getter for opengl."""
 
-        return self._open_gl
+        return self._opengl
 
     @property
     def no_frame(self):
@@ -227,7 +227,7 @@ machine!")
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._open_gl >= 2:
+        if self._opengl >= 2:
             ogl.glBegin(ogl.GL_POINTS)
             ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!
             ogl.glVertex2i(0, 0)
@@ -255,7 +255,7 @@ machine!")
         except Exception:
             stimuli = [stimuli]
 
-        if not self._open_gl:
+        if not self._opengl:
             rectangles = []
             for stim in stimuli:
                 pos = stim.absolute_position
@@ -316,7 +316,7 @@ machine!")
 
         """
 
-        if self._open_gl:
+        if self._opengl:
             ogl.glClearColor(float(self._colour[0]) / 255,
                              float(self._colour[1]) / 255,
                              float(self._colour[2]) / 255, 0)
@@ -337,7 +337,7 @@ machine!")
 
         """
 
-        if self._open_gl:
+        if self._opengl:
             size = self._surface.get_size()
             ogl.glReadBuffer(ogl.GL_FRONT)
             buffer = ogl.glReadPixels(0, 0, size[0], size[1], ogl.GL_RGB,

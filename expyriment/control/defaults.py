@@ -63,7 +63,7 @@ Default settings for the control package. ::
         Python needs about 10 seconds to start up properly. Before that,
         timing accuracy can be worse.
 
-    open_gl : int or bool
+    opengl : int or bool
         0/False = no OpenGL (no vsync / no blocking)
         1       = OpenGL (vsync / no blocking)
         2       = OpenGL (vsync / blocking)
@@ -155,7 +155,7 @@ quit_key = _constants.K_ESCAPE
 
 display = 0
 display_resolution = None
-open_gl = 2
+opengl = 2
 window_mode = False
 window_size = (800, 600)
 window_no_frame = False

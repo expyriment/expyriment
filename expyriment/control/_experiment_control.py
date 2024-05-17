@@ -434,7 +434,7 @@ fullscreen.""")
 
     experiment._clock = misc.Clock()
     experiment._screen = Screen(colour=(0, 0, 0),
-                                open_gl=defaults.open_gl,
+                                opengl=defaults.opengl,
                                 window_mode=defaults.window_mode,
                                 window_size=defaults.window_size,
                                 no_frame=defaults.window_no_frame,
