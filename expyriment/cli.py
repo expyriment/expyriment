@@ -264,8 +264,8 @@ letter arguments run single commands""",
             if what == "":
                 what = "all"
         branches = ["master"]
-        if __version__ != "":
-            branches.append(__version__)
+        if xpy.__version__ != "":
+            branches.append(xpy.__version__)
         branch = ""
         while branch not in branches:
             if len(branches) == 1:
