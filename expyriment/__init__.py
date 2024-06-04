@@ -70,14 +70,14 @@ try:
     import OpenGL as _OpenGL
     pyopengl_version = tuple(map(int, (_OpenGL.__version__.split("."))))
 
-    if not pyopengl_version[0] == 3 and pyopengl_version[1:] <= (1, 7):
+    if not pyopengl_version[0] == 3:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
                         int(_OpenGL.version.__version__[2]),
                         int(_OpenGL.version.__version__[4]),
                           ) +
-                      "\nPlease install PyOpenGL(>=3,<3.1.7).")
+                      "\nPlease install PyOpenGL(>=3,<4).")
 
     # Try patching PyOpenGL <= 3.1.7 for Python >= 3.12:
     # https://github.com/mcfletch/pyopengl/pull/100 
@@ -92,7 +92,7 @@ except ImportError:
     print("No OpenGL support!" +
                     "\nExpyriment {0} ".format(__version__) +
                       "needs the package 'PyOpenGL'."
-                      "\nPlease install PyOpenGL(>=3,<3.1.7) for OpenGL functionality.")
+                      "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
 
 
 from ._internals import get_version, import_all_extras
