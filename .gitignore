@@ -58,13 +58,6 @@ test_suite_protocol.xpp
 data/
 events/
 _build/
-documentation/html/
-documentation/Expyriment.pdf
-documentation/api_ref_html/
-documentation/sphinx/expyriment*.rst
-documentation/sphinx/expyriment
-documentation/sphinx/Changelog.rst
-documentation/sphinx/sitemap.yml
 
 # test scripts
 test-*
