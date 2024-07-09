@@ -127,11 +127,12 @@ OpenGL will be deactivated!"
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
 
-            if platform.system() == "Windows":
-                user32 = ctypes.windll.user32
-                user32.SetProcessDPIAware()
-
             if self._fullscreen:
+
+                if platform.system() == "Windows":
+                    user32 = ctypes.windll.user32
+                    user32.SetProcessDPIAware()
+
                 self._surface = pygame.display.set_mode(
                     self._display_resolution, pygame_mode | pygame.FULLSCREEN,
                     display=self._display, vsync=1)
