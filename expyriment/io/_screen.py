@@ -89,7 +89,13 @@ OpenGL will be deactivated!"
             _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
             self._opengl = False
 
+        # Set HiDPI mode on Windows (if SDL environment variable is not set)
+        if platform.system() == "Windows":
+            if not "SDL_WINDOWS_DPI_AWARENESS" in os.environ:
+                os.environ["SDL_WINDOWS_DPI_AWARENESS"] = "permonitorv2"
+
         pygame.display.init()
+
         if _internals.active_exp.is_initialized:
             self._display_resolution = \
                         _internals.active_exp.screen.display_resolution
@@ -128,11 +134,6 @@ OpenGL will be deactivated!"
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
 
             if self._fullscreen:
-
-                if platform.system() == "Windows":
-                    user32 = ctypes.windll.user32
-                    user32.SetProcessDPIAware()
-
                 self._surface = pygame.display.set_mode(
                     self._display_resolution, pygame_mode | pygame.FULLSCREEN,
                     display=self._display, vsync=1)
