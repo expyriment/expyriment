@@ -480,7 +480,7 @@ fullscreen.""")
                             text_size= experiment.text_size,
                             text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
-                            position=(0, -5))
+                            position=(0, -20))
     canvas = stimuli.Canvas((600, 400), colour=(0, 0, 0))
     canvas2 = stimuli.Canvas((600, 400), colour=(0, 0, 0))
     logo.plot(canvas)
@@ -495,7 +495,7 @@ fullscreen.""")
             text_size= int(experiment.text_size * 0.7),
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),
-            position=(0, -50))
+            position=(0, -65))
         text2.plot(canvas)
     canvas.preload(True)
     canvas._set_surface(canvas._get_surface().convert())
