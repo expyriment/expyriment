@@ -208,6 +208,13 @@ After the test, you will be asked to indicate which (if any) of those two square
                 break
         response = respkeys[key]
 
+        # Scale fonts/logo according to default font size
+        scaling = exp.text_size / 20
+        if scaling < 1:
+            scaling = 1
+        if scaling > 2:
+            scaling = 2
+
         info = stimuli.TextScreen("Results", "")
         if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
@@ -218,12 +225,12 @@ After the test, you will be asked to indicate which (if any) of those two square
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
                         int(misc.round(refresh_rate)), misc.round(1000/refresh_rate, 2)),
-                    text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, text_colour=results1_colour, position=(0, 40))
+                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+                    text_justification=0, text_colour=results1_colour, position=(0, int(40 * scaling)))
         results2 = stimuli.TextScreen("",
                     "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
-                    text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, position=(0, 20))
+                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+                    text_justification=0, position=(0, int(20 * scaling)))
         if inaccuracy > 2:
             results3_colour = [255, 0, 0]
         elif inaccuracy in (1, 2):
@@ -232,8 +239,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             results3_colour = [0, 255, 0]
         results3 = stimuli.TextScreen("",
                     "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
-                    text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, text_colour=results3_colour, position=(0, -20))
+                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+                    text_justification=0, text_colour=results3_colour, position=(0, -int(20 * scaling)))
         if delayed > 10:
             results4_colour = [255, 0, 0]
         elif 10 > delayed > 1:
@@ -242,18 +249,18 @@ After the test, you will be asked to indicate which (if any) of those two square
             results4_colour = [0, 255, 0]
         results4 = stimuli.TextScreen("",
                     "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
-                    text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, text_colour=results4_colour, position=(0, -40))
+                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+                    text_justification=0, text_colour=results4_colour, position=(0, -int(40 * scaling)))
         results5 = stimuli.TextScreen("",
                     hist_str,
-                    text_font="freemono", text_size = 16, text_bold=True,
-                    text_justification=0, position=(0, -100))
+                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+                    text_justification=0, position=(0, -int(100 * scaling)))
         results1.plot(info)
         results2.plot(info)
         results3.plot(info)
         results4.plot(info)
         results5.plot(info)
-        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -160))
+        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -int(160 * scaling)))
         info2.plot(info)
         while True:
             info.present()
@@ -377,6 +384,13 @@ def _audio_playback(exp):
                 break
     buffer_sizes = [32, 64, 128, 256, 512, 1024, 2048, 4096]
 
+    # Scale fonts/logo according to default font size
+    scaling = exp.text_size / 20
+    if scaling < 1:
+        scaling = 1
+    if scaling > 2:
+        scaling = 2
+
     # Get samplerate, bitrate
     options = [f"{x[0]} Hz, {x[1] * -1} bit" for x in audio_formats]
     default = (control.defaults.audiosystem_sample_rate,
@@ -385,7 +399,8 @@ def _audio_playback(exp):
         index = audio_formats.index(default)
     else:
         index = 0
-    menu = io.TextMenu("Audio format", menu_items=options, width=350)
+    menu = io.TextMenu("Audio format", menu_items=options,
+                       text_size=int(20 * scaling), width=int(350 * scaling))
     audio_format = audio_formats[menu.get(index)]
 
     # Get buffer size
@@ -395,7 +410,8 @@ def _audio_playback(exp):
         index = buffer_sizes.index(default)
     else:
         index = 0
-    menu = io.TextMenu("Buffer size", menu_items=options, width=350)
+    menu = io.TextMenu("Buffer size", menu_items=options,
+                       text_size=int(20 * scaling), width=int(350 * scaling))
     buffer_size = buffer_sizes[menu.get(index)]
 
     settings = \
@@ -458,13 +474,19 @@ click center          --  Quit
             text_justification=0).present()
         exp.keyboard.wait()
 
+    # Scale fonts/logo according to default font size
+    scaling = exp.text_size / 20
+    if scaling < 1:
+        scaling = 1
+    if scaling > 2:
+        scaling = 2
 
     default_text = u"""The quick brown fox jumps over the lazy dog.
 ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ
 abcdefghijklmnopqrstuvwxyz äöü
 1234567890.:,;ßéèê(*!?')"""
     text = default_text
-    size = 14
+    size = int(14 * scaling)
     font_id = 0
     italic = False
     bold = False
@@ -640,14 +662,23 @@ def run_test_suite(item=None):
     test_functions.extend(['rtn = _write_protocol(exp, results)',
                             'go_on=False;rtn=[];'])
 
-    background = stimuli.Canvas(size=[400, 600])
-    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE, position=(0, 255))
-    pict.scale(0.35)
+    # Scale fonts/logo according to default font size
+    scaling = exp.text_size / 20
+    if scaling < 1:
+        scaling = 1
+    if scaling > 2:
+        scaling = 2
+
+    background = stimuli.Canvas(size=[800, int(600 * scaling)])
+    pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE,
+                           position=(0, int(220 * scaling)))
+    pict.scale(0.3 * scaling)
     pict.plot(background)
 
-    v = stimuli.TextLine("Version {0}".format(get_version()), text_size=10,
+    v = stimuli.TextLine("Version {0}".format(get_version()),
+                         text_size=int(10 * scaling),
                          text_colour=constants.C_EXPYRIMENT_PURPLE)
-    v.move((0, 205))
+    v.move((0, int(160 * scaling)))
     v.plot(background)
     results = get_system_info()
 
@@ -665,8 +696,8 @@ def run_test_suite(item=None):
             go_on = False
             select = item
         else:
-            select = io.TextMenu("Test suite", menu, width=350,
-                                 justification=0, text_size=18,
+            select = io.TextMenu("Test suite", menu, width=int(350 * scaling),
+                                 justification=0, text_size=int(20 * scaling),
                                  background_stimulus=background,
                                  mouse=mouse).get(preselected_item)
 

@@ -473,16 +473,18 @@ fullscreen.""")
         experiment._events = None
     experiment._keyboard = Keyboard()
     experiment._mouse = Mouse(show_cursor=False)
+    # Scale fonts/logo according to default font size
+    scaling = experiment.text_size / 20
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
-    logo.scale((0.7, 0.7))
+    logo.scale(0.6 * scaling)
     text = stimuli.TextLine("Version {0}".format(get_version()),
-                            text_size= experiment.text_size,
+                            text_size=int(20 * scaling),
                             text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
-                            position=(0, -20))
-    canvas = stimuli.Canvas((600, 400), colour=(0, 0, 0))
-    canvas2 = stimuli.Canvas((600, 400), colour=(0, 0, 0))
+                            position=(0, -int(25 * scaling ** 2.5)))
+    canvas = stimuli.Canvas((800, 600), colour=(0, 0, 0))
+    canvas2 = stimuli.Canvas((800, 600), colour=(0, 0, 0))
     logo.plot(canvas)
     text.plot(canvas)
     hash_ = misc.get_experiment_secure_hash()
@@ -492,10 +494,10 @@ fullscreen.""")
             txt += ", {0}".format(
                         misc.module_hashes_as_string())
         text2 = stimuli.TextLine(txt,
-            text_size= int(experiment.text_size * 0.7),
+            text_size=int(14 * scaling),
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
             background_colour=(0, 0, 0),
-            position=(0, -65))
+            position=(0, -int(75 * scaling ** 1.6)))
         text2.plot(canvas)
     canvas.preload(True)
     canvas._set_surface(canvas._get_surface().convert())

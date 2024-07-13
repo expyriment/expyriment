@@ -551,8 +551,17 @@ The Python package 'pySerial' is not installed."""
         else:
             import serial
 
-            idx = io.TextMenu("Select Serial Port", ports, width=200,
-                                         justification=1, scroll_menu=5).get()
+            # Scale fonts/logo according to default font size
+            scaling = exp.text_size / 20
+            if scaling < 1:
+                scaling = 1
+            if scaling > 2:
+                scaling = 2
+
+            idx = io.TextMenu("Select Serial Port", ports,
+                              width=int(200 * scaling),
+                              text_size=int(20 * scaling), justification=1,
+                              scroll_menu=5).get()
             comport = ports[idx]
 
             rates = [0, 50, 75, 110, 134, 150, 200, 300, 600, 1200, 1800, 2400,
@@ -560,19 +569,22 @@ The Python package 'pySerial' is not installed."""
                      500000, 576000, 921600, 1000000, 1152000, 1500000, 2000000,
                      2500000, 3000000, 3500000, 4000000]
             idx = io.TextMenu("Select Baudrate", [repr(x) for x in rates],
-                                         width=200, justification=1,
-                                         scroll_menu=2).get(preselected_item=14)
+                              width=int(200 * scaling),
+                              text_size=int(20 * scaling), justification=1,
+                              scroll_menu=2).get(preselected_item=14)
             baudrate = rates[idx]
 
             parities = ["N", "E", "O"]
-            idx = io.TextMenu("Select Parity", parities, width=200,
-                                         justification=1, scroll_menu=2).get(
-                                             preselected_item=0)
+            idx = io.TextMenu("Select Parity", parities,
+                              width=int(200 * scaling),
+                              text_size=int(20 * scaling), justification=1,
+                              scroll_menu=2).get(preselected_item=0)
             parity = parities[idx]
 
             stopbits = [0, 1, 1.5, 2]
             idx = io.TextMenu("Select Stopbits", [repr(x) for x in stopbits],
-                              width=200, justification=1,
+                              width=int(200 * scaling), justification=1,
+                              text_size=int(20 * scaling),
                               scroll_menu=2).get(preselected_item=1)
             stopbit = stopbits[idx]
 

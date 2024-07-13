@@ -138,6 +138,9 @@ letter arguments run single commands""",
                         "1 = OpenGL (vsync / no blocking), "\
                         "2 = OpenGL (vsync / blocking)")
 
+    parser.add_argument("--text-size", metavar="SIZE", type=int,
+                        help="set the default text size")
+
     parser.add_argument("--window-size", metavar="WIDTHxHEIGHT",
                         help="set the window size (only in window mode)")
 
@@ -188,7 +191,7 @@ letter arguments run single commands""",
     if args['fast_mode']:
         print("* Fast mode")
         xpy.control.defaults.initialize_delay = 0
-        xpy.control.defaults.fast_quit = False
+        xpy.control.defaults.fast_quit = True
 
     if args['window_mode']:
         print("* Window mode")
@@ -229,6 +232,9 @@ letter arguments run single commands""",
         xpy.control.defaults.display_resolution = res
         print("* Setting display resolution to {0}".format(
             args["display_resolution"]))
+
+    if args["text_size"] is not None:
+        xpy.design.defaults.experiment_text_size = args["text_size"]
 
     if args["window_size"] is not None:
         res = [int(x) for x in args["window_size"].split("x")]

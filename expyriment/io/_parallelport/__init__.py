@@ -524,13 +524,13 @@ class ParallelPort(Input, Output):
 
             pin_canvas = stimuli.Canvas((800, 600))
             poll = stimuli.TextLine("Poll", text_colour=[255, 255, 255],
-                                    position=[0, 165])
+                                    text_size=20, position=[0, 165])
             poll.plot(pin_canvas)
             poll_line = stimuli.Rectangle((660, 2), colour=[255, 255, 255],
                                           position=[0, 120])
             poll_line.plot(pin_canvas)
             control = stimuli.TextLine("Control", text_colour=[100, 100, 100],
-                                       position=[-260, 95])
+                                       text_size=20, position=[-260, 95])
             control.plot(pin_canvas)
             control_line = stimuli.Rectangle((140, 2), colour=[100, 100, 100],
                                              position=[-260, 50])
@@ -538,6 +538,7 @@ class ParallelPort(Input, Output):
             data = stimuli.TextLine(
                 "Data",
                 text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                text_size=20,
                 position=[-20, 95])
             data.plot(pin_canvas)
             data_line = stimuli.Rectangle(
@@ -548,6 +549,7 @@ class ParallelPort(Input, Output):
             status = stimuli.TextLine(
                 "Status",
                 text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
+                text_size=20,
                 position=[240, 95])
             status.plot(pin_canvas)
             status_line = stimuli.Rectangle(
@@ -575,7 +577,7 @@ class ParallelPort(Input, Output):
                     bg.plot(pin_canvas)
                     colour = _internals.active_exp._background_colour
                 stim = stimuli.TextLine(repr(pin), text_font="freemono",
-                                        text_colour=colour,
+                                        text_colour=colour, text_size=20,
                                         position=[x_pos, 0])
                 stim.plot(pin_canvas)
                 pins[pin] = stim
@@ -585,7 +587,7 @@ class ParallelPort(Input, Output):
                 x_pos += 40
 
             control2 = stimuli.TextLine("Control", text_colour=[100, 100, 100],
-                                        position=[-260, -95])
+                                        text_size=20, position=[-260, -95])
             control2.plot(pin_canvas)
             control2_line = stimuli.Rectangle((140, 2), colour=[100, 100, 100],
                                               position=[-260, -50])
@@ -594,6 +596,7 @@ class ParallelPort(Input, Output):
             data2 = stimuli.TextLine(
                 "Data",
                 text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
+                text_size=20,
                 position=[-20, -95])
             data2.plot(pin_canvas)
             data2_line = stimuli.Rectangle(
@@ -603,7 +606,7 @@ class ParallelPort(Input, Output):
             data2_line.plot(pin_canvas)
 
             send = stimuli.TextLine("Send", text_colour=[255, 255, 255],
-                                    position=[-100, -165])
+                                    text_size=20, position=[-100, -165])
             send.plot(pin_canvas)
             send_line = stimuli.Rectangle((460, 2), colour=[255, 255, 255],
                                           position=[-100, -120])
@@ -649,18 +652,21 @@ class ParallelPort(Input, Output):
                 rc = stimuli.TextLine(
                     "{0}".format(read_control),
                     text_colour=[0, 255, 0],
+                    text_size=20,
                     position=[-260, 0])
                 rc.plot(results_canvas)
 
                 rd = stimuli.TextLine(
                     "{0}".format(read_data),
                     text_colour=[0, 255, 0],
+                    text_size=20,
                     position=[-20, 0])
                 rd.plot(results_canvas)
 
                 rs = stimuli.TextLine(
                     "{0}".format(read_status),
                     text_colour=[0, 255, 0],
+                    text_size=20,
                     position=[240, 0])
                 rs.plot(results_canvas)
 
@@ -671,7 +677,7 @@ class ParallelPort(Input, Output):
 
                 pd = stimuli.TextLine(
                     "{0}".format(read_poll),
-                    text_colour=[0, 255, 0])
+                    text_colour=[0, 255, 0], text_size=20)
                 pd.plot(poll_canvas)
 
                 poll_canvas.present(clear=False, update=False)
@@ -694,12 +700,14 @@ class ParallelPort(Input, Output):
                 sc = stimuli.TextLine(
                     "{0}".format(c),
                     text_colour=[255, 0, 0],
+                    text_size=20,
                     position=[-260, 0])
                 sc.plot(results_canvas2)
 
                 sd = stimuli.TextLine(
                     "{0}".format(send & 255),
                     text_colour=[255, 0, 0],
+                    text_size=20,
                     position=[-20, 0])
                 sd.plot(results_canvas2)
 
@@ -710,7 +718,7 @@ class ParallelPort(Input, Output):
 
                 ss = stimuli.TextLine(
                     "{0}".format(send),
-                    text_colour=[255, 0, 0])
+                    text_colour=[255, 0, 0], text_size=20)
                 ss.plot(send_canvas)
 
                 if pp.reverse is True:
@@ -721,6 +729,7 @@ class ParallelPort(Input, Output):
                         position=[240, -95])
                     reverse = stimuli.TextLine(
                         "Reverse Mode",
+                        text_size=20,
                         text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                         background_colour=_internals.active_exp.background_colour)
                     reverse.plot(r)
@@ -732,6 +741,7 @@ class ParallelPort(Input, Output):
                         position=[240, -95])
                     reverse = stimuli.TextLine(
                         "Reverse Mode",
+                        text_size=20,
                         text_colour=_internals.active_exp.background_colour,
                         background_colour=_internals.active_exp.background_colour)
                     reverse.plot(r)
