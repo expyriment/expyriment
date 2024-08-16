@@ -19,7 +19,7 @@ from .. import _internals
 class TextMenu(Input):
     """A class implementing a text menu."""
 
-    def __init__(self, heading, menu_items, width, position=None,
+    def __init__(self, heading, menu_items, width=None, position=None,
                  text_size=None, gap=None, heading_font=None,
                  text_font=None, background_colour=None,
                  text_colour=None, heading_text_colour=None,
@@ -37,8 +37,9 @@ class TextMenu(Input):
             menu heading
         menu_items : str or list
             list with menu items
-        width : int
-            width of the menu
+        width : int, optional
+            width of the menu. If not defined, the width depends on the widest
+            item in the menu
         position : (int, int), optional
         text_size : int, optional
         background_colour : (int, int, int), optional
@@ -114,8 +115,20 @@ class TextMenu(Input):
         self._position = position
         self._bkg_colours = [background_colour, select_background_colour]
         self._text_colours = [text_colour, select_text_colour]
-        self._line_size = (width, stimuli.TextLine(
-            menu_items[0], text_size=text_size).surface_size[1] + 2)
+
+        # determine line size
+        item_surface_size = stimuli.TextLine(menu_items[0], text_font=text_font,
+                                             text_size=text_size).surface_size
+        if width is None:
+            # get larges width
+            for mi in menu_items[1:]:
+                s = stimuli.TextLine(mi,text_font=text_font,
+                                     text_size=text_size).surface_size
+                if s[0] > item_surface_size[0]:
+                    item_surface_size = s
+            width = item_surface_size[0] + 2
+
+        self._line_size = (width, item_surface_size[1] + 2)
         stimuli._stimulus.Stimulus._id_counter -= 1
         self._frame = stimuli.Rectangle(
             line_width=select_frame_line_width,

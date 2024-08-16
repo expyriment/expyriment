@@ -35,6 +35,8 @@ Changed:
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
 - updated cli options
+- io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
+
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
