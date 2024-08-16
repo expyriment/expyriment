@@ -88,6 +88,8 @@ class TextMenu(Input):
             text_font = defaults.textmenu_text_font
         if text_size is None:
             text_size = defaults.textmenu_text_size
+        if text_size is None:
+            text_size = _internals.active_exp.text_size
         if background_colour is None:
             background_colour = defaults.textmenu_background_colour
         if text_colour is None:

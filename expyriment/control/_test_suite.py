@@ -399,8 +399,7 @@ def _audio_playback(exp):
         index = audio_formats.index(default)
     else:
         index = 0
-    menu = io.TextMenu("Audio format", menu_items=options,
-                       text_size=int(20 * scaling), width=int(350 * scaling))
+    menu = io.TextMenu("Audio format", menu_items=options)
     audio_format = audio_formats[menu.get(index)]
 
     # Get buffer size
@@ -410,8 +409,7 @@ def _audio_playback(exp):
         index = buffer_sizes.index(default)
     else:
         index = 0
-    menu = io.TextMenu("Buffer size", menu_items=options,
-                       text_size=int(20 * scaling), width=int(350 * scaling))
+    menu = io.TextMenu("Buffer size", menu_items=options)
     buffer_size = buffer_sizes[menu.get(index)]
 
     settings = \
@@ -696,8 +694,7 @@ def run_test_suite(item=None):
             go_on = False
             select = item
         else:
-            select = io.TextMenu("Test suite", menu, width=int(350 * scaling),
-                                 justification=0, text_size=int(20 * scaling),
+            select = io.TextMenu("Test suite", menu, justification=0,
                                  background_stimulus=background,
                                  mouse=mouse).get(preselected_item)
 

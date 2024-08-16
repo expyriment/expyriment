@@ -75,7 +75,7 @@ textinput_frame_colour = None  # 'None' is experiment_text_colour
 textinput_gap = 6
 
 # Menu
-textmenu_text_size = 20
+textmenu_text_size = None
 textmenu_gap = 2
 textmenu_position = (0, 0)
 textmenu_background_colour = _constants.C_BLACK
