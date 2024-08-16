@@ -169,6 +169,10 @@ class Keyboard(Input):
         cleared, and when checking for key-up events, all key-down events are
         first cleared!
 
+        Unlike the wait method, events are only logged on loglevel 2 when no
+        keys are specified. this is to prevent excesive default logging when
+        used repeatedly in a loop.
+        
         """
 
         # TODO for 1.0: Check should not return None. Think about the
