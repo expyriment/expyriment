@@ -48,9 +48,29 @@ import pygame
 
 from .._internals import get_version
 
+
+def _get_registry_subkeys(key, subkey):
+    try:
+        import winreg as _winreg
+    except Exception:
+        return ""
+
+    key_id = getattr(_winreg, key)
+    handle = _winreg.OpenKey(key_id, subkey)
+    subkeys = []
+    i = 0
+    while True:
+        try:
+            subkeys.append(str(_winreg.EnumKey(handle, i)))
+            i += 1
+        except OSError:
+            break
+    return subkeys
+
+
 def _get_registry_value(key, subkey, value):
     try:
-        import winreg as _winreg  # TODO check me on Windows
+        import winreg as _winreg
     except Exception:
         return ""
 
@@ -227,19 +247,22 @@ def get_system_info(as_string=False):
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
 
-        tmp = _get_registry_value("HKEY_LOCAL_MACHINE",
-                                      "HARDWARE\\DEVICEMAP\\VIDEO",
-                                      "\Device\Video0")
-        idx = tmp.find("System")
-        if idx>=0:
+        video_cards = []
+        subkeys = _get_registry_subkeys(
+            "HKEY_LOCAL_MACHINE",
+            "SYSTEM\\CurrentControlSet\\Control\\Video")
+        for x in subkeys:
             try:
-                hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
-                                           tmp[idx:].replace("\\", "\\\\"),
-                                           "Device Description")
-            except Exception:
-                hardware_video_card  = _get_registry_value( "HKEY_LOCAL_MACHINE",
-                                           tmp[idx:].replace("\\", "\\\\"),
-                                           "DriverDesc")
+                found = _get_registry_value(
+                    "HKEY_LOCAL_MACHINE",
+                    f"SYSTEM\\CurrentControlSet\\Control\\Video\\{x}\\Video",
+                    "DeviceDesc")
+                video_cards.append(found.split(";")[-1])
+            except FileNotFoundError:  # "DeviceDesc" value not present
+                pass
+
+        if video_cards != []:
+            hardware_video_card = video_cards
         else:
             hardware_video_card = ""
 
