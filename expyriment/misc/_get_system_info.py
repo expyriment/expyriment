@@ -268,14 +268,15 @@ def get_system_info(as_string=False):
 
         hardware_audio_card = ""  # TODO
 
-    # Get platform specific info for OS X
+    # Get platform specific info for MacOS
     elif sys.platform.startswith("darwin"):
         os_platform = "Darwin"
-        os_name = "Mac OS X"
+        os_name = "MacOS"
         os_details = platform.mac_ver()[1][1]
         os_version = platform.mac_ver()[0]
         try:
             proc = subprocess.Popen(['sysctl', '-a', 'hw.model'],
+                                    text=True,
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
             hardware_cpu_details = \
@@ -284,6 +285,7 @@ def get_system_info(as_string=False):
             hardware_cpu_details = ""
         try:
             proc = subprocess.Popen(['sysctl', '-a', 'hw.memsize'],
+                                    text=True,
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
             mem_total = int(proc.stdout.readline().split(":")[1].strip()) // 1024 ** 2
@@ -294,19 +296,33 @@ def get_system_info(as_string=False):
         try:
             import re
             proc = subprocess.Popen(['vm_stat'],
+                                    text=True,
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
             output = proc.stdout.read().split("\n")
             for item in output:
-                x = item.find("Pages active:")
-                y = item.find("page size of")
-                if x > -1:
-                    non_decimal = re.compile(r'[^\d.]+')
-                    active = int(non_decimal.sub('', item).strip("."))
-                if y > -1:
+                a = item.find("page size of")
+                b = item.find("Anonymous pages:")
+                c = item.find("Pages purgeable:")
+                d = item.find("Pages wired down:")
+                e = item.find("Pages occupied by compressor:")
+                if a > -1:
                     non_decimal = re.compile(r'[^\d.]+')
                     page = int(non_decimal.sub('', item).strip("."))
-            hardware_memory_free = str(mem_total - (active * page) // 1024 ** 2) + " MB"
+                if b > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    anonymous = int(non_decimal.sub('', item).strip("."))
+                if c > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    purgeable = int(non_decimal.sub('', item).strip("."))
+                if d > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    wired = int(non_decimal.sub('', item).strip("."))
+                if e > -1:
+                    non_decimal = re.compile(r'[^\d.]+')
+                    compressed = int(non_decimal.sub('', item).strip("."))
+
+            hardware_memory_free = str(mem_total - (((anonymous - purgeable) + wired + compressed) * page) // 1024 ** 2) + " MB"
 
         except Exception:
             hardware_memory_free = ""
@@ -323,11 +339,17 @@ def get_system_info(as_string=False):
             hardware_disk_space_free = ""
 
         try:
-            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType'],
+            import plistlib
+            proc = subprocess.Popen(['system_profiler', 'SPAudioDataType',
+                                     '-xml'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            hardware_audio_card = \
-                proc.stdout.read().split("\n")[2].strip(":").strip()
+            pl = plistlib.loads(proc.stdout.read())
+            hardware_audio_card = []
+            for x in pl[0]['_items']:
+                for card in x['_items']:
+                    hardware_audio_card.append(card['_name'])
+
         except Exception:
             hardware_audio_card = ""
 
@@ -337,7 +359,7 @@ def get_system_info(as_string=False):
                                      '-xml'],
                                     stdout=subprocess.PIPE,
                                     stdin=subprocess.PIPE)
-            pl = plistlib.readPlist(proc.stdout)
+            pl = plistlib.loads(proc.stdout.read())
             hardware_video_card = []
             for card in pl[0]['_items']:
                 hardware_video_card.append(card['sppci_model'])
