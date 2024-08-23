@@ -579,15 +579,19 @@ abcdefghijklmnopqrstuvwxyz äöü
 def _write_protocol(exp, results):
     """Write a protocol with all test results."""
 
+    longest = 0
+    for key in results.keys():
+        longest = max(len(key), longest)
+    for key in results.keys():
+        if len(key) == longest:
+            print(key)
+
     sorted_keys = list(results.keys())
     sorted_keys.sort()
     rtn = ""
     for key in sorted_keys:
-        tabs = "\t" * (4 - int((len(key) + 1) // 8)) + "\t"
-        try:
-            rtn += key + ":" + tabs + results[key] + "\n"
-        except TypeError:
-            rtn += key + ":" + tabs + repr(results[key]) + "\n"
+        tabs = " " * (longest - len(key)) + "\t"
+        rtn += key + ":" + tabs + repr(results[key]) + "\n"
 
     filename = os.path.join(os.getcwd(), "test_suite_protocol.xpp")
     with open(filename, 'wb') as f:
@@ -706,15 +710,21 @@ def run_test_suite(item=None):
             results["testsuite_visual_timing_inaccuracy"] = str(rtn[3]) + " ms"
             results["testsuite_visual_timing_delayed"] = str(rtn[4]) + " %"
             results["testsuite_visual_flipping_user"] = rtn[5]
-            delay = [x[1]-x[0] for x in zip(results["testsuite_visual_timing_to_do"],
-                               results["testsuite_visual_timing_actual"])]
-            results["testsuite_visual_timing_delay_histogram"], _ = _histogram(delay)
+            delay = [x[1]-x[0] for x in zip(
+                results["testsuite_visual_timing_to_do"],
+                results["testsuite_visual_timing_actual"])]
+            results["testsuite_visual_timing_delay_histogram"], _ = _histogram(
+                delay)
             results["testsuite_visual_opengl"] = exp.screen.opengl
             if ogl is not None and exp.screen.opengl:
-                results["testsuite_visual_opengl_vendor"] = ogl.glGetString(ogl.GL_VENDOR)
-                results["testsuite_visual_opengl_renderer"] = ogl.glGetString(ogl.GL_RENDERER)
-                results["testsuite_visual_opengl_version"] = ogl.glGetString(ogl.GL_VERSION)
-                extensions = ogl.glGetString(ogl.GL_EXTENSIONS).decode().split(" ")
+                results["testsuite_visual_opengl_vendor"] = ogl.glGetString(
+                    ogl.GL_VENDOR).decode()
+                results["testsuite_visual_opengl_renderer"] = ogl.glGetString(
+                    ogl.GL_RENDERER).decode()
+                results["testsuite_visual_opengl_version"] = ogl.glGetString(
+                    ogl.GL_VERSION).decode()
+                extensions = ogl.glGetString(
+                    ogl.GL_EXTENSIONS).decode().split(" ")
                 if extensions[-1] == "":
                     extensions = extensions[:-1]
                 results["testsuite_visual_opengl_extensions"] = extensions

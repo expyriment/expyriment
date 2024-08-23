@@ -4,39 +4,52 @@ Expyriment Release Notes
 Coming up
 ---------
 New Features:
-- command line interface: option ``-I`` starts an interactive session
-- io.TextInput: ``get`` method now has parameter ``clear_event_cue``
+- Expyriment is now based on Pygame 2 (using SDL 2)
 - test suite: option to run single tests
+- io.TextInput: ``get`` method now has parameter ``clear_event_cue``
 - control.pause: added ``text`` and ``key`` parameters
 - control.defaults: added ``display`` to set display index for showing screen on
 - io.Screen.get_display_resolution and misc.get_display_info
 - control.defaults.display
 - control.defaults.display_resolution
+- command line interface: option ``-I`` starts an interactive session
+- command line interface: option ``--display`` defines which display to show
+  the (fullscreen) window on
+- command line interface: option ``--display-resolution`` sets the fullscreen
+  resolution to use (overwrites automatically detected maximal display
+  resolution)
+- command line interface: option ``--text-size`` sets the default experiment
+  text size (as defined in ``design.defaults.experiment_text_size``)
+- command line interface: option ``--window-size`` sets the default size of the
+  window (when using window-mode)
 
 Changed:
 - package building with flit and pyproject.toml
-- removed: revision number and build data (`__revision__`, `__date__`)
+- revision number and build data (`__revision__`, `__date__`) removed from
+  source files
 - Python 2 support has been removed
   Expyriment now only works with Python 3.8 or higher
-- renaming: misc.py2py3_sort_array --> misc.string_sort_array
+- Documentation not shipped with Expyriment anymore (i.e. no offline
+  documentation available, only online)
+- rewrite of permutation module
 - pause_key has been removed
 - test suite: improved audio test
-- rewrite permutation module
+- renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
 - io.GamePad.wait_press: removed ``time.sleep(0.0005)``
 - When running in virtual environment, Expyriment settings folder will be local
   to that environment
-- Documentation not shipped with Expyriment anymore (i.e. no offline
-  documentation available, only online)
 - Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
 - Always use maximal display resolution by default for fullscreen mode (unless
   overwritten by control.defaults.display_resolution)
 - ``expyriment.control.defaults.openg_gl`` is now called ``expyriment.control.defaults.opengl``
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
-- updated cli options
+- updated cli options:
+    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
+    - OpenGL mode can now be set with new option ``--opengl``
+    - all arguments are now also available as alternative long names
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
-
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
