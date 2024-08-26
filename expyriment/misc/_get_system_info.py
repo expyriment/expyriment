@@ -258,7 +258,7 @@ def get_system_info(as_string=False):
                     f"SYSTEM\\CurrentControlSet\\Control\\Video\\{x}\\Video",
                     "DeviceDesc")
                 video_cards.append(found.split(";")[-1])
-            except FileNotFoundError:  # "DeviceDesc" value not present
+            except Exception:
                 pass
 
         if video_cards != []:
@@ -266,7 +266,42 @@ def get_system_info(as_string=False):
         else:
             hardware_video_card = ""
 
-        hardware_audio_card = ""  # TODO
+        audio_cards = []
+        capture_subkeys = dict.fromkeys(_get_registry_subkeys(
+            "HKEY_LOCAL_MACHINE",
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Capture"),
+                                        "Capture")
+        render_subkeys = dict.fromkeys(_get_registry_subkeys(
+            "HKEY_LOCAL_MACHINE",
+            "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\Render"),
+                                       "Render")
+
+        for x,y in {**capture_subkeys, **render_subkeys}.items():
+            try:
+                active = _get_registry_value(
+                    "HKEY_LOCAL_MACHINE",
+                    f"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\{y}\\{x}",
+                    "DeviceState")
+                if active != "1":
+                    continue
+                found_description = _get_registry_value(
+                    "HKEY_LOCAL_MACHINE",
+                    f"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\{y}\\{x}\\Properties",
+                    "{a45c254e-df1c-4efd-8020-67d146a850e0},2")
+                found_name = _get_registry_value(
+                    "HKEY_LOCAL_MACHINE",
+                    f"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\MMDevices\\Audio\\{y}\\{x}\\Properties",
+                    "{b3f8fa53-0004-438e-9003-51a46e139bfc},6")
+
+                audio_cards.append(f"{found_description} ({found_name})")
+            except Exception:
+                pass
+
+        if audio_cards != []:
+            hardware_audio_card = audio_cards
+        else:
+            hardware_audio_card = ""
+
 
     # Get platform specific info for MacOS
     elif sys.platform.startswith("darwin"):
