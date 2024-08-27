@@ -111,7 +111,7 @@ def get_system_info(as_string=False):
         os_name = linux_distribution()[0]
 
         details = []
-        for release_file in sorted(glob.glob("/etc/release-*")):
+        for release_file in sorted(glob.glob("/etc/*release*")):
             with open(release_file) as f:
                 for line in f:
                     if "PRETTY_NAME" in line and details == []:
