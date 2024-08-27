@@ -22,6 +22,7 @@ New Features:
   text size (as defined in ``design.defaults.experiment_text_size``)
 - command line interface: option ``--window-size`` sets the default size of the
   window (when using window-mode)
+- additions to misc.get_system_info
 
 Changed:
 - package building with flit and pyproject.toml
@@ -45,11 +46,13 @@ Changed:
 - ``expyriment.control.defaults.openg_gl`` is now called ``expyriment.control.defaults.opengl``
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
-- updated cli options:
+- updated command line interface options:
     - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
     - OpenGL mode can now be set with new option ``--opengl``
     - all arguments are now also available as alternative long names
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
+- misc.get_system_info: format changes for ``as_text`` output and improvements
+- test suite: format changes in saved protocol
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
@@ -62,6 +65,7 @@ Fixed:
 - io.Screen: bug in saving screenshots with `save` when using OpenGL
 - io.Screen: bug in showing Expyriment logo in task bar
 - bug in `misc.get_display_info`
+- several bugs in misc.get_system_info 
 
 
 Version 0.10.0 (30 Oct 2019)
