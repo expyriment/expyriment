@@ -35,6 +35,7 @@ Changed:
 - rewrite of permutation module
 - pause_key has been removed
 - test suite: improved audio test
+- test suite: format changes in saved protocol
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
 - io.GamePad.wait_press: removed ``time.sleep(0.0005)``
@@ -52,7 +53,6 @@ Changed:
     - all arguments are now also available as alternative long names
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
 - misc.get_system_info: format changes for ``as_text`` output and improvements
-- test suite: format changes in saved protocol
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
