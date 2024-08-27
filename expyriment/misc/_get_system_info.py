@@ -112,10 +112,17 @@ def get_system_info(as_string=False):
         details = []
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
-        if "DESKTOP_SESSION" in os.environ:
+        elif "DESKTOP_SESSION" in os.environ:
             details.append(os.environ["DESKTOP_SESSION"])
+        else:
+            pass
+        if "WAYLAND_DISPLAY" in os.environ:
+            details.append(os.environ["WAYLAND_DISPLAY"])
+        if "DISPLAY" in os.environ:
+            details.append(os.environ["DISPLAY"])
+
         if details != []:
-            os_details = details
+            os_details = ", ".join(details)
         else:
             os_details = ""
         os_version = linux_distribution()[1]
@@ -155,7 +162,7 @@ def get_system_info(as_string=False):
         try:
             hardware_audio_card = ""
             cards = []
-            p = subprocess.Popen(['lspci'], stdout=subprocess.PIPE)
+            p = subprocess.Popen(['lspci'], stdout=subprocess.PIPE, text=True)
             for line in p.stdout:
                 if "Audio" in line:
                     cards.append(line.split(":")[-1].strip())
@@ -189,7 +196,7 @@ def get_system_info(as_string=False):
         try:
             hardware_video_card = ""
             cards = []
-            p = subprocess.Popen(['lspci'], stdout=subprocess.PIPE)
+            p = subprocess.Popen(['lspci'], stdout=subprocess.PIPE, text=True)
             for line in p.stdout:
                 if "VGA" in line:
                     cards.append(line.split(":")[-1].strip())
