@@ -112,10 +112,10 @@ def get_system_info(as_string=False):
         details = []
         p = subprocess.Popen(['cat' '/etc/*release*'], stdout=subprocess.PIPE,
                              text=True)
-            for line in p.stdout:
-                if "PRETTY_NAME" in line:
-                    details.append(line.split("=")[-1].strip('"'))
-            p.wait()
+        for line in p.stdout:
+            if "PRETTY_NAME" in line:
+                details.append(line.split("=")[-1].strip('"'))
+        p.wait()
 
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
