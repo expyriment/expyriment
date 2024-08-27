@@ -582,9 +582,6 @@ def _write_protocol(exp, results):
     longest = 0
     for key in results.keys():
         longest = max(len(key), longest)
-    for key in results.keys():
-        if len(key) == longest:
-            print(key)
 
     sorted_keys = list(results.keys())
     sorted_keys.sort()

@@ -115,7 +115,7 @@ def get_system_info(as_string=False):
         if "DESKTOP_SESSION" in os.environ:
             details.append(os.environ["DESKTOP_SESSION"])
         if details != []:
-            os_details = ", ".join(details)
+            os_details = details
         else:
             os_details = ""
         os_version = linux_distribution()[1]
@@ -160,7 +160,8 @@ def get_system_info(as_string=False):
                 if "Audio" in line:
                     cards.append(line.split(":")[-1].strip())
             p.wait()
-            hardware_audio_card = ", ".join(cards)
+            if cards != []:
+                hardware_audio_card = cards
         except Exception:
             try:
                 hardware_audio_card = ""
@@ -169,7 +170,8 @@ def get_system_info(as_string=False):
                     for line in f:
                         if line.startswith(" 0"):
                             cards.append(line.split(":")[1].strip())
-                hardware_audio_card = ", ".join(cards)
+                if cards != []:
+                    hardware_audio_card = cards
             except Exception:
                 hardware_audio_card = ""
 
@@ -192,7 +194,8 @@ def get_system_info(as_string=False):
                 if "VGA" in line:
                     cards.append(line.split(":")[-1].strip())
             p.wait()
-            hardware_video_card = ", ".join(cards)
+            if cards != []:
+                hardware_video_card = cards
         except Exception:
             hardware_video_card = ""
 
@@ -475,16 +478,19 @@ def get_system_info(as_string=False):
         info["hardware_ports_serial"] = _com_port_list
     info["hardware_video_card"] = hardware_video_card
 
+    # sort output
+    info = dict(sorted(info.items()))
+
     if as_string:
-        sorted_keys = list(info.keys())
-        sorted_keys.sort()
+        longest = 0
+        for key in info.keys():
+            longest = max(len(key), longest)
+
         rtn = ""
-        for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) // 8))
-            try:
-                rtn += key + ":" + tabs + info[key] + "\n"
-            except TypeError:
-                rtn += key + ":" + tabs + repr(info[key]) + "\n"
+        for key in info:
+            tabs = " " * (longest - len(key)) + "\t"
+            rtn += key + ":" + tabs + repr(info[key]) + "\n"
+
     else:
         rtn = info
 
