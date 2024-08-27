@@ -111,14 +111,11 @@ def get_system_info(as_string=False):
         os_name = linux_distribution()[0]
 
         details = []
-        release_found = False
-        for release_file in sorted(glob.glob("/etc/*release*")):
-            if not release_found:
-                with open(release_file) as f:
-                    for line in f:
-                        if "PRETTY_NAME" in line:
-                            details.append(line.split("=")[-1].strip('"'))
-                            release_found = True
+        for release_file in sorted(glob.glob("/etc/release-*")):
+            with open(release_file) as f:
+                for line in f:
+                    if "PRETTY_NAME" in line and details == []:
+                        details.append(line.split("=")[-1].strip().strip('"'))
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
         elif "DESKTOP_SESSION" in os.environ:
