@@ -49,7 +49,6 @@ Changed:
     - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
     - OpenGL mode can now be set with new option ``--opengl``
     - all arguments are now also available as alternative long names
-    - all long names arguments don't start with capital letters
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
 
 Fixed:
