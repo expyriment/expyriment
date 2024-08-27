@@ -8,6 +8,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
 import os
+import glob
 import platform
 import subprocess
 import socket
@@ -110,13 +111,14 @@ def get_system_info(as_string=False):
         os_name = linux_distribution()[0]
 
         details = []
-        p = subprocess.Popen(['cat' '/etc/*release*'], stdout=subprocess.PIPE,
-                             text=True)
-        for line in p.stdout:
-            if "PRETTY_NAME" in line:
-                details.append(line.split("=")[-1].strip('"'))
-        p.wait()
-
+        release_found = False
+        for release_file in sorted(glob.glob("/etc/*release*")):
+            if not release_found:
+                with open(release_file) as f:
+                    for line in f:
+                        if "PRETTY_NAME" in line:
+                            details.append(line.split("=")[-1].strip('"'))
+                            release_found = True
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
         elif "DESKTOP_SESSION" in os.environ:
