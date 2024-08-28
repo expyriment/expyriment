@@ -101,7 +101,24 @@ def get_system_info(as_string=False):
             from distro import linux_distribution #TODO: only available for Linux, should it be a suggested package dependency?
         except Exception:
             def linux_distribution():
-                return ("Linux", "?", "?")
+                name = ""
+                version = ""
+                name_found = False
+                version_found = False
+                for release_file in ("/etc/os-release", "/etc/lsb-release"):
+                    with open release_file as f:
+                        for line in file:
+                            if not name_found and \
+                                    (line.startswith("NAME=") or \
+                                    line.startswith("DISTRIB_ID=")):
+                                name = line.split("=")[-1].strip().strip('"')
+                                name_found = True
+                            if not version_found and \
+                                    (line.startswith("VERSION_ID=") or \
+                                    line.startswith("DISTRIB_RELEASE=")):
+                                version = line.split("=")[-1].strip().strip('"')
+                                version_found = True
+                return (name, version)
 
     info = {}
 
@@ -109,13 +126,9 @@ def get_system_info(as_string=False):
     if sys.platform.startswith("linux"):
         os_platform = "Linux"
         os_name = linux_distribution()[0]
+        os_version = linux_distribution()[1]
 
         details = []
-        for release_file in sorted(glob.glob("/etc/*release*")):
-            with open(release_file) as f:
-                for line in f:
-                    if "PRETTY_NAME" in line and details == []:
-                        details.append(line.split("=")[-1].strip().strip('"'))
         if "XDG_CURRENT_DESKTOP" in os.environ:
             details.append(os.environ["XDG_CURRENT_DESKTOP"])
         elif "DESKTOP_SESSION" in os.environ:
@@ -131,7 +144,6 @@ def get_system_info(as_string=False):
             os_details = ", ".join(details)
         else:
             os_details = ""
-        os_version = linux_distribution()[1]
 
         try:
             hardware_cpu_details = ""
