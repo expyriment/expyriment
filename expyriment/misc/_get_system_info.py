@@ -106,7 +106,7 @@ def get_system_info(as_string=False):
                 name_found = False
                 version_found = False
                 for release_file in ("/etc/os-release", "/etc/lsb-release"):
-                    with open release_file as f:
+                    with open(release_file) as f:
                         for line in file:
                             if not name_found and \
                                     (line.startswith("NAME=") or \
