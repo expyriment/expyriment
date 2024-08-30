@@ -27,7 +27,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
             skip_ready_screen=False):
     """Start an experiment.
 
-    This starts an experiment defined by 'experiment' and asks for the subject
+    This starts the currently initialized experiment and asks for the subject
     number. When the subject number is entered and confirmed by ENTER, a data
     file is created.
     Eventually, "Ready" will be shown on the screen and the method waits for
