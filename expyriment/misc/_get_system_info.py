@@ -105,9 +105,11 @@ def get_system_info(as_string=False):
                 version = ""
                 name_found = False
                 version_found = False
-                for release_file in ("/etc/os-release", "/etc/lsb-release"):
+                files = [x for x in ("/etc/os-release", "/etc/lsb-release") \
+                         if os.path.isfile(x)]
+                for release_file in files:
                     with open(release_file) as f:
-                        for line in file:
+                        for line in f:
                             if not name_found and \
                                     (line.startswith("NAME=") or \
                                     line.startswith("DISTRIB_ID=")):
