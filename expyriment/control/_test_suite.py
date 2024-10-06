@@ -193,8 +193,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
             if key != 0:
                 delayed_presentations += hist[key]
-        inaccuracy = int(misc.round( sum(inaccuracies)/ len(inaccuracies)))
-        delayed = misc.round(100 * delayed_presentations/180.0, 2)
+        inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
+        delayed = misc.round(100 * delayed_presentations/180.0, 1)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
                     constants.K_0:0, constants.K_1:1, constants.K_2:2}
@@ -224,7 +224,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results1_colour = [0, 255, 0]
         results1 = stimuli.TextScreen("",
                     "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(misc.round(refresh_rate)), misc.round(1000/refresh_rate, 2)),
+                        int(misc.round(refresh_rate)), misc.round(1000/refresh_rate, 1)),
                     text_font="freemono", text_size=int(16 * scaling), text_bold=True,
                     text_justification=0, text_colour=results1_colour, position=(0, int(40 * scaling)))
         results2 = stimuli.TextScreen("",
