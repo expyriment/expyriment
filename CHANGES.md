@@ -36,6 +36,7 @@ Changed:
 - pause_key has been removed
 - test suite: improved audio test
 - test suite: format changes in saved protocol
+- test suite: improvements in reporting visual timing test results
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
 - io.GamePad.wait_press: removed ``time.sleep(0.0005)``
