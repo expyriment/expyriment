@@ -1325,9 +1325,9 @@ The Python package 'Numpy' is not installed."""
                         elif dv[0] == "n_trials":
                             row.append(values.shape[0])
                         else:
-                            row.append(_np.NaN)
+                            row.append(_np.nan)
                     else:
-                        row.append(_np.NaN)
+                        row.append(_np.nan)
             if result is None:
                 result = _np.array([row], dtype='|U99')
             else:
