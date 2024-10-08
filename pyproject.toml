@@ -17,19 +17,19 @@ classifiers = [
 ]
 
 dependencies = [
-  "pygame>=2.5,<3",
+  "pygame>=2.5.2,<3",
   "pyopengl>=3,<4",
 ]
 
 [project.optional-dependencies]
 all = [
-  "numpy>=1.6,<2",
+  "numpy>=1.6,<3",
   "pyserial>=3,<4",
   "pyparallel>=0.2,<1",
   "sounddevice>=0.3,<1",
   "mediadecoder>=0.1,<1",
 ]
-data_preprocessing = ["numpy>=1.6,<2"]
+data_preprocessing = ["numpy>=1.6,<3"]
 parallelport_linux = ["pyparallel>=0.2,<1"]
 serialport = ["pyserial>=3,<4"]
 video = [
