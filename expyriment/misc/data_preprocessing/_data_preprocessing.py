@@ -71,10 +71,10 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
     if encoding is None:
         with open(filename, 'r') as fl:
             first_line = fl.readline()
-            encoding = _re.findall("coding[:=]\s*([-\w.]+)", first_line)
+            encoding = _re.findall(r"coding[:=]\s*([-\w.]+)", first_line)
             if encoding == []:
                 second_line = fl.readline()
-                encoding = _re.findall("coding[:=]\s*([-\w.]+)",
+                encoding = _re.findall(r"coding[:=]\s*([-\w.]+)",
                                        second_line)
                 if encoding == []:
                     encoding = [None]
