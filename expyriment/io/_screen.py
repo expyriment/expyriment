@@ -112,7 +112,8 @@ OpenGL will be deactivated!"
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(id_)
         icon = pygame.image.load(os.path.join(os.path.split(__file__)[0],
                                               "..", "xpy_icon.png"))
-        icon = pygame.transform.smoothscale(icon, (32, 32))
+        if platform.system() != "Darwin":
+            icon = pygame.transform.smoothscale(icon, (32, 32))
         pygame.display.set_icon(icon)
 
         if not self._opengl:
