@@ -177,6 +177,15 @@ After the test, you will be asked to indicate which (if any) of those two square
         #    response1 = None
 
 
+        def get_local_peak(presentation_time, refresh_rate, spread=25):
+            refresh_time = 1000 / refresh_rate
+            multiples = presentation_time / refresh_time
+            spread = spread / 100
+            if abs(multiples) % 1 < spread or abs(multiples) % 1 > 1 - spread:
+                return round(multiples) * refresh_time
+            else:
+                return None
+
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
             refresh_time = 1000 / refresh_rate
@@ -184,14 +193,19 @@ After the test, you will be asked to indicate which (if any) of those two square
                 return refresh_time - (presentation_time % refresh_time)
             else:
                 return 0
+
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
         unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
         for key in list(hist.keys()):
-            inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
-            if key != 0:
+            peak = get_local_peak(key, refresh_rate)
+            if peak is not None:
+                inaccuracies.extend([abs(int(round(peak)) - key)] * hist[key])
+            else:
+                inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
+            if key > 0:
                 delayed_presentations += hist[key]
         inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
         delayed = misc.round(100 * delayed_presentations/180.0, 1)
