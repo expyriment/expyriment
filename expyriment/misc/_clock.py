@@ -11,10 +11,11 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import time
 from types import FunctionType
+
 import pygame
 
-from ._timer import get_time
 from .. import _internals
+from ._timer import get_time
 
 
 class Clock(object) :
@@ -36,7 +37,7 @@ class Clock(object) :
         """
 
         if (sync_clock.__class__.__name__ == "Clock"):
-            self.__init_time = sync_clock.init_time // 1000
+            self.__init_time = sync_clock.init_time / 1000
         else:
             self.__init_time = get_time()
 
