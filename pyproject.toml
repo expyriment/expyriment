@@ -46,4 +46,4 @@ video = [
 expyriment="expyriment.cli:main"
 
 [tool.setuptools.package-data]
-"expyriment" = ["*.png"]
+"expyriment" = ["*.png", "_fonts/*.*"]
