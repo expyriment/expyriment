@@ -35,13 +35,13 @@ __version__ = '0.11.dev5'
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1] < 8:
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 9:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.8+. Note, the last major "
+                      "\n\n  Please use Python 3.9+. Note, the last major "
                       "release compatible with Python 2.7\n"
                       "  is Expyriment 0.10.")
 
@@ -80,7 +80,7 @@ try:
                       "\nPlease install PyOpenGL(>=3,<4).")
 
     # Try patching PyOpenGL <= 3.1.7 for Python >= 3.12:
-    # https://github.com/mcfletch/pyopengl/pull/100 
+    # https://github.com/mcfletch/pyopengl/pull/100
     try:
       if pyopengl_version <= (3, 1, 7) and _sys.version_info >= (3, 12):
           _OpenGL.FormatHandler.by_name("ctypesparameter").check.append(
@@ -96,6 +96,7 @@ except ImportError:
 
 
 from ._internals import get_version, import_all_extras
+
 print("Expyriment {0} ".format(get_version()))
 
 
@@ -109,12 +110,7 @@ try:
 except Exception:
     pass
 
-from . import _internals
-from . import design
-from . import misc
-from . import stimuli
-from . import io
-from . import control
+from . import _internals, control, design, io, misc, stimuli
 
 if not misc.is_android_running():
     from ._api_reference_tool import show_documentation

@@ -7,7 +7,7 @@ description = 'A Python library for cognitive and neuroscientific experiments'
 license = {file = "COPYING.txt"}
 name = "expyriment"
 readme = "README.md"
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 dynamic = ["version"]
 keywords = ["experiment control", "open science",
             "neuroscience", "experimental psychology"]

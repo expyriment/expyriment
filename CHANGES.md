@@ -29,7 +29,7 @@ Changed:
 - revision number and build data (`__revision__`, `__date__`) removed from
   source files
 - Python 2 support has been removed
-  Expyriment now only works with Python 3.8 or higher
+  Expyriment now only works with Python 3.9 or higher
 - Documentation not shipped with Expyriment anymore (i.e. no offline
   documentation available, only online)
 - rewrite of permutation module
@@ -66,7 +66,7 @@ Fixed:
 - io.Screen: bug in saving screenshots with `save` when using OpenGL
 - io.Screen: bug in showing Expyriment logo in task bar
 - bug in `misc.get_display_info`
-- several bugs in misc.get_system_info 
+- several bugs in misc.get_system_info
 
 
 Version 0.10.0 (30 Oct 2019)

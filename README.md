@@ -1,10 +1,10 @@
 ```
-      ______                           _                          __ 
+      ______                           _                          __
      / ____/_  __ ____   __  __ _____ (_)____ ___   ___   ____   / /_
     / __/  | |/_// __ \ / / / // ___// // __ `__ \ / _ \ / __ \ / __/
-   / /___ _>  < / /_/ // /_/ // /   / // / / / / //  __// / / // /_  
-  /_____//_/|_|/ .___/ \__, //_/   /_//_/ /_/ /_/ \___//_/ /_/ \__/  
-              /_/     /____/                                         
+   / /___ _>  < / /_/ // /_/ // /   / // / / / / //  __// / / // /_
+  /_____//_/|_|/ .___/ \__, //_/   /_//_/ /_/ /_/ \___//_/ /_/ \__/
+              /_/     /____/
 ```
 
 
@@ -29,7 +29,7 @@ experience.
 
 - Project Homepage: http://www.expyriment.org
 
-*GNU General Public License v3* (see [details])  
+*GNU General Public License v3* (see [details])
 Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.org)
 
 Documentation
@@ -44,14 +44,14 @@ For online examples see: http://stash.expyriment.org/examples
 Installation
 ============
 The latest stable release of Expyriment can be found at Github:
-https://github.com/expyriment/expyriment/releases/latest 
-For detailed installation instructions, please see the online documentation: 
+https://github.com/expyriment/expyriment/releases/latest
+For detailed installation instructions, please see the online documentation:
 http://docs.expyriment.org/Installation.html
 
 Reference
 =========
-Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive 
-and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428. 
+Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive
+and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.
 http://dx.doi.org/10.3758/s13428-013-0390-6
 
 [details]: https://github.com/expyriment/expyriment/blob/master/COPYING.txt
@@ -61,4 +61,4 @@ Contributing
 Join other
 [contributors](https://github.com/expyriment/expyriment/graphs/contributors)
 and help us out with Expyriment development! We are very happy to receive pull
-requests on GitHub. 
+requests on GitHub.
