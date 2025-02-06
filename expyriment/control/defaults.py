@@ -13,6 +13,9 @@ Default settings for the control package. ::
     audiosystem_channels : int
         the number of audio channels
 
+    audiosystem_device : str
+        the name of the audio device to use
+
     audiosystem_sample_rate : int
         the audio sample rate
 
@@ -168,6 +171,7 @@ audiosystem_sample_rate = 44100
 audiosystem_bit_depth = -16  # Negative values mean signed sample values
 audiosystem_channels = 2
 audiosystem_buffer_size = 2048
+audiosystem_device = None
 
 _mode_settings = None
 
