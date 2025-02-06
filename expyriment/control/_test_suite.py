@@ -126,30 +126,29 @@ After the test, you will be asked to indicate which (if any) of those two square
             exp.clock.wait(randomize.rand_int(30, 60))
 
         # determine refresh rate
-        s1 = stimuli.Circle(0, colour=exp.background_colour)  # 1 px
-        s2 = stimuli.Circle(0, colour=exp.background_colour)  # 1 px
-        s1.preload()
-        s2.preload()
-        tmp = []
-        for _x in range(200):
+        s = stimuli.Circle(0, colour=exp.background_colour)  # 1 px
+        s.preload()
+        frame_times = []
+        for _x in range(300):
             start = get_time()
-            s1.present(clear=False)
-            tmp.append(get_time() - start)
-            start = get_time()
-            s2.present(clear=False)
-            tmp.append(get_time() - start)
+            s.present(clear=False)
+            frame_times.append(get_time() - start)
 
-        # ignore dropped frames and rate limiting
-        tmp1 = []
-        tmp2 = []
-        for c, x in enumerate(tmp[1:]):
-            if c > 0 and x / statistics.mean(tmp1) > 1.5:
-                tmp2.append(x)
+        # account for dropped frames and rate limiting
+        valid_frame_times = []
+        for c, x in enumerate(frame_times[2:]):  # ignore first two frames
+            if c > 0 and x / statistics.mean(valid_frame_times) > 1.5:
+                pass
             else:
-                tmp1.append(x)
-        refresh_rate = 1000 / (statistics.mean(tmp1) * 1000)
-        dropped_frames = len(tmp2) / len(tmp1)
-        print(dropped_frames)
+                valid_frame_times.append(x)
+        refresh_rate = 1000 / (statistics.mean(valid_frame_times) * 1000)
+
+        def has_peaks(data):
+            cv = statistics.std(data) / statistics.mean(data)
+            if cv > 1:
+                return True
+            else:
+                return False
 
         def get_local_peak(presentation_time, refresh_rate, spread=25):
             refresh_time = 1000 / refresh_rate
@@ -170,25 +169,31 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
         diff = [x[0] - x[1] for x in zip(actual_time, to_do_time)]
-        print(diff)
-        print(statistics.mean(diff))
-        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
+        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) \
+                             for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
+        if os.environ.get("XPY_TESTSUITE_EXPERIMENTAL"):
+            peaks = has_peaks(hist.values())
+        else:
+            peaks = False
         for key in list(hist.keys()):
             peak = get_local_peak(key, refresh_rate)
-            if peak is not None:
-                inaccuracies.extend([abs(int(round(peak)) - key)] * hist[key])
+            if peaks and peak is not None:
+                inaccuracies.extend(
+                    [abs(int(round(peak)) - key)] * hist[key])
             else:
-                inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
+                inaccuracies.extend(
+                    [key % max(1, (1000 // refresh_rate))] * hist[key])
             if key > 0:
                 delayed_presentations += hist[key]
         inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
         delayed = misc.round(100 * delayed_presentations/len(to_do_time), 1)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
-                    constants.K_0:0, constants.K_1:1, constants.K_2:2}
+                    constants.K_0:0, constants.K_1:1, constants.K_2:2,
+                    constants.K_KP0:0, constants.K_KP1:1, constants.K_KP2:2}
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
             "[Press 0 (or F1), 1 (or F2), 2 (or F3)]")
@@ -207,7 +212,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             scaling = 2
 
         info = stimuli.TextScreen("Results", "")
-        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 360:
+        if int(misc.round(refresh_rate))  < 50 or \
+                int(misc.round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
         elif int(misc.round(refresh_rate)) not in (60, 75, 120, 144, 240):
             results1_colour = [255, 255, 0]
@@ -216,63 +222,64 @@ After the test, you will be asked to indicate which (if any) of those two square
         r = "{0} Hz (~ every {1} ms)".format(
             int(misc.round(refresh_rate)),
             misc.round(1000/refresh_rate, 1))
-        if tmp2 != []:
-            r += " [{0} Hz after {1} frames!]".format(
-                int(misc.round(refresh_rate2)),
-                len(tmp1) + 1)
-            results1_colour = [255, 255, 0]
-        results1 = stimuli.TextScreen("",
-                    "Estimated Screen Refresh Rate:     {0}\n\n".format(
-                        r),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results1_colour, position=(0, int(40 * scaling)))
+        results1 = stimuli.TextScreen(
+            "", "Estimated Screen Refresh Rate:     {0}\n\n".format(r),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results1_colour,
+            position=(0, int(40 * scaling)))
         if response !=1:
             results2_colour = [255, 0, 0]
         else:
             results2_colour = [0, 255, 0]
-        results2 = stimuli.TextScreen("",
-                    "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results2_colour, position=(0, int(20 * scaling)))
+        results2 = stimuli.TextScreen(
+            "",
+            "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results2_colour,
+            position=(0, int(20 * scaling)))
         if inaccuracy > 2:
             results3_colour = [255, 0, 0]
         elif inaccuracy in (1, 2):
             results3_colour = [255, 255, 0]
         else:
             results3_colour = [0, 255, 0]
-        results3 = stimuli.TextScreen("",
-                    "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results3_colour, position=(0, -int(20 * scaling)))
+        results3 = stimuli.TextScreen(
+            "",
+            "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results3_colour,
+            position=(0, -int(20 * scaling)))
         if delayed > 10:
             results4_colour = [255, 0, 0]
         elif 10 > delayed > 1:
             results4_colour = [255, 255, 0]
         else:
             results4_colour = [0, 255, 0]
-        results4 = stimuli.TextScreen("",
-                    "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results4_colour, position=(0, -int(40 * scaling)))
-        results5 = stimuli.TextScreen("",
-                    hist_str,
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, position=(0, -int(100 * scaling)))
+        results4 = stimuli.TextScreen(
+            "",
+            "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results4_colour,
+            position=(0, -int(40 * scaling)))
+        results5 = stimuli.TextScreen(
+            "", hist_str, text_font="freemono", text_size=int(16 * scaling),
+            text_bold=True, text_justification=0,
+            position=(0, -int(100 * scaling)))
         results1.plot(info)
         results2.plot(info)
         results3.plot(info)
         results4.plot(info)
         results5.plot(info)
-        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -int(160 * scaling)))
+        info2 = stimuli.TextLine("[Press RETURN to continue]",
+                                 position=(0, -int(160 * scaling)))
         info2.plot(info)
         while True:
             info.present()
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
             if key is not None:
                 break
-        return to_do_time, actual_time, refresh_rate, inaccuracy, delayed, response
-
-
+        return (to_do_time, actual_time, refresh_rate, inaccuracy, delayed,
+                response)
 
 #     def _test2():
 #         info = """This will test if stimulus presentation can be synchronized to the refreshrate of the screen.
