@@ -16,7 +16,8 @@ from ._miscellaneous import get_monitor_resolution, get_display_info, \
                             is_idle_running, is_ipython_running, \
                             is_android_running, is_interactive_mode, \
                             create_colours, has_internet_connection, which, \
-                            download_from_stash,string_sort_array, round
+                            download_from_stash,string_sort_array, round, \
+                            get_audio_devices
 from ._get_system_info import get_system_info
 from ._secure_hash import get_module_hash_dictionary, \
                           get_experiment_secure_hash, module_hashes_as_string

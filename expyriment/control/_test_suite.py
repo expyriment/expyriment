@@ -380,14 +380,19 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
+    # Get audio device
+    options = misc.get_audio_devices()
+    menu = io.TextMenu("Audio device", menu_items=options)
+    audio_device = options[menu.get()]
+
     audio_formats = []
-    hz = (44100, 48000, 96000)
-    bits = (-16, -24, -32)
+    hz = (44100, 48000, 88200, 96000)
+    bits = ((-16, "16-bit"), (32, "32-bit float"))
     for x in bits:
         for y in hz:
             try:
                 pygame.mixer.quit()
-                pygame.mixer.pre_init(y, x, 2, 512, allowedchanges=pygame.AUDIO_ALLOW_FREQUENCY_CHANGE)
+                pygame.mixer.pre_init(y, x[0], 2, 512, devicename=audio_device)
                 pygame.mixer.init()
                 audio_formats.append((y, x))
             except:
@@ -402,7 +407,7 @@ def _audio_playback(exp):
         scaling = 2
 
     # Get samplerate, bitrate
-    options = [f"{x[0]} Hz, {x[1] * -1} bit" for x in audio_formats]
+    options = [f"{x[0]} Hz, {x[1][1]}" for x in audio_formats]
     default = (control.defaults.audiosystem_sample_rate,
                control.defaults.audiosystem_bit_depth)
     if default in audio_formats:
@@ -425,7 +430,7 @@ def _audio_playback(exp):
     settings = \
         f"{audio_formats[0]} Hz, {audio_format[1]} bit, {buffer_size} samples"
     pygame.mixer.quit()
-    pygame.mixer.pre_init(audio_format[0], audio_format[1], 2, buffer_size)
+    pygame.mixer.pre_init(audio_format[0], audio_format[1][0], 2, buffer_size)
     pygame.mixer.init()
     pygame.mixer.init()
 

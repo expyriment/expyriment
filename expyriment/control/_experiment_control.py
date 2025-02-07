@@ -428,7 +428,7 @@ fullscreen.""")
                    defaults.audiosystem_bit_depth,
                    defaults.audiosystem_channels,
                    defaults.audiosystem_buffer_size,
-                   devicename=defaults.audiosystem.device)
+                   devicename=defaults.audiosystem_device)
     if defaults.audiosystem_autostart:
         mixer.init()
         mixer.init()  # Needed on some systems

@@ -20,6 +20,7 @@ except Exception:
 
 from . import defaults
 from . import _visual
+from ..control import defaults as control_defaults
 from ..misc import unicode2byte, Clock, has_internet_connection, which
 from .._internals import CallbackQuitEvent
 from .. import _internals
@@ -135,6 +136,16 @@ class Video(_visual.Stimulus):
                 self._backend = "pygame"
             try:
                 import sounddevice as _sounddevice
+                # Set output device from control.defaults
+                default_device = control_defaults.audiosystem_device
+                if default_device is not None:
+                    device_id = None
+                    for device in _sounddevice.query_devices():
+                        if device["name"] in default_device:  # can be cut off
+                            if device["max_output_channels"] > 0: # output device
+                                device_id = device["index"]
+                    if device_id is not None:
+                        _sounddevice.default.device = None, device_id
             except ImportError:
                 print("Warning: Package 'sounddevice' not installed!\n" +
                       "Audio will be played back using Pygame audiosystem.")
