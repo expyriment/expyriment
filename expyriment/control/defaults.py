@@ -5,11 +5,11 @@ Default settings for the control package. ::
         start the audiosystem when Expyriment is initialized
 
     audiosystem_bit_depth : int
-        8   = 8 bit unsigned integer (8-bit PCM)
+        8   = 8 bit unsigned integer (8-bit audio)
         -8  = 8 bit signed integer (uncommon)
         16  = 16 bit unsigned integer (uncommon)
-        -16 = 16 bit signed integer (16-bit PCM)
-        32  = 32 bit floating point (32-bit float PCM)
+        -16 = 16 bit signed integer (16-bit audio)
+        32  = 32 bit floating point (32-bit float audio)
 
     audiosystem_buffer_size: int
         the audio buffer size in samples
