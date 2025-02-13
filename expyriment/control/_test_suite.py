@@ -381,7 +381,8 @@ def _audio_playback(exp):
     """Test the audio playback"""
 
     info = f"""This will test the auditory stimulus presentation capabilities of your system.
-You will be asked to select the audio device, format, and buffer size to test. Afterwards, a test tone will be played back to you with the chosen settings.
+You will be asked to select the audio device, format, and buffer size to test.
+Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
@@ -459,6 +460,31 @@ You will be asked to select the audio device, format, and buffer size to test. A
                            menu_items=[f"{x}" for x in channel_counts])
         audio_format.append(channel_counts[menu.get(index)])
 
+    ch = "channel"
+    if audio_format[2] > 1:
+        ch += "s"
+
+    # Test if audio format is supported
+    try:
+        pygame.mixer.quit()
+        pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
+                              audio_format[2])
+        pygame.mixer.init()
+        pygame.mixer.init()
+    except:
+        info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
+
+[Press RETURN to continue]
+        """
+        text = stimuli.TextScreen(f"Audio format not supported", info)
+        while True:
+            text.present()
+            key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+            if key is not None:
+                break
+            return
+        return "", ""
+
     # Get buffer size
     options = [f"{x}" for x in buffer_sizes]
     default = control.defaults.audiosystem_buffer_size
@@ -469,23 +495,7 @@ You will be asked to select the audio device, format, and buffer size to test. A
     menu = io.TextMenu("Buffer size", menu_items=options)
     buffer_size = buffer_sizes[menu.get(index)]
 
-    ch = "channel"
-    if audio_format[2] > 1:
-        ch += "s"
-    settings = \
-        f"{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}, {buffer_size} samples"
-    pygame.mixer.quit()
-    pygame.mixer.pre_init(audio_format[0], audio_format[1][0], audio_format[2],
-                          buffer_size)
-    pygame.mixer.init()
-    pygame.mixer.init()
-
-    info = f"""A test tone will now be played with the following audio settings:
-
-{audio_device}
-{settings}
-
-Listen carefully to whether you can hear the tone clearly and undistorded.
+    info = f"""A test tone will now be played on '{audio_device}' with format '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}' and a buffer of {buffer_size} samples.
 
 [Press RETURN to continue]
 """
