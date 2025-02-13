@@ -284,7 +284,42 @@ class Video(_visual.Stimulus):
                     self._audio_renderer = "sounddevice"
                 except ImportError:
                     from mediadecoder.soundrenderers import SoundrendererPygame
-                    self._audio = SoundrendererPygame(
+
+                    # Patch mediadecoder to not init and quit Pygame mixer
+                    class PatchedSoundrendererPygame(SoundrendererPygame):
+                        def __init__(self, audioformat):
+                            super(SoundrendererPygame, self).__init__()
+
+                        def run(self):
+                            from queue import Empty
+                            import pygame
+                            queue_timeout=0.01
+                            if not hasattr(self, 'queue'):
+                                raise RuntimeError(
+                                    "Audio queue is not intialized.")
+                            chunk = None
+                            channel = None
+                            self.keep_listening = True
+                            while self.keep_listening:
+                                if chunk is None:
+                                    try:
+                                        frame = self.queue.get(
+                                            timeout=queue_timeout)
+                                        chunk = pygame.sndarray.make_sound(
+                                            frame)
+                                    except Empty:
+                                        continue
+                                if channel is None:
+                                    channel = chunk.play()
+                                else:
+                                    if not channel.get_queue():
+                                        channel.queue(chunk)
+                                        chunk = None
+                                time.sleep(0.005)
+                            if not channel is None and pygame.mixer.get_init():
+                                channel.stop()
+
+                    self._audio = PatchedSoundrendererPygame(
                         self._file.audioformat)
                     self._audio_renderer = "pygame"
                 self._file.set_audiorenderer(self._audio)
