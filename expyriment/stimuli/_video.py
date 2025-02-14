@@ -87,6 +87,7 @@ class Video(_visual.Stimulus):
         self._new_frame_available = False
         self._surface_locked = False
         self._audio_started = False
+
         if position:
             self._position = position
         else:
@@ -111,6 +112,7 @@ class Video(_visual.Stimulus):
             raise ImportError(
                 "Video playback needs the package 'mediadecoder'." +
                 "\nPlease install mediadecoder(>=0.1,<1).")
+
         try:
             import sounddevice as _sounddevice
             # Set output device from control.defaults
@@ -135,9 +137,9 @@ class Video(_visual.Stimulus):
                         device_id = device["index"]
                 if device_id is not None:
                     _sounddevice.default.device = None, device_id
-        except ImportError:
-            print("Warning: Package 'sounddevice' not installed!\n" +
-                  "Audio will be played back using Pygame audiosystem.")
+            self._audio_renderer = "sounddevice"
+        except:
+            self._audio_renderer = "pygame"
 
 
     def __del__(self):
@@ -276,13 +278,12 @@ class Video(_visual.Stimulus):
                     import moviepy.video.fx.all as vfx
                     self._file.clip = vfx.mirror_y(self._file.clip)
             if self._file.audioformat:
-                try:
+                if self._audio_renderer == "sounddevice":
                     from mediadecoder.soundrenderers.sounddevicerenderer \
                         import SoundrendererSounddevice
                     self._audio = SoundrendererSounddevice(
                         self._file.audioformat)
-                    self._audio_renderer = "sounddevice"
-                except ImportError:
+                elif self._audio_renderer == "pygame":
                     from mediadecoder.soundrenderers import SoundrendererPygame
 
                     # Patch mediadecoder to not init and quit Pygame mixer
@@ -321,7 +322,6 @@ class Video(_visual.Stimulus):
 
                     self._audio = PatchedSoundrendererPygame(
                         self._file.audioformat)
-                    self._audio_renderer = "pygame"
                 self._file.set_audiorenderer(self._audio)
             size = self._file.clip.size
 
