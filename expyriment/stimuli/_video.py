@@ -33,11 +33,13 @@ class Video(_visual.Stimulus):
 
     Notes
     -----
-    When the audio from the video should be played as well, the audiosystem
-    might need to be stopped (by calling
-    ``expyriment.control.stop_audiosystem()``) BEFORE the video stimulus is
-    preloaded! After the stimulus has been played the audiosystem can be
-    started again (by calling ``expyriment.control.start_audiosystem()``).
+    With the "pygame" audio backend, the Expyriment audiosystem is used to play
+    the audio of the video. If the audiosystem is stopped BEFORE the video
+    stimulus is played, (by calling ``expyriment.control.stop_audiosystem()``),
+    or if the "sounddevice" backend is used, a temporary audiosystem will be
+    started with parameters (sample rate, bit depth, channels) matching those
+    of the video. The temporary audiosystem will be stopped when the video is
+    stopped.
 
     When showing videos in large dimensions, and your computer is not fast
     enough, frames might be dropped! When using ``Video.wait_frame()`` or
@@ -64,13 +66,15 @@ class Video(_visual.Stimulus):
         except ImportError:
             pass
 
-    def __init__(self, filename, position=None):
+    def __init__(self, filename, audio_backend=None, position=None):
         """Create a video stimulus.
 
         Parameters
         ----------
         filename : str
             filename (incl. path) of the video
+        audio_backend : str, optional
+            the audio backend to use (one of "pygame" or "sounddevice")
         position : (int, int), optional
             position of the stimulus
 
@@ -88,6 +92,10 @@ class Video(_visual.Stimulus):
         self._surface_locked = False
         self._audio_started = False
 
+        if audio_backend:
+            self._audio_backend = audio_backend
+        else:
+            self._audio_backend = defaults.video_audio_backend
         if position:
             self._position = position
         else:
@@ -99,22 +107,20 @@ class Video(_visual.Stimulus):
 
         Video.get_ffmpeg_binary()  # in case it still needs to be downloaded
         try:
-            # Hotfixing mediadecoder for moviepy 2 API changes
-            try:
-                import moviepy
-                if int(moviepy.__version__.split(".")[0]) > 1:
-                    from moviepy.tools import convert_to_seconds
-                    moviepy.tools.cvsecs = convert_to_seconds
-            except:
-                pass
             import mediadecoder as _mediadecoder
         except ImportError:
             raise ImportError(
                 "Video playback needs the package 'mediadecoder'." +
-                "\nPlease install mediadecoder(>=0.1,<1).")
+                "\nPlease install mediadecoder(>=0.1.6,<1).")
 
-        try:
-            import sounddevice as _sounddevice
+        if self._audio_backend == "sounddevice":
+            try:
+                import sounddevice as _sounddevice
+            except ImportError:
+                raise ImportError(
+                    "Audio backend needs the package 'sounddevice'." +
+                    "\nPlease install sounddevice(>=0.3.,<1).")
+
             # Set output device from control.defaults
             default_device = control_defaults.audiosystem_device
             if default_device is not None:
@@ -137,14 +143,15 @@ class Video(_visual.Stimulus):
                         device_id = device["index"]
                 if device_id is not None:
                     _sounddevice.default.device = None, device_id
-            self._audio_renderer = "sounddevice"
-        except:
-            self._audio_renderer = "pygame"
+        elif self._audio_backend != "pygame":
+            raise ValueError("Unknown audio backend '{0}'!".format(
+                self._audio_backend))
 
 
     def __del__(self):
         """Destructor for the video stimulus."""
 
+        self.stop()
         self._surface = None
         self._file = None
 
@@ -161,6 +168,12 @@ class Video(_visual.Stimulus):
         """Getter for position."""
 
         return self._position
+
+    @property
+    def audio_backend(self):
+        """Getter for audio_backend."""
+
+        return self._audio_backend
 
     @property
     def filename(self):
@@ -248,14 +261,6 @@ class Video(_visual.Stimulus):
     def preload(self):
         """Preload stimulus to memory.
 
-        Notes
-        -----
-        When the audio from the video should be played as well, the audiosystem
-        might need to be stopped (by calling
-        ``expyriment.control.stop_audiosystem()``) BEFORE the video stimulus is
-        preloaded! After the stimulus has been played the audiosystem can be
-        started again (by calling ``expyriment.control.start_audiosystem()``).
-
         """
 
         if not self._is_preloaded:
@@ -277,60 +282,15 @@ class Video(_visual.Stimulus):
                 else:
                     import moviepy.video.fx.all as vfx
                     self._file.clip = vfx.mirror_y(self._file.clip)
-            if self._file.audioformat:
-                if self._audio_renderer == "sounddevice":
-                    from mediadecoder.soundrenderers.sounddevicerenderer \
-                        import SoundrendererSounddevice
-                    self._audio = SoundrendererSounddevice(
-                        self._file.audioformat)
-                elif self._audio_renderer == "pygame":
-                    from mediadecoder.soundrenderers import SoundrendererPygame
 
-                    # Patch mediadecoder to not init and quit Pygame mixer
-                    class PatchedSoundrendererPygame(SoundrendererPygame):
-                        def __init__(self, audioformat):
-                            super(SoundrendererPygame, self).__init__()
-
-                        def run(self):
-                            from queue import Empty
-                            import pygame
-                            queue_timeout=0.01
-                            if not hasattr(self, 'queue'):
-                                raise RuntimeError(
-                                    "Audio queue is not intialized.")
-                            chunk = None
-                            channel = None
-                            self.keep_listening = True
-                            while self.keep_listening:
-                                if chunk is None:
-                                    try:
-                                        frame = self.queue.get(
-                                            timeout=queue_timeout)
-                                        chunk = pygame.sndarray.make_sound(
-                                            frame)
-                                    except Empty:
-                                        continue
-                                if channel is None:
-                                    channel = chunk.play()
-                                else:
-                                    if not channel.get_queue():
-                                        channel.queue(chunk)
-                                        chunk = None
-                                time.sleep(0.005)
-                            if not channel is None and pygame.mixer.get_init():
-                                channel.stop()
-
-                    self._audio = PatchedSoundrendererPygame(
-                        self._file.audioformat)
-                self._file.set_audiorenderer(self._audio)
             size = self._file.clip.size
 
             screen_size = _internals.active_exp.screen.surface.get_size()
-
             self._pos = [screen_size[0] // 2 - size[0] // 2 +
                          self._position[0],
                          screen_size[1] // 2 - size[1] // 2 -
                          self._position[1]]
+
             self._is_paused = False
             self._is_preloaded = True
 
@@ -343,6 +303,7 @@ class Video(_visual.Stimulus):
         """
 
         if self._is_preloaded:
+            self.stop()
             self._file = None
             self._surface = None
             self._is_preloaded = False
@@ -363,11 +324,14 @@ class Video(_visual.Stimulus):
 
         Notes
         -----
-        When the audio from the video should be played as well, the audiosystem
-        might need to be stopped (by calling
-        ``expyriment.control.stop_audiosystem()``) BEFORE the video stimulus is
-        preloaded! After the stimulus has been played the audiosystem can be
-        started again (by calling ``expyriment.control.start_audiosystem()``).
+        With the "pygame" audio backend, the Expyriment audiosystem is used to
+        play the audio of the video. If the audiosystem is stopped BEFORE the
+        video stimulus is played, (by calling
+        ``expyriment.control.stop_audiosystem()``), or if the "sounddevice"
+        backend is used, a temporary audiosystem will be started with
+        parameters (sample rate, bit depth, channels) matching those of the
+        video. The temporary audiosystem will be stopped when the video is
+        stopped.
 
         When showing videos in large dimensions, and your computer is not fast
         enough, frames might be dropped! When using Video.wait_frame() or
@@ -391,6 +355,16 @@ class Video(_visual.Stimulus):
                     "Video,playing,{0}".format(self._filename),
                     log_level=1, log_event_tag=log_event_tag)
             if self._file.audioformat and audio:
+                if self._audio_backend == "pygame":
+                    from mediadecoder.soundrenderers import SoundrendererPygame
+                    self._audio = SoundrendererPygame(self._file.audioformat)
+
+                elif self._audio_backend == "sounddevice":
+                    from mediadecoder.soundrenderers import \
+                        SoundrendererSounddevice
+                    self._audio = SoundrendererSounddevice(
+                        self._file.audioformat)
+                self._file.set_audiorenderer(self._audio)
                 self._audio.start()
                 self._audio_started = True
             self._file.loop = loop
@@ -454,12 +428,6 @@ class Video(_visual.Stimulus):
 
         Notes
         -----
-        When the audio from the video should be played as well, the audiosystem
-        might need to be stopped (by calling
-        ``expyriment.control.stop_audiosystem()``) BEFORE the video stimulus is
-        preloaded! After the stimulus has been played the audiosystem can be
-        started again (by calling ``expyriment.control.start_audiosystem()``).
-
         When showing videos in large dimensions, and your computer is not fast
         enough, frames might be dropped! When using ``Video.wait_frame()`` or
         ``Video.wait_end()``, dropped video frames will be reported and logged.
