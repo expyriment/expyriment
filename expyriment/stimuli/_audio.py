@@ -94,7 +94,11 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-            self._file = mixer.Sound(self._filename)
+            # Due to a bug in handling file names introduced in PyGame 1.9.2,
+            # we pass a file handle to PyGame. See also:
+            # https://github.com/expyriment/expyriment/issues/81
+            with open(self._filename, 'rb') as f:
+                self._file = mixer.Sound(f)
             self._is_preloaded = True
 
     def unload(self, **kwargs):
