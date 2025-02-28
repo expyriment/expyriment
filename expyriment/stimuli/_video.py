@@ -72,9 +72,9 @@ class Video(_visual.Stimulus):
         Parameters
         ----------
         filename : str
-            filename (incl. path) of the video
+            filename (incl. path) of the video file
         audio_backend : str, optional
-            the audio backend to use (one of "pygame" or "sounddevice")
+            audio backend to use (one of "pygame" or "sounddevice")
         position : (int, int), optional
             position of the stimulus
 

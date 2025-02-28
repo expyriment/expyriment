@@ -37,11 +37,9 @@ class Audio(Stimulus):
         Parameters
         ----------
         filename : str
-            the filename. Must be an .ogg or uncompressed .wav file.
+            filename (incl. path) of the audio file
 
         """
-        if os.path.splitext(filename)[1] not in ('.wav', '.ogg'):
-            raise ValueError("The audio file must be an .ogg or uncompressed .wav file")
 
         Stimulus.__init__(self, filename)
         self._filename = filename
@@ -96,11 +94,7 @@ class Audio(Stimulus):
         """Preload stimulus to memory."""
 
         if not self._is_preloaded:
-        # Due to a bug in handling file names in PyGame 1.9.2, we pass a file
-        # handle to PyGame. See also:
-        # https://github.com/expyriment/expyriment/issues/81
-            with open(self._filename, 'rb') as f:
-                self._file = mixer.Sound(f)
+            self._file = mixer.Sound(self._filename)
             self._is_preloaded = True
 
     def unload(self, **kwargs):
