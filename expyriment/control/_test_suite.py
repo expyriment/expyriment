@@ -237,9 +237,9 @@ After the test, you will be asked to indicate which (if any) of those two square
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results2_colour,
             position=(0, int(20 * scaling)))
-        if inaccuracy > 2:
+        if inaccuracy > round(refresh_rate / 4):
             results3_colour = [255, 0, 0]
-        elif inaccuracy in (1, 2):
+        elif 0 < inaccuracy <= round(refresh_rate / 4):
             results3_colour = [255, 255, 0]
         else:
             results3_colour = [0, 255, 0]
