@@ -111,7 +111,7 @@ class Video(_visual.Stimulus):
         except ImportError:
             raise ImportError(
                 "Video playback needs the package 'mediadecoder'." +
-                "\nPlease install mediadecoder(>=0.1.6,<1).")
+                "\nPlease install mediadecoder(>=0.2,<1).")
 
         if self._audio_backend == "sounddevice":
             try:
