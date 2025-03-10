@@ -396,7 +396,7 @@ class Video(_visual.Stimulus):
             self._file.seek(0)
             self._frame = 0
             self._start_position = 0
-            if self._file.audioformat:
+            if self._file.audioformat and hasattr(self, "_audio"):
                 self._audio.close_stream()
 
     def pause(self):
