@@ -10,6 +10,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 import time
+import atexit
 from types import FunctionType
 
 import pygame
@@ -91,6 +92,7 @@ class Video(_visual.Stimulus):
         self._new_frame_available = False
         self._surface_locked = False
         self._audio_started = False
+        self._start_position = 0
 
         if audio_backend:
             self._audio_backend = audio_backend
@@ -293,6 +295,7 @@ class Video(_visual.Stimulus):
 
             self._is_paused = False
             self._is_preloaded = True
+            atexit.register(self.unload)
 
     def unload(self, **kwargs):
         """Unload stimulus from memory.
@@ -304,6 +307,7 @@ class Video(_visual.Stimulus):
 
         if self._is_preloaded:
             self.stop()
+            del self._file
             self._file = None
             self._surface = None
             self._is_preloaded = False
@@ -355,6 +359,9 @@ class Video(_visual.Stimulus):
                     "Video,playing,{0}".format(self._filename),
                     log_level=1, log_event_tag=log_event_tag)
             if self._file.audioformat and audio:
+                old_buffersize = self._file.audioformat["buffersize"]
+                self._file.audioformat["buffersize"] = \
+                    control_defaults.audiosystem_buffer_size
                 if self._audio_backend == "pygame":
                     from mediadecoder.soundrenderers import SoundrendererPygame
                     self._audio = SoundrendererPygame(self._file.audioformat)
@@ -367,15 +374,28 @@ class Video(_visual.Stimulus):
                 self._file.set_audiorenderer(self._audio)
                 self._audio.start()
                 self._audio_started = True
+                self._file.audioformat["buffersize"] = old_buffersize
+
             self._file.loop = loop
             self._file.play()
+            if self._start_position != 0:
+                while True:
+                    try:
+                        self._file.seek(self._start_position)
+                        self._new_frame_available = False
+                        break
+                    except AttributeError:  # if thread not fully started yet
+                        if self._file.status == 2:  # paused by seek method
+                            self._file.pause()  # set playing again
 
     def stop(self):
         """Stop the video stimulus."""
 
         if self._is_preloaded:
             self._file.stop()
-            self.rewind()
+            self._file.seek(0)
+            self._frame = 0
+            self._start_position = 0
             if self._file.audioformat:
                 self._audio.close_stream()
 
@@ -400,10 +420,27 @@ class Video(_visual.Stimulus):
         """
 
         if self._is_preloaded:
-            pos = self._file.current_playtime + seconds
-            self._file.seek(pos)
+            if not(self.is_playing or self._is_paused):
+                pos = self._start_position + seconds
+                self._start_position = pos
+            else:
+                pos = self._file.current_playtime + seconds
+                if self._is_paused:
+                    self.pause()  # mediadecoder pauses itself before seeking!
+                    was_paused = True
+                else:
+                    was_paused = False
+                while True:
+                    try:
+                        self._file.seek(pos)
+                        break
+                    except AttributeError: # if thread not fully started yet
+                        pass
+                if was_paused:
+                    self.pause()  # mediadecoder unpauses itself after seeking!
             new_frame = int(pos * self._file.fps)
             self._frame = new_frame
+            self._new_frame_available = False
 
     def rewind(self):
         """Rewind to start of video stimulus."""
@@ -411,6 +448,7 @@ class Video(_visual.Stimulus):
         if self._is_preloaded:
             self._file.rewind()
             self._frame = 0
+            self._start_position = 0
 
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
