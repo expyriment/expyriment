@@ -9,16 +9,13 @@ from builtins import object
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
 import os
+import sys
+
 import pygame
 
-try:
-    import android
-except ImportError:
-    android = None
-
 from . import __version__
+
 
 def get_version():
     """
@@ -158,9 +155,10 @@ def get_settings_folder():
 
     home = os.getenv('USERPROFILE')
     if home is None:
-        if android is not None:
+        try:
+            sys.getandroidapilevel()
             home = "/storage/sdcard0/"
-        else:
+        except AttributeError:
             home = os.getenv('HOME')
     if is_venv():
         home = sys.prefix

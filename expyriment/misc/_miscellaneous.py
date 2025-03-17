@@ -16,6 +16,7 @@ import glob
 import random
 import colorsys
 import math
+import platform
 
 import pygame
 try:
@@ -23,7 +24,7 @@ try:
 except:
     sdl2_audio = None
 
-from .._internals import android, get_settings_folder, get_version, is_venv
+from .._internals import get_settings_folder, get_version, is_venv
 
 try:
     from locale import getdefaultlocale
@@ -361,7 +362,7 @@ def is_idle_running():
 
 
 def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDLE or
+    """Return if Python is running in interactive mode (such as IDLE or
     IPthon)
 
     Returns
@@ -377,7 +378,7 @@ def is_interactive_mode():
 def is_android_running():
     """Return True if Exypriment runs on Android."""
 
-    return android is not None
+    return hasattr(sys, "getandroidapilevel")
 
 
 def has_internet_connection():

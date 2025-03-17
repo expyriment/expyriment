@@ -90,9 +90,9 @@ try:
 
 except ImportError:
     print("No OpenGL support!" +
-                    "\nExpyriment {0} ".format(__version__) +
-                      "needs the package 'PyOpenGL'."
-                      "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
+          "\nExpyriment {0} ".format(__version__) +
+          "needs the package 'PyOpenGL'."
+          "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
 
 
 from ._internals import get_version, import_all_extras

@@ -14,10 +14,6 @@ import atexit
 from types import FunctionType
 
 import pygame
-try:
-    import android.mixer as mixer
-except Exception:
-    import pygame.mixer as mixer
 
 from . import defaults
 from . import _visual
@@ -38,9 +34,9 @@ class Video(_visual.Stimulus):
     the audio of the video. If the audiosystem is stopped BEFORE the video
     stimulus is played, (by calling ``expyriment.control.stop_audiosystem()``),
     or if the "sounddevice" backend is used, a temporary audiosystem will be
-    started with parameters (sample rate, bit depth, channels) matching those
-    of the video. The temporary audiosystem will be stopped when the video is
-    stopped.
+    started with parameters (sample rate, bit depth, channels) matching the
+    audiosystem defaults. The temporary audiosystem will be stopped when the
+    video is stopped.
 
     When showing videos in large dimensions, and your computer is not fast
     enough, frames might be dropped! When using ``Video.wait_frame()`` or
@@ -51,19 +47,14 @@ class Video(_visual.Stimulus):
     @staticmethod
     def get_ffmpeg_binary():
         try:
-            import imageio
+            import imageio_ffmpeg
             try:
-                ffmpeg_binary = imageio.plugins.ffmpeg.get_exe()
+                ffmpeg_binary = imageio_ffmpeg.get_ffmpeg_exe()
                 if ffmpeg_binary == "ffmpeg":
                     ffmpeg_binary = which(ffmpeg_binary)
                 return ffmpeg_binary
-            except imageio.core.NeedDownloadError:
-                try:
-                    assert has_internet_connection()
-                    imageio.plugins.ffmpeg.download()
-                    return imageio.plugins.ffmpeg.get_exe()
-                except Exception:
-                    os.environ['IMAGEIO_NO_INTERNET'] = 'yes'
+            except RuntimeError:
+                pass
         except ImportError:
             pass
 
@@ -107,7 +98,6 @@ class Video(_visual.Stimulus):
             raise IOError(u"The video file {0} does not exists".format(
                 self._filename))
 
-        Video.get_ffmpeg_binary()  # in case it still needs to be downloaded
         try:
             import mediadecoder as _mediadecoder
         except ImportError:
@@ -274,8 +264,13 @@ class Video(_visual.Stimulus):
                 raise RuntimeError("'ffmpeg' not found!")
             from mediadecoder.states import PLAYING
             from mediadecoder.decoder import Decoder
-            self._file = Decoder(mediafile=self._filename,
-                                 videorenderfunc=self._update_surface)
+            self._file = Decoder(
+                mediafile=self._filename,
+                videorenderfunc=self._update_surface,
+                audio_fps=control_defaults.audiosystem_sample_rate,
+                audio_nbytes=\
+                abs(int(control_defaults.audiosystem_bit_depth / 8)),
+                audio_nchannels=control_defaults.audiosystem_channels)
             if _internals.active_exp._screen.opengl:
                 import moviepy
                 if int(moviepy.__version__.split(".")[0]) > 1:
@@ -333,8 +328,8 @@ class Video(_visual.Stimulus):
         video stimulus is played, (by calling
         ``expyriment.control.stop_audiosystem()``), or if the "sounddevice"
         backend is used, a temporary audiosystem will be started with
-        parameters (sample rate, bit depth, channels) matching those of the
-        video. The temporary audiosystem will be stopped when the video is
+        parameters (sample rate, bit depth, channels) matching the audiosystem
+        defaults. The temporary audiosystem will be stopped when the video is
         stopped.
 
         When showing videos in large dimensions, and your computer is not fast
@@ -359,12 +354,12 @@ class Video(_visual.Stimulus):
                     "Video,playing,{0}".format(self._filename),
                     log_level=1, log_event_tag=log_event_tag)
             if self._file.audioformat and audio:
-                old_buffersize = self._file.audioformat["buffersize"]
-                self._file.audioformat["buffersize"] = \
-                    control_defaults.audiosystem_buffer_size
                 if self._audio_backend == "pygame":
                     from mediadecoder.soundrenderers import SoundrendererPygame
-                    self._audio = SoundrendererPygame(self._file.audioformat)
+                    self._audio = SoundrendererPygame(
+                        self._file.audioformat,
+                        pygame_buffersize=\
+                        control_defaults.audiosystem_buffer_size)
 
                 elif self._audio_backend == "sounddevice":
                     from mediadecoder.soundrenderers import \
@@ -374,7 +369,6 @@ class Video(_visual.Stimulus):
                 self._file.set_audiorenderer(self._audio)
                 self._audio.start()
                 self._audio_started = True
-                self._file.audioformat["buffersize"] = old_buffersize
 
             self._file.loop = loop
             self._file.play()

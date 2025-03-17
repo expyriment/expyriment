@@ -9,13 +9,9 @@ Oliver Lindemann <oliver@expyriment.org>'
 import sys
 import os
 import pygame
-try:
-    import android.mixer as mixer
-except ImportError:
-    import pygame.mixer as mixer
 
 from . import defaults
-from ._miscellaneous import _set_stdout_logging
+from ._miscellaneous import _set_stdout_logging, start_audiosystem
 from .._internals import get_version, android
 from .. import design, stimuli, misc, _internals
 from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
@@ -424,14 +420,21 @@ fullscreen.""")
     _keyboard.quit_key = defaults.quit_key
     _keyboard.end_function = end
 
-    mixer.pre_init(defaults.audiosystem_sample_rate,
-                   defaults.audiosystem_bit_depth,
-                   defaults.audiosystem_channels,
-                   defaults.audiosystem_buffer_size,
-                   devicename=defaults.audiosystem_device)
+    if defaults.audiosystem_bit_depth not in (8, -8, 16, -16, 32):
+        message = "Audiosystem only supports bit depth values of " + \
+            "8, -8, 16, -16 and 32."
+        raise RuntimeError(message.format(defaults.audiosystem.bit_depth))
+    if defaults.audiosystem_channels not in (1, 2, 4, 6):
+        message = "Audiosystem only supports channel values of 1, 2, 4 and 6."
+        raise RuntimeError(message.format(defaults.audiosystem.channels))
+    pygame.mixer.pre_init(defaults.audiosystem_sample_rate,
+                          defaults.audiosystem_bit_depth,
+                          defaults.audiosystem_channels,
+                          defaults.audiosystem_buffer_size,
+                          devicename=defaults.audiosystem_device,
+                          allowedchanges=0)
     if defaults.audiosystem_autostart:
-        mixer.init()
-        mixer.init()  # Needed on some systems
+        start_audiosystem()
 
     experiment._clock = misc.Clock()
     if hasattr(defaults, "open_gl"):

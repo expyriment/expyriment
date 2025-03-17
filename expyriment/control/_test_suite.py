@@ -17,7 +17,7 @@ try:
 except Exception:
     ogl = None
 
-from . import defaults, initialize, end
+from . import defaults, initialize, end, start_audiosystem, stop_audiosystem
 from .. import stimuli, io, _internals, design, control
 import expyriment
 
@@ -466,11 +466,10 @@ Afterwards, a test tone will be played back to you with the chosen settings.
 
     # Test if audio format is supported
     try:
-        pygame.mixer.quit()
+        stop_audiosystem()
         pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
-                              audio_format[2])
-        pygame.mixer.init()
-        pygame.mixer.init()
+                              audio_format[2], allowedchanges=0)
+        start_audiosystem()
     except:
         info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
 
@@ -758,11 +757,9 @@ def run_test_suite(item=None):
     v.plot(background)
     results = get_system_info()
 
-    try:
-        import android
+    if misc.is_android_running():
         mouse = io.Mouse(show_cursor=False)
-    except ImportError:
-        android = None
+    else:
         mouse = None
 
     preselected_item = 0

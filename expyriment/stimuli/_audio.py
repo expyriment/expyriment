@@ -10,10 +10,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 
-try:
-    import android.mixer as mixer
-except Exception:
-    import pygame.mixer as mixer
 from .. import _internals
 from ..misc import unicode2byte
 from ._stimulus import Stimulus
@@ -98,7 +94,7 @@ class Audio(Stimulus):
             # we pass a file handle to PyGame. See also:
             # https://github.com/expyriment/expyriment/issues/81
             with open(self._filename, 'rb') as f:
-                self._file = mixer.Sound(f)
+                self._file = pygame.mixer.Sound(f)
             self._is_preloaded = True
 
     def unload(self, **kwargs):
