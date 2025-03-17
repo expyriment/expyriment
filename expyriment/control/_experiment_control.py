@@ -12,8 +12,9 @@ import pygame
 
 from . import defaults
 from ._miscellaneous import _set_stdout_logging, start_audiosystem
-from .._internals import get_version, android
+from .._internals import get_version
 from .. import design, stimuli, misc, _internals
+from ..misc import is_android_running
 from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
                 _keyboard, TouchScreenButtonBox
 from ..io._screen import Screen
@@ -81,7 +82,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         default_number = subject_id
 
     if not auto_create_subject_id:
-        if android is not None:
+        if is_android_running():
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
             fields = [stimuli.Circle(radius=100, colour=(70, 70, 70),
                                      position=(0, 70), anti_aliasing=10),
@@ -200,7 +201,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                          text_size=int(experiment.text_size * 1.2),
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        if android is None:
+        if is_android_running():
             experiment.keyboard.wait()
         else:
             experiment.mouse.wait_press()
@@ -236,7 +237,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     experiment._screen.colour = [0, 0, 0]
     old_logging = experiment.log_level
     experiment.set_log_level(0)
-    if android is not None:
+    if is_android_running():
         position = (0, 200)
     else:
         position = (0, 0)
@@ -248,7 +249,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
-    if android is None:
+    if is_android_running():
         experiment.keyboard.wait(keys=(key))
     else:
         experiment.mouse.wait_press()
@@ -303,7 +304,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
         experiment._screen.colour = [0, 0, 0]
-        if android is not None:
+        if is_android_running():
             position = (0, 200)
         else:
             position = (0, 0)
