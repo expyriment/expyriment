@@ -87,8 +87,16 @@ class Audio(Stimulus):
         return rtn
 
     def preload(self):
-        """Preload stimulus to memory."""
+        """Preload stimulus to memory.
 
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
+        """
+
+        start = get_time()
         if not self._is_preloaded:
             # Due to a bug in handling file names introduced in PyGame 1.9.2,
             # we pass a file handle to PyGame. See also:
@@ -97,17 +105,27 @@ class Audio(Stimulus):
                 self._file = pygame.mixer.Sound(f)
             self._is_preloaded = True
 
+        return int((get_time() - start) * 1000)
+
     def unload(self, **kwargs):
         """Unload stimulus from memory.
 
         This removes the reference to the object in memory.
         It is up to the garbage collector to actually remove it from memory.
 
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
         """
 
+        start = get_time()
         if self._is_preloaded:
             self._file = None
             self._is_preloaded = False
+
+        return int((get_time() - start) * 1000)
 
     def play(self, loops=0, maxtime=0, fade_ms=0, log_event_tag=None):
         """Play the audio stimulus.

@@ -19,6 +19,7 @@ from . import defaults
 from . import _visual
 from ..control import defaults as control_defaults
 from ..misc import unicode2byte, Clock, has_internet_connection, which
+from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
 from .. import _internals
 
@@ -58,13 +59,38 @@ class Video(_visual.Stimulus):
         except ImportError:
             pass
 
-    def __init__(self, filename, audio_backend=None, position=None):
+    def __init__(self, filename, resizing=None, audio_backend=None,
+                 position=None):
         """Create a video stimulus.
 
         Parameters
         ----------
         filename : str
             filename (incl. path) of the video file
+        resizing : int, float, bool, None, list or tuple , optional
+            Determines whether and how the video should be resized upon
+            preloading.
+            When given a single value, the value can be:
+                int     - Resizing of video to the given height
+                          (e.g., 1080, 720)
+                float   - Resizing of video with given scaling factor
+                          (e.g., 0.5 * original)
+                `True`  - Resizing of video to fit screen
+                `False` - No resizing of video
+            Resizing using a single value will always maintain the orignal
+            aspect ratio.
+            When given a list or tuple of (width, height), resizing of each
+            dimension can be controlled individually, and the values can be:
+                int     - Resizing of dimension to given value
+                float   - Resizing of dimension with given scaling factor
+                `True`  - Resizing of dimension to fit screen dimension
+                `False` - No resizing of dimension
+                `None`  - Conditional resizing of dimension
+                          (i.e., compute value to keep aspect ratio, given
+                          value of the other dimension; if both dimensions are
+                          `None`, resize to fit the screen, but only if either
+                          dimension of the original exceeds the corresponding
+                          screen dimension)
         audio_backend : str, optional
             audio backend to use (one of "pygame" or "sounddevice")
         position : (int, int), optional
@@ -85,11 +111,15 @@ class Video(_visual.Stimulus):
         self._audio_started = False
         self._start_position = 0
 
-        if audio_backend:
+        if audio_backend is not None:
             self._audio_backend = audio_backend
         else:
             self._audio_backend = defaults.video_audio_backend
-        if position:
+        if resizing is not None:
+            self._resizing = resizing
+        else:
+            self._resizing = defaults.video_resizing
+        if position is not None:
             self._position = position
         else:
             self._position = defaults.video_position
@@ -99,7 +129,7 @@ class Video(_visual.Stimulus):
                 self._filename))
 
         try:
-            import mediadecoder as _mediadecoder
+            import mediadecoder
         except ImportError:
             raise ImportError(
                 "Video playback needs the package 'mediadecoder'." +
@@ -107,34 +137,12 @@ class Video(_visual.Stimulus):
 
         if self._audio_backend == "sounddevice":
             try:
-                import sounddevice as _sounddevice
+                import sounddevice
             except ImportError:
                 raise ImportError(
                     "Audio backend needs the package 'sounddevice'." +
                     "\nPlease install sounddevice(>=0.3.,<1).")
 
-            # Set output device from control.defaults
-            default_device = control_defaults.audiosystem_device
-            if default_device is not None:
-                device_id = None
-                # get devices that sounddevice knows
-                devices = _sounddevice.query_devices()
-                # only consider devices of default audio api
-                devices = [x for x in devices \
-                           if x["hostapi"] == _sounddevice.default.hostapi]
-                # only consider output devices
-                devices = [x for x in devices \
-                           if x["max_output_channels"] > 0]
-                # find device that best corresponds to the one Pygame uses
-                for device in devices:
-                    tmp = sorted([device["name"], default_device], key=len)
-                    # allow for a mismatch of up to 1 character
-                    # (":" vs. "," on Linux)
-                    if len([x for c,x in enumerate(tmp[0]) \
-                            if tmp[1][c] != x]) <= 1:
-                        device_id = device["index"]
-                if device_id is not None:
-                    _sounddevice.default.device = None, device_id
         elif self._audio_backend != "pygame":
             raise ValueError("Unknown audio backend '{0}'!".format(
                 self._audio_backend))
@@ -156,18 +164,6 @@ class Video(_visual.Stimulus):
         return self._is_preloaded
 
     @property
-    def position(self):
-        """Getter for position."""
-
-        return self._position
-
-    @property
-    def audio_backend(self):
-        """Getter for audio_backend."""
-
-        return self._audio_backend
-
-    @property
     def filename(self):
         """Getter for filename."""
 
@@ -185,6 +181,57 @@ class Video(_visual.Stimulus):
             if not(os.path.isfile(self._filename)):
                 raise IOError(u"The video file {0} does not exists".format(
                     self._filename))
+
+    @property
+    def resizing(self):
+        """Getter for resizing."""
+
+        return self._resizing
+
+    @resizing.setter
+    def resizing(self, value):
+        if self._is_preloaded:
+            raise AttributeError(Video._getter_exception_message.format(
+                "resizing"))
+        else:
+            self._resizing = value
+
+    @property
+    def audio_backend(self):
+        """Getter for audio_backend."""
+
+        return self._audio_backend
+
+    @audio_backend.setter
+    def audio_backend(self, value):
+        if self._is_preloaded:
+            raise AttributeError(Video._getter_exception_message.format(
+                "audio_backend"))
+        else:
+            if value not in ("pygame", "sounddevice"):
+                raise ValueError("Unknown audio backend '{0}'!".format(value))
+            self._audio_backed = value
+
+    @property
+    def position(self):
+        """Getter for position."""
+
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        if self._is_preloaded:
+            raise AttributeError(Video._getter_exception_message.format(
+                "position"))
+        else:
+            self._position = value
+
+    @property
+    def size(self):
+        """Getter for size."""
+
+        if self._is_preloaded:
+            return self._file.clip.size
 
     @property
     def is_playing(self):
@@ -206,13 +253,6 @@ class Video(_visual.Stimulus):
 
         if self._is_preloaded:
             return self._file.current_playtime
-
-    @property
-    def size(self):
-        """Property to get the resolution of the video."""
-
-        if self._is_preloaded:
-            return self._file.clip.size
 
     @property
     def frame(self):
@@ -253,20 +293,108 @@ class Video(_visual.Stimulus):
     def preload(self):
         """Preload stimulus to memory.
 
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
         """
 
+        start = get_time()
         if not self._is_preloaded:
             if not _internals.active_exp.is_initialized:
                 message = "Can't preload video. Expyriment needs to be " + \
                           "initialized before preloading a video."
                 raise RuntimeError(message)
+
             if self.get_ffmpeg_binary() is None:
                 raise RuntimeError("'ffmpeg' not found!")
+
+            if self._audio_backend == "sounddevice":
+                # Set output device from control.defaults
+                import sounddevice as _sounddevice
+                default_device = control_defaults.audiosystem_device
+                if default_device is not None:
+                    device_id = None
+                    # get devices that sounddevice knows
+                    devices = _sounddevice.query_devices()
+                    # only consider devices of default audio api
+                    devices = [x for x in devices \
+                               if x["hostapi"] == _sounddevice.default.hostapi]
+                    # only consider output devices
+                    devices = [x for x in devices \
+                               if x["max_output_channels"] > 0]
+                    # find device that best corresponds to the one Pygame uses
+                    for device in devices:
+                        tmp = sorted([device["name"], default_device], key=len)
+                        # allow for a mismatch of up to 1 character
+                        # (":" vs. "," on Linux)
+                        if len([x for c,x in enumerate(tmp[0]) \
+                                if tmp[1][c] != x]) <= 1:
+                            device_id = device["index"]
+                    if device_id is not None:
+                        _sounddevice.default.device = None, device_id
+
             from mediadecoder.states import PLAYING
             from mediadecoder.decoder import Decoder
+
+            # Calculate target_resolution
+            screen_size = _internals.active_exp.screen.surface.get_size()
+            if isinstance(self._resizing, (int, float, bool)):  # single value
+                if self._resizing == False:
+                    target_res = (None, None)
+                elif isinstance(self._resizing, (int, float, bool)):
+                    video_size = Decoder(mediafile=self._filename, play_audio=False).clip.size
+                    if self._resizing is True:
+                        x_diff = video_size[0] - screen_size[0]
+                        y_diff = video_size[1] - screen_size[1]
+                        if x_diff > y_diff:
+                            target_res = (screen_size[0], None)
+                        else:
+                            target_res = (None, screen_size[1])
+                    elif isinstance(self._resizing, int):
+                        target_res = (None, self._resizing)
+                    elif isinstance(self._resizing, float):
+                        target_res = (int(video_size[0] * self._resizing),
+                                      int(video_size[1] * self._resizing))
+
+            elif (hasattr(self._resizing, '__getitem__')) and \
+                  (hasattr(self._resizing, '__len__')) and \
+                   len(self._resizing) >= 2:  # List/tuple (or other indexable)
+                if (self._resizing[0] is None and self._resizing[1] is None) \
+                or any(isinstance(x, float) for x in self._resizing) \
+                        or False in self._resizing:
+                        video_size = Decoder(mediafile=self._filename,
+                                             play_audio=False).clip.size
+                if self._resizing[0] is None and self._resizing[1] is None:
+                    x_diff = video_size[0] - screen_size[0]
+                    y_diff = video_size[1] - screen_size[1]
+                    if x_diff > 0 and y_diff > 0:
+                        if x_diff > y_diff:
+                            target_res = (screen_size[0], None)
+                        else:
+                            target_res = (None, screen_size[1])
+                    else:
+                        target_res = (None, None)
+                else:
+                    target_res = [None, None]
+                    for c, value in enumerate(self._resizing):
+                        if value == False:
+                            target_res[c] = video_size[c]
+                        elif value == True:
+                            target_res[c] = screen_size[c]
+                        elif type(value) is int:
+                            target_res[c] = value
+                        elif type(value) is float:
+                            target_res[c] = int(value * video_size[c])
+                        elif value is None:
+                            pass
+
+            # Load media
             self._file = Decoder(
                 mediafile=self._filename,
                 videorenderfunc=self._update_surface,
+                target_resolution=target_res,
                 audio_fps=control_defaults.audiosystem_sample_rate,
                 audio_nbytes=\
                 abs(int(control_defaults.audiosystem_bit_depth / 8)),
@@ -292,20 +420,30 @@ class Video(_visual.Stimulus):
             self._is_preloaded = True
             atexit.register(self.unload)
 
+        return int((get_time() - start) * 1000)
+
     def unload(self, **kwargs):
         """Unload stimulus from memory.
 
         This removes the reference to the object in memory.
         It is up to the garbage collector to actually remove it from memory.
 
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
+
         """
 
+        start = get_time()
         if self._is_preloaded:
             self.stop()
             del self._file
             self._file = None
             self._surface = None
             self._is_preloaded = False
+
+        return int((get_time() - start) * 1000)
 
     def play(self, loop=False, log_event_tag=None, audio=True):
         """Play the video stimulus from the current position.

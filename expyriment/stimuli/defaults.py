@@ -100,6 +100,7 @@ rectangle_corner_anti_aliasing = 0
 picture_position = (0, 0)
 
 # Video
+video_resizing = (None, None)
 video_audio_backend = "pygame"
 video_position = [0, 0]
 
