@@ -16,7 +16,6 @@ import glob
 import random
 import colorsys
 import math
-import platform
 
 import pygame
 try:

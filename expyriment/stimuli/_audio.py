@@ -10,8 +10,11 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 
+import pygame
+
 from .. import _internals
 from ..misc import unicode2byte
+from ..misc._timer import get_time
 from ._stimulus import Stimulus
 
 
