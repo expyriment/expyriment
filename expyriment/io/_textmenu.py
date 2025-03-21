@@ -172,7 +172,7 @@ class TextMenu(Input):
             text_font=heading_font,
             text_colour=heading_text_colour,
             text_bold=True,
-            background_colour=self._bkg_colours[0])
+            background_colour=self._bkg_colours[0]) ## changes Florian TODO
         stimuli._stimulus.Stimulus._id_counter -= 1
 
     @property
