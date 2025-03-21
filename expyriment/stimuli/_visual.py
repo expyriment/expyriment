@@ -989,7 +989,7 @@ class Visual(Stimulus):
         if self.is_compressed is False:
             if self._compression_filename is None:
                 fid, self._compression_filename = tempfile.mkstemp(
-                    dir=defaults.tempdir, suffix=".tga")
+                    dir=defaults.tempdir, suffix=".bmp")
                 os.close(fid)
             pygame.image.save(self._get_surface(), self._compression_filename)
             self._is_compressed = True
@@ -1231,7 +1231,7 @@ class Visual(Stimulus):
         if len(parts) > 1:
             parts[-1] = parts[-1].lower()
         else:
-            parts.append("tga")
+            parts.append("bmp")
         filename = ".".join(parts)
         pygame.image.save(self._get_surface(), unicode2byte(filename))
 
@@ -1250,7 +1250,7 @@ class Visual(Stimulus):
 
         from . import _picture
         fid, location = tempfile.mkstemp(dir=defaults.tempdir,
-                                         suffix=".tga")
+                                         suffix=".bmp")
         os.close(fid)
         pygame.image.save(self._get_surface(), location)
         return _picture.Picture(filename=location)
