@@ -196,6 +196,7 @@ class Visual(Stimulus):
             textureData = pygame.image.tostring(surf, "RGBA", 1)
             colours = ogl.GL_RGBA
             width, height = surf.get_size()
+            ogl.glPixelStorei(ogl.GL_UNPACK_ALIGNMENT, 4)
         else:
             textureData = surf
             if textureData.shape[2] == 3:
@@ -203,9 +204,9 @@ class Visual(Stimulus):
             elif textureData.shape[2] == 4:
                 colours = ogl.GL_RGBA
             width, height = len(surf[0]), len(surf)
+            ogl.glPixelStorei(ogl.GL_UNPACK_ALIGNMENT, 1)
         ogl.glEnable(ogl.GL_TEXTURE_2D)
         ogl.glBindTexture(ogl.GL_TEXTURE_2D, txtr)
-        ogl.glPixelStorei(ogl.GL_UNPACK_ALIGNMENT, 1)
         ogl.glTexImage2D(ogl.GL_TEXTURE_2D, 0, colours, width, height, 0,
           colours, ogl.GL_UNSIGNED_BYTE, textureData)
         ogl.glTexParameterf(ogl.GL_TEXTURE_2D,
