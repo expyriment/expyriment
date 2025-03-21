@@ -83,22 +83,10 @@ After the test, you will be asked to indicate which (if any) of those two square
 [Press RETURN to continue]"""
 
         text = stimuli.TextScreen("Visual stimulus presentation test", info)
-        #y = []
-        #for x in [16, 32, 48, 64]:
-        #    y.extend([x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, ])
-        #graph1 = _make_graph(range(60), y, [0, 255, 0])
-        #y = range(80)
-        #graph2 = _make_graph(range(60), y, [255, 0, 0])
-        #graph1.position = (-200, -100)
-        #graph2.position = (200, -100)
-        while True:
-            text.present()
-        #graph1.present(clear=False, update=False)
-        #graph2.present(clear=False)
-            key, rt_ = exp.keyboard.wait([constants.K_RETURN])
-            if key is not None:
-                break
+        text.present()
+        key, rt_ = exp.keyboard.wait([constants.K_RETURN])
         message = stimuli.TextScreen("Running", "Please wait...")
+        message.present()
         message.present()
         message.present()
         message.present()
@@ -121,11 +109,12 @@ After the test, you will be asked to indicate which (if any) of those two square
         c2.present(clear=False)
         c3.present(clear=False)
 
-        s1 = stimuli.Circle(1, colour=exp.background_colour)
-        s2 = stimuli.Circle(1, colour=exp.background_colour)
+        s1 = stimuli.Canvas(exp.screen.size)  # fullscreen transparent
+        s2 = stimuli.Canvas(exp.screen.size)  # fullscreen transparent
         s1.preload()
         s2.preload()
-        to_do_time = list(range(0, 60)) * 3
+        to_do_time = list(range(0,25)) + list(range(100,125)) + \
+                     list(range(200,225)) + list(range(300,325))
         randomize.shuffle_list(to_do_time)
         actual_time = []
         for x in to_do_time:
@@ -136,46 +125,39 @@ After the test, you will be asked to indicate which (if any) of those two square
             actual_time.append((get_time() - start) * 1000)
             exp.clock.wait(randomize.rand_int(30, 60))
 
-        # determine refresh_rate
-        tmp = []
-        for _x in range(100):
+        # determine refresh rate
+        s = stimuli.Circle(0, colour=exp.background_colour)  # 1 px
+        s.preload()
+        frame_times = []
+        for _x in range(300):
             start = get_time()
-            s1.present(clear=False)
-            tmp.append(get_time() - start)
-            start = get_time()
-            s2.present(clear=False)
-            tmp.append(get_time() - start)
-        refresh_rate = 1000 / (statistics.mean(tmp) * 1000)
+            s.present(clear=False)
+            frame_times.append(get_time() - start)
 
-        #text = stimuli.TextScreen("Results", "[Press RETURN to continue]")
-        #graph = _make_graph(to_do_time, actual_time, [150, 150, 150])
-        #graph.position = (0, -100)
-        #text.present(update=False)
-        #graph.present(clear=False)
-        #exp.keyboard.wait([constants.K_RETURN])
-        #text = stimuli.TextScreen(
-        #    "Which picture looks most similar to the results?",
-        #    "[Press LEFT or RIGHT arrow key]")
-        #y = []
-        #for x in [16, 32, 48, 64]:
-        #    y.extend([x, x, x, x, x, x, x, x, x, x, x, x, x, x, x, ])
-        #graph1 = _make_graph(range(60), y, [0, 255, 0])
-        #y = range(80)
-        #graph2 = _make_graph(range(60), y, [255, 0, 0])
-        #graph1.position = (-200, -100)
-        #graph2.position = (200, -100)
-        #text.present(update=False)
-        #graph1.present(clear=False, update=False)
-        #graph2.present(clear=False)
-        #key, _rt = exp.keyboard.wait([constants.K_LEFT,
-        #                             constants.K_RIGHT])
-        #if key == constants.K_LEFT:
-        #    response1 = "Steps"
-        #elif key == constants.K_RIGHT:
-        #    response1 = "Line"
-        #else:
-        #    response1 = None
+        # account for dropped frames and rate limiting
+        valid_frame_times = []
+        for c, x in enumerate(frame_times[2:]):  # ignore first two frames
+            if c > 0 and x / statistics.mean(valid_frame_times) > 1.5:
+                pass
+            else:
+                valid_frame_times.append(x)
+        refresh_rate = 1000 / (statistics.mean(valid_frame_times) * 1000)
 
+        def has_peaks(data):
+            cv = statistics.std(data) / statistics.mean(data)
+            if cv > 1:
+                return True
+            else:
+                return False
+
+        def get_local_peak(presentation_time, refresh_rate, spread=25):
+            refresh_time = 1000 / refresh_rate
+            multiples = presentation_time / refresh_time
+            spread = spread / 100
+            if abs(multiples) % 1 < spread or abs(multiples) % 1 > 1 - spread:
+                return round(multiples) * refresh_time
+            else:
+                return None
 
         # show histogram of presentation delays
         def expected_delay(presentation_time, refresh_rate):
@@ -184,20 +166,34 @@ After the test, you will be asked to indicate which (if any) of those two square
                 return refresh_time - (presentation_time % refresh_time)
             else:
                 return 0
+
         # delay = map(lambda x: x[1]- x[0], zip(to_do_time, actual_time))
-        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) for x in zip(to_do_time, actual_time)]
+        diff = [x[0] - x[1] for x in zip(actual_time, to_do_time)]
+        unexplained_delay = [x[1]- x[0] - expected_delay(x[0], refresh_rate) \
+                             for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
         delayed_presentations = 0
+        if os.environ.get("XPY_TESTSUITE_EXPERIMENTAL"):
+            peaks = has_peaks(hist.values())
+        else:
+            peaks = False
         for key in list(hist.keys()):
-            inaccuracies.extend([key % max(1, (1000 // refresh_rate))] * hist[key])
-            if key != 0:
+            peak = get_local_peak(key, refresh_rate)
+            if peaks and peak is not None:
+                inaccuracies.extend(
+                    [abs(int(round(peak)) - key)] * hist[key])
+            else:
+                inaccuracies.extend(
+                    [key % max(1, (1000 // refresh_rate))] * hist[key])
+            if key > 0:
                 delayed_presentations += hist[key]
         inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
-        delayed = misc.round(100 * delayed_presentations/180.0, 1)
+        delayed = misc.round(100 * delayed_presentations/len(to_do_time), 1)
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
-                    constants.K_0:0, constants.K_1:1, constants.K_2:2}
+                    constants.K_0:0, constants.K_1:1, constants.K_2:2,
+                    constants.K_KP0:0, constants.K_KP1:1, constants.K_KP2:2}
         text = stimuli.TextScreen(
             "How many of the two squares were flickering?",
             "[Press 0 (or F1), 1 (or F2), 2 (or F3)]")
@@ -216,60 +212,74 @@ After the test, you will be asked to indicate which (if any) of those two square
             scaling = 2
 
         info = stimuli.TextScreen("Results", "")
-        if int(misc.round(refresh_rate))  < 50 or int(misc.round(refresh_rate)) > 360:
+        if int(misc.round(refresh_rate))  < 50 or \
+                int(misc.round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
         elif int(misc.round(refresh_rate)) not in (60, 75, 120, 144, 240):
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
-        results1 = stimuli.TextScreen("",
-                    "Estimated Screen Refresh Rate:     {0} Hz (~ every {1} ms)\n\n".format(
-                        int(misc.round(refresh_rate)), misc.round(1000/refresh_rate, 1)),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results1_colour, position=(0, int(40 * scaling)))
-        results2 = stimuli.TextScreen("",
-                    "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, position=(0, int(20 * scaling)))
-        if inaccuracy > 2:
+        r = "{0} Hz (~ every {1} ms)".format(
+            int(misc.round(refresh_rate)),
+            misc.round(1000/refresh_rate, 1))
+        results1 = stimuli.TextScreen(
+            "", "Estimated Screen Refresh Rate:     {0}\n\n".format(r),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results1_colour,
+            position=(0, int(40 * scaling)))
+        if response !=1:
+            results2_colour = [255, 0, 0]
+        else:
+            results2_colour = [0, 255, 0]
+        results2 = stimuli.TextScreen(
+            "",
+            "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results2_colour,
+            position=(0, int(20 * scaling)))
+        if inaccuracy > round(refresh_rate / 4):
             results3_colour = [255, 0, 0]
-        elif inaccuracy in (1, 2):
+        elif 0 < inaccuracy <= round(refresh_rate / 4):
             results3_colour = [255, 255, 0]
         else:
             results3_colour = [0, 255, 0]
-        results3 = stimuli.TextScreen("",
-                    "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results3_colour, position=(0, -int(20 * scaling)))
+        results3 = stimuli.TextScreen(
+            "",
+            "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results3_colour,
+            position=(0, -int(20 * scaling)))
         if delayed > 10:
             results4_colour = [255, 0, 0]
         elif 10 > delayed > 1:
             results4_colour = [255, 255, 0]
         else:
             results4_colour = [0, 255, 0]
-        results4 = stimuli.TextScreen("",
-                    "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, text_colour=results4_colour, position=(0, -int(40 * scaling)))
-        results5 = stimuli.TextScreen("",
-                    hist_str,
-                    text_font="freemono", text_size=int(16 * scaling), text_bold=True,
-                    text_justification=0, position=(0, -int(100 * scaling)))
+        results4 = stimuli.TextScreen(
+            "",
+            "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=True,
+            text_justification=0, text_colour=results4_colour,
+            position=(0, -int(40 * scaling)))
+        results5 = stimuli.TextScreen(
+            "", hist_str, text_font="freemono", text_size=int(16 * scaling),
+            text_bold=True, text_justification=0,
+            position=(0, -int(100 * scaling)))
         results1.plot(info)
         results2.plot(info)
         results3.plot(info)
         results4.plot(info)
         results5.plot(info)
-        info2 = stimuli.TextLine("[Press RETURN to continue]", position=(0, -int(160 * scaling)))
+        info2 = stimuli.TextLine("[Press RETURN to continue]",
+                                 position=(0, -int(160 * scaling)))
         info2.plot(info)
         while True:
             info.present()
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
             if key is not None:
                 break
-        return to_do_time, actual_time, refresh_rate, inaccuracy, delayed, response
-
-
+        return (to_do_time, actual_time, refresh_rate, inaccuracy, delayed,
+                response)
 
 #     def _test2():
 #         info = """This will test if stimulus presentation can be synchronized to the refreshrate of the screen.
