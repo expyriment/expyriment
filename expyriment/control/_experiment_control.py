@@ -9,15 +9,12 @@ Oliver Lindemann <oliver@expyriment.org>'
 import sys
 import os
 import pygame
-try:
-    import android.mixer as mixer
-except ImportError:
-    import pygame.mixer as mixer
 
 from . import defaults
-from ._miscellaneous import _set_stdout_logging
-from .._internals import get_version, android
+from ._miscellaneous import _set_stdout_logging, start_audiosystem
+from .._internals import get_version
 from .. import design, stimuli, misc, _internals
+from ..misc import is_android_running
 from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
                 _keyboard, TouchScreenButtonBox
 from ..io._screen import Screen
@@ -85,7 +82,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         default_number = subject_id
 
     if not auto_create_subject_id:
-        if android is not None:
+        if is_android_running():
             background_stimulus = stimuli.BlankScreen(colour=(0, 0, 0))
             fields = [stimuli.Circle(radius=100, colour=(70, 70, 70),
                                      position=(0, 70), anti_aliasing=10),
@@ -204,7 +201,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                          text_size=int(experiment.text_size * 1.2),
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        if android is None:
+        if is_android_running():
             experiment.keyboard.wait()
         else:
             experiment.mouse.wait_press()
@@ -240,7 +237,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     experiment._screen.colour = [0, 0, 0]
     old_logging = experiment.log_level
     experiment.set_log_level(0)
-    if android is not None:
+    if is_android_running():
         position = (0, 200)
     else:
         position = (0, 0)
@@ -252,7 +249,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     experiment._screen.colour = screen_colour
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
-    if android is None:
+    if is_android_running():
         experiment.keyboard.wait(keys=(key))
     else:
         experiment.mouse.wait_press()
@@ -307,7 +304,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         experiment._event_file_log("Experiment,paused")
         screen_colour = experiment.screen.colour
         experiment._screen.colour = [0, 0, 0]
-        if android is not None:
+        if is_android_running():
             position = (0, 200)
         else:
             position = (0, 0)
@@ -424,13 +421,21 @@ fullscreen.""")
     _keyboard.quit_key = defaults.quit_key
     _keyboard.end_function = end
 
-    mixer.pre_init(defaults.audiosystem_sample_rate,
-                   defaults.audiosystem_bit_depth,
-                   defaults.audiosystem_channels,
-                   defaults.audiosystem_buffer_size)
+    if defaults.audiosystem_bit_depth not in (8, -8, 16, -16, 32):
+        message = "Audiosystem only supports bit depth values of " + \
+            "8, -8, 16, -16 and 32."
+        raise RuntimeError(message.format(defaults.audiosystem.bit_depth))
+    if defaults.audiosystem_channels not in (1, 2, 4, 6):
+        message = "Audiosystem only supports channel values of 1, 2, 4 and 6."
+        raise RuntimeError(message.format(defaults.audiosystem.channels))
+    pygame.mixer.pre_init(defaults.audiosystem_sample_rate,
+                          defaults.audiosystem_bit_depth,
+                          defaults.audiosystem_channels,
+                          defaults.audiosystem_buffer_size,
+                          devicename=defaults.audiosystem_device,
+                          allowedchanges=0)
     if defaults.audiosystem_autostart:
-        mixer.init()
-        mixer.init()  # Needed on some systems
+        start_audiosystem()
 
     experiment._clock = misc.Clock()
     if hasattr(defaults, "open_gl"):

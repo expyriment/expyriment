@@ -18,8 +18,12 @@ import colorsys
 import math
 
 import pygame
+try:
+    import pygame._sdl2.audio as sdl2_audio
+except:
+    sdl2_audio = None
 
-from .._internals import android, get_settings_folder, get_version, is_venv
+from .._internals import get_settings_folder, get_version, is_venv
 
 try:
     from locale import getdefaultlocale
@@ -357,7 +361,7 @@ def is_idle_running():
 
 
 def is_interactive_mode():
-    """Returns if Python is running in interactive mode (such as IDLE or
+    """Return if Python is running in interactive mode (such as IDLE or
     IPthon)
 
     Returns
@@ -373,7 +377,7 @@ def is_interactive_mode():
 def is_android_running():
     """Return True if Exypriment runs on Android."""
 
-    return android is not None
+    return hasattr(sys, "getandroidapilevel")
 
 
 def has_internet_connection():
@@ -557,7 +561,8 @@ def string_sort_array(array):
 
     Returns
     -------
-    array: the sorted array
+    array : list
+        the sorted array
 
     """
 
@@ -570,3 +575,32 @@ def _sorter_fnc(x):
         return str("")
     else:
         return str(x)
+
+def get_audio_devices(input_devices=False):
+    """Get the names of available audio devices.
+
+    Parameters
+    ----------
+    input_devices : bool, optional
+        return input (instead of output) device names (default=False)
+
+    Returns
+    -------
+    audio_devices : list
+        a list of audio device names
+
+    """
+
+    if sdl2_audio is None:
+        return
+
+    is_initialized = pygame.mixer.get_init()
+    if not is_initialized:
+        pygame.mixer.init()
+
+    audio_devices = sdl2_audio.get_audio_device_names(input_devices)
+
+    if not is_initialized:
+        pygame.mixer.quit()
+
+    return audio_devices

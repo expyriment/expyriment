@@ -166,15 +166,13 @@ class TextMenu(Input):
                 text_justification=justification,
                 size=self._line_size))
             stimuli._stimulus.Stimulus._id_counter -= 1
-        self._heading = stimuli.TextBox(
+        self._heading = stimuli.TextLine(
             heading,
             text_size=text_size,
-            text_justification=justification,
             text_font=heading_font,
             text_colour=heading_text_colour,
             text_bold=True,
-            background_colour=self._bkg_colours[0],
-            size=self._line_size)
+            background_colour=self._bkg_colours[0])
         stimuli._stimulus.Stimulus._id_counter -= 1
 
     @property

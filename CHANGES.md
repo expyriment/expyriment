@@ -45,15 +45,31 @@ Changed:
 - Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
 - Always use maximal display resolution by default for fullscreen mode (unless
   overwritten by control.defaults.display_resolution)
-- ``expyriment.control.defaults.openg_gl`` is now called ``expyriment.control.defaults.opengl``
+- ``expyriment.control.defaults.openg_gl`` is now called
+  ``expyriment.control.defaults.opengl``
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
 - updated command line interface options:
     - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
     - OpenGL mode can now be set with new option ``--opengl``
     - all arguments are now also available as alternative long names
-- io.TextMenu: `width` is now an optional parameter. If not defined, surface width is based on the widest item in the menu
+- io.TextMenu: `width` is now an optional parameter. If not defined, surface
+  width is based on the widest item in the menu
 - misc.get_system_info: format changes for ``as_text`` output and improvements
+- audiosystem:
+    - support for selecting audio device
+    - new control default ``audiosystem_device``
+    - new function ``misc.get_audio_devices``
+- stimuli.Audio:
+    - not limited to .wav/.ogg files anymore
+    - should support most common formats (i.e. WAV, AIFF, MP3, Ogg, Opus, FLAC)
+- stimuli.Video:
+    - general improvements
+    - Pygame video backend removed (always relies on mediadecoder)
+    - Pygame audio backend is now the default (instead of sounddevice)
+    - new parameter ``audio_backend``
+    - new stimuli default ``video_audio_backend``
+    - Pygame audio backend uses current audiosystem (if started)
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour

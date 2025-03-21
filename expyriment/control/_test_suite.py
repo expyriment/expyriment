@@ -17,7 +17,7 @@ try:
 except Exception:
     ogl = None
 
-from . import defaults, initialize, end
+from . import defaults, initialize, end, start_audiosystem, stop_audiosystem
 from .. import stimuli, io, _internals, design, control
 import expyriment
 
@@ -380,18 +380,33 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    audio_formats = []
-    hz = (44100, 48000, 96000)
-    bits = (-16, -24, -32)
-    for x in bits:
-        for y in hz:
-            try:
-                pygame.mixer.quit()
-                pygame.mixer.pre_init(y, x, 2, 512, allowedchanges=pygame.AUDIO_ALLOW_FREQUENCY_CHANGE)
-                pygame.mixer.init()
-                audio_formats.append((y, x))
-            except:
-                break
+    info = f"""This will test the auditory stimulus presentation capabilities of your system.
+You will be asked to select the audio device, format, and buffer size to test.
+Afterwards, a test tone will be played back to you with the chosen settings.
+
+[Press RETURN to continue]
+"""
+    text = stimuli.TextScreen(f"Auditory stimulus presentation test", info)
+    while True:
+        text.present()
+        key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+        if key is not None:
+            break
+
+    # Get audio device
+    options = misc.get_audio_devices()
+    menu = io.TextMenu("Audio device", menu_items=options)
+    audio_device = options[menu.get()]
+
+    # Get sample rate
+    sample_rates = (22050, 44100, 48000, 88200, 96000, 192000)
+    bit_depths = ((8, "8-bit signed integer (8-bit audio)"),
+                 (-8, "8-bit unsigned integer (uncommon)"),
+                 (16, "16-bit signed integer (uncommon)"),
+                 (-16, "16-bit unsigned integer (16-bit audio)"),
+                 (32, "32-bit floating point (23-bit float audio)"))
+    channel_counts = (1, 2, 4 ,6)
+
     buffer_sizes = [32, 64, 128, 256, 512, 1024, 2048, 4096]
 
     # Scale fonts/logo according to default font size
@@ -401,19 +416,76 @@ def _audio_playback(exp):
     if scaling > 2:
         scaling = 2
 
-    # Get samplerate, bitrate
-    options = [f"{x[0]} Hz, {x[1] * -1} bit" for x in audio_formats]
-    default = (control.defaults.audiosystem_sample_rate,
-               control.defaults.audiosystem_bit_depth)
-    if default in audio_formats:
-        index = audio_formats.index(default)
+    # Get samplerate, bitrate for common parameters
+    common = [(sample_rates[1], bit_depths[3], channel_counts[1]),
+              (sample_rates[2], bit_depths[3], channel_counts[1])]
+    default = control.defaults.audiosystem_sample_rate
+    if default in [x[0] for x in common]:
+        index = [x[0] for x in common].index(default)
     else:
-        index = 0
+        index = 2
+    options = [f"{x[0]} Hz, {abs(x[1][0])}-bit, {x[2]} ch" for x in common]
+    options.append("Other")
     menu = io.TextMenu("Audio format", menu_items=options)
-    audio_format = audio_formats[menu.get(index)]
+    selection = menu.get(index)
+    if selection < 2:
+        audio_format = common[selection]
+    else:
+        audio_format = []
+        # Get custom samplerate
+        default = control.defaults.audiosystem_sample_rate
+        if default in sample_rates:
+            index = sample_rates.index(default)
+        else:
+            index = 0
+        menu = io.TextMenu("Sample rate",
+                           menu_items=[f"{x}" for x in sample_rates])
+        audio_format.append(sample_rates[menu.get(index)])
+        # Get custom bit depth
+        default = control.defaults.audiosystem_bit_depth
+        if default in [x[0] for x in bit_depths]:
+            index = [x[0] for x in bit_depths].index(default)
+        else:
+            index = 0
+        menu = io.TextMenu("Bit depth",
+                           menu_items=[f"{x[0]}" for x in bit_depths])
+        audio_format.append(bit_depths[menu.get(index)])
+        # Get channels
+        default = control.defaults.audiosystem_channels
+        if default in channel_counts:
+            index = channel_counts.index(default)
+        else:
+            index = 0
+        menu = io.TextMenu("Channels",
+                           menu_items=[f"{x}" for x in channel_counts])
+        audio_format.append(channel_counts[menu.get(index)])
+
+    ch = "channel"
+    if audio_format[2] > 1:
+        ch += "s"
+
+    # Test if audio format is supported
+    try:
+        stop_audiosystem()
+        pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
+                              audio_format[2], allowedchanges=0)
+        start_audiosystem()
+    except:
+        info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
+
+[Press RETURN to continue]
+        """
+        text = stimuli.TextScreen(f"Audio format not supported", info)
+        while True:
+            text.present()
+            key, rt_ = exp.keyboard.wait([constants.K_RETURN])
+            if key is not None:
+                break
+            return
+        return "", ""
 
     # Get buffer size
-    options = [f"{x} samples" for x in buffer_sizes]
+    options = [f"{x}" for x in buffer_sizes]
     default = control.defaults.audiosystem_buffer_size
     if default in buffer_sizes:
         index = buffer_sizes.index(default)
@@ -422,18 +494,11 @@ def _audio_playback(exp):
     menu = io.TextMenu("Buffer size", menu_items=options)
     buffer_size = buffer_sizes[menu.get(index)]
 
-    settings = \
-        f"{audio_formats[0]} Hz, {audio_format[1]} bit, {buffer_size} samples"
-    pygame.mixer.quit()
-    pygame.mixer.pre_init(audio_format[0], audio_format[1], 2, buffer_size)
-    pygame.mixer.init()
-    pygame.mixer.init()
-
-    info = f"""This will test the audio playback. A test tone will be played.
+    info = f"""A test tone will now be played on '{audio_device}' with format '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}' and a buffer of {buffer_size} samples.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Audio playback test [settings]", info)
+    text = stimuli.TextScreen(f"Audio playback test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -444,7 +509,8 @@ def _audio_playback(exp):
     a = stimuli.Tone(duration=1000)
     a.present()
     exp.clock.wait(1000)
-    text = stimuli.TextScreen("Did you hear the tone?", "[Press Y or N]")
+    text = stimuli.TextScreen("Did you hear the tone clearly and undistorted?",
+                              "[Press Y or N]")
     while True:
         text.present()
         key, _rt = exp.keyboard.wait([constants.K_y,
@@ -691,11 +757,9 @@ def run_test_suite(item=None):
     v.plot(background)
     results = get_system_info()
 
-    try:
-        import android
+    if misc.is_android_running():
         mouse = io.Mouse(show_cursor=False)
-    except ImportError:
-        android = None
+    else:
         mouse = None
 
     preselected_item = 0

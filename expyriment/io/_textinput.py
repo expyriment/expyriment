@@ -9,12 +9,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
-try:
-    import android
-except ImportError:
-    android = None
 
 try:
+    import android
     import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
 except ImportError:
@@ -23,7 +20,7 @@ except ImportError:
 from . import defaults
 from .. import _internals, stimuli
 from ..misc import find_font, unicode2byte, constants, \
-                 numpad_digit_code2ascii
+                 numpad_digit_code2ascii, is_android_running
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
 
@@ -503,7 +500,7 @@ class TextInput(Input):
                 elif inkey not in (pygame.K_LCTRL, pygame.K_RCTRL,
                                    pygame.K_TAB):
                     if not self._user_text_surface_size[0] >= self._max_size[0]:
-                        if android is not None:
+                        if is_android_running():
                             if inkey in filter:
                                 if inkey in constants.K_ALL_KEYPAD_DIGITS:
                                     inkey = numpad_digit_code2ascii(inkey)

@@ -5,13 +5,27 @@ Default settings for the control package. ::
         start the audiosystem when Expyriment is initialized
 
     audiosystem_bit_depth : int
-        the audio bit depth; negative values mean signed sample values
+        8   = 8 bit unsigned integer (8-bit audio)
+        -8  = 8 bit signed integer (uncommon)
+        16  = 16 bit unsigned integer (uncommon)
+        -16 = 16 bit signed integer (16-bit audio)
+        32  = 32 bit floating point (32-bit float audio)
 
     audiosystem_buffer_size: int
         the audio buffer size in samples
 
+        NOTE
+        ====
+        Smaller buffer sizes reduce the delay in audio playback, but a too
+        small buffer size might result in distorted audio. The optimal buffer
+        size is the smallest one that does not distort the audio, and can
+        differ between systems.
+
     audiosystem_channels : int
         the number of audio channels
+
+    audiosystem_device : str
+        the name of the audio device to use
 
     audiosystem_sample_rate : int
         the audio sample rate
@@ -167,7 +181,8 @@ audiosystem_autostart = True
 audiosystem_sample_rate = 44100
 audiosystem_bit_depth = -16  # Negative values mean signed sample values
 audiosystem_channels = 2
-audiosystem_buffer_size = 2048
+audiosystem_buffer_size = 512
+audiosystem_device = None
 
 _mode_settings = None
 
