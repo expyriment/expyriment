@@ -221,16 +221,21 @@ machine!")
 
         return self._display_resolution
 
-    def update(self):
+    def update(self, blocking=True):
         """Update the screen.
 
         This will flip the display double buffer.
+
+        Parameters
+        ----------
+        blocking : bool, optional
+            whether to block on vertical retrace (OpenGL only; default=True)
 
         """
 
         pygame.event.pump()
         pygame.display.flip()
-        if self._opengl >= 2:
+        if self._opengl >= 2 and blocking:
             ogl.glBegin(ogl.GL_POINTS)
             ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!
             ogl.glVertex2i(0, 0)

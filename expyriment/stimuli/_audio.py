@@ -9,10 +9,12 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
+from types import FunctionType
 
 import pygame
 
 from .. import _internals
+from .._internals import CallbackQuitEvent
 from ..misc import unicode2byte
 from ..misc._timer import get_time
 from ._stimulus import Stimulus
@@ -44,6 +46,8 @@ class Audio(Stimulus):
         self._filename = filename
         self._file = None
         self._is_preloaded = False
+        self._channel = None
+        self._is_paused = False
         if not(os.path.isfile(self._filename)):
             raise IOError(u"The audio file {0} does not exists".format(
                 self._filename))
@@ -55,6 +59,12 @@ class Audio(Stimulus):
         """Getter for is_preloaded."""
 
         return self._is_preloaded
+
+    @property
+    def is_playing(self):
+        """Property to check if audio is playing."""
+        if self._is_preloaded and self._channel and not self._is_paused:
+            return self._channel.get_busy()
 
     @property
     def filename(self):
@@ -153,7 +163,15 @@ class Audio(Stimulus):
 
         if not self._is_preloaded:
             self.preload()
-        rtn = self._file.play(loops, maxtime, fade_ms)
+
+        if self._is_paused:
+            self.pause()
+
+        if self.is_playing:
+            print("HERE")
+            return self._channel
+
+        self._channel = self._file.play(loops, maxtime, fade_ms)
         if self._logging:
             if isinstance(self._filename, str):
                 import sys
@@ -164,13 +182,23 @@ class Audio(Stimulus):
             _internals.active_exp._event_file_log(
                 "Stimulus,played,{0}".format(filename), 1,
                                  log_event_tag=log_event_tag)
-        return rtn
+        return self._channel
+
+    def pause(self):
+        if self._is_preloaded:
+            if not self._is_paused:
+                self._channel.pause()
+                self._is_paused = True
+            elif self._is_paused:
+                self._channel.unpause()
+                self._is_paused = False
 
     def stop(self):
         """Stop the audio stimulus"""
 
         if self._is_preloaded:
             self._file.stop()
+            self._is_paused = False
 
     def present(self, log_event_tag=None):
         """Presents the sound.
@@ -185,3 +213,53 @@ class Audio(Stimulus):
         """
 
         self.play(log_event_tag=log_event_tag)
+
+    def wait_end(self, callback_function=None, process_control_events=True):
+        """Wait until audio has ended playing.
+
+        Blocks until the audios is not playing anymore and only returns then.
+
+        Parameters
+        ----------
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+
+        """
+
+        while self.is_playing:
+            if _internals.skip_wait_methods:
+                break
+
+            if isinstance(callback_function, FunctionType):
+                rtn_callback = callback_function()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    self.stop()
+                    return rtn_callback
+            if _internals.active_exp.is_initialized:
+                rtn_callback = _internals.active_exp._execute_wait_callback()
+                if isinstance(rtn_callback, CallbackQuitEvent):
+                    self.stop()
+                    return rtn_callback
+
+            if process_control_events:
+                _internals.active_exp.mouse.process_quit_event(
+                    event_detected_function=self.pause,
+                    quit_confirmed_function=self.stop,
+                    quit_denied_function=self.play)
+                _internals.active_exp.keyboard.process_control_keys(
+                    event_detected_function=self.pause,
+                    quit_confirmed_function=self.stop,
+                    quit_denied_function=self.play)
+            else:
+                pygame.event.pump()
+
+

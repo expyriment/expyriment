@@ -39,7 +39,9 @@ class Keyboard(Input):
     """
 
     @staticmethod
-    def process_control_keys(key_event=None, quit_confirmed_function=None):
+    def process_control_keys(key_event=None, event_detected_function=None,
+                             quit_confirmed_function=None,
+                             quit_denied_function=None):
         """Check if quit_key has been pressed.
 
         Reads pygame event cue if no key_event is specified.
@@ -49,8 +51,12 @@ class Keyboard(Input):
         key_event : int, optional
             key event to check. If not defined, the Pygame event queue will be
             checked for key down events.
+        event_detected_function : function, optional
+            function to be called when key event is detected.
         quit_confirmed_function : function, optional
             function to be called if quitting has been confirmed.
+        quit_denied_function : function, optional
+            function to be called if quitting has been denied.
 
         Returns
         -------
@@ -64,17 +70,24 @@ class Keyboard(Input):
             if key_event.type == pygame.KEYDOWN:
                 if key_event.key == quit_key and \
                    end_function is not None:
+                    if event_detected_function is not None:
+                        event_detected_function()
                     confirm = end_function(
                         confirmation=True,
                         pre_quit_function=quit_confirmed_function)
                     if confirm:
                         sys.exit()
+                    else:
+                        if quit_denied_function is not None:
+                            quit_denied_function()
                     return True
         else:
             # process all key-down events
             for event in pygame.event.get(pygame.KEYDOWN):
                 if Keyboard.process_control_keys(event,
-                                                 quit_confirmed_function):
+                                                 event_detected_function,
+                                                 quit_confirmed_function,
+                                                 quit_denied_function):
                     return True
             return False
 
@@ -172,7 +185,7 @@ class Keyboard(Input):
         Unlike the wait method, events are only logged on loglevel 2 when no
         keys are specified. this is to prevent excesive default logging when
         used repeatedly in a loop.
-        
+
         """
 
         # TODO for 1.0: Check should not return None. Think about the

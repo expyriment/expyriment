@@ -105,7 +105,7 @@ class Video(_visual.Stimulus):
         self._filename = filename
         self._is_preloaded = False
         self._is_paused = False
-        self._frame = 0
+        self._frame = -1
         self._new_frame_available = False
         self._surface_locked = False
         self._audio_started = False
@@ -249,14 +249,14 @@ class Video(_visual.Stimulus):
 
     @property
     def time(self):
-        """Property to get the current playback time."""
+        """Property to get the current playback time (in seconds)."""
 
         if self._is_preloaded:
             return self._file.current_playtime
 
     @property
     def frame(self):
-        """Property to get the current available video frame."""
+        """Property to get the current available video frame (0-based!)."""
 
         if self._is_preloaded:
             return self._file.current_frame_no
@@ -275,6 +275,13 @@ class Video(_visual.Stimulus):
 
         if self._is_preloaded:
             return self._file.duration
+
+    @property
+    def n_frames(self):
+        """Property to get the number of frames of the video."""
+
+        if self._is_preloaded:
+            return self._file.clip.n_frames
 
     @property
     def has_video(self):
@@ -510,15 +517,12 @@ class Video(_visual.Stimulus):
 
             self._file.loop = loop
             self._file.play()
+            while not hasattr(self._file._clock, "interval_start"):
+                pass  # if thread not fully started yet
+
             if self._start_position != 0:
-                while True:
-                    try:
-                        self._file.seek(self._start_position)
-                        self._new_frame_available = False
-                        break
-                    except AttributeError:  # if thread not fully started yet
-                        if self._file.status == 2:  # paused by seek method
-                            self._file.pause()  # set playing again
+                self._file.seek(self._start_position)
+                self._new_frame_available = False
 
     def stop(self):
         """Stop the video stimulus."""
@@ -526,10 +530,15 @@ class Video(_visual.Stimulus):
         if self._is_preloaded:
             self._file.stop()
             self._file.seek(0)
-            self._frame = 0
+            self._frame = -1
             self._start_position = 0
             if self._file.audioformat and hasattr(self, "_audio"):
                 self._audio.close_stream()
+                while self._file.audioframe_handler.is_alive():
+                    pass  # if thread not fully stopped
+            while hasattr(self._file._clock, "thread") and \
+                    self._file._clock.thread.is_alive():
+                pass  # if thread not fully stopped
 
     def pause(self):
         """Pause the video stimulus."""
@@ -578,19 +587,26 @@ class Video(_visual.Stimulus):
         """Rewind to start of video stimulus."""
 
         if self._is_preloaded:
-            self._file.rewind()
-            self._frame = 0
+            if self._is_paused:
+                self.pause()  # mediadecoder pauses itself before seeking!
+                was_paused = True
+            else:
+                was_paused = False
+            self._file.seek(0)
+            if was_paused:
+                self.pause()  # mediadecoder unpauses itself after seeking!
+            self._frame = -1
             self._start_position = 0
 
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
 
-        if not self._surface_locked:
+        if not self._surface_locked and self.frame > self._frame:
             self._surface = frame
             self._new_frame_available = True
 
     def present(self):
-        """Present current frame.
+        """Present next available frame.
 
         This method waits for the next frame and presents it on the screen.
         When using OpenGL, the method blocks until this frame is actually being
@@ -599,32 +615,55 @@ class Video(_visual.Stimulus):
         Notes
         -----
         When showing videos in large dimensions, and your computer is not fast
-        enough, frames might be dropped! When using ``Video.wait_frame()`` or
-        ``Video.wait_end()``, dropped video frames will be reported and logged.
+        enough, frames might be dropped! When using this method, dropped video
+        frames will be reported and logged.
 
         """
 
         start = Clock.monotonic_time()
+        if not self.is_playing:
+            self.play()
+        print(self.frame, self._frame)
         while not self.new_frame_available:
-            if not self.is_playing:
-                return
-        diff = self.frame - self._frame
-        if diff > 1:
-            warn_message = repr(diff - 1) + " video frame(s) dropped!"
-            print(warn_message)
-            _internals.active_exp._event_file_warn(
-                "Video,warning," + warn_message)
-        self._frame = self.frame
+            pass
         self.update()
         return (Clock.monotonic_time() - start) * 1000
 
-    def update(self):
-        """Update the screen."""
+    def update(self, blocking=True):
+        """Update the screen with the current frame.
+
+        Parameters
+        ----------
+        blocking : bool, optional
+            whether to block on vertical retrace (OpenGL only; default=True)
+
+        Notes
+        -----
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using this method, dropped video
+        frames will be reported and logged.
+
+        """
 
         if not self.is_playing:
             return
         start = Clock.monotonic_time()
+
         self._surface_locked = True
+        if self.new_frame_available:
+            diff = self.frame - self._frame
+            if diff > 1:
+                warn_message = repr(diff - 1) + " video frame(s) dropped!"
+                if diff == 2:
+                    warn_message += " ({0})".format(self._frame + 1)
+                else:
+                    warn_message += " ({0}-{1})".format(self._frame + 1,
+                                                        self._frame + diff)
+                print(warn_message)
+                _internals.active_exp._event_file_warn(
+                    "Video,warning," + warn_message)
+            self._frame = self.frame
+
         if not _internals.active_exp._screen.opengl:
             _internals.active_exp._screen.surface.blit(
                 pygame.surfarray.make_surface(self._surface.swapaxes(0,1)),
@@ -637,7 +676,7 @@ class Video(_visual.Stimulus):
             self._surface_locked = False
             self._new_frame_available = False
             ogl_screen.display()
-        _internals.active_exp._screen.update()
+        _internals.active_exp._screen.update(blocking)
 
     def _wait(self, frame=None, callback_function=None,
               process_control_events=True):
@@ -686,14 +725,17 @@ class Video(_visual.Stimulus):
                     if _internals.active_exp.mouse.process_quit_event():
                         break
 
-            for event in pygame.event.get(pygame.KEYDOWN):
-                if _internals.active_exp.is_initialized and \
-                   process_control_events and \
-                   event.type == pygame.KEYDOWN and (
-                       event.key == self.Keyboard.get_quit_key()):
-                    self.pause()
-                    self.Keyboard.process_control_keys(event, self.stop)
-                    self.play()
+            if process_control_events:
+                _internals.active_exp.mouse.process_quit_event(
+                    event_detected_function=self.pause,
+                    quit_confirmed_function=self.stop,
+                    quit_denied_function=self.play)
+                _internals.active_exp.keyboard.process_control_keys(
+                    event_detected_function=self.pause,
+                    quit_confirmed_function=self.stop,
+                    quit_denied_function=self.play)
+            else:
+                pygame.event.pump()
 
     def wait_frame(self, frame, callback_function=None,
                    process_control_events=True):
@@ -715,15 +757,17 @@ class Video(_visual.Stimulus):
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
         If keyboard events should not be cleared, a loop has to be created
-        manually like::
+        manually, for instance like::
 
-            video.present()
             while video.is_playing and video.frame < frame:
                 while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
                 video.update()
-            video.stop()
+
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using this method, dropped video
+        frames will be reported and logged.
 
         """
 
@@ -747,16 +791,18 @@ class Video(_visual.Stimulus):
         Thus, keyboard events will be cleared from the cue and cannot be
         received by a Keyboard().check() anymore!
         If keyboard events should not be cleared, a loop has to be created
-        manually like::
+        manually, for instance like::
 
-            video.present()
-            while video.is_playing and video.frame < frame:
+            while video.is_playing and video.frame < self.n_frame-1:
                 while not video.new_frame_available:
                     key = exp.keyboard.check()
                     if key == ...
                 video.update()
-            video.stop()
+
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using this method, dropped video
+        frames will be reported and logged.
 
         """
 
-        self._wait(callback_function, process_control_events)
+        self._wait(self.n_frames-1, callback_function, process_control_events)

@@ -136,7 +136,9 @@ class Mouse(Input):
             pass
 
     @staticmethod
-    def process_quit_event(click_position=None):
+    def process_quit_event(click_position=None, event_detected_function=None,
+                           quit_confirmed_function=None,
+                           quit_denied_function=None):
         """Check if mouse exit action has been performed.
 
         If quit corner location is has been defined via
@@ -155,6 +157,13 @@ class Mouse(Input):
             clicked location to be processed. If not defined, the Pygame event
             queue will be checked for mouse down events and the current
             position is taken
+        event_detected_function : function, optional
+            function to be called when key event is detected.
+        quit_confirmed_function : function, optional
+            function to be called if quitting has been confirmed.
+        quit_denied_function : function, optional
+            function to be called if quitting has been denied.
+
 
         Returns
         -------
@@ -223,7 +232,10 @@ class Mouse(Input):
                         pygame.KEYDOWN,
                         {'key': _internals.active_exp.keyboard.get_quit_key()})
                     return _internals.active_exp.keyboard.process_control_keys(
-                        key_event=simulated_key)
+                        key_event=simulated_key,
+                        event_detected_function=event_deteced_function,
+                        quit_confirmed_function=quit_confirmed_function,
+                        quit_detected_function=quit_denied_function)
         return False
 
 

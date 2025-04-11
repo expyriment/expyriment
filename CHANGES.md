@@ -34,14 +34,30 @@ Changed:
   documentation available, only online)
 - rewrite of permutation module
 - pause_key has been removed
+- control.Keyboard.process_control_events:
+    - new parameter ``event_detected_function`` to set a function that is
+      called as soon as a quit event is detected (but before the end function
+      is called)
+    - new parameter ``quit_denied_function`` to set a function that is called
+      when a user declines the quitting (i.e. presses "n")
+- control.Mouse.process_quit_event:
+    - new parameter ``event_detected_function`` to set a function that is
+      called as soon as a quit event is detected (but before the end function
+      is called)
+    - new parameter ``quit_confirmed_function`` to set a function that is
+      called when a user confirms the quitting (i.e. presses "y")
+    - new parameter ``quit_denied_function`` to set a function that is called
+      when a user declines the quitting (i.e. presses "n")
 - test suite: improved audio test
 - test suite: format changes in saved protocol
 - test suite: improvements in reporting visual timing test results
+- When running in virtual environment, Expyriment settings folder will be local
+  to that environment
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
 - io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
 - io.GamePad.wait_press: removed ``time.sleep(0.0005)``
-- When running in virtual environment, Expyriment settings folder will be local
-  to that environment
+- io.Screen.update: new ``blocking`` parameter to control blocking on vertical
+  retrace (OpenGL mode only) behaviour per call
 - Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
 - Always use maximal display resolution by default for fullscreen mode (unless
   overwritten by control.defaults.display_resolution)
@@ -63,6 +79,11 @@ Changed:
 - stimuli.Audio:
     - not limited to .wav/.ogg files anymore
     - should support most common formats (i.e. WAV, AIFF, MP3, Ogg, Opus, FLAC)
+    - new property ``is_playing`` to check whether the audio stimulus is
+      playing
+    - new method ``wait_end`` to wait until the audio stimulus has finished
+      playing
+    - new method ``pause`` to pause (and unpause) playback of the audio stimulus
 - stimuli.Video:
     - general improvements
     - Pygame video backend removed (always relies on mediadecoder)
@@ -70,6 +91,11 @@ Changed:
     - new parameter ``audio_backend``
     - new stimuli default ``video_audio_backend``
     - Pygame audio backend uses current audiosystem (if started)
+    - present method will start playback if not started already
+    - frame dropping check is now located in update method (was in present)
+    - update method allows for updating without blocking on vertical retrace
+      (OpenGL mode only)
+    - new property ``n_frames`` to get the total number of frames of the video
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
