@@ -9,8 +9,10 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
+import sys
 import time
 import atexit
+import contextlib
 from types import FunctionType
 
 import pygame
@@ -22,6 +24,14 @@ from ..misc import unicode2byte, Clock, has_internet_connection, which
 from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
 from .. import _internals
+
+
+# Fix for verbose moviepy 2.1.2
+@contextlib.contextmanager
+def suppress_output():
+    with open(os.devnull, 'w') as devnull:
+        with contextlib.redirect_stdout(devnull):
+            yield
 
 
 class Video(_visual.Stimulus):
@@ -351,7 +361,9 @@ class Video(_visual.Stimulus):
                 if self._resizing == False:
                     target_res = (None, None)
                 elif isinstance(self._resizing, (int, float, bool)):
-                    video_size = Decoder(mediafile=self._filename, play_audio=False).clip.size
+                    with suppress_output():  # fix for verbose moviepy 2.1.2
+                        video_size = Decoder(mediafile=self._filename,
+                                             play_audio=False).clip.size
                     if self._resizing is True:
                         x_diff = video_size[0] - screen_size[0]
                         y_diff = video_size[1] - screen_size[1]
@@ -371,8 +383,9 @@ class Video(_visual.Stimulus):
                 if (self._resizing[0] is None and self._resizing[1] is None) \
                 or any(isinstance(x, float) for x in self._resizing) \
                         or False in self._resizing:
-                        video_size = Decoder(mediafile=self._filename,
-                                             play_audio=False).clip.size
+                        with suppress_output():  # fix for verbose moviepy 2.1.2
+                            video_size = Decoder(mediafile=self._filename,
+                                                 play_audio=False).clip.size
                 if self._resizing[0] is None and self._resizing[1] is None:
                     x_diff = video_size[0] - screen_size[0]
                     y_diff = video_size[1] - screen_size[1]
@@ -398,14 +411,15 @@ class Video(_visual.Stimulus):
                             pass
 
             # Load media
-            self._file = Decoder(
-                mediafile=self._filename,
-                videorenderfunc=self._update_surface,
-                target_resolution=target_res,
-                audio_fps=control_defaults.audiosystem_sample_rate,
-                audio_nbytes=\
-                abs(int(control_defaults.audiosystem_bit_depth / 8)),
-                audio_nchannels=control_defaults.audiosystem_channels)
+            with suppress_output():  # fix for verbose moviepy 2.1.2
+                self._file = Decoder(
+                    mediafile=self._filename,
+                    videorenderfunc=self._update_surface,
+                    target_resolution=target_res,
+                    audio_fps=control_defaults.audiosystem_sample_rate,
+                    audio_nbytes=\
+                    abs(int(control_defaults.audiosystem_bit_depth / 8)),
+                    audio_nchannels=control_defaults.audiosystem_channels)
             if _internals.active_exp._screen.opengl:
                 import moviepy
                 if int(moviepy.__version__.split(".")[0]) > 1:
@@ -501,10 +515,36 @@ class Video(_visual.Stimulus):
             if self._file.audioformat and audio:
                 if self._audio_backend == "pygame":
                     from mediadecoder.soundrenderers import SoundrendererPygame
+                    buffer_size = control_defaults.audiosystem_buffer_size
+                    while buffer_size > (1.0 / self._file.fps) * \
+                            self._file.audioformat["fps"]:
+                        buffer_size //= 2
+                    mixer_init = pygame.mixer.get_init()
+                    if mixer_init:
+                        if buffer_size != \
+                                control_defaults.audiosystem_buffer_size:
+                            warn_message = "Audio will be out of sync due " +\
+                                "to too large audiosystem buffer size! " +\
+                                "({0} samples)".format(
+                                    control_defaults.audiosystem_buffer_size)
+
+                            print(warn_message)
+                            _internals.active_exp._event_file_warn(
+                                "Video,warning," + warn_message)
+                    else:
+                        warn_message = "Temporary audiosystem in use! "
+                        warn_message += \
+                            "({0} Hz, {1}-bit, {2} ch, {3} samples)".format(
+                                control_defaults.audiosystem_sample_rate,
+                                abs(control_defaults.audiosystem_bit_depth),
+                                control_defaults.audiosystem_channels,
+                                buffer_size)
+                        print(warn_message)
+                        _internals.active_exp._event_file_warn(
+                            "Video,warning," + warn_message)
                     self._audio = SoundrendererPygame(
                         self._file.audioformat,
-                        pygame_buffersize=\
-                        control_defaults.audiosystem_buffer_size)
+                        pygame_buffersize=buffer_size)
 
                 elif self._audio_backend == "sounddevice":
                     from mediadecoder.soundrenderers import \
@@ -577,6 +617,8 @@ class Video(_visual.Stimulus):
                         break
                     except AttributeError: # if thread not fully started yet
                         pass
+                while not self._file.audioqueue.empty():
+                    self._file.audioqueue.get()
                 if was_paused:
                     self.pause()  # mediadecoder unpauses itself after seeking!
             new_frame = int(pos * self._file.fps)
@@ -584,7 +626,13 @@ class Video(_visual.Stimulus):
             self._new_frame_available = False
 
     def rewind(self):
-        """Rewind to start of video stimulus."""
+        """Rewind to start of video stimulus.
+
+        Notes
+        -----
+        For stability reasons, this will rewind to 0.5 seconds into the video.
+
+        """
 
         if self._is_preloaded:
             if self._is_paused:
@@ -592,10 +640,13 @@ class Video(_visual.Stimulus):
                 was_paused = True
             else:
                 was_paused = False
-            self._file.seek(0)
+            self._file.seek(0.5)
+            while not self._file.audioqueue.empty():
+                self._file.audioqueue.get()
+
             if was_paused:
                 self.pause()  # mediadecoder unpauses itself after seeking!
-            self._frame = -1
+            self._frame = int(0.5 * self._file.fps)
             self._start_position = 0
 
     def _update_surface(self, frame):
@@ -623,9 +674,9 @@ class Video(_visual.Stimulus):
         start = Clock.monotonic_time()
         if not self.is_playing:
             self.play()
-        print(self.frame, self._frame)
         while not self.new_frame_available:
             pass
+
         self.update()
         return (Clock.monotonic_time() - start) * 1000
 
