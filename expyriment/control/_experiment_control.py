@@ -202,9 +202,9 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
         if is_android_running():
-            experiment.keyboard.wait()
-        else:
             experiment.mouse.wait_press()
+        else:
+            experiment.keyboard.wait()
     experiment.set_log_level(old_logging)
     experiment._screen.colour = screen_colour
     experiment.log_design_to_event_file()
@@ -250,9 +250,9 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     stimuli._stimulus.Stimulus._id_counter -= 1
     misc.Clock().wait(200)
     if is_android_running():
-        experiment.keyboard.wait(keys=(key))
-    else:
         experiment.mouse.wait_press()
+    else:
+        experiment.keyboard.wait(keys=(key))
     experiment._event_file_log("Experiment,resumed")
 
 
