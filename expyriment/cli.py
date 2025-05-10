@@ -178,24 +178,32 @@ letter arguments run single commands""",
 
     # parse
     args = vars(parser.parse_args())
-    import expyriment as xpy
 
     # options
+    statements = []
+    statements.append("import sys as _sys, os as _os")
+    statements.append("original_stdout = _sys.stdout")
+    statements.append("_sys.stdout = open(_os.devnull, 'w')")
+    statements.append("import expyriment as xpy")
+    statements.append("_sys.stdout.close()")
+    statements.append("_sys.stdout = original_stdout")
+    statements.append("del _sys, _os")
+
     if args['develop_mode']:
-        xpy.control.set_develop_mode(True)
+        statements.append("xpy.control.set_develop_mode(True)")
 
     if args['intensive_logging']:
         print("* Intensive logging")
-        xpy.control.defaults.event_logging = 2
+        statements.append("xpy.control.defaults.event_logging = 2")
 
     if args['fast_mode']:
         print("* Fast mode")
-        xpy.control.defaults.initialize_delay = 0
-        xpy.control.defaults.fast_quit = True
+        statements.append("xpy.control.defaults.initialize_delay = 0")
+        statements.append("xpy.control.defaults.fast_quit = True")
 
     if args['window_mode']:
         print("* Window mode")
-        xpy.control.defaults.window_mode = True
+        statements.append("xpy.control.defaults.window_mode = True")
 
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
         if args[x] is True:
@@ -206,63 +214,74 @@ letter arguments run single commands""",
     if args['opengl'] is not None:
         mode = args['opengl']
         if mode == 0:
-            xpy.control.defaults.opengl = 0
+            statements.append("xpy.control.defaults.opengl = 0")
             print("* No OpenGL (no vsync / no blocking)")
         elif mode == 1:
-            xpy.control.defaults.opengl = 1
+            statements.append("xpy.control.defaults.opengl = 1")
             print("* OpenGL (vsync / no blocking)")
         elif mode == 2:
-            xpy.control.defaults.opengl = 2
+            statements.append("xpy.control.defaults.opengl = 2")
             print("* OpenGL (vsync / blocking")
 
     if args['no_time_stamps']:
         print("* No time stamps")
-        xpy.io.defaults.outputfile_time_stamp = False
+        statements.append("xpy.io.defaults.outputfile_time_stamp = False")
 
     if args['auto_subject_id']:
         print("* Auto create subject id")
-        xpy.control.defaults.auto_create_subject_id = True
+        statements.append("xpy.control.defaults.auto_create_subject_id = True")
 
     if args["display"] is not None and args["display"] >= 0:
         print("* Using display #{0}".format(args["display"]))
-        xpy.control.defaults.display = args["display"]
+        statements.append("xpy.control.defaults.display = {0}".format(
+            args['display']))
 
     if args["display_resolution"] is not None:
         res = [int(x) for x in args["display_resolution"].split("x")]
-        xpy.control.defaults.display_resolution = res
+        statements.append(
+            "xpy.control.defaults.display_resolution = {0}".format(res))
         print("* Setting display resolution to {0}".format(
             args["display_resolution"]))
 
     if args["text_size"] is not None:
-        xpy.design.defaults.experiment_text_size = args["text_size"]
+        statements.append(
+            "xpy.design.defaults.experiment_text_size = {0}".format(
+                args['text_size']))
 
     if args["window_size"] is not None:
         res = [int(x) for x in args["window_size"].split("x")]
-        xpy.control.defaults.display_resolution = res
+        statements.append(
+            "xpy.control.defaults.display_resolution = {0}".format(res))
         print("* Setting window size to {0}".format(
             args["window_size"]))
 
     # commands
     if args["system_info"]:
         print("System info")
+        exec("\n".join(statements), globals())
         print(xpy.misc.get_system_info(as_string=True))
 
     elif args["test_suite"]:
         print("Run test suite")
+        exec("\n".join(statements), globals())
         xpy.control.run_test_suite()
 
     elif args["browser_api"]:
+        exec("\n".join(statements), globals())
         xpy.show_documentation(1)
 
     elif args["api"]:
         print("Start API reference tool")
+        exec("\n".join(statements), globals())
         xpy.show_documentation(2)
 
     elif args["create_exp"]:
+        exec("\n".join(statements), globals())
         create_template()
 
     elif args["download_stash"]:
         print("Download from stash")
+        exec("\n".join(statements), globals())
         what = ""
         while what not in ["all", "examples", "extras", "tools"]:
             sys.stdout.write(" what to download ([all]/examples/extras/tools)? ")
@@ -288,6 +307,7 @@ letter arguments run single commands""",
         xpy.misc.download_from_stash(what, branch)
 
     elif args["join_data"]:
+        exec("\n".join(statements), globals())
         d = join_data()
         output = ""
         while len(output) <= 1:
@@ -298,20 +318,54 @@ letter arguments run single commands""",
     elif args["interactive"]:
         print("Interactive session")
         print("")
-        expyriment = xpy
-        xpy.control.defaults.window_mode = True
-        xpy.control.defaults.stdout_logging = False
+        statements.append("expyriment = xpy")
+        #xpy.control.defaults.window_mode = True
+        statements.append("xpy.control.defaults.stdout_logging = False")
         #exp = xpy.control.initialize()
-        banner = """Expyriment is available as both 'expyriment' and 'xpy'.
-Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
-        if find_spec("readline") is not None:
-            import readline
+        statements.append(
+            """print("Expyriment is available as both 'expyriment' and 'xpy'.")""")
+        statements.append(
+            """print("Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment.")""")
+
         if find_spec("IPython") is not None:
-            import IPython
-            IPython.embed(header=banner)
+            statements.append(
+                """get_ipython().history_manager.store_inputs(get_ipython().execution_count + 1, "exp = xpy.control.initialize()")""")
+            command = "\n".join(statements)
+            os.execvp(sys.executable, [sys.executable, '-m', 'IPython',
+                                       '--no-banner', '-i', '-c', command])
+
         else:
-            import code
-            code.interact(local=locals(), banner=banner)
+            history_file = os.path.expanduser("~/.python_history")
+            if os.path.exists(history_file):
+                with open(history_file, 'a') as f:
+                    f.write("exp = xpy.control.initialize()\n")
+            command = "\n".join(statements)
+            os.execvp(sys.executable, [sys.executable, '-i', '-c', command])
+            #import code
+            #if find_spec("readline") is not None:
+            #    import readline
+            #class CustomInteractiveConsole(code.InteractiveConsole):
+            #    def __init__(self, locals=None):
+            #        super().__init__(locals)
+            #        self.history = []
+
+            #    def runsource(self, source, filename="<input>", symbol="single"):
+            #        # Store the source in history
+            #        self.history.append(source)
+            #        if find_spec("readline") is not None:
+            #            readline.add_history(source)  # Add to readline history
+            #        return super().runsource(source, filename, symbol)
+
+            #    def add_to_history(self, command):
+            #        """Add a command to the history without executing it."""
+            #        self.history.append(command)
+            #        if find_spec("readline") is not None:
+            #            readline.add_history(command)
+
+            #console = CustomInteractiveConsole(locals=locals())
+            #console.add_to_history("exp = xpy.control.initialize()")
+            #code.interact(local=console.locals, banner=banner)
+
 
     # run script
     elif args["SCRIPT"] is not None:
@@ -319,6 +373,8 @@ Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
         if not os.path.isfile(script):
             print("Can't find {0}!".format(args["SCRIPT"]))
             exit()
+            local_namespace = {}
+        exec("\n".join(statements), globals(), local_namespace)
         path, pyfile = os.path.split(script)
         os.chdir(path)
         sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
@@ -339,7 +395,7 @@ Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment."""
             })
             with open(filepath, 'rb') as file:
                 exec(compile(file.read(), filepath, 'exec'), globals, locals)
-        execfile(pyfile)
+        execfile(pyfile, locals=local_namespace)
 
     else:
         parser.print_usage()
