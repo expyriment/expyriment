@@ -252,7 +252,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
     if is_android_running():
         experiment.mouse.wait_press()
     else:
-        experiment.keyboard.wait(keys=(key))
+        experiment.keyboard.wait(keys=(key), low_performance=True)
     experiment._event_file_log("Experiment,resumed")
 
 
@@ -312,7 +312,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                          text_colour=misc.constants.C_EXPYRIMENT_ORANGE,
                          text_size=int(_internals.active_exp.text_size * 1.2)).present()
         stimuli._stimulus.Stimulus._id_counter -= 1
-        char = Keyboard().wait_char(["y", "n"], process_control_events=False)
+        char = Keyboard().wait_char(["y", "n"], process_control_events=False,
+                                    low_performance=True)
         if char[0] == "n":
             experiment._screen.colour = screen_colour
             experiment._event_file_log("Experiment,resumed")

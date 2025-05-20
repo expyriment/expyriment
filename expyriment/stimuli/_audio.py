@@ -168,7 +168,6 @@ class Audio(Stimulus):
             self.pause()
 
         if self.is_playing:
-            print("HERE")
             return self._channel
 
         self._channel = self._file.play(loops, maxtime, fade_ms)

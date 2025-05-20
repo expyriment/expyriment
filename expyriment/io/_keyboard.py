@@ -82,6 +82,10 @@ class Keyboard(Input):
                             quit_denied_function()
                     return True
         else:
+            # Clear keyup events to prevent limit on unicode field storage:
+            # https://github.com/pygame/pygame/issues/3229
+            pygame.event.get(pygame.KEYUP)
+
             # process all key-down events
             for event in pygame.event.get(pygame.KEYDOWN):
                 if Keyboard.process_control_keys(event,

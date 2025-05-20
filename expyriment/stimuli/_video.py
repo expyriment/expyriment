@@ -118,6 +118,8 @@ class Video(_visual.Stimulus):
         self._frame = -1
         self._new_frame_available = False
         self._surface_locked = False
+        self._pygame_channel_id = None
+        self._pygame_channel_volume = None
         self._audio_started = False
         self._start_position = 0
 
@@ -276,8 +278,13 @@ class Video(_visual.Stimulus):
         """Property to check if new video frame is available to render."""
 
         if self._is_preloaded:
-            time.sleep(0.0001)  # Needed for performance for some reason
-            return self._new_frame_available
+            frame_available = self._new_frame_available
+            if not frame_available:
+                # As this property will be called repeatedly in (custom) wait
+                # functions, this is a good point for implementing a time
+                # window that allows for the audio thread to run continuously
+                time.sleep(0.0001)
+            return frame_available
 
     @property
     def length(self):
@@ -531,6 +538,15 @@ class Video(_visual.Stimulus):
                             print(warn_message)
                             _internals.active_exp._event_file_warn(
                                 "Video,warning," + warn_message)
+                        for channel_id in range(
+                                pygame.mixer.get_num_channels()):
+                            channel = pygame.mixer.Channel(channel_id)
+                            if not channel.get_busy():
+                                self._pygame_channel_id = channel_id
+                                if self._pygame_channel_volume is not None:
+                                    channel.set_volume(
+                                        self._pygame_channel_volume)
+                                break
                     else:
                         warn_message = "Temporary audiosystem in use! "
                         warn_message += \
@@ -544,7 +560,8 @@ class Video(_visual.Stimulus):
                             "Video,warning," + warn_message)
                     self._audio = SoundrendererPygame(
                         self._file.audioformat,
-                        pygame_buffersize=buffer_size)
+                        pygame_buffersize=buffer_size,
+                        pygame_channel_id=self._pygame_channel_id)
 
                 elif self._audio_backend == "sounddevice":
                     from mediadecoder.soundrenderers import \
@@ -568,12 +585,20 @@ class Video(_visual.Stimulus):
         """Stop the video stimulus."""
 
         if self._is_preloaded:
+            if self.audio_backend == "pygame" and self._audio_started  and \
+                    self._pygame_channel_id is not None:
+                channel = pygame.mixer.Channel(self._pygame_channel_id)
+                self._pygame_channel_volume = channel.get_volume()
+                while channel.get_volume() > 0:
+                    self._pygame_channel_volume = channel.get_volume()
+                    channel.set_volume(0)
             self._file.stop()
             self._file.seek(0)
             self._frame = -1
             self._start_position = 0
-            if self._file.audioformat and hasattr(self, "_audio"):
+            if self._audio_started:
                 self._audio.close_stream()
+                self._audio_started = False
                 while self._file.audioframe_handler.is_alive():
                     pass  # if thread not fully stopped
             while hasattr(self._file._clock, "thread") and \
@@ -584,6 +609,16 @@ class Video(_visual.Stimulus):
         """Pause the video stimulus."""
 
         if self._is_preloaded:
+            if self.audio_backend == "pygame" and self._audio_started and \
+                    self._pygame_channel_id is not None:
+                channel = pygame.mixer.Channel(self._pygame_channel_id)
+                if not self._is_paused:
+                    self._pygame_channel_volume = channel.get_volume()
+                    channel.set_volume(0)
+                else:
+                    channel.set_volume(self._pygame_channel_volume)
+            while not self._file.audioqueue.empty():
+                self._file.audioqueue.get()
             self._file.pause()
             if self._is_paused:
                 self._is_paused = False
@@ -652,7 +687,8 @@ class Video(_visual.Stimulus):
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
 
-        if not self._surface_locked and self.frame > self._frame:
+        if not self._surface_locked and self.frame is not None and \
+                self.frame > self._frame:
             self._surface = frame
             self._new_frame_available = True
 
@@ -662,6 +698,11 @@ class Video(_visual.Stimulus):
         This method waits for the next frame and presents it on the screen.
         When using OpenGL, the method blocks until this frame is actually being
         written to the screen.
+
+        Returns
+        -------
+        time : int
+            the time it took to execute this method
 
         Notes
         -----
@@ -698,7 +739,6 @@ class Video(_visual.Stimulus):
 
         if not self.is_playing:
             return
-        start = Clock.monotonic_time()
 
         self._surface_locked = True
         if self.new_frame_available:
@@ -780,11 +820,11 @@ class Video(_visual.Stimulus):
                 _internals.active_exp.mouse.process_quit_event(
                     event_detected_function=self.pause,
                     quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
+                    quit_denied_function=self.pause)
                 _internals.active_exp.keyboard.process_control_keys(
                     event_detected_function=self.pause,
                     quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
+                    quit_denied_function=self.pause)
             else:
                 pygame.event.pump()
 
