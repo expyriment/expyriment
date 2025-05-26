@@ -16,6 +16,12 @@ import contextlib
 from types import FunctionType
 
 import pygame
+import moviepy
+try:
+    from moviepy.tools import cvsecs  # MoviePy < 2.0.0
+except ImportError:
+    from moviepy.tools import convert_to_seconds as cvsecs  # MoviePy >= 2.0.0
+
 
 from . import defaults
 from . import _visual
@@ -32,6 +38,23 @@ def suppress_output():
     with open(os.devnull, 'w') as devnull:
         with contextlib.redirect_stdout(devnull):
             yield
+
+
+class Time(float):
+    def __lt__(self, other):
+        return float(self) < cvsecs(other)
+
+    def __le__(self, other):
+        return float(self) <= cvsecs(other)
+
+    def __eq__(self, other):
+        return float(self) == cvsecs(other)
+
+    def __gt__(self, other):
+        return float(self) > cvsecs(other)
+
+    def __ge__(self, other):
+        return float(self) >= cvsecs(other)
 
 
 class Video(_visual.Stimulus):
@@ -264,7 +287,7 @@ class Video(_visual.Stimulus):
         """Property to get the current playback time (in seconds)."""
 
         if self._is_preloaded:
-            return self._file.current_playtime
+            return Time(self._file.current_playtime)
 
     @property
     def frame(self):
@@ -291,7 +314,7 @@ class Video(_visual.Stimulus):
         """Property to get the length of the video."""
 
         if self._is_preloaded:
-            return self._file.duration
+            return Time(self._file.duration)
 
     @property
     def n_frames(self):
@@ -299,6 +322,12 @@ class Video(_visual.Stimulus):
 
         if self._is_preloaded:
             return self._file.clip.n_frames
+
+    @property
+    def fps(self):
+        """Property to get the FSP (frames per second) of the video."""
+        if self._is_preloaded:
+            return self._file.fps
 
     @property
     def has_video(self):
@@ -428,7 +457,6 @@ class Video(_visual.Stimulus):
                     abs(int(control_defaults.audiosystem_bit_depth / 8)),
                     audio_nchannels=control_defaults.audiosystem_channels)
             if _internals.active_exp._screen.opengl:
-                import moviepy
                 if int(moviepy.__version__.split(".")[0]) > 1:
                     from moviepy.video.fx import MirrorY
                     self._file.clip = self._file.clip.with_effects([MirrorY()])
@@ -625,22 +653,28 @@ class Video(_visual.Stimulus):
             else:
                 self._is_paused = True
 
-    def forward(self, seconds):
-        """Advance playback position.
+    def seek(self, time):
+        """Seek playback position to specified time.
 
         Parameters
         ----------
-        seconds : int
-            amount to advance (in seconds)
+        time : int or float or list or str
+            the time to seek to; can be any of the following formats:
+                >>> 15.4 -> 15.4  # seconds
+                >>> (1, 21.5) -> 81.5  # (min, sec)
+                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
+                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
+                >>> '01:01:33.045' -> 3693.045
+                >>> '01:01:33,5'  # comma works too
 
         """
 
         if self._is_preloaded:
-            if not(self.is_playing or self._is_paused):
-                pos = self._start_position + seconds
+            pos = cvsecs(time)
+            if not (self.is_playing or self._is_paused):
                 self._start_position = pos
             else:
-                pos = self._file.current_playtime + seconds
+                pos = max(0.5, pos)
                 if self._is_paused:
                     self.pause()  # mediadecoder pauses itself before seeking!
                     was_paused = True
@@ -656,33 +690,57 @@ class Video(_visual.Stimulus):
                     self._file.audioqueue.get()
                 if was_paused:
                     self.pause()  # mediadecoder unpauses itself after seeking!
-            new_frame = int(pos * self._file.fps)
+            new_frame = int(pos * self._file.fps) - 1
             self._frame = new_frame
             self._new_frame_available = False
 
-    def rewind(self):
-        """Rewind to start of video stimulus.
+    def forward(self, duration):
+        """Forward playback position by specified duration.
 
-        Notes
-        -----
-        For stability reasons, this will rewind to 0.5 seconds into the video.
+        Parameters
+        ----------
+        duration : int or float or list or str
+            the duration to forward by; can be any of the following formats:
+                >>> 15.4 -> 15.4  # seconds
+                >>> (1, 21.5) -> 81.5  # (min, sec)
+                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
+                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
+                >>> '01:01:33.045' -> 3693.045
+                >>> '01:01:33,5'  # comma works too
 
         """
 
         if self._is_preloaded:
-            if self._is_paused:
-                self.pause()  # mediadecoder pauses itself before seeking!
-                was_paused = True
+            if not(self.is_playing or self._is_paused):
+                pos = self._start_position + cvsecs(duration)
             else:
-                was_paused = False
-            self._file.seek(0.5)
-            while not self._file.audioqueue.empty():
-                self._file.audioqueue.get()
+                pos = self._file.current_playtime + cvsecs(seconds)
+            self.seek(pos)
 
-            if was_paused:
-                self.pause()  # mediadecoder unpauses itself after seeking!
-            self._frame = int(0.5 * self._file.fps)
-            self._start_position = 0
+    def rewind(self, duration=None):
+        """Rewind playback position by specified duration or to beginning."
+
+        Parameters
+        ----------
+        duration : int or float or list or str, optional
+            the duration to rewind by; can be any of the following formats:
+                >>> 15.4 -> 15.4  # seconds
+                >>> (1, 21.5) -> 81.5  # (min, sec)
+                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
+                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
+                >>> '01:01:33.045' -> 3693.045
+                >>> '01:01:33,5'  # comma works too
+
+        """
+
+        if self._is_preloaded:
+            if duration is None:
+                pos = 0
+            elif not(self.is_playing or self._is_paused):
+                pos = self._start_position - cvsecs(duration)
+            else:
+                pos = self._file.current_playtime - cvsecs(duration)
+            self.seek(pos)
 
     def _update_surface(self, frame):
         """Update surface with newly available video frame."""
@@ -706,6 +764,9 @@ class Video(_visual.Stimulus):
 
         Notes
         -----
+        If there are no frames available anymore (end of video reached), this
+        method will return immediately.
+
         When showing videos in large dimensions, and your computer is not fast
         enough, frames might be dropped! When using this method, dropped video
         frames will be reported and logged.
@@ -713,12 +774,20 @@ class Video(_visual.Stimulus):
         """
 
         start = Clock.monotonic_time()
+
+        if not self._is_preloaded:
+            self.preload()
+
         if not self.is_playing:
             self.play()
-        while not self.new_frame_available:
-            pass
 
-        self.update()
+        while True:
+            if self.new_frame_available:
+                self.update()
+                break
+            elif self._frame >= self.n_frames:
+                break
+
         return (Clock.monotonic_time() - start) * 1000
 
     def update(self, blocking=True):
@@ -769,14 +838,21 @@ class Video(_visual.Stimulus):
             ogl_screen.display()
         _internals.active_exp._screen.update(blocking)
 
-    def _wait(self, frame=None, callback_function=None,
+    def _wait(self, time=None, callback_function=None,
               process_control_events=True):
-        """Wait until frame was shown or end of video and update screen.
+        """Wait until specified time or end of video and update screen.
 
         Parameters
         ----------
-        frame : int, optional
-            number of the frame to stop after
+        time : int or float or list or str, optional
+            time to wait until; can be any of the following formats:
+                >>> 15.4 -> 15.4  # seconds
+                >>> (1, 21.5) -> 81.5  # (min, sec)
+                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
+                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
+                >>> '01:01:33.045' -> 3693.045
+                >>> '01:01:33,5'  # comma works too
+
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
@@ -795,14 +871,18 @@ class Video(_visual.Stimulus):
 
         """
 
-        while self.is_playing:
+        if time is None:
+            time = self.length
+        else:
+            time = cvsecs(time)
+
+        while self.is_playing and self.time < time:
 
             if _internals.skip_wait_methods:
                 return
 
-            self.present()
-            if frame is not None and self.frame >= frame:
-                break
+            if self.new_frame_available:
+                self.update()
 
             if isinstance(callback_function, FunctionType):
                 rtn_callback = callback_function()
@@ -828,14 +908,58 @@ class Video(_visual.Stimulus):
             else:
                 pygame.event.pump()
 
+    def wait_time(self, time, callback_function=None,
+                  process_control_events=True):
+        """Wait until specified time and constantly update screen.
+
+        Parameters
+        ----------
+        time : int or float or list or str
+            time to wait until; can be any of the following formats:
+                >>> 15.4 -> 15.4  # seconds
+                >>> (1, 21.5) -> 81.5  # (min, sec)
+                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
+                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
+                >>> '01:01:33.045' -> 3693.045
+                >>> '01:01:33,5'  # comma works too
+
+        callback_function : function, optional
+            function to repeatedly execute during waiting loop
+        process_control_events : bool, optional
+            process ``io.Keyboard.process_control_keys()`` and
+            ``io.Mouse.process_quit_event()`` (default = True)
+
+        Notes
+        ------
+        This will also by default process control events (quit and pause).
+        Thus, keyboard events will be cleared from the cue and cannot be
+        received by a Keyboard().check() anymore!
+        If keyboard events should not be cleared, a loop has to be created
+        manually, for instance like::
+
+            while video.is_playing and video.time < time:
+                if video.new_frame_available:
+                    video.update()
+                else:
+                    key = exp.keyboard.check()
+                    if key == ...
+
+        When showing videos in large dimensions, and your computer is not fast
+        enough, frames might be dropped! When using this method, dropped video
+        frames will be reported and logged.
+
+        """
+
+        self._wait(time, callback_function, process_control_events)
+
     def wait_frame(self, frame, callback_function=None,
                    process_control_events=True):
-        """Wait until certain frame was shown and constantly update screen.
+        """Wait until specified frame and constantly update screen.
 
         Parameters
         ----------
         frame : int
-            number of the frame to stop after
+            number of the frame to wait until
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
@@ -851,10 +975,11 @@ class Video(_visual.Stimulus):
         manually, for instance like::
 
             while video.is_playing and video.frame < frame:
-                while not video.new_frame_available:
+                if video.new_frame_available:
+                    video.update()
+                else:
                     key = exp.keyboard.check()
                     if key == ...
-                video.update()
 
         When showing videos in large dimensions, and your computer is not fast
         enough, frames might be dropped! When using this method, dropped video
@@ -862,8 +987,8 @@ class Video(_visual.Stimulus):
 
         """
 
-        if self.is_playing:
-            self._wait(frame, callback_function, process_control_events)
+        time = frame * (1.0 / self._file.fps)
+        self._wait(time, callback_function, process_control_events)
 
     def wait_end(self, callback_function=None, process_control_events=True):
         """Wait until video has ended and constantly update screen.
@@ -884,11 +1009,12 @@ class Video(_visual.Stimulus):
         If keyboard events should not be cleared, a loop has to be created
         manually, for instance like::
 
-            while video.is_playing and video.frame < self.n_frame-1:
-                while not video.new_frame_available:
+            while video.is_playing:
+                if video.new_frame_available:
+                    video.update()
+                else:
                     key = exp.keyboard.check()
                     if key == ...
-                video.update()
 
         When showing videos in large dimensions, and your computer is not fast
         enough, frames might be dropped! When using this method, dropped video
@@ -896,4 +1022,4 @@ class Video(_visual.Stimulus):
 
         """
 
-        self._wait(self.n_frames-1, callback_function, process_control_events)
+        self._wait(None, callback_function, process_control_events)

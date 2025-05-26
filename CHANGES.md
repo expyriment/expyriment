@@ -96,6 +96,11 @@ Changed:
     - update method allows for updating without blocking on vertical retrace
       (OpenGL mode only)
     - new property ``n_frames`` to get the total number of frames of the video
+    - new property ``fps`` to get the frame rate in frames per second
+    - new method ``wait_time`` to wait until a certain time
+    - new method ``seek`` to seek to any position in the video
+    - ``seem``, ``rewind``, ``forward``, ``wait_time`` methods all take multiple
+      convenient time formats now (e.g. "00:01:30")
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour
