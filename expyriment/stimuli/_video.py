@@ -17,16 +17,11 @@ from types import FunctionType
 
 import pygame
 import moviepy
-try:
-    from moviepy.tools import cvsecs  # MoviePy < 2.0.0
-except ImportError:
-    from moviepy.tools import convert_to_seconds as cvsecs  # MoviePy >= 2.0.0
-
 
 from . import defaults
 from . import _visual
 from ..control import defaults as control_defaults
-from ..misc import unicode2byte, Clock, has_internet_connection, which
+from ..misc import Clock, MediaTime, which
 from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
 from .. import _internals
@@ -38,23 +33,6 @@ def suppress_output():
     with open(os.devnull, 'w') as devnull:
         with contextlib.redirect_stdout(devnull):
             yield
-
-
-class Time(float):
-    def __lt__(self, other):
-        return float(self) < cvsecs(other)
-
-    def __le__(self, other):
-        return float(self) <= cvsecs(other)
-
-    def __eq__(self, other):
-        return float(self) == cvsecs(other)
-
-    def __gt__(self, other):
-        return float(self) > cvsecs(other)
-
-    def __ge__(self, other):
-        return float(self) >= cvsecs(other)
 
 
 class Video(_visual.Stimulus):
@@ -287,7 +265,7 @@ class Video(_visual.Stimulus):
         """Property to get the current playback time (in seconds)."""
 
         if self._is_preloaded:
-            return Time(self._file.current_playtime)
+            return MediaTime(self._file.current_playtime)
 
     @property
     def frame(self):
@@ -314,7 +292,7 @@ class Video(_visual.Stimulus):
         """Property to get the length of the video."""
 
         if self._is_preloaded:
-            return Time(self._file.duration)
+            return MediaTime(self._file.duration)
 
     @property
     def n_frames(self):
@@ -658,19 +636,26 @@ class Video(_visual.Stimulus):
 
         Parameters
         ----------
-        time : int or float or list or str
+        time : int, float, list or str
             the time to seek to; can be any of the following formats:
-                >>> 15.4 -> 15.4  # seconds
-                >>> (1, 21.5) -> 81.5  # (min, sec)
-                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
-                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
-                >>> '01:01:33.045' -> 3693.045
-                >>> '01:01:33,5'  # comma works too
+                - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+
+        Examples
+        --------
+        >>> seek(15.4)          # seconds
+        >>> seek((1, 21.5))     # (min, sec)
+        >>> seek((1, 1, 2))     # (hr, min, sec)
+        >>> seek('01:01:33.5')  # (hr:min:sec)
+        >>> seek('01:01:33.045')
+        >>> seek('01:01:33,5')  # comma works too
 
         """
 
         if self._is_preloaded:
-            pos = cvsecs(time)
+            pos = MediaTime.convert_to_seconds(time)
             if not (self.is_playing or self._is_paused):
                 self._start_position = pos
             else:
@@ -699,22 +684,31 @@ class Video(_visual.Stimulus):
 
         Parameters
         ----------
-        duration : int or float or list or str
+        duration : int, float, tuple, list or str
             the duration to forward by; can be any of the following formats:
-                >>> 15.4 -> 15.4  # seconds
-                >>> (1, 21.5) -> 81.5  # (min, sec)
-                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
-                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
-                >>> '01:01:33.045' -> 3693.045
-                >>> '01:01:33,5'  # comma works too
+                - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+
+        Examples
+        --------
+        >>> forward(15.4)          # seconds
+        >>> forward((1, 21.5))     # (min, sec)
+        >>> forward((1, 1, 2))     # (hr, min, sec)
+        >>> forward('01:01:33.5')  # (hr:min:sec)
+        >>> forward('01:01:33.045')
+        >>> forward('01:01:33,5')  # comma works too
 
         """
 
         if self._is_preloaded:
             if not(self.is_playing or self._is_paused):
-                pos = self._start_position + cvsecs(duration)
+                pos = self._start_position + \
+                    MediaTime.convert_to_seconds(duration)
             else:
-                pos = self._file.current_playtime + cvsecs(seconds)
+                pos = self._file.current_playtime + \
+                    MediaTime.convert_to_seconds(duration)
             self.seek(pos)
 
     def rewind(self, duration=None):
@@ -722,14 +716,21 @@ class Video(_visual.Stimulus):
 
         Parameters
         ----------
-        duration : int or float or list or str, optional
+        duration : int, float, tuple, list or str, optional
             the duration to rewind by; can be any of the following formats:
-                >>> 15.4 -> 15.4  # seconds
-                >>> (1, 21.5) -> 81.5  # (min, sec)
-                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
-                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
-                >>> '01:01:33.045' -> 3693.045
-                >>> '01:01:33,5'  # comma works too
+                - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+
+        Examples
+        --------
+        >>> rewind(15.4)          # seconds
+        >>> rewind((1, 21.5))     # (min, sec)
+        >>> rewind((1, 1, 2))     # (hr, min, sec)
+        >>> rewind('01:01:33.5')  # (hr:min:sec)
+        >>> rewind('01:01:33.045')
+        >>> rewind('01:01:33,5')  # comma works too
 
         """
 
@@ -737,9 +738,11 @@ class Video(_visual.Stimulus):
             if duration is None:
                 pos = 0
             elif not(self.is_playing or self._is_paused):
-                pos = self._start_position - cvsecs(duration)
+                pos = self._start_position - \
+                    MediaTime.convert_to_seconds(duration)
             else:
-                pos = self._file.current_playtime - cvsecs(duration)
+                pos = self._file.current_playtime - \
+                    MediaTime.convert_to_seconds(duration)
             self.seek(pos)
 
     def _update_surface(self, frame):
@@ -844,20 +847,26 @@ class Video(_visual.Stimulus):
 
         Parameters
         ----------
-        time : int or float or list or str, optional
+        time : int, float, tuple, list or str, optional
             time to wait until; can be any of the following formats:
-                >>> 15.4 -> 15.4  # seconds
-                >>> (1, 21.5) -> 81.5  # (min, sec)
-                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
-                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
-                >>> '01:01:33.045' -> 3693.045
-                >>> '01:01:33,5'  # comma works too
-
+                - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+
+        Examples
+        --------
+        >>> _wait(15.4)          # seconds
+        >>> _wait((1, 21.5))     # (min, sec)
+        >>> _wait((1, 1, 2))     # (hr, min, sec)
+        >>> _wait('01:01:33.5')  # (hr:min:sec)
+        >>> _wait('01:01:33.045')
+        >>> _wait('01:01:33,5')  # comma works too
 
         Notes
         ------
@@ -874,7 +883,7 @@ class Video(_visual.Stimulus):
         if time is None:
             time = self.length
         else:
-            time = cvsecs(time)
+            time = MediaTime.convert_to_seconds(time)
 
         while self.is_playing and self.time < time:
 
@@ -914,20 +923,26 @@ class Video(_visual.Stimulus):
 
         Parameters
         ----------
-        time : int or float or list or str
+        time : int, float, tuple, list or str
             time to wait until; can be any of the following formats:
-                >>> 15.4 -> 15.4  # seconds
-                >>> (1, 21.5) -> 81.5  # (min, sec)
-                >>> (1, 1, 2) -> 3662  # (hr, min, sec)
-                >>> '01:01:33.5' -> 3693.5  # (hr:min:sec)
-                >>> '01:01:33.045' -> 3693.045
-                >>> '01:01:33,5'  # comma works too
-
+                 - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+
+        Examples
+        --------
+        >>> wait_time(15.4)          # seconds
+        >>> wait_time((1, 21.5))     # (min, sec)
+        >>> wait_time((1, 1, 2))     # (hr, min, sec)
+        >>> wait_time('01:01:33.5')  # (hr:min:sec)
+        >>> wait_time('01:01:33.045')
+        >>> wait_time('01:01:33,5')  # comma works too
 
         Notes
         ------
@@ -990,7 +1005,7 @@ class Video(_visual.Stimulus):
         time = frame * (1.0 / self._file.fps)
         self._wait(time, callback_function, process_control_events)
 
-    def wait_end(self, callback_function=None, process_control_events=True):
+    def wait_end(self, time=None, callback_function=None, process_control_events=True):
         """Wait until video has ended and constantly update screen.
 
         Parameters

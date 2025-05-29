@@ -39,6 +39,104 @@ if FS_ENC is None:
     FS_ENC = 'utf-8'
 
 
+class MediaTime(float):
+    """A class representing time as used in the context of media playback.
+
+    Internally represents time in seconds as a float value (inherits from
+    built-in float type), but can deal with multiple formats when creating and
+    comparing time.
+
+    Parameters
+    ----------
+    time : int, float, tuple, list or str
+        the time to represent; can be any of the following formats:
+            - float: seconds
+            - tuple: (minutes, seconds) or (hours, minutes, seconds)
+            - list: [minutes, seconds] or [hours, minutes, seconds]
+            - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+
+    Examples
+    --------
+    >>> MediaTime(15.4)                # seconds
+    >>> MediaTime((1, 21.5))           # (min, sec)
+    >>> MediaTime((1, 1, 2))           # (hr, min, sec)
+    >>> MediaTime('01:01:33.5')        # (hr:min:sec)
+    >>> MediaTime('01:01:33.045')
+    >>> MediaTime('01:01:33,5')        # comma works too 
+    >>> MediaTime(3600) == '01:00:00'  # True
+
+    """
+
+    @staticmethod
+    def convert_to_seconds(time):
+        """Try to convert time specified in common media formats into seconds.
+
+        Parameters
+        ----------
+        time : int, float, tuple, list or str
+            the time to convert; can be any of the following formats:
+                - float: seconds
+                - tuple: (minutes, seconds) or (hours, minutes, seconds)
+                - list: [minutes, seconds] or [hours, minutes, seconds]
+                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+
+        Returns
+        -------
+        float
+            The media time in seconds.
+
+        Examples
+        --------
+        >>> convert_to_seconds(15.4)          # seconds
+        15.4
+        >>> convert_to_seconds((1, 21.5))     # (min, sec)
+        81.5
+        >>> convert_to_seconds((1, 1, 2))     # (hr, min, sec)
+        3662
+        >>> convert_to_seconds('01:01:33.5')  # (hr:min:sec)
+        3693.5
+        >>> convert_to_seconds('01:01:33.045')
+        3693.045
+        >>> convert_to_seconds('01:01:33,5')  # comma works too
+        3693.5
+
+        """
+
+        # The following code has been adapted from MoviePy
+        # (https://zulko.github.io/moviepy/)
+
+        factors = (1, 60, 3600)
+
+        if isinstance(time, str):
+            time = [float(part.replace(",", ".")) for part in time.split(":")]
+
+        if not isinstance(time, (tuple, list)):
+            return time  # Return as is, if not a valid format
+
+        return sum(mult * part for mult, part in zip(factors, reversed(time)))
+
+        # End of code from MoviePy
+
+    def __new__(cls, time):
+        seconds = cls.convert_to_seconds(time)  # Use the static method
+        return super(MediaTime, cls).__new__(cls, seconds)
+
+    def __lt__(self, other):
+        return float(self) < self.convert_to_seconds(other)
+
+    def __le__(self, other):
+        return float(self) <= self.convert_to_seconds(other)
+
+    def __eq__(self, other):
+        return float(self) == self.convert_to_seconds(other)
+
+    def __gt__(self, other):
+        return float(self) > self.convert_to_seconds(other)
+
+    def __ge__(self, other):
+        return float(self) >= self.convert_to_seconds(other)
+
+
 def round(number, ndigits=0): # TODO: overrides Python's round, maybe renaming?
     """Round half away from zero.
 

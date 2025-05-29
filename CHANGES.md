@@ -5,35 +5,21 @@ Coming up
 ---------
 New Features:
 - Expyriment is now based on Pygame 2 (using SDL 2)
-- test suite: option to run single tests
-- io.TextInput: ``get`` method now has parameter ``clear_event_cue``
-- control.pause: added ``text`` and ``key`` parameters
-- control.defaults: added ``display`` to set display index for showing screen on
-- io.Screen.get_display_resolution and misc.get_display_info
-- control.defaults.display
-- control.defaults.display_resolution
-- command line interface: option ``-I`` starts an interactive session
-- command line interface: option ``--display`` defines which display to show
-  the (fullscreen) window on
-- command line interface: option ``--display-resolution`` sets the fullscreen
-  resolution to use (overwrites automatically detected maximal display
-  resolution)
-- command line interface: option ``--text-size`` sets the default experiment
-  text size (as defined in ``design.defaults.experiment_text_size``)
-- command line interface: option ``--window-size`` sets the default size of the
-  window (when using window-mode)
-- additions to misc.get_system_info
-
-Changed:
-- package building with flit and pyproject.toml
-- revision number and build data (`__revision__`, `__date__`) removed from
-  source files
-- Python 2 support has been removed
-  Expyriment now only works with Python 3.9 or higher
-- Documentation not shipped with Expyriment anymore (i.e. no offline
-  documentation available, only online)
-- rewrite of permutation module
-- pause_key has been removed
+- test suite:
+    - option to run single tests
+    - improvements in reporting visual timing test results
+    - improved audio test
+    - format changes in saved protocol
+- command line interface:
+    - option ``-I`` starts an interactive session
+    - option ``--display`` defines which display to show the (fullscreen)
+      window on
+    - option ``--display-resolution`` sets the fullscreen resolution to use
+      (overwrites automatically detected maximal display resolution)
+    - option ``--text-size`` sets the default experiment text size (as defined
+      in ``design.defaults.experiment_text_size``)
+    - option ``--window-size`` sets the default size of the window (when using
+      window-mode)
 - control.Keyboard.process_control_events:
     - new parameter ``event_detected_function`` to set a function that is
       called as soon as a quit event is detected (but before the end function
@@ -48,42 +34,28 @@ Changed:
       called when a user confirms the quitting (i.e. presses "y")
     - new parameter ``quit_denied_function`` to set a function that is called
       when a user declines the quitting (i.e. presses "n")
-- test suite: improved audio test
-- test suite: format changes in saved protocol
-- test suite: improvements in reporting visual timing test results
-- When running in virtual environment, Expyriment settings folder will be local
-  to that environment
-- renaming: misc.py2py3_sort_array --> misc.string_sort_array
-- io.Keyboard.wait and io.Keyboard.wait_char: added parameter ``low_performance``
-- io.GamePad.wait_press: removed ``time.sleep(0.0005)``
-- io.Screen.update: new ``blocking`` parameter to control blocking on vertical
-  retrace (OpenGL mode only) behaviour per call
-- Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
-- Always use maximal display resolution by default for fullscreen mode (unless
-  overwritten by control.defaults.display_resolution)
-- ``expyriment.control.defaults.openg_gl`` is now called
-  ``expyriment.control.defaults.opengl``
-- OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
-  "3" used to do (i.e. "alternative blocking")
-- updated command line interface options:
-    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
-    - OpenGL mode can now be set with new option ``--opengl``
-    - all arguments are now also available as alternative long names
-- io.TextMenu: `width` is now an optional parameter. If not defined, surface
-  width is based on the widest item in the menu
-- misc.get_system_info: format changes for ``as_text`` output and improvements
-- audiosystem:
-    - support for selecting audio device
-    - new control default ``audiosystem_device``
-    - new function ``misc.get_audio_devices``
+- control.pause: added ``text`` and ``key`` parameters
+- control.defaults:
+    - added ``display`` to set display index for showing screen on
+    - added ``display_resolution`` to overwrite detected native resolution
+    - added ``audiosystem_device`` to select audio device
 - stimuli.Audio:
     - not limited to .wav/.ogg files anymore
     - should support most common formats (i.e. WAV, AIFF, MP3, Ogg, Opus, FLAC)
     - new property ``is_playing`` to check whether the audio stimulus is
       playing
+    - new property ``length`` to get the length of the audio stimulus
+    - new property ``time`` to get the current playback time
+    - new method ``wait_time`` to wait until specified playback time is reached
     - new method ``wait_end`` to wait until the audio stimulus has finished
       playing
     - new method ``pause`` to pause (and unpause) playback of the audio stimulus
+    - new method ``seek`` to seek to a specified playback time
+    - new method ``forward`` to forward playback by specified duration
+    - new method ``rewind`` to rewind playback by specified duration or to the
+      start
+    - ``seek``, ``rewind``, ``forward``, ``wait_time`` methods all take multiple
+      convenient time formats now (e.g. "00:01:30")
 - stimuli.Video:
     - general improvements
     - Pygame video backend removed (always relies on mediadecoder)
@@ -99,8 +71,53 @@ Changed:
     - new property ``fps`` to get the frame rate in frames per second
     - new method ``wait_time`` to wait until a certain time
     - new method ``seek`` to seek to any position in the video
-    - ``seem``, ``rewind``, ``forward``, ``wait_time`` methods all take multiple
-      convenient time formats now (e.g. "00:01:30")
+    - ``seek``, ``rewind``, ``forward``, ``wait_time`` methods all take multiple
+     convenient time formats now (e.g. "00:01:30")
+- io.Screen:
+    - new method ``get_display_resolution``
+    - new method ``misc.get_display_info``
+    - ``update`` method has new ``blocking`` parameter to control blocking on
+      vertical retrace (OpenGL mode only) behaviour per call
+ - io.Keyboard: ``wait`` and ``wait_char`` methods have new parameter
+   ``low_performance`` which allows for other threads to be processed while
+   waiting (at the cost of accuracy)
+- io.TextInput: ``get`` method now has parameter ``clear_event_cue``
+- misc:
+    - new class``MediaTime`` for representing time as used in the context of
+      media playback
+    - new function ``misc.get_audio_devices`` to get a list of available audio
+      devices
+
+Changed:
+- package building with flit and pyproject.toml
+- revision number and build data (`__revision__`, `__date__`) removed from
+  source files
+- Python 2 support has been removed
+  Expyriment now only works with Python 3.9 or higher
+- Documentation not shipped with Expyriment anymore (i.e. no offline
+  documentation available, only online)
+- rewrite of permutation module
+- pause_key has been removed
+- When running in virtual environment, Expyriment settings folder will be local
+  to that environment
+- Always use maximal display resolution by default for fullscreen mode (unless
+  overwritten by control.defaults.display_resolution)
+- ``expyriment.control.defaults.openg_gl`` is now called
+  ``expyriment.control.defaults.opengl``
+- OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
+  "3" used to do (i.e. "alternative blocking")
+- updated command line interface options:
+    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
+    - OpenGL mode can now be set with new option ``--opengl``
+    - all arguments are now also available as alternative long names
+- io.TextMenu: `width` is now an optional parameter. If not defined, surface
+  width is based on the widest item in the menu
+- io.GamePad.wait_press: removed ``time.sleep(0.0005)``
+- Deprecated io.Screen.get_monitor_resolution and misc.get_monitor_resolution
+- misc.get_system_info:
+    - additions and improvements
+    - format changes for ``as_text`` output
+- renaming: misc.py2py3_sort_array --> misc.string_sort_array
 
 Fixed:
 - bug in colour.is_hex & colour.is_colour

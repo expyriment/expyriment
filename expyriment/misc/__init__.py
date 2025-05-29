@@ -18,6 +18,7 @@ from ._miscellaneous import get_monitor_resolution, get_display_info, \
                             create_colours, has_internet_connection, which, \
                             download_from_stash,string_sort_array, round, \
                             get_audio_devices
+from ._miscellaneous import MediaTime
 from ._get_system_info import get_system_info
 from ._secure_hash import get_module_hash_dictionary, \
                           get_experiment_secure_hash, module_hashes_as_string
