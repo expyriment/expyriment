@@ -26,12 +26,12 @@ all = [
   "numpy>=1.6,<3",
   "pyserial>=3,<4",
   "pyparallel>=0.2,<1",
-  "mediadecoder>=0.2,<1",
+  "mediadecoder>=0.2.2,<1",
 ]
 data_preprocessing = ["numpy>=1.6,<3"]
 parallelport_linux = ["pyparallel>=0.2,<1"]
 serialport = ["pyserial>=3,<4"]
-video = ["mediadecoder>=0.2,<1"]
+video = ["mediadecoder>=0.2.2,<1"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/expyriment/expyriment/issues"
