@@ -6,18 +6,26 @@ The control._experiment_control module of expyriment.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
 import os
+import sys
+
 import pygame
 
+from .. import _internals, design, misc, stimuli
+from .._internals import get_version
+from ..io import (
+    DataFile,
+    EventFile,
+    Keyboard,
+    Mouse,
+    TextInput,
+    TouchScreenButtonBox,
+    _keyboard,
+)
+from ..io._screen import Screen
+from ..misc import is_android_running
 from . import defaults
 from ._miscellaneous import _set_stdout_logging, start_audiosystem
-from .._internals import get_version
-from .. import design, stimuli, misc, _internals
-from ..misc import is_android_running
-from ..io import DataFile, EventFile, TextInput, Keyboard, Mouse, \
-                _keyboard, TouchScreenButtonBox
-from ..io._screen import Screen
 
 
 def start(experiment=None, auto_create_subject_id=None, subject_id=None,
@@ -292,7 +300,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
                 pre_quit_function()
 
         # Delete open file handles and previously opened fonts
-        import expyriment.stimuli._textline, expyriment.stimuli._textbox
+        import expyriment.stimuli._textbox
+        import expyriment.stimuli._textline
         for text_stim in [stimuli._textline, stimuli._textbox]:
             for f in text_stim.open_filehandles:
                 f.close()
@@ -357,7 +366,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         pre_quit_function()
 
     # Delete open file handles and previously opened fonts
-    import expyriment.stimuli._textline, expyriment.stimuli._textbox
+    import expyriment.stimuli._textbox
+    import expyriment.stimuli._textline
     for text_stim in [expyriment.stimuli._textline, expyriment.stimuli._textbox]:
         for f in text_stim.open_filehandles:
             f.close()
@@ -423,8 +433,7 @@ fullscreen.""")
     old_logging = experiment.log_level
     experiment.set_log_level(0)  # switch off for the first screens
 
-    _keyboard.quit_key = defaults.quit_key
-    _keyboard.end_function = end
+    _keyboard.quit_control.setup(quit_key=defaults.quit_key, end_function=end)
 
     if defaults.audiosystem_bit_depth not in (8, -8, 16, -16, 32):
         message = "Audiosystem only supports bit depth values of " + \

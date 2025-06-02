@@ -9,39 +9,67 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-import time, sys
+import sys
+import time
 from types import FunctionType
 
 import pygame
 
 try:
-    import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
+    import android.show_keyboard as android_show_keyboard
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-from . import defaults
-
+from .. import _internals
 from ..misc._timer import get_time
-from ..misc import unicode2byte
-from  ._input_output import Input
-from .. import  _internals
+from . import defaults
+from ._input_output import Input
 
-quit_key = None
-end_function = None
 
-EVENT_DETECTED_FUNCTIONS = []
-quit_confirmed_functions = []
-quit_denied_functions = []
+def _list(x):
+    """returns list and empty list if x is None"""
+    if isinstance(x, (tuple, list)):
+        return list(x)
+    elif x is not None:
+        return [x]
+    else:
+        return []
 
-class QuitControl:
+class _QuitControl:
+
     quit_key = None
     end_function = None
     event_detected_functions = []
     quit_confirmed_functions =[]
     quit_denied_functions = []
 
-quit_control = QuitControl()
+    @classmethod
+    def setup(cls, quit_key, end_function):
+        cls.quit_key = quit_key
+        cls.end_function = end_function
+
+    @classmethod
+    def call_functions(cls,
+                            event_detected_function=None,
+                            quit_confirmed_function=None,
+                            quit_denied_function=None):
+
+        for fnc in _list(cls.event_detected_functions) + _list(event_detected_function):
+            fnc()
+
+        if isinstance(cls.end_function, FunctionType):
+            confirm = cls.end_function(
+                confirmation=True,
+                pre_quit_function = _list(cls.quit_confirmed_functions) +\
+                                        _list(quit_confirmed_function))
+            if confirm:
+                sys.exit()
+            else:
+                for fnc in _list(cls.quit_denied_functions) + _list(quit_denied_function):
+                    fnc()
+
+quit_control = _QuitControl()
 
 class Keyboard(Input):
     """A class implementing a keyboard input.
@@ -52,7 +80,8 @@ class Keyboard(Input):
     """
 
     @staticmethod
-    def process_control_keys(key_event=None, event_detected_function=None,
+    def process_control_keys(key_event=None,
+                             event_detected_function=None,
                              quit_confirmed_function=None,
                              quit_denied_function=None):
         """Check if quit_key has been pressed.
@@ -81,21 +110,8 @@ class Keyboard(Input):
 
         if key_event:
             if key_event.type == pygame.KEYDOWN:
-                if key_event.key == quit_key and \
-                   quit_control.end_function is not None:
-                    quit_control.call_event_detected_functions()
-                    if event_detected_function is not None:
-                        event_detected_function()
-                    pre_quit_functions = quit_control.quit_confirmed_functions[:]
-                    if quit_confirmed_function is not None:
-                        pre_quit_functions.append(quit_confirmed_function)
-                    confirm = end_function(
-                        confirmation=True,
-                        pre_quit_function=pre_quit_functions)
-                    if confirm:
-                        sys.exit()
-                    else:
-                        quit_control.call_quit_denied_functions()
+                if key_event.key == quit_key:
+                    quit_control.call_functions()
                     return True
         else:
             # Clear keyup events to prevent limit on unicode field storage:
