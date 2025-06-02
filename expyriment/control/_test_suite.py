@@ -173,7 +173,8 @@ After the test, you will be asked to indicate which (if any) of those two square
                              for x in zip(to_do_time, actual_time)]
         hist, hist_str = _histogram(unexplained_delay)
         inaccuracies = []
-        delayed_presentations = 0
+        delayed_presentations_accurate = 0
+        delayed_presentations_inaccurate = 0
         if os.environ.get("XPY_TESTSUITE_EXPERIMENTAL"):
             peaks = has_peaks(hist.values())
         else:
@@ -186,10 +187,16 @@ After the test, you will be asked to indicate which (if any) of those two square
             else:
                 inaccuracies.extend(
                     [key % max(1, (1000 / refresh_rate))] * hist[key])
-            if key > 0:
-                delayed_presentations += hist[key]
+            if key != 0:
+                if key % int(misc.round(1000 / refresh_rate)) == 0:
+                    delayed_presentations_accurate += hist[key]
+                else:
+                    delayed_presentations_inaccurate += hist[key]
         inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
-        delayed = misc.round(100 * delayed_presentations/len(to_do_time), 1)
+        delayed_accurate = int(misc.round(
+            100 * delayed_presentations_accurate/len(to_do_time)))
+        delayed_inaccurate = int(misc.round(
+            100 * delayed_presentations_inaccurate/len(to_do_time)))
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
                     constants.K_0:0, constants.K_1:1, constants.K_2:2,
@@ -249,27 +256,57 @@ After the test, you will be asked to indicate which (if any) of those two square
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results3_colour,
             position=(0, -int(20 * scaling)))
-        if delayed > 10:
+        if delayed_accurate > 50:
+            results5_colour = [255, 0, 0]
+        elif 50 >= delayed_accurate > 5:
+            results5_colour = [255, 255, 0]
+        else:
+            results5_colour = [0, 255, 0]
+        if delayed_inaccurate > 10:
+            results6_colour = [255, 0, 0]
+        elif 10 >= delayed_inaccurate > 1:
+            results6_colour = [255, 255, 0]
+        else:
+            results6_colour = [0, 255, 0]
+        if [255, 0, 0] in (results5_colour, results6_colour):
             results4_colour = [255, 0, 0]
-        elif 10 > delayed > 1:
+        elif [255, 255, 0] in (results5_colour, results6_colour):
             results4_colour = [255, 255, 0]
         else:
             results4_colour = [0, 255, 0]
         results4 = stimuli.TextScreen(
             "",
-            "Unexplained Presentation Delays:   {0} %\n\n\n".format(delayed),
+            "Unexplained Presentation Delays:   {0} %\n\n\n".format(
+                delayed_accurate + delayed_inaccurate),
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results4_colour,
-            position=(0, -int(40 * scaling)))
+            position=(0, -int(60 * scaling)))
         results5 = stimuli.TextScreen(
+            "",
+            "........... Accurately Reported:  {:>3} %\n\n\n".format(
+                delayed_accurate),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=False,
+            text_justification=0, text_colour=results5_colour,
+            position=(0, -int(80 * scaling)))
+        results6 = stimuli.TextScreen(
+            "",
+            "......... Inaccurately Reported:  {:>3} %\n\n\n".format(
+                delayed_inaccurate),
+            text_font="freemono", text_size=int(16 * scaling), text_bold=False,
+            text_justification=0, text_colour=results6_colour,
+            position=(0, -int(100 * scaling)))
+        results7 = stimuli.TextScreen(
             "", hist_str, text_font="freemono", text_size=int(16 * scaling),
             text_bold=True, text_justification=0,
-            position=(0, -int(100 * scaling)))
+            position=(0, -int(160 * scaling)))
+
         results1.plot(info)
         results2.plot(info)
         results3.plot(info)
         results4.plot(info)
         results5.plot(info)
+        results6.plot(info)
+        results7.plot(info)
         info2 = stimuli.TextLine("[Press RETURN to continue]",
                                  position=(0, -int(160 * scaling)))
         info2.plot(info)
@@ -278,8 +315,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
             if key is not None:
                 break
-        return (to_do_time, actual_time, refresh_rate, inaccuracy, delayed,
-                response)
+        return (to_do_time, actual_time, refresh_rate, inaccuracy,
+                delayed_accurate, delayed_inaccurate, response)
 
 #     def _test2():
 #         info = """This will test if stimulus presentation can be synchronized to the refreshrate of the screen.
@@ -775,8 +812,11 @@ def run_test_suite(item=None):
             results["testsuite_visual_timing_actual"] = rtn[1]
             results["testsuite_visual_sync_refresh_rate"] = str(rtn[2]) + " Hz"
             results["testsuite_visual_timing_inaccuracy"] = str(rtn[3]) + " ms"
-            results["testsuite_visual_timing_delayed"] = str(rtn[4]) + " %"
-            results["testsuite_visual_flipping_user"] = rtn[5]
+            results["testsuite_visual_timing_delayed_accurate"] = \
+                str(rtn[4]) + " %"
+            results["testsuite_visual_timing_delayed_inaccurate"] = \
+                str(rtn[5]) + " %"
+            results["testsuite_visual_flipping_user"] = rtn[6]
             delay = [x[1]-x[0] for x in zip(
                 results["testsuite_visual_timing_to_do"],
                 results["testsuite_visual_timing_actual"])]
