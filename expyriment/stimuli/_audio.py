@@ -9,6 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
+import time
 from types import FunctionType
 
 import pygame
@@ -207,6 +208,12 @@ class Audio(Stimulus):
 
         self._channel = self._file.play(loops, maxtime, fade_ms)
         self._start_time = get_time() - self._start_position
+
+        _internals.active_exp.keyboard.quit_control.register_functions(
+                event_detected_function=self.pause,
+                quit_confirmed_function=self.stop,
+                quit_denied_function=self.pause)
+
         if self._logging:
             if isinstance(self._filename, str):
                 import sys
@@ -241,6 +248,11 @@ class Audio(Stimulus):
             self._start_time = 0
             self._paused_time = 0
             self._is_paused = False
+
+            _internals.active_exp.keyboard.quit_control.unregister_functions(
+                event_detected_function=self.pause,
+                quit_confirmed_function=self.stop,
+                quit_denied_function=self.pause)
 
     def seek(self, time):
         """Seek playback position to specified time.
@@ -427,14 +439,8 @@ class Audio(Stimulus):
                     return rtn_callback
 
             if process_control_events:
-                _internals.active_exp.mouse.process_quit_event(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
-                _internals.active_exp.keyboard.process_control_keys(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
+                _internals.active_exp.mouse.process_quit_event()
+                _internals.active_exp.keyboard.process_control_keys()
             else:
                 pygame.event.pump()
 
@@ -484,14 +490,8 @@ class Audio(Stimulus):
                     return rtn_callback
 
             if process_control_events:
-                _internals.active_exp.mouse.process_quit_event(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
-                _internals.active_exp.keyboard.process_control_keys(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.play)
+                _internals.active_exp.mouse.process_quit_event()
+                _internals.active_exp.keyboard.process_control_keys()
             else:
                 pygame.event.pump()
 

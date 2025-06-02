@@ -471,7 +471,7 @@ class Video(_visual.Stimulus):
 
         start = get_time()
         if self._is_preloaded:
-            self.stop()
+            self._file.stop()
             del self._file
             self._file = None
             self._surface = None
@@ -583,6 +583,11 @@ class Video(_visual.Stimulus):
             while not hasattr(self._file._clock, "interval_start"):
                 pass  # if thread not fully started yet
 
+            _internals.active_exp.keyboard.quit_control.register_functions(
+                event_detected_function=self.pause,
+                quit_confirmed_function=self.stop,
+                quit_denied_function=self.pause)
+
             if self._start_position != 0:
                 self._file.seek(self._start_position)
                 self._new_frame_available = False
@@ -610,6 +615,11 @@ class Video(_visual.Stimulus):
             while hasattr(self._file._clock, "thread") and \
                     self._file._clock.thread.is_alive():
                 pass  # if thread not fully stopped
+            _internals.active_exp.keyboard.quit_control.unregister_functions(
+                event_detected_function=self.pause,
+                quit_confirmed_function=self.stop,
+                quit_denied_function=self.pause)
+
 
     def pause(self):
         """Pause the video stimulus."""
@@ -913,14 +923,8 @@ class Video(_visual.Stimulus):
                         break
 
             if process_control_events:
-                _internals.active_exp.mouse.process_quit_event(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.pause)
-                _internals.active_exp.keyboard.process_control_keys(
-                    event_detected_function=self.pause,
-                    quit_confirmed_function=self.stop,
-                    quit_denied_function=self.pause)
+                _internals.active_exp.mouse.process_quit_event()
+                _internals.active_exp.keyboard.process_control_keys()
             else:
                 pygame.event.pump()
 

@@ -28,13 +28,14 @@ from ._input_output import Input
 
 
 def _list(x):
-    """returns list and empty list if x is None"""
+    """Returns list and empty list if x is None"""
     if isinstance(x, (tuple, list)):
         return list(x)
     elif x is not None:
         return [x]
     else:
         return []
+
 
 class _QuitControl:
 
@@ -51,11 +52,12 @@ class _QuitControl:
 
     @classmethod
     def call_functions(cls,
-                            event_detected_function=None,
-                            quit_confirmed_function=None,
-                            quit_denied_function=None):
+                       event_detected_function=None,
+                       quit_confirmed_function=None,
+                       quit_denied_function=None):
 
-        for fnc in _list(cls.event_detected_functions) + _list(event_detected_function):
+        for fnc in _list(cls.event_detected_functions) + \
+                _list(event_detected_function):
             fnc()
 
         if isinstance(cls.end_function, FunctionType):
@@ -66,10 +68,38 @@ class _QuitControl:
             if confirm:
                 sys.exit()
             else:
-                for fnc in _list(cls.quit_denied_functions) + _list(quit_denied_function):
+                for fnc in _list(cls.quit_denied_functions) + \
+                        _list(quit_denied_function):
                     fnc()
 
-quit_control = _QuitControl()
+    @classmethod
+    def register_functions(cls, event_detected_function=None,
+                           quit_confirmed_function=None,
+                           quit_denied_function=None):
+        for func in _list(event_detected_function):
+            if not func in cls.event_detected_functions:
+                cls.event_detected_functions.append(func)
+        for func in _list(quit_confirmed_function):
+            if not func in cls.quit_confirmed_functions:
+                cls.quit_confirmed_functions.append(func)
+        for func in _list(quit_denied_function):
+            if not func in cls.quit_denied_functions:
+                cls.quit_denied_functions.append(func)
+
+    @classmethod
+    def unregister_functions(cls, event_detected_function=None,
+                             quit_confirmed_function=None,
+                             quit_denied_function=None):
+        for func in _list(event_detected_function):
+            while func in cls.event_detected_functions:
+                cls.event_detected_functions.remove(func)
+        for func in _list(quit_confirmed_function):
+            while func in cls.quit_confirmed_functions:
+                cls.quit_confirmed_functions.remove(func)
+        for func in _list(quit_denied_function):
+            while func in cls.quit_denied_functions:
+                cls.quit_denied_functions.remove(func)
+
 
 class Keyboard(Input):
     """A class implementing a keyboard input.
@@ -79,8 +109,10 @@ class Keyboard(Input):
 
     """
 
-    @staticmethod
-    def process_control_keys(key_event=None,
+    quit_control = _QuitControl()
+
+    @classmethod
+    def process_control_keys(cls, key_event=None,
                              event_detected_function=None,
                              quit_confirmed_function=None,
                              quit_denied_function=None):
@@ -110,8 +142,10 @@ class Keyboard(Input):
 
         if key_event:
             if key_event.type == pygame.KEYDOWN:
-                if key_event.key == quit_key:
-                    quit_control.call_functions()
+                if key_event.key == cls.quit_control.quit_key:
+                    cls.quit_control.call_functions(event_detected_function,
+                                                    quit_confirmed_function,
+                                                    quit_denied_function)
                     return True
         else:
             # Clear keyup events to prevent limit on unicode field storage:
@@ -162,15 +196,14 @@ class Keyboard(Input):
     def get_quit_key():
         """Returns the currently defined quit key """
 
-        return quit_key
+        return quit_control.quit_key
 
 
     @staticmethod
     def set_quit_key(value):
         """Set the currently defined quit key"""
 
-        global quit_key
-        quit_key = value
+        quit_control.quit_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""

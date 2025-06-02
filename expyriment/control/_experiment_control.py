@@ -361,9 +361,15 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     if not fast_quit:
         misc.Clock().wait(goodbye_delay)
-    _internals.active_exp = design.Experiment("None")
+
     if pre_quit_function is not None:
-        pre_quit_function()
+        if isinstance(pre_quit_function, (tuple, list)):
+            for function in pre_quit_function:
+                function()
+        else:
+            pre_quit_function()
+
+    _internals.active_exp = design.Experiment("None")
 
     # Delete open file handles and previously opened fonts
     import expyriment.stimuli._textbox
@@ -433,8 +439,6 @@ fullscreen.""")
     old_logging = experiment.log_level
     experiment.set_log_level(0)  # switch off for the first screens
 
-    _keyboard.quit_control.setup(quit_key=defaults.quit_key, end_function=end)
-
     if defaults.audiosystem_bit_depth not in (8, -8, 16, -16, 32):
         message = "Audiosystem only supports bit depth values of " + \
             "8, -8, 16, -16 and 32."
@@ -491,6 +495,8 @@ fullscreen.""")
     else:
         experiment._events = None
     experiment._keyboard = Keyboard()
+    experiment._keyboard.quit_control.setup(quit_key=defaults.quit_key,
+                                            end_function=end)
     experiment._mouse = Mouse(show_cursor=False)
     # Scale fonts/logo according to default font size
     scaling = experiment.text_size / 20
