@@ -30,6 +30,19 @@ from .. import  _internals
 quit_key = None
 end_function = None
 
+EVENT_DETECTED_FUNCTIONS = []
+quit_confirmed_functions = []
+quit_denied_functions = []
+
+class QuitControl:
+    quit_key = None
+    end_function = None
+    event_detected_functions = []
+    quit_confirmed_functions =[]
+    quit_denied_functions = []
+
+quit_control = QuitControl()
+
 class Keyboard(Input):
     """A class implementing a keyboard input.
 
@@ -69,17 +82,20 @@ class Keyboard(Input):
         if key_event:
             if key_event.type == pygame.KEYDOWN:
                 if key_event.key == quit_key and \
-                   end_function is not None:
+                   quit_control.end_function is not None:
+                    quit_control.call_event_detected_functions()
                     if event_detected_function is not None:
                         event_detected_function()
+                    pre_quit_functions = quit_control.quit_confirmed_functions[:]
+                    if quit_confirmed_function is not None:
+                        pre_quit_functions.append(quit_confirmed_function)
                     confirm = end_function(
                         confirmation=True,
-                        pre_quit_function=quit_confirmed_function)
+                        pre_quit_function=pre_quit_functions)
                     if confirm:
                         sys.exit()
                     else:
-                        if quit_denied_function is not None:
-                            quit_denied_function()
+                        quit_control.call_quit_denied_functions()
                     return True
         else:
             # Clear keyup events to prevent limit on unicode field storage:

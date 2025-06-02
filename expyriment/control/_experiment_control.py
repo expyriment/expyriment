@@ -273,8 +273,8 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         (default = None)
     system_exit : bool, optional
         call Python's sys.exit() method when ending expyriment (default = False)
-    pre_quit_function : function, optional
-        function to be called before quitting Pygame
+    pre_quit_function : function or list of functions, optional
+        function(s) to be called before quitting Pygame
 
     Returns
     -------
@@ -285,7 +285,11 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     if not _internals.active_exp.is_initialized:
         if pre_quit_function is not None:
-            pre_quit_function()
+            if isinstance(pre_quit_function, (tuple, list)):
+                for function in pre_quit_function:
+                    function()
+            else:
+                pre_quit_function()
 
         # Delete open file handles and previously opened fonts
         import expyriment.stimuli._textline, expyriment.stimuli._textbox
