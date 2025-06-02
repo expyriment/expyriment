@@ -144,35 +144,35 @@ letter arguments run single commands""",
     parser.add_argument("--window-size", metavar="WIDTHxHEIGHT",
                         help="set the window size (only in window mode)")
 
-    parser.add_argument("-A", "--api",
+    parser.add_argument("-A", "--Api",
                         action="store_true",
                         help="start the API reference tool")
 
-    parser.add_argument("-B", "--browser-api",
+    parser.add_argument("-B", "--Browser-api",
                         action="store_true",
                         help="open browser with API reference")
 
-    parser.add_argument("-C", "--create-exp",
+    parser.add_argument("-C", "--Create-exp",
                         action="store_true",
                         help="create experiment template")
 
-    parser.add_argument("-D", "--download-stash",
+    parser.add_argument("-D", "--Download-stash",
                         action="store_true",
                         help="download from Expyriment stash")
 
-    parser.add_argument("-I", "--interactive",
+    parser.add_argument("-I", "--Interactive",
                         action="store_true",
                         help="start an interactive session")
 
-    parser.add_argument("-J", "--join-data",
+    parser.add_argument("-J", "--Join-data",
                         action="store_true",
                         help="join data files to one single csv file")
 
-    parser.add_argument("-S", "--system-info",
+    parser.add_argument("-S", "--System-info",
                         action="store_true",
                         help="print system information")
 
-    parser.add_argument("-T", "--test-suite",
+    parser.add_argument("-T", "--Test-suite",
                         action="store_true",
                         help="run the Expyriment test suite")
 
@@ -256,30 +256,30 @@ letter arguments run single commands""",
             args["window_size"]))
 
     # commands
-    if args["system_info"]:
+    if args["System_info"]:
         print("System info")
         exec("\n".join(statements), globals())
         print(xpy.misc.get_system_info(as_string=True))
 
-    elif args["test_suite"]:
+    elif args["Test_suite"]:
         print("Run test suite")
         exec("\n".join(statements), globals())
         xpy.control.run_test_suite()
 
-    elif args["browser_api"]:
+    elif args["Browser_api"]:
         exec("\n".join(statements), globals())
         xpy.show_documentation(1)
 
-    elif args["api"]:
+    elif args["Api"]:
         print("Start API reference tool")
         exec("\n".join(statements), globals())
         xpy.show_documentation(2)
 
-    elif args["create_exp"]:
+    elif args["Create_exp"]:
         exec("\n".join(statements), globals())
         create_template()
 
-    elif args["download_stash"]:
+    elif args["Download_stash"]:
         print("Download from stash")
         exec("\n".join(statements), globals())
         what = ""
@@ -306,7 +306,7 @@ letter arguments run single commands""",
                     branch = branches[1]
         xpy.misc.download_from_stash(what, branch)
 
-    elif args["join_data"]:
+    elif args["Join_data"]:
         exec("\n".join(statements), globals())
         d = join_data()
         output = ""
@@ -315,7 +315,7 @@ letter arguments run single commands""",
             output = input()
         d.write_concatenated_data(output)
 
-    elif args["interactive"]:
+    elif args["Interactive"]:
         print("Interactive session")
         print("")
         statements.append("expyriment = xpy")
