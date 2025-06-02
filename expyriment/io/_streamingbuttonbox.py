@@ -9,7 +9,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
+import time
 from types import FunctionType
+
 import pygame
 
 from . import defaults
@@ -110,7 +112,7 @@ class StreamingButtonBox(Input, Output):
 
     def wait(self, codes=None, duration=None, no_clear_buffer=False,
              bitwise_comparison=False, callback_function=None,
-             process_control_events=True):
+             process_control_events=True, low_performance=False):
         """Wait for responses defined as codes.
 
         If bitwise_comparison = True, the function performs a bitwise
@@ -134,6 +136,9 @@ class StreamingButtonBox(Input, Output):
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -186,6 +191,8 @@ class StreamingButtonBox(Input, Output):
             if found is not None:
                 rt = int((get_time() - start) * 1000)
                 break
+            if low_performance:
+                time.sleep(0.0001)
 
         if self._logging:
             _internals.active_exp._event_file_log(

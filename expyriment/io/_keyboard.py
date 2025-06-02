@@ -254,8 +254,8 @@ class Keyboard(Input):
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
         low_performance : bool, optional
-            reduce CPU performance while waiting at the cost of less timing
-            accuracy (default = False)
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -329,7 +329,7 @@ class Keyboard(Input):
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
             if not done and low_performance:
-                time.sleep(0.0005)
+                time.sleep(0.0001)
         if self._logging:
             _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
@@ -357,8 +357,8 @@ class Keyboard(Input):
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
         low_performance : bool, optional
-            reduce CPU performance while waiting at the cost of less timing
-            accuracy (default = False)
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -415,7 +415,7 @@ class Keyboard(Input):
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
             if not done and low_performance:
-                time.sleep(0.0005)
+                time.sleep(0.0001)
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(

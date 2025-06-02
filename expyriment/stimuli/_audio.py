@@ -362,6 +362,13 @@ class Audio(Stimulus):
         The function is identical to Audio.play(loops=0, maxtime=0, fade_ms=0)
         and returns also immediately after the sound started to play.
 
+        Parameters
+        ----------
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
+
         Notes
         -----
         See Audio.play for more information.
@@ -431,6 +438,8 @@ class Audio(Stimulus):
             else:
                 pygame.event.pump()
 
+            time.sleep(0.0001)
+
 
     def wait_end(self, callback_function=None, process_control_events=True):
         """Wait until audio has ended playing.
@@ -486,4 +495,5 @@ class Audio(Stimulus):
             else:
                 pygame.event.pump()
 
+            time.sleep(0.0001)
 

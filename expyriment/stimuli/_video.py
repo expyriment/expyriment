@@ -753,12 +753,19 @@ class Video(_visual.Stimulus):
             self._surface = frame
             self._new_frame_available = True
 
-    def present(self):
+    def present(self, log_event_tag=None):
         """Present next available frame.
 
         This method waits for the next frame and presents it on the screen.
         When using OpenGL, the method blocks until this frame is actually being
         written to the screen.
+
+        Parameters
+        ----------
+        log_event_tag : numeral or string, optional
+            if log_event_tag is defined and if logging is switched on for this
+            stimulus (default), a summary of the inter-event-intervalls are
+            appended at the end of the event file
 
         Returns
         -------
@@ -782,7 +789,7 @@ class Video(_visual.Stimulus):
             self.preload()
 
         if not self.is_playing:
-            self.play()
+            self.play(log_even_tag)
 
         while True:
             if self.new_frame_available:

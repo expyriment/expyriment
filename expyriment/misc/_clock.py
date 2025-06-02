@@ -95,7 +95,8 @@ class Clock(object) :
 
         self.__start = get_time()
 
-    def wait(self, waiting_time, callback_function=None, process_control_events=False):
+    def wait(self, waiting_time, callback_function=None,
+             process_control_events=False, low_performance=False):
         """Wait for a certain amount of milliseconds.
 
         Parameters
@@ -107,6 +108,9 @@ class Clock(object) :
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = False)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -122,7 +126,7 @@ class Clock(object) :
         if _internals.skip_wait_methods:
             return
         start = self.time
-        if isinstance(callback_function, FunctionType) or \
+        if low_performance or isinstance(callback_function, FunctionType) or \
            (process_control_events or \
              _internals.active_exp.is_callback_registered):
             while (self.time < start + waiting_time):
@@ -140,6 +144,9 @@ class Clock(object) :
                         _internals.active_exp.mouse.process_quit_event()
                     else:
                         pygame.event.pump()
+                if low_performance:
+                    time.sleep(0.0001)
+
         else:
             looptime = 200
             if (waiting_time > looptime):
@@ -157,7 +164,7 @@ class Clock(object) :
                 pass
 
     def wait_seconds(self, time_sec, callback_function=None,
-                     process_control_events=False):
+                     process_control_events=False, low_performance=False):
         """Wait for a certain amount of seconds.
 
         Parameters
@@ -169,6 +176,9 @@ class Clock(object) :
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = False)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -182,10 +192,11 @@ class Clock(object) :
 
         """
 
-        return self.wait(time_sec * 1000, callback_function, process_control_events)
+        return self.wait(time_sec * 1000, callback_function,
+                         process_control_events, low_performance)
 
     def wait_minutes(self, time_minutes, callback_function=None,
-                     process_control_events=False):
+                     process_control_events=False, low_performance=False):
         """Wait for a certain amount of minutes.
 
         Parameters
@@ -197,6 +208,9 @@ class Clock(object) :
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = False)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -211,4 +225,4 @@ class Clock(object) :
         """
 
         return self.wait_seconds(time_minutes * 60, callback_function,
-                                 process_control_events)
+                                 process_control_events, low_performance)

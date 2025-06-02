@@ -8,7 +8,9 @@ This module contains a class implementing a trigger input.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import time
 from types import FunctionType
+
 import pygame
 
 from . import defaults
@@ -58,7 +60,7 @@ class TriggerInput(Input):
         self._default_code = value
 
     def wait(self, code=None, bitwise_comparison=False, callback_function=None,
-             process_control_events=True):
+             process_control_events=True, low_performance=False):
         """Wait for a trigger.
 
         Returns the code received and the reaction time [code, rt].
@@ -78,6 +80,9 @@ class TriggerInput(Input):
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Notes
         -----
@@ -124,6 +129,9 @@ class TriggerInput(Input):
                     break
             if Keyboard.process_control_keys():
                     break
+            if low_performance:
+                time.sleep(0.0001)
+
         if self._logging:
             _internals.active_exp._event_file_log(
                             "TriggerInput,received,{0},wait".format(found))

@@ -7,6 +7,7 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
+import time
 from types import FunctionType
 
 import pygame
@@ -121,6 +122,8 @@ def wait_end_audiosystem(channel=None, callback_function=None,
                     break
             else:
                 pygame.event.pump()
+
+        time.sleep(0.0001)
 
 
 def set_skip_wait_methods(on=True):

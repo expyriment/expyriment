@@ -8,6 +8,7 @@ This module contains a class implementing pygame mouse input.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import time
 from types import FunctionType
 
 import pygame
@@ -447,7 +448,8 @@ class Mouse(Input):
 
     def wait_event(self, wait_button=True, wait_motion=True, buttons=None,
                    duration=None, wait_for_buttonup=False,
-                   callback_function=None, process_control_events=True):
+                   callback_function=None, process_control_events=True,
+                   low_performance=False):
         """Wait for a mouse event (i.e., motion, button press or wheel event).
 
         Button id coding:
@@ -474,6 +476,9 @@ class Mouse(Input):
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
             ``io.mouse.process_quit_event()`` (default = True)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -546,6 +551,8 @@ class Mouse(Input):
             elif (duration is not None and \
                     int((get_time() - start) * 1000) >= duration):
                 break
+            if low_performance:
+                time.sleep(0.0001)
 
         position_in_expy_coordinates = self.position
 
@@ -556,7 +563,8 @@ class Mouse(Input):
 
 
     def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
-                   callback_function=None, process_control_events=True):
+                   callback_function=None, process_control_events=True,
+                   low_performance=False):
         """Wait for a mouse button press or mouse wheel event.
 
         Parameters
@@ -572,6 +580,9 @@ class Mouse(Input):
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
             ``io.mouse.process_quit_event()`` (default = false)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -597,11 +608,12 @@ class Mouse(Input):
                               buttons=buttons, duration=duration,
                               wait_for_buttonup=wait_for_buttonup,
                               callback_function=callback_function,
-                              process_control_events=process_control_events)
+                              process_control_events=process_control_events,
+                              low_performance=low_performance)
         return rtn[0], rtn[2], rtn[3]
 
     def wait_motion(self, duration=None, callback_function=None,
-                    process_control_events=True):
+                    process_control_events=True, low_performance=False):
         """Wait for a mouse motion.
 
         Parameters
@@ -613,6 +625,9 @@ class Mouse(Input):
         process_control_events : bool, optional
             process ``io.keyboard.process_control_keys()`` and
             ``io.mouse.process_quit_event()`` (default = false)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -626,7 +641,8 @@ class Mouse(Input):
         rtn = self.wait_event(wait_button=False, wait_motion=True, buttons=[],
                               duration=duration, wait_for_buttonup=False,
                               callback_function=callback_function,
-                              process_control_events=process_control_events)
+                              process_control_events=process_control_events,
+                              low_performance=low_performance)
 
         if isinstance(rtn[0], _internals.CallbackQuitEvent):
             return rtn[0], rtn[3]

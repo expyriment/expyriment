@@ -8,7 +8,9 @@ This module contains a class implementing a touchscreen button box.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import time
 from types import FunctionType
+
 import pygame
 
 from .. import _internals, stimuli
@@ -228,7 +230,7 @@ class TouchScreenButtonBox(Input):
         return None
 
     def wait(self, duration=None, button_fields=None, callback_function=None,
-                process_control_events=True):
+                process_control_events=True, low_performance=False):
         """Wait for a touchscreen button box click.
 
         Parameters
@@ -242,6 +244,9 @@ class TouchScreenButtonBox(Input):
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -291,4 +296,7 @@ class TouchScreenButtonBox(Input):
             elif (duration is not None and int((get_time()-start)*1000)>=duration):
                 pressed_button_field, rt = None, None
                 break
+            if low_performance:
+                time.sleep(0.0001)
+
         return pressed_button_field, rt

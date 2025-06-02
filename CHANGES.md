@@ -20,6 +20,8 @@ New Features:
       in ``design.defaults.experiment_text_size``)
     - option ``--window-size`` sets the default size of the window (when using
       window-mode)
+-  all wait methods have new parameter ``low_performance`` which allows for
+   other threads to be processed while waiting (at the cost of accuracy)
 - control.Keyboard.process_control_events:
     - new parameter ``event_detected_function`` to set a function that is
       called as soon as a quit event is detected (but before the end function
@@ -78,9 +80,6 @@ New Features:
     - new method ``misc.get_display_info``
     - ``update`` method has new ``blocking`` parameter to control blocking on
       vertical retrace (OpenGL mode only) behaviour per call
- - io.Keyboard: ``wait`` and ``wait_char`` methods have new parameter
-   ``low_performance`` which allows for other threads to be processed while
-   waiting (at the cost of accuracy)
 - io.TextInput: ``get`` method now has parameter ``clear_event_cue``
 - misc:
     - new class``MediaTime`` for representing time as used in the context of

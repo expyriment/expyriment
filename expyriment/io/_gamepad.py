@@ -204,7 +204,7 @@ class GamePad(Input, Output):
             _internals.active_exp._event_file_log("GamePad,cleared", 2)
 
     def wait_press(self, buttons=None, duration=None, callback_function=None,
-                   process_control_events=True):
+                   process_control_events=True, low_performance=False):
         """Wait for gamepad button press.
 
         Returns the found button and the reaction time.
@@ -220,6 +220,9 @@ class GamePad(Input, Output):
         process_control_events : bool, optional
             process ``io.Keyboard.process_control_keys()`` and
             ``io.Mouse.process_quit_event()`` (default = True)
+        low_performance : bool, optional
+            reduce CPU performance (and allow potential threads to run) while
+            waiting at the cost of less timing accuracy (default = False)
 
         Returns
         -------
@@ -283,6 +286,8 @@ class GamePad(Input, Output):
                     if int((get_time() - start) * 1000) >= duration:
                         done = True
                         break
+                if low_performance:
+                    time.sleep(0.0001)
 
         if self._logging:
             _internals.active_exp._event_file_log(
