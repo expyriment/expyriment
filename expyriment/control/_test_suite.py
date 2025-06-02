@@ -185,7 +185,7 @@ After the test, you will be asked to indicate which (if any) of those two square
                     [abs(int(round(peak)) - key)] * hist[key])
             else:
                 inaccuracies.extend(
-                    [key % max(1, (1000 // refresh_rate))] * hist[key])
+                    [key % max(1, (1000 / refresh_rate))] * hist[key])
             if key > 0:
                 delayed_presentations += hist[key]
         inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))

@@ -16,7 +16,6 @@ import contextlib
 from types import FunctionType
 
 import pygame
-import moviepy
 
 from . import defaults
 from . import _visual
@@ -435,6 +434,7 @@ class Video(_visual.Stimulus):
                     abs(int(control_defaults.audiosystem_bit_depth / 8)),
                     audio_nchannels=control_defaults.audiosystem_channels)
             if _internals.active_exp._screen.opengl:
+                import moviepy
                 if int(moviepy.__version__.split(".")[0]) > 1:
                     from moviepy.video.fx import MirrorY
                     self._file.clip = self._file.clip.with_effects([MirrorY()])
