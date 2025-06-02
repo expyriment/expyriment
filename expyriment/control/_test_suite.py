@@ -739,12 +739,8 @@ def run_test_suite(item=None):
 
     # Scale fonts/logo according to default font size
     scaling = exp.text_size / 20
-    if scaling < 1:
-        scaling = 1
-    if scaling > 2:
-        scaling = 2
 
-    background = stimuli.Canvas(size=[800, int(600 * scaling)])
+    background = stimuli.Canvas(size=[int(800 * scaling), int(600 * scaling)])
     pict = stimuli.Picture(constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, int(220 * scaling)))
     pict.scale(0.3 * scaling)
