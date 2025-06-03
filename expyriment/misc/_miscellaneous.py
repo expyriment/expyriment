@@ -20,7 +20,7 @@ import math
 import pygame
 try:
     import pygame._sdl2.audio as sdl2_audio
-except:
+except ImportError:
     sdl2_audio = None
 
 from .._internals import get_settings_folder, get_version, is_venv

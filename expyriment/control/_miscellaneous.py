@@ -31,7 +31,7 @@ def start_audiosystem():
     try:
         pygame.mixer.init()
         pygame.mixer.init()  # needed on some systems
-    except:
+    except Exception:
         message = "Audiosystem could not be initialized with given parameters."
         raise RuntimeError(message)
 
