@@ -185,14 +185,8 @@ class Colour(object):
 
         """
 
-        if len(value) != 3:
-            return False
-        elif False in [isinstance(x, int) for x in value]:
-            return False
-        elif False in [0 <= x <= 255 for x in value]:
-            return False
-        else:
-            return True
+        return len(value) == 3 and \
+                all(isinstance(x, int) and 0 <= x <= 255 for x in value)
 
     @staticmethod
     def is_name(value):
@@ -210,10 +204,7 @@ class Colour(object):
 
         """
 
-        if not value in _colours.keys():
-            return False
-        else:
-            return True
+        return value in _colours.keys()
 
     @staticmethod
     def is_hex(value):
@@ -230,18 +221,13 @@ class Colour(object):
             whether the value is valid or not
 
         """
+        
+        if isinstance(value, str):
+            value = value.lstrip("#")
+            return len(value) == 6 and \
+                    all(x in "0123456789ABCDEF" for x in value.upper())
 
-        if not isinstance(value, str):
-            return False
-
-        value = value.lstrip("#")
-        if len(value) != 6:
-            return False
-        else:
-            for x in value.upper():
-                if x not in "0123456789ABCDEF":
-                    return False
-        return True
+        return False
 
     @staticmethod
     def is_hsv(value):
@@ -259,16 +245,10 @@ class Colour(object):
 
         """
 
-        if len(value) != 3:
-            return False
-        elif False in [isinstance(x, int) for x in value]:
-            return False
-        elif not 0 <= value[0] <= 360:
-            return False
-        elif False in [0 <= x <= 100 for x in value[1:]]:
-            return False
-        else:
-            return True
+        return len(value) == 3 and \
+                all(isinstance(x, int) for x in value) and \
+                0 <= value[0] <= 360 and \
+                all(0 <= x <= 100 for x in value[1:])
 
     @staticmethod
     def is_hsl(value):
