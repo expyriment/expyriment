@@ -66,9 +66,9 @@ class Screen(Output):
 
         Output.__init__(self)
         self._colour = colour
-        if opengl == False:
+        if opengl is False:
             opengl = 0
-        elif opengl == True:
+        elif opengl is True:
             opengl = 2
         elif opengl > 2:
             warn_message = "OpenGL mode '{0}' does not exist. \
