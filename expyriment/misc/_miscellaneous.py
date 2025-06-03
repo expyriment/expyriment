@@ -119,7 +119,7 @@ class MediaTime(float):
 
     def __new__(cls, time):
         seconds = cls.convert_to_seconds(time)  # Use the static method
-        return super(MediaTime, cls).__new__(cls, seconds)
+        return super().__new__(cls, seconds)
 
     def __lt__(self, other):
         return float(self) < self.convert_to_seconds(other)
