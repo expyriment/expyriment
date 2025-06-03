@@ -252,7 +252,7 @@ def get_system_info(as_string=False):
                 def __init__(self):
                     # Initialize this to the size of MEMORYSTATUSEX
                     self.dwLength = 2 * 4 + 7 * 8  # size = 2 ints, 7 longs
-                    return super().__init__()
+                    super().__init__()
 
             stat = MEMORYSTATUSEX()
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
