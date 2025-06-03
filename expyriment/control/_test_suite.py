@@ -283,14 +283,14 @@ After the test, you will be asked to indicate which (if any) of those two square
             position=(0, -int(60 * scaling)))
         results5 = stimuli.TextScreen(
             "",
-            "........... Accurately Reported:  {:>3} %\n\n\n".format(
+            "........... Accurately Reported: {:>3} %\n\n\n".format(
                 delayed_accurate),
             text_font="freemono", text_size=int(16 * scaling), text_bold=False,
             text_justification=0, text_colour=results5_colour,
             position=(0, -int(80 * scaling)))
         results6 = stimuli.TextScreen(
             "",
-            "......... Inaccurately Reported:  {:>3} %\n\n\n".format(
+            "......... Inaccurately Reported: {:>3} %\n\n\n".format(
                 delayed_inaccurate),
             text_font="freemono", text_size=int(16 * scaling), text_bold=False,
             text_justification=0, text_colour=results6_colour,
