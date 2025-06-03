@@ -8,7 +8,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
 import os
-import glob
 import platform
 import subprocess
 import socket
@@ -91,7 +90,7 @@ def get_system_info(as_string=False):
 
     """
 
-    from ..io import SerialPort, ParallelPort
+    from ..io import ParallelPort
     from .._internals import get_settings_folder
     from ._miscellaneous import get_display_info
     try:

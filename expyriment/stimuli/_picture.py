@@ -15,7 +15,6 @@ import os
 
 import pygame
 from .. import _internals
-from ..misc import unicode2byte
 from . import defaults
 from ._visual import Visual
 

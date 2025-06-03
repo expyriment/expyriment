@@ -9,7 +9,6 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
-import sys
 import time
 import atexit
 import contextlib

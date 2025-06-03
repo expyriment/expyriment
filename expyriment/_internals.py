@@ -10,8 +10,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 import sys
 
-import pygame
-
 from . import __version__
 
 
