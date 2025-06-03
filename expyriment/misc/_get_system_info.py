@@ -268,8 +268,12 @@ def get_system_info(as_string=False):
             ret = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
                 str(current_folder), ctypes.byref(_),
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
-            hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
-            hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
+            if ret:
+                hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
+                hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
+            else:
+                hardware_disk_space_total = ""
+                hardware_disk_space_free = ""
         except Exception:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
@@ -483,7 +487,6 @@ def get_system_info(as_string=False):
     info["hardware_cpu_type"] = platform.processor()
     info["hardware_disk_space_free"] = hardware_disk_space_free
     info["hardware_disk_space_total"] = hardware_disk_space_total
-    display_info = get_display_info()
     info["hardware_displays"] = get_display_info()
     try:
         socket.gethostbyname("google.com")

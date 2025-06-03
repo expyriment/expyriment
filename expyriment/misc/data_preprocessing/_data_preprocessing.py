@@ -232,7 +232,7 @@ def get_experiment_duration(event_filename):
 
     data, _, _, _ = read_datafile(event_filename)
 
-    start = end = None
+    start = stop = None
     for r in data:
         if r[1] == "Experiment":
             if r[2] == "started":

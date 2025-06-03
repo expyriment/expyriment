@@ -589,7 +589,6 @@ def download_from_stash(content="all", branch=None):
         raise RuntimeError("Download of {0} failed!".format(url))
 
     with TemporaryFile() as f:
-        meta = u.info()
         try:
             file_size = int(u.getheader('Content-Length'))
             file_size_dl = 0

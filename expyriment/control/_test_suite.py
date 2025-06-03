@@ -51,7 +51,6 @@ def _histogram(data):
             hist[x] = 1
     #make string representation
     hist_str = ""
-    cnt = 0
     str1 = None
     for x in range(min(hist.keys()), max(hist.keys())+1):
         if str1 is None:
