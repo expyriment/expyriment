@@ -31,7 +31,7 @@ To cite Expyriment in publications, please refer to the following article:
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-__version__ = '0.11.dev5'
+__version__ = '1.0.0.dev1'
 
 import sys as _sys
 
