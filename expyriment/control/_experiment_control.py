@@ -183,7 +183,6 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         text.present()
         text.present()  # for flipping with double buffer
         text.present()  # for flipping with triple buffer
-    default_textline_size = stimuli.TextLine(text="").text_size
     while number > 0:
         counter = stimuli.TextLine(
             "{num:02d}".format(num=number),
