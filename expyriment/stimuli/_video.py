@@ -798,7 +798,7 @@ class Video(_visual.Stimulus):
             self.preload()
 
         if not self.is_playing:
-            self.play(log_even_tag)
+            self.play(log_event_tag)
 
         while True:
             if self.new_frame_available:

@@ -25,6 +25,7 @@ try:
     import numpy as _np
 except Exception:
     _np = None
+from ... import __version__
 from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
 from ...misc import string_sort_array as _py2py3_sort_array

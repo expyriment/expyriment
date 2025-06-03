@@ -22,7 +22,7 @@ import pygame
 
 from . import defaults
 from ._input_output import Input, Output
-from .. import _internals, misc
+from .. import _internals, misc, __version__
 from .._internals import CallbackQuitEvent
 
 
