@@ -508,7 +508,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
         pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
                               audio_format[2], allowedchanges=0)
         start_audiosystem()
-    except:
+    except Exception:
         info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
 
 [Press RETURN to continue]
