@@ -976,7 +976,7 @@ type".format(permutation_type))
                             message = "Can't read design file. " + \
                                 "The file '{0}' ".format(filename) + \
                                 "does not contain an Expyriment trial list."
-                            raise IOError(message)
+                            raise OSError(message)
                     else:
                         block_cnt = None
                         trial_cnt = None

@@ -27,7 +27,7 @@ try:
     import parallel as _parallel
 except ImportError:
     _parallel = None
-except WindowsError:
+except OSError:
     _parallel = None
 try:
     import numpy as _numpy

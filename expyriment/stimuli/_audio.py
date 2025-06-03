@@ -53,7 +53,7 @@ class Audio(Stimulus):
         self._start_time = 0
         self._paused_time = 0
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The audio file {0} does not exists".format(
+            raise OSError(u"The audio file {0} does not exists".format(
                 self._filename))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"

@@ -56,7 +56,7 @@ class InputFile(Input):
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The input file '{0}' does not exist.".format(
+            raise OSError(u"The input file '{0}' does not exist.".format(
                 self._filename))
 
         if encoding is None:
