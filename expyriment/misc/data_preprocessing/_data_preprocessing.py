@@ -730,7 +730,7 @@ The Python package 'Numpy' is not installed."""
 
         print(u"found {0} subject_data sets".format(len(self._data_files)))
         print(u"found {0} variables: {1}".format(len(self._variables),
-                                                 [x for x in self._variables]))
+                                                 list(self._variables)))
 
     @property
     def data_files(self):
