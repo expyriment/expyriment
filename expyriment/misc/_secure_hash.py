@@ -13,7 +13,7 @@ from copy import copy
 from ._miscellaneous import is_interactive_mode
 
 def _make_secure_hash(filename):
-    """returns secure hash from file or None, if not possile"""
+    """returns secure hash from file or None, if not possible"""
 
     try:
         with open(filename, 'br') as f:

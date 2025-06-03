@@ -95,7 +95,7 @@ Default settings for the control package. ::
         This mode can be useful for dynamic displays, where an accurate
         stimulus timing is not required, but rather very fast display changes
         have high priority and stimuli have to be created and on the fly (e.g.
-        questionnairs, video game-like scenarios).
+        questionnaires, video game-like scenarios).
 
         OpenGL (vsync / no blocking)
         ----------------------------
@@ -105,7 +105,7 @@ Default settings for the control package. ::
         * Synchronized display updating
             Pixels are starting to change always when the vertical retrace is
             at the left top corner
-        * Innaccurate presentation time reporting
+        * Inaccurate presentation time reporting
             Exact time of pixels changing on screen is not known
 
         This mode can be useful for dynamic displays, where an accurate

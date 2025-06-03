@@ -87,7 +87,7 @@ class Video(_visual.Stimulus):
                           (e.g., 0.5 * original)
                 `True`  - Resizing of video to fit screen
                 `False` - No resizing of video
-            Resizing using a single value will always maintain the orignal
+            Resizing using a single value will always maintain the original
             aspect ratio.
             When given a list or tuple of (width, height), resizing of each
             dimension can be controlled individually, and the values can be:
