@@ -709,8 +709,8 @@ class EventFile(OutputFile):
         """appending the inter event interval summary to event file, if log_event_tag have been set while presentation
         this function will be called at exit"""
 
-        for l in self._inter_event_intervall_log.summary():
-            self.write_comment(l)
+        for line in self._inter_event_intervall_log.summary():
+            self.write_comment(line)
 
 
 
