@@ -56,7 +56,7 @@ class Shape(Visual):
 
         A shape is an object described by vertices. For more details about
         vertex representations see:
-        http://en.wikipedia.org/wiki/Vertex_(geometry)
+        https://en.wikipedia.org/wiki/Vertex_(geometry)
 
         The vertex representation describes the contour of an object. Think of
         it as if you would draw with a pen. You start somewhere and make

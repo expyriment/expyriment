@@ -17,14 +17,14 @@ design to a running program. It is therefore also suited for students, as well
 as for experimental psychologists and neuroscientists with little programming
 experience.
 
-Website: http://www.expyriment.org
+Website: https://expyriment.org
 
 To cite Expyriment in publications, please refer to the following article:
 
   Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive
   and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.
 
-  see http://dx.doi.org/10.3758/s13428-013-0390-6
+  see https://doi.org/10.3758/s13428-013-0390-6
 
 """
 

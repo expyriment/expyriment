@@ -88,10 +88,10 @@ class ParallelPort(Input, Output):
     Notes
     -----
     CAUTION: On Windows, one of the following parallel port drivers needs to
-    be installed: 'inpout32' (http://www.highrez.co.uk/Downloads/InpOut32/) or
-    'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/).
+    be installed: 'inpout32' (https://www.highrez.co.uk/Downloads/InpOut32/) or
+    'dlportio' (https://real.kyiv.ua/2010/11/29/dlportio-and-32-bit-windows/).
     On Linux, the Python package 'PyParallel'
-    (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
+    (https://pypi.org/project/pyparallel/) has to be installed.
 
     """
 
@@ -123,8 +123,8 @@ class ParallelPort(Input, Output):
         if _ParallelPort is None:
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
-"drivers: 'inpout32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
-"'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/)."
+"drivers: 'inpout32' (https://www.highrez.co.uk/Downloads/InpOut32/) or " + \
+"'dlportio' (https://real.kyiv.ua/2010/11/29/dlportio-and-32-bit-windows/)."
             elif sys.platform.startswith("linux"):
                 _message = "Please install the Python package 'PyParallel'."
             else:
@@ -422,10 +422,10 @@ class ParallelPort(Input, Output):
         """Return the driver used for interacting with parallel ports.
 
         On Windows, one of the following parallel port drivers needs to
-        be installed: 'input32' (http://www.highrez.co.uk/Downloads/InpOut32/) or
-        'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/).
+        be installed: 'input32' (https://www.highrez.co.uk/Downloads/InpOut32/) or
+        'dlportio' (https://real.kyiv.ua/2010/11/29/dlportio-and-32-bit-windows/).
         On Linux, the Python package 'PyParallel'
-        (http://pyserial.sourceforge.net/pyparallel.html) has to be installed.
+        (https://pypi.org/project/pyparallel/) has to be installed.
 
         """
 
@@ -471,8 +471,8 @@ class ParallelPort(Input, Output):
         if _ParallelPort is None:
             if sys.platform == "win32":
                 _message = "Please install one of the following parallel port " + \
-"drivers: 'inpout32' (http://www.highrez.co.uk/Downloads/InpOut32/) or " + \
-"'dlportio' (http://real.kiev.ua/2010/11/29/dlportio-and-32-bit-windows/)."
+"drivers: 'inpout32' (https://www.highrez.co.uk/Downloads/InpOut32/) or " + \
+"'dlportio' (https://real.kyiv.ua/2010/11/29/dlportio-and-32-bit-windows/)."
             elif sys.platform.startswith("linux"):
                 _message = "Please install the Python package 'PyParallel'."
             else:
