@@ -58,10 +58,7 @@ def _histogram(data):
             str1 = "dRT: "
             str2 = "  n: "
         str1 += "%4d" % x
-        if x in hist:
-            value = hist[x]
-        else:
-            value = 0
+        value = hist.get(x, 0)
         str2 += "%4d" % value
         if x % 10 == 0:
             hist_str += str1 + "\n" + str2 + "\n\n"
