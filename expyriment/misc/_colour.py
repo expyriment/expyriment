@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Colour class.
 
 This module contains a class implementing an RGB colour.

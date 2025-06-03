@@ -23,8 +23,7 @@ print("Expyriment command line interface")
 print("")
 
 def create_template():
-    template_file = '''# -*- coding: utf-8 -*-
-
+    template_file = '''
 """This file is an automatically created template for an Expyriment experiment.
 
 It has been created by calling `expyriment -C`.

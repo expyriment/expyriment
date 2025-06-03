@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The expyriment testsuite.
 
 This module contains several functions to test the machine expyriment is
