@@ -21,18 +21,12 @@ import expyriment
 from ._internals import get_version
 
 
-try:
-    import tkinter as _tk  # future (Python 3)
-except Exception:
-    _tk = None
+import tkinter as _tk
 
-try:
-    import tkinter.ttk as _ttk
-    # for OS X, if there is no Tile support
-    _root = _ttk.Tk()
-    _root.destroy()
-except Exception:
-    _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
+import tkinter.ttk as _ttk
+# for OS X, if there is no Tile support
+_root = _ttk.Tk()
+_root.destroy()
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -93,10 +87,6 @@ def show_GUI():
     import expyriment.design.extras
     import expyriment.stimuli.extras
     import expyriment.misc.extras
-
-    if not isinstance(_tk, ModuleType):
-        raise ImportError("""API Reference Tool could not be started.
-The Python package 'Tkinter' is not installed""")
 
     # Create the documentation dict
     doc_dict = {}

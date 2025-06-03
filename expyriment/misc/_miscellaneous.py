@@ -142,7 +142,7 @@ def round(number, ndigits=0): # TODO: overrides Python's round, maybe renaming?
 
     This method implements the Python 2 way of rounding.
     For "bankers rounding" (round half to even), please use the builtin `round`
-    function in Python 3 or Numpy's `around` function.
+    function or Numpy's `around` function.
 
     Parameters
     ----------
