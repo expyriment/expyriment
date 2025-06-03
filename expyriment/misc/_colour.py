@@ -184,7 +184,7 @@ class Colour:
 
         """
 
-        if not len(value) == 3:
+        if len(value) != 3:
             return False
         elif False in [isinstance(x, int) for x in value]:
             return False
@@ -258,7 +258,7 @@ class Colour:
 
         """
 
-        if not len(value) == 3:
+        if len(value) != 3:
             return False
         elif False in [isinstance(x, int) for x in value]:
             return False
