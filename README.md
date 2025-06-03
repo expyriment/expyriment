@@ -39,7 +39,7 @@ For online documentation see: http://docs.expyriment.org
 
 Examples
 ========
-For online examples see: http://stash.expyriment.org/examples
+For online examples see: https://github.com/expyriment/expyriment-stash/tree/master/examples
 
 Installation
 ============
