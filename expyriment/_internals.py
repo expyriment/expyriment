@@ -87,7 +87,7 @@ class CallbackQuitEvent(object):
     """A CallbackQuitEvent.
 
     If a callback function returns a CallbackQuitEvent object the currently processed
-    the wait or event loop function will be quited.
+    wait or event loop function will be quit.
 
     """
 
@@ -98,7 +98,7 @@ class CallbackQuitEvent(object):
         ----------
         data : any data type, optional
             you might use this variable to return data or values from your
-            callback function to your main function, since the quited wait or
+            callback function to your main function, since the quit wait or
             event loop function will return this CallbackQuitEvent
 
         See Also

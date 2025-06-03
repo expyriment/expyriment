@@ -800,7 +800,7 @@ The Python package 'Numpy' is not installed."""
 
     def get_data(self, filename, recode_variables=True,
                  compute_new_variables=True, exclude_trials=True):
-        """Read data from from a single Expyriment data file.
+        """Read data from a single Expyriment data file.
 
         Notes
         -----

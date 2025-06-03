@@ -391,7 +391,7 @@ def initialize(experiment=None):
     This initializes an experiment defined by 'experiment' as well as the
     underlying expyriment system. If 'experiment' is None, a new Experiment
     object will be created and returned. Furthermore, a screen, a clock, a
-    keyboard and a event file are created and added to the experiment. The
+    keyboard and an event file are created and added to the experiment. The
     initialization screen is shown for a short delay to ensure that Python
     is fully initialized and time accurate. Afterwards, "Preparing
     experiment..." is presented on the screen.

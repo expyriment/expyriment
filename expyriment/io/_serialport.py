@@ -265,7 +265,7 @@ The Python package 'pySerial' is not installed."""
 
     @property
     def has_input_history(self):
-        """Returns if a input_history exists or not (True / False)."""
+        """Returns if an input_history exists or not (True / False)."""
 
         return isinstance(self._input_history, misc.ByteBuffer)
 
@@ -300,7 +300,7 @@ The Python package 'pySerial' is not installed."""
     def read_input(self):
         """Read all input from serial port.
 
-        If a input_history is used, all received data will be added.
+        If an input_history is used, all received data will be added.
 
         Returns
         -------
@@ -335,7 +335,7 @@ The Python package 'pySerial' is not installed."""
     def poll(self):
         """Poll the serial port.
 
-        If a input_history is used, it will be added.
+        If an input_history is used, it will be added.
 
         Returns
         -------

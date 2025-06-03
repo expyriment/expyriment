@@ -236,13 +236,13 @@ class Shape(Visual):
 
     @property
     def debug_contour_colour(self):
-        """Getter for conture_colour."""
+        """Getter for contour_colour."""
 
         return self._debug_contour_colour
 
     @debug_contour_colour.setter
     def debug_contour_colour(self, colour):
-        """Setter for conture_colour."""
+        """Setter for contour_colour."""
 
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
@@ -608,7 +608,7 @@ class Shape(Visual):
         Parameters
         ----------
         level : int
-            level of bluring
+            level of blurring
 
         Returns
         -------
