@@ -4,7 +4,7 @@
 # which don't have it and then worry about dealing with
 # using the right one later
 
-class PParallelInpOut32(object):
+class PParallelInpOut32:
     """
     This class provides read/write access to the parallel port on a PC
     using inpout32 (for instance for Windows 7 64-bit)

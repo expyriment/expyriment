@@ -167,7 +167,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        experiment.data.add_subject_info(u"{0} = {1}".format(
+        experiment.data.add_subject_info("{0} = {1}".format(
             f, _permuted_bws_factor_condition))
 
     if experiment.events is not None:

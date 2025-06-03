@@ -131,7 +131,7 @@ class TextInput(Input):
             with open(self._message_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(message_font))
+            raise OSError("Font '{0}' not found!".format(message_font))
         if message_bold is not None:
             self._message_bold = message_bold
         else:
@@ -166,7 +166,7 @@ class TextInput(Input):
             with open(self._user_text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(user_text_font))
+            raise OSError("Font '{0}' not found!".format(user_text_font))
         if user_text_colour is None:
             user_text_colour = defaults.textinput_user_text_colour
         if user_text_colour is not None:

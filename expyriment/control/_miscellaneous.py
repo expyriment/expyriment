@@ -346,7 +346,7 @@ def _set_stdout_logging(event_file):
 
     """
 
-    class Logger(object):
+    class Logger:
         def __init__(self, event_file, log_tag):
             self.terminal = sys.stdout
             self.event_file = event_file

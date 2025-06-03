@@ -18,7 +18,7 @@ from .. import _internals
 from ._timer import get_time
 
 
-class Clock(object) :
+class Clock :
     """Basic timing class.
 
     Unit of time is milliseconds.

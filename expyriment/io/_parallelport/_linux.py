@@ -7,7 +7,7 @@
 # we actually want to find!
 
 # We duck-type the parallel port objects
-class PParallelLinux(object):
+class PParallelLinux:
     """
     This class provides read/write access to the parallel port for linux using
     pyparallel.

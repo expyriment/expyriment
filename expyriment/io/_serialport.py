@@ -133,7 +133,7 @@ The Python package 'pySerial' is not installed."""
                                     stopbits, timeout, xonxoff, rtscts,
                                     dsrdtr)
         if not self._serial.isOpen():
-            raise IOError("Could not open serial port")
+            raise OSError("Could not open serial port")
 
         atexit.register(self.close)
 
