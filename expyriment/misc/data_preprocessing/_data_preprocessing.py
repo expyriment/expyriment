@@ -718,7 +718,7 @@ The Python package 'Numpy' is not installed."""
                 self._variables = vnames
             else:
                 if vnames != self._variables:
-                    message = u"Different variables in ".format(flname)
+                    message = u"Different variables in {0}".format(flname)
                     message = message + u"\n{0}".format(vnames)
                     message = message + u"\ninstead of\n{0}".format(
                         self._variables)
