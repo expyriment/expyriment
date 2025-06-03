@@ -715,7 +715,7 @@ class EventFile(OutputFile):
 
 
 
-class _InterEventIntervallLog():
+class _InterEventIntervallLog:
     """This class is used to log the intervals of tagged events to get a
     summary of the timing at the end of the event file
     """
