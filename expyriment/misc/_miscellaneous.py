@@ -670,7 +670,7 @@ def string_sort_array(array):
 def _sorter_fnc(x):
     """sorter function for py_sort"""
     if x is None:
-        return str("")
+        return ""
     else:
         return str(x)
 
