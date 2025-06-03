@@ -252,7 +252,7 @@ class Keyboard(Input):
         first cleared!
 
         Unlike the wait method, events are only logged on loglevel 2 when no
-        keys are specified. this is to prevent excesive default logging when
+        keys are specified. this is to prevent excessive default logging when
         used repeatedly in a loop.
 
         """

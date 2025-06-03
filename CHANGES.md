@@ -106,7 +106,7 @@ Changed:
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
 - updated command line interface options:
-    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
+    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are deprecated
     - OpenGL mode can now be set with new option ``--opengl``
     - all arguments are now also available as alternative long names
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface

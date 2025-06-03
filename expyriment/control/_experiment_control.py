@@ -232,7 +232,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
         the text to be shown at the pause screen (default="Paused")
 
     key : int, optional
-        the key to be pressed for continueing (default=misc.constants.K_RETURN)
+        the key to be pressed for continuing (default=misc.constants.K_RETURN)
 
 
     """

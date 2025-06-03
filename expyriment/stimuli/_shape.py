@@ -268,7 +268,7 @@ class Shape(Visual):
 
         Notes
         -----
-        Fom version 0.9.1 on, this is a pygame.Rect
+        From version 0.9.1 on, this is a pygame.Rect
 
         """
 
