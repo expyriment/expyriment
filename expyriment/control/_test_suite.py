@@ -45,7 +45,7 @@ def _histogram(data):
 
     hist = {}
     for x in data: # make histogram
-        x = int(round(x))
+        x = round(x)
         if x in hist:
             hist[x] += 1
         else:
@@ -183,7 +183,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             peak = get_local_peak(key, refresh_rate)
             if peaks and peak is not None:
                 inaccuracies.extend(
-                    [abs(int(round(peak)) - key)] * hist[key])
+                    [abs(round(peak) - key)] * hist[key])
             else:
                 inaccuracies.extend(
                     [key % max(1, (1000 / refresh_rate))] * hist[key])
