@@ -779,8 +779,8 @@ type".format(permutation_type))
         id_list = [x.id for x in self._blocks]
         id_list.sort()
         for id in id_list:
-            position = [i for i, x in enumerate(self._blocks)
-                        if x.id == id][0]
+            position = next(i for i, x in enumerate(self._blocks)
+                        if x.id == id)
             blocks_new.append(self._blocks[position])
         self._blocks = blocks_new
 
@@ -1763,8 +1763,8 @@ class Block(object):
         id_list = [x.id for x in self._trials]
         id_list.sort()
         for _id in id_list:
-            position = [i for i, x in enumerate(self._trials)
-                        if x.id == _id][0]
+            position = next(i for i, x in enumerate(self._trials)
+                        if x.id == _id)
             trials_new.append(self._trials[position])
         self._trials = trials_new
 
@@ -2045,8 +2045,8 @@ class Trial(object):
         id_list = [x.id for x in self._stimuli]
         id_list.sort()
         for _id in id_list:
-            position = [i for i, x in enumerate(self._stimuli)
-                        if x.id == _id][0]
+            position = next(i for i, x in enumerate(self._stimuli)
+                        if x.id == _id)
             stimuli_new.append(self._stimuli[position])
         self._stimuli = stimuli_new
 

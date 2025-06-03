@@ -348,7 +348,7 @@ The Python package 'pySerial' is not installed."""
         if read != b"":
             if self.has_input_history:
                 last = self._input_history.get_last_event()
-                self._input_history.add_event(list(read)[0])
+                self._input_history.add_event(next(iter(read)))
                 if last[1] > 0: # if input_history is empty
                     if self._serial.inWaiting() >= (self._os_buffer_size - 1):
                         warn_message = "{0} not updated for {1} ms!".format(
@@ -359,7 +359,7 @@ The Python package 'pySerial' is not installed."""
             if self._logging:
                 _internals.active_exp._event_file_log(
                         "SerialPort {0},received,{1},poll".format(
-                            repr(self._serial.port), list(read)[0]), 2)
+                            repr(self._serial.port), next(iter(read))), 2)
             return ord(read)
         return None
 
