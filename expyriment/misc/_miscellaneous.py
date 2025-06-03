@@ -23,7 +23,7 @@ try:
 except ImportError:
     sdl2_audio = None
 
-from .._internals import get_settings_folder, get_version
+from .._internals import active_exp, get_settings_folder, get_version
 
 try:
     from locale import getdefaultlocale
@@ -436,8 +436,8 @@ def get_monitor_resolution():
     """
 
     pygame.display.init()
-    if _internals.active_exp.is_initialized:
-        return _internals.active_exp.screen.display_resolution
+    if active_exp.is_initialized:
+        return active_exp.screen.display_resolution
     else:
         return get_display_info[0]["maximal_resolution"]
 
