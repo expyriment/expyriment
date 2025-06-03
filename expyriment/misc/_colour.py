@@ -159,7 +159,7 @@ _colours = {
 }
 
 
-class Colour(object):
+class Colour:
     """Implements a class representing an RGB colour."""
 
     @staticmethod

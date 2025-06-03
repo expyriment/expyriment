@@ -243,7 +243,7 @@ def get_experiment_duration(event_filename):
     return sec / 60.0
 
 
-class Aggregator(object):
+class Aggregator:
     """A class implementing a tool to aggregate Expyriment data.
 
     This class is used to handle the multiple data files of a Experiment

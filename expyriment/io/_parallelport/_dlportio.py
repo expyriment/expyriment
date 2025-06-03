@@ -33,7 +33,7 @@
 # SOFTWARE.
 #
 
-class PParallelDLPortIO(object):
+class PParallelDLPortIO:
     """
     This class provides read/write access to the parallel port on a PC.
 

@@ -32,7 +32,7 @@ from . import permute
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
 
-class Experiment(object):
+class Experiment:
     """A class implementing a basic experiment."""
 
     def __init__(self, name=None, foreground_colour=None,
@@ -1144,7 +1144,7 @@ type".format(permutation_type))
         return (self._wait_callback_function is not None)
 
 
-class Block(object):
+class Block:
     """A class implementing an experimental block."""
 
     _trial_cnt_variable_name = "trial_cnt"  # variable names for csv in/output
@@ -1802,7 +1802,7 @@ class Block(object):
         return rtn
 
 
-class Trial(object):
+class Trial:
     """A class implementing an experimental trial."""
 
     def __init__(self):

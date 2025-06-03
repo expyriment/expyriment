@@ -48,7 +48,7 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
 
-class Expyriment_object(object):
+class Expyriment_object:
     """A class implementing a general Expyriment object.
 
        Parent of all stimuli and IO objects.
@@ -82,7 +82,7 @@ class Expyriment_object(object):
         return self._logging
 
 
-class CallbackQuitEvent(object):
+class CallbackQuitEvent:
 
     """A CallbackQuitEvent.
 
