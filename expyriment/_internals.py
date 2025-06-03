@@ -4,8 +4,6 @@ This module also contains the currently active experiment:
             active_exp
 """
 
-from builtins import object
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
