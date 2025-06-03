@@ -92,7 +92,6 @@ def wait_end_audiosystem(channel=None, callback_function=None,
 
     """
 
-    from .. import io
     while get_audiosystem_is_playing(channel):
         if _internals.skip_wait_methods:
             break

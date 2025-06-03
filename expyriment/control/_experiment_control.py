@@ -20,7 +20,6 @@ from ..io import (
     Mouse,
     TextInput,
     TouchScreenButtonBox,
-    _keyboard,
 )
 from ..io._screen import Screen
 from ..misc import is_android_running

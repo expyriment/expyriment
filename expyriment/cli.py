@@ -13,7 +13,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 import sys
-from importlib import import_module
 from importlib.util import find_spec
 
 #from . import control, io, show_documentation

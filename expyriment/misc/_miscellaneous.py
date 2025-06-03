@@ -23,7 +23,7 @@ try:
 except ImportError:
     sdl2_audio = None
 
-from .._internals import get_settings_folder, get_version, is_venv
+from .._internals import get_settings_folder, get_version
 
 try:
     from locale import getdefaultlocale
