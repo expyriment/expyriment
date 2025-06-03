@@ -91,7 +91,7 @@ OpenGL will be deactivated!"
 
         # Set HiDPI mode on Windows (if SDL environment variable is not set)
         if platform.system() == "Windows":
-            if not "SDL_WINDOWS_DPI_AWARENESS" in os.environ:
+            if "SDL_WINDOWS_DPI_AWARENESS" not in os.environ:
                 os.environ["SDL_WINDOWS_DPI_AWARENESS"] = "permonitorv2"
 
         pygame.display.init()

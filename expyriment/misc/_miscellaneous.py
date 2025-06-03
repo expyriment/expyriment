@@ -625,7 +625,7 @@ def download_from_stash(content="all", branch=None):
             content_ = ("examples", "extras", "tools")
         else:
             content_ = content
-        if not type(content_) in (list, tuple):
+        if type(content_) not in (list, tuple):
             content_ = (content_,)
         files = []
         root = f_zip.namelist()[0]
