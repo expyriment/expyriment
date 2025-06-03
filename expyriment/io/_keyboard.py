@@ -77,13 +77,13 @@ class _QuitControl:
                            quit_confirmed_function=None,
                            quit_denied_function=None):
         for func in _list(event_detected_function):
-            if not func in cls.event_detected_functions:
+            if func not in cls.event_detected_functions:
                 cls.event_detected_functions.append(func)
         for func in _list(quit_confirmed_function):
-            if not func in cls.quit_confirmed_functions:
+            if func not in cls.quit_confirmed_functions:
                 cls.quit_confirmed_functions.append(func)
         for func in _list(quit_denied_function):
-            if not func in cls.quit_denied_functions:
+            if func not in cls.quit_denied_functions:
                 cls.quit_denied_functions.append(func)
 
     @classmethod

@@ -726,7 +726,7 @@ def _find_self_tests():
     for module in ["expyriment.io", "expyriment.io.extras"]:
         exec("classes = dir({0})".format(module), namesspace)
         for cl in namesspace['classes']:
-            if not cl.startswith("_") and not cl in ["False", "None", "True"]:
+            if not cl.startswith("_") and cl not in ["False", "None", "True"]:
                 exec("method = dir({0}.{1})".format(module, cl), namesspace)
                 if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
