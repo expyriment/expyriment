@@ -418,13 +418,13 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    info = f"""This will test the auditory stimulus presentation capabilities of your system.
+    info = """This will test the auditory stimulus presentation capabilities of your system.
 You will be asked to select the audio device, format, and buffer size to test.
 Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Auditory stimulus presentation test", info)
+    text = stimuli.TextScreen("Auditory stimulus presentation test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -513,7 +513,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
         """
-        text = stimuli.TextScreen(f"Audio format not supported", info)
+        text = stimuli.TextScreen("Audio format not supported", info)
         while True:
             text.present()
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -536,7 +536,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Audio playback test", info)
+    text = stimuli.TextScreen("Audio playback test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
