@@ -56,7 +56,7 @@ class InputFile(Input):
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            raise OSError(u"The input file '{0}' does not exist.".format(
+            raise OSError("The input file '{0}' does not exist.".format(
                 self._filename))
 
         if encoding is None:
@@ -462,7 +462,7 @@ class DataFile(OutputFile):
 
         """
 
-        self._subject_info.append(u"{0}s {1}{2}".format(
+        self._subject_info.append("{0}s {1}{2}".format(
             self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
@@ -480,7 +480,7 @@ class DataFile(OutputFile):
         """
 
         for line in text.splitlines():
-            self._experiment_info.append(u"{0}e {1}{2}".format(
+            self._experiment_info.append("{0}e {1}{2}".format(
                 self.comment_char, line, defaults.outputfile_eol))
 
     @property

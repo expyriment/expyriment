@@ -137,7 +137,7 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
 
         if not(os.path.isfile(self._filename)):
-            raise OSError(u"The video file {0} does not exists".format(
+            raise OSError("The video file {0} does not exists".format(
                 self._filename))
 
         try:
@@ -191,7 +191,7 @@ class Video(_visual.Stimulus):
         else:
             self._filename = value
             if not(os.path.isfile(self._filename)):
-                raise OSError(u"The video file {0} does not exists".format(
+                raise OSError("The video file {0} does not exists".format(
                     self._filename))
 
     @property

@@ -593,7 +593,7 @@ click center          --  Quit
     if scaling > 2:
         scaling = 2
 
-    default_text = u"""The quick brown fox jumps over the lazy dog.
+    default_text = """The quick brown fox jumps over the lazy dog.
 ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ
 abcdefghijklmnopqrstuvwxyz äöü
 1234567890.:,;ßéèê(*!?')"""

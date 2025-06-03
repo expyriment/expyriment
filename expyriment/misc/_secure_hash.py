@@ -102,7 +102,7 @@ def module_hashes_as_string():
     if len(secure_hashes)>1:
         txt = ""
         for fl, sha in get_module_hash_dictionary().items():
-            txt += u"{0} ({1}), ".format(fl, sha)
+            txt += "{0} ({1}), ".format(fl, sha)
         return txt[:-2]
     else:
         return ""
