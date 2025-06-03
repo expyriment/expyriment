@@ -111,13 +111,11 @@ def get_system_info(as_string=False):
                     with open(release_file) as f:
                         for line in f:
                             if not name_found and \
-                                    (line.startswith("NAME=") or \
-                                    line.startswith("DISTRIB_ID=")):
+                                    line.startswith(("NAME=", "DISTRIB_ID=")):
                                 name = line.split("=")[-1].strip().strip('"')
                                 name_found = True
                             if not version_found and \
-                                    (line.startswith("VERSION_ID=") or \
-                                    line.startswith("DISTRIB_RELEASE=")):
+                                    line.startswith(("VERSION_ID=", "DISTRIB_RELEASE=")):
                                 version = line.split("=")[-1].strip().strip('"')
                                 version_found = True
                 return (name, version)
