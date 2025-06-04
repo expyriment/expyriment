@@ -637,8 +637,10 @@ Design
                 tmp_comb = increase_combination(tmp_comb, n_levels)
 
         new_variable_names = ["subject_id"]
-        for sv in self.subject_variables:
-            new_variable_names.append("{0}".format(sv))
+        new_variable_names.extend(
+            "{0}".format(sv)
+            for sv in self.subject_variables
+        )
 
         for dv in self._dv:
             if dv[0] == "n_trials":
@@ -646,8 +648,10 @@ Design
             else:
                 dv_txt = self.variables[dv[1]]
             if len(names) > 0:
-                for n in names:
-                    new_variable_names.append("{0}_{1}".format(dv_txt, n))
+                new_variable_names.extend(
+                    "{0}_{1}".format(dv_txt, n)
+                    for n in names
+                )
             else:
                 new_variable_names.append("{0}_total".format(dv_txt))
 
@@ -1290,8 +1294,10 @@ Design
             mtx = data[data[:, column_subject_id] == sub, :]
             row = [sub]
             # subject info
-            for sv in self.subject_variables:
-                row.append(mtx[0, self._get_variable_id(sv)])
+            row.extend(
+                mtx[0, self._get_variable_id(sv)]
+                for sv in self.subject_variables
+            )
             for dv in self._dv:
                 for fac_cmb in combinations:
                     if fac_cmb == "total":
