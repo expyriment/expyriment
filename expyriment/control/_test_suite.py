@@ -44,7 +44,7 @@ def _histogram(data):
 
     hist = {}
     for x in data: # make histogram
-        x = int(round(x))
+        x = round(x)
         if x in hist:
             hist[x] += 1
         else:
@@ -691,8 +691,7 @@ def _write_protocol(exp, results):
     for key in results.keys():
         longest = max(len(key), longest)
 
-    sorted_keys = list(results.keys())
-    sorted_keys.sort()
+    sorted_keys = sorted(results.keys())
     rtn = ""
     for key in sorted_keys:
         tabs = " " * (longest - len(key)) + "\t"

@@ -676,18 +676,14 @@ class Experiment:
             cnt = 0
             n_segments = 1
             while len(tmp) > 0:
-                is_new = True
                 tr_type = tmp[cnt].factors_as_text
-                for occ in types_occured:
-                    if tr_type == occ:
-                        is_new = False
-                        break
+                is_new = not any(tr_type == occ for occ in types_occured)
                 if is_new:
                     self._blocks.append(tmp.pop(cnt))
                     types_occured.append(tr_type)
                     cnt = 0
                 else:
-                    cnt = cnt + 1
+                    cnt += 1
                     if cnt >= len(tmp):
                         types_occured = []
                         cnt = 0
@@ -729,7 +725,7 @@ a subject number needs to be defined for the permutation.")
                 subject_id = self.subject
 
         if not permute.is_permutation_type(permutation_type):
-                raise AttributeError("{0} is a unknown permutation \
+            raise AttributeError("{0} is a unknown permutation \
 type".format(permutation_type))
         if factor_names is None:
             factor_names = self.block_list_factor_names
@@ -776,8 +772,7 @@ type".format(permutation_type))
         """Sort the blocks according to their indices from low to high."""
 
         blocks_new = []
-        id_list = [x.id for x in self._blocks]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._blocks)
         for id in id_list:
             position = [i for i, x in enumerate(self._blocks)
                         if x.id == id][0]
@@ -1731,18 +1726,14 @@ class Block:
             cnt = 0
             n_segments = 1
             while len(tmp) > 0:
-                is_new = True
                 tr_type = tmp[cnt].factors_as_text
-                for occ in types_occured:
-                    if tr_type == occ:
-                        is_new = False
-                        break
+                is_new = not any(tr_type == occ for occ in types_occured)
                 if is_new:
                     self._trials.append(tmp.pop(cnt))
                     types_occured.append(tr_type)
                     cnt = 0
                 else:
-                    cnt = cnt + 1
+                    cnt += 1
                     if cnt >= len(tmp):
                         types_occured = []
                         cnt = 0
@@ -1760,8 +1751,7 @@ class Block:
         """Sort the trials according to their indices from low to high."""
 
         trials_new = []
-        id_list = [x.id for x in self._trials]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._trials)
         for _id in id_list:
             position = [i for i, x in enumerate(self._trials)
                         if x.id == _id][0]
@@ -2042,8 +2032,7 @@ class Trial:
         """Sort the stimuli according to their IDs from low to high."""
 
         stimuli_new = []
-        id_list = [x.id for x in self._stimuli]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._stimuli)
         for _id in id_list:
             position = [i for i, x in enumerate(self._stimuli)
                         if x.id == _id][0]

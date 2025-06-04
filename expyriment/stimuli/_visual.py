@@ -677,8 +677,8 @@ class Visual(Stimulus):
             if stimulus.surface_size[1] % 2 == 0:
                 oy += 1
             stimrect = pygame.Rect((0, 0), stimulus.surface_size)
-            stimrect.right = stimrect.right + 1
-            stimrect.bottom = stimrect.bottom + 1
+            stimrect.right += 1
+            stimrect.bottom += 1
             stimrect.center = (ox, oy)
             return stimrect.contains(selfrect)
 
@@ -791,8 +791,8 @@ class Visual(Stimulus):
                 ox += 1
             if stimulus.surface_size[1] % 2 == 0:
                 oy += 1
-            stimrect.right = stimrect.right + 1
-            stimrect.bottom = stimrect.bottom + 1
+            stimrect.right += 1
+            stimrect.bottom += 1
             stimrect.center = (ox, oy)
             if selfrect.colliderect(stimrect):
                 return True, None

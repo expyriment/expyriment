@@ -93,9 +93,7 @@ def wait_end_audiosystem(channel=None, callback_function=None,
     """
 
     from .. import io
-    while get_audiosystem_is_playing(channel):
-        if _internals.skip_wait_methods:
-            break
+    while get_audiosystem_is_playing(channel) and not _internals.skip_wait_methods:
         if isinstance(callback_function, FunctionType):
             rtn_callback = callback_function()
             if isinstance(rtn_callback, CallbackQuitEvent):
@@ -252,12 +250,10 @@ def get_defaults(search_str="", as_string=False):
                 tmp[key] = defaults[key]
         defaults = tmp
     if as_string:
-        sorted_keys = list(defaults.keys())
-        sorted_keys.sort()
         rtn = ""
-        for key in sorted_keys:
-            tabs = "\t" * (4 - int((len(key) + 1) // 8))
-            rtn += key + ":" + tabs + repr(defaults[key]) + "\n"
+        for key in sorted(defaults.keys()):
+            tabs = "\t" * (4 - (len(key) + 1) // 8)
+            rtn += f"{key}:{tabs}{defaults[key]!r}\n"
     else:
         rtn = defaults
 

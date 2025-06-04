@@ -1279,8 +1279,7 @@ The Python package 'Numpy' is not installed."""
         """
 
         data, _variables = self.concatenated_data
-        subjects = list(set(data[:, column_subject_id]))
-        subjects.sort()
+        subjects = sorted(set(data[:, column_subject_id])))
         # get all iv values
         iv_values = []
         for iv in self._iv:
