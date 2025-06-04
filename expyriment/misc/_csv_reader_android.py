@@ -24,8 +24,7 @@ def reader(the_file):
 
     '''
     delimiter = ","
-    rtn = []
-    for row in the_file:
-        rtn.append([strn.strip() for strn in row.split(delimiter)])
-    return rtn
-
+    return [
+        [strn.strip() for strn in row.split(delimiter)]
+        for row in the_file
+    ]
