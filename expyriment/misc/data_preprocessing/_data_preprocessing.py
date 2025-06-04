@@ -620,9 +620,7 @@ The Python package 'Numpy' is not installed."""
                 return comb
 
         # calc n levels
-        n_levels = []
-        for x in iv_values:
-            n_levels.append(len(x) - 1)
+        n_levels = [len(x) - 1 for x in iv_values]
 
         # build new variables names
         factor_combinations = []
@@ -971,9 +969,10 @@ The Python package 'Numpy' is not installed."""
         if not isinstance(variables, (list, tuple)):
             variables = [variables]
 
-        cols = []
-        for v in variables:
-            cols.append(self._get_variable_id(v, throw_exception=True))
+        cols = [
+            self._get_variable_id(v, throw_exception=True)
+            for v in variables
+        ]
 
         data = self.concatenated_data[0]
         try:

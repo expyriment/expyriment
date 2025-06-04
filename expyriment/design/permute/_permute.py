@@ -13,10 +13,7 @@ from ..randomize import rand_int_sequence
 
 
 def _empty_rect(n_rows, n_columns):
-    rtn = []
-    for _ in range(n_rows):
-        rtn.append([None] * n_columns)
-    return rtn
+    return [[None] * n_columns] * n_rows
 
 
 def _square_of_elements(list_, idx_square):
@@ -30,10 +27,10 @@ def _square_of_elements(list_, idx_square):
 
     """
 
-    square = []
-    for idx_row in idx_square:
-        square.append([list_[i] for i in idx_row])
-    return square
+    return [
+        [list_[i] for i in idx_row]
+        for idx_row in idx_square
+    ]
 
 
 def is_permutation_type(type_str):

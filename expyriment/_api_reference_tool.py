@@ -35,10 +35,11 @@ except Exception:
     _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
 
 def _get_doc_and_function(obj):
-    rtn = []
-    for var in dir(obj):
-        if not var.startswith("_"):
-            rtn.append(var)
+    rtn = [
+        var
+        for var in dir(obj)
+        if not var.startswith("_")
+    ]
     return _getdoc(obj), rtn
 
 def _read_module(mod, doc_dict):
@@ -70,19 +71,19 @@ def _search_doc(search_str, doc_dict):
 
     """
 
-    rtn = []
-    for k in list(doc_dict.keys()):
+    return [
+        k
+        for k in doc_dict.keys()
         if k.lower().find(search_str.lower()) > -1 or\
-            doc_dict[k].lower().find(search_str.lower()) > -1:
-            rtn.append(k)
-    return rtn
+            doc_dict[k].lower().find(search_str.lower()) > -1
+    ]
 
 def _get_members(item_str):
-    members = []
-    for member in _inspect.getmembers(eval(item_str)):
-        if not member[0].startswith("_"):
-            members.append(item_str + "." + member[0])
-    return members
+    return [
+        item_str + "." + member[0]
+        for member in _inspect.getmembers(eval(item_str))
+        if not member[0].startswith("_")
+    ]
 
 def show_GUI():
     """Show the GUI."""

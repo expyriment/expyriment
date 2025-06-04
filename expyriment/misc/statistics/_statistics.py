@@ -119,11 +119,11 @@ def median(data):
 
     """
 
-    tmp = []
-    for elem in data: # remove non numerics
-        if isinstance(elem, (int, int, float)):
-            tmp.append(elem)
-    data = sorted(tmp)
+    data = sorted(
+        elem
+        for elem in data
+        if isinstance(elem, (int, int, float))  # remove non numerics
+    )
     if len(data) % 2 == 1:
         return data[(len(data) - 1) // 2 ]
     else:

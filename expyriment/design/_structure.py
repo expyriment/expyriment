@@ -600,10 +600,7 @@ class Experiment:
 
         if not len(order) == len(self._blocks):
             raise ValueError("Given order has wrong number of items!")
-        blocks_new = []
-        for position in order:
-            blocks_new.append(self._blocks[position])
-        self._blocks = blocks_new
+        self._blocks = [self._blocks[position] for position in order]
 
     @property
     def n_blocks(self):
@@ -737,9 +734,10 @@ type".format(permutation_type))
         # Get the condition combinations for the specified factors:
         all_factor_combi = []
         for b in self.blocks:
-            combi = []
-            for f in factor_names:
-                combi.append([f, b.get_factor(f, return_none_if_not_defined=True)])
+            combi = [
+                [f, b.get_factor(f, return_none_if_not_defined=True)]
+                for f in factor_names
+            ]
             new = True
             for c in all_factor_combi:
                 if c == combi:
@@ -1460,10 +1458,10 @@ class Block:
 
         """
 
-        rtn = []
-        for trial in self.trials:
-            rtn.append(trial.get_factor(name, return_none_if_not_defined=True))
-        return rtn
+        return [
+            trial.get_factor(name, return_none_if_not_defined=True)
+            for trial in self.trials
+        ]
 
     @property
     def design_as_text(self):
@@ -1642,10 +1640,10 @@ class Block:
 
         if not len(order) == len(self._trials):
             raise ValueError("Given order has wrong number of items!")
-        trials_new = []
-        for position in order:
-            trials_new.append(self._trials[position])
-        self._trials = trials_new
+        self._trials = [
+            self._trials[position]
+            for position in order
+        ]
 
     def swap_trials(self, position1, position2):
         """Swap two trials.
@@ -1674,9 +1672,7 @@ class Block:
 
         """
 
-        tmp = []
-        for t in self._trials:
-            tmp.append(t.factors_as_text)
+        tmp = [t.factors_as_text for t in self._trials]
 
         max_reps = 0
         cnt = 0
@@ -1982,10 +1978,7 @@ class Trial:
 
         if not len(order) == len(self._stimuli):
             raise ValueError("Given order has wrong number of items!")
-        stimuli_new = []
-        for position in order:
-            stimuli_new.append(self._stimuli[position])
-        self._stimuli = stimuli_new
+        self._stimuli = [self._stimuli[position] for position in order]
 
     def clear_stimuli(self):
         """Clear the stimuli."""
