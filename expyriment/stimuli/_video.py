@@ -9,7 +9,6 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
-import sys
 import time
 import atexit
 import contextlib
@@ -371,7 +370,7 @@ class Video(_visual.Stimulus):
             # Calculate target_resolution
             screen_size = _internals.active_exp.screen.surface.get_size()
             if isinstance(self._resizing, (int, float, bool)):  # single value
-                if self._resizing == False:
+                if self._resizing is False:
                     target_res = (None, None)
                 elif isinstance(self._resizing, (int, float, bool)):
                     with suppress_output():  # fix for verbose moviepy 2.1.2
@@ -412,9 +411,9 @@ class Video(_visual.Stimulus):
                 else:
                     target_res = [None, None]
                     for c, value in enumerate(self._resizing):
-                        if value == False:
+                        if value is False:
                             target_res[c] = video_size[c]
-                        elif value == True:
+                        elif value is True:
                             target_res[c] = screen_size[c]
                         elif type(value) is int:
                             target_res[c] = value
@@ -799,7 +798,7 @@ class Video(_visual.Stimulus):
             self.preload()
 
         if not self.is_playing:
-            self.play(log_even_tag)
+            self.play(log_event_tag)
 
         while True:
             if self.new_frame_available:

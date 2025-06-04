@@ -20,10 +20,10 @@ import math
 import pygame
 try:
     import pygame._sdl2.audio as sdl2_audio
-except:
+except ImportError:
     sdl2_audio = None
 
-from .._internals import get_settings_folder, get_version, is_venv
+from .._internals import active_exp, get_settings_folder, get_version
 
 try:
     from locale import getdefaultlocale
@@ -436,8 +436,8 @@ def get_monitor_resolution():
     """
 
     pygame.display.init()
-    if _internals.active_exp.is_initialized:
-        return _internals.active_exp.screen.display_resolution
+    if active_exp.is_initialized:
+        return active_exp.screen.display_resolution
     else:
         return get_display_info[0]["maximal_resolution"]
 
@@ -589,7 +589,6 @@ def download_from_stash(content="all", branch=None):
         raise RuntimeError("Download of {0} failed!".format(url))
 
     with TemporaryFile() as f:
-        meta = u.info()
         try:
             file_size = int(u.getheader('Content-Length'))
             file_size_dl = 0
@@ -625,7 +624,7 @@ def download_from_stash(content="all", branch=None):
             content_ = ("examples", "extras", "tools")
         else:
             content_ = content
-        if not type(content_) in (list, tuple):
+        if type(content_) not in (list, tuple):
             content_ = (content_,)
         files = []
         root = f_zip.namelist()[0]

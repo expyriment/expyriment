@@ -15,9 +15,8 @@ import os
 import sys
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
-from types import ModuleType, MethodType, FunctionType
+from types import MethodType, FunctionType
 
-import expyriment
 from ._internals import get_version
 
 

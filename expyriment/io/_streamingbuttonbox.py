@@ -17,7 +17,7 @@ import pygame
 from . import defaults
 from .. import _internals
 from ..misc import compare_codes
-from .._internals import CallbackQuitEvent, skip_wait_methods
+from .._internals import CallbackQuitEvent
 from ..misc._timer import get_time
 from ._input_output import Input, Output
 

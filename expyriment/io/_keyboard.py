@@ -77,13 +77,13 @@ class _QuitControl:
                            quit_confirmed_function=None,
                            quit_denied_function=None):
         for func in _list(event_detected_function):
-            if not func in cls.event_detected_functions:
+            if func not in cls.event_detected_functions:
                 cls.event_detected_functions.append(func)
         for func in _list(quit_confirmed_function):
-            if not func in cls.quit_confirmed_functions:
+            if func not in cls.quit_confirmed_functions:
                 cls.quit_confirmed_functions.append(func)
         for func in _list(quit_denied_function):
-            if not func in cls.quit_denied_functions:
+            if func not in cls.quit_denied_functions:
                 cls.quit_denied_functions.append(func)
 
     @classmethod
@@ -193,17 +193,17 @@ class Keyboard(Input):
         self._default_keys = value
 
     @staticmethod
-    def get_quit_key():
+    def get_quit_key(cls):
         """Returns the currently defined quit key """
 
-        return quit_control.quit_key
+        return cls.quit_control.quit_key
 
 
     @staticmethod
-    def set_quit_key(value):
+    def set_quit_key(cls, value):
         """Set the currently defined quit key"""
 
-        quit_control.quit_key = value
+        cls.quit_control.quit_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""

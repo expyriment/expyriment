@@ -210,7 +210,7 @@ class Colour(object):
 
         """
 
-        if not value in _colours.keys():
+        if value not in _colours.keys():
             return False
         else:
             return True

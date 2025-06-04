@@ -625,7 +625,7 @@ class ParallelPort(Input, Output):
             def _update(inputs_states, outputs_states, read_control,
                         read_data, read_status, read_poll):
                 for pin in list(inputs.keys()):
-                    if inputs_states[pin] == True:
+                    if inputs_states[pin] is True:
                         inputs[pin].colour = [0, 255, 0]
                     else:
                         inputs[pin].colour = [0, 30, 0]
@@ -635,7 +635,7 @@ class ParallelPort(Input, Output):
 
                 send = 0
                 for pin in list(outputs.keys()):
-                    if outputs_states[pin][0] == True:
+                    if outputs_states[pin][0] is True:
                         send += outputs_states[pin][1]
                         outputs[pin].colour = [255, 0, 0]
                     else:
