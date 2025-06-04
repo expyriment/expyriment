@@ -299,10 +299,7 @@ class Shape(Visual):
 
         """
 
-        rtn = []
-        for p in self.xy_points:
-            rtn.append(p.tuple)
-        return rtn
+        return [p.tuple for p in self.xy_points]
 
     @property
     def points_on_screen(self):
@@ -323,10 +320,7 @@ class Shape(Visual):
 
         """
 
-        rtn = []
-        for p in self.xy_points_on_screen:
-            rtn.append(p.tuple)
-        return rtn
+        return [p.tuple for p in self.xy_points_on_screen]
 
     @property
     def scaling(self):
@@ -381,11 +375,10 @@ class Shape(Visual):
 
         """
 
-        rtn = []
-        pos = XYPoint(xy=self.position)
-        for p in copy.deepcopy(self.xy_points):
-            rtn.append(p.move(pos))
-        return rtn
+        return [
+            p.move(XYPoint(xy=self.position))
+            for p in copy.deepcopy(self.xy_points)
+        ]
 
     def add_vertex(self, xy):
         """ Add a vertex to the shape.
@@ -673,9 +666,10 @@ class Shape(Visual):
                                         pygame.SRCALPHA).convert_alpha()
 
         # plot create polygon area
-        poly = []
-        for p in self.xy_points: # Convert points_in_pygame_coordinates
-            poly.append(self.convert_expyriment_xy_to_surface_xy(p.tuple))
+        poly = [
+            self.convert_expyriment_xy_to_surface_xy(p.tuple)  # Convert points_in_pygame_coordinates
+            for p in self.xy_points
+        ]
 
         pygame.draw.polygon(surface, self.colour, poly, 0)
 
