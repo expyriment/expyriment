@@ -6,6 +6,7 @@ The control._miscellaneous module of expyriment.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import sys
 import time
 from types import FunctionType
@@ -197,10 +198,8 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
                 defaults._mode_settings[3]
             defaults.auto_create_subject_id = defaults._mode_settings[4]
             defaults._mode_settings = None
-            try:
+            with contextlib.suppress(Exception):
                 defaults.event_logging = defaults._mode_settings[5]
-            except Exception:
-                pass
             set_skip_wait_methods(False)
         else:
             pass  # Nothing to do

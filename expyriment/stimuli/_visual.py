@@ -5,6 +5,7 @@ This module contains the base classes for visual stimuli.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import tempfile
 import os
 import copy
@@ -82,10 +83,8 @@ class _LaminaPanelSurface(object):
         """Call glDeleteTextures when deconstruction the object."""
 
         if getattr(self, '_txtr', None) is not None:
-            try:
+            with contextlib.suppress(Exception):
                 ogl.glDeleteTextures([self._txtr])
-            except Exception:
-                pass
 
     def convertMousePos(self, pos):
         """Convert 2d pixel mouse pos to 2d gl units.
@@ -258,15 +257,11 @@ class Visual(Stimulus):
 
         """
 
-        try:
+        with contextlib.suppress(Exception):
             self.clear_surface()
-        except Exception:
-            pass
         if self._compression_filename is not None:
-            try:
+            with contextlib.suppress(Exception):
                 os.remove(self._compression_filename)
-            except Exception:
-                pass
 
     @property
     def position(self):

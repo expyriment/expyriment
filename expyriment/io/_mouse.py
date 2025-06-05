@@ -8,6 +8,7 @@ This module contains a class implementing pygame mouse input.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import time
 from types import FunctionType
 
@@ -130,11 +131,9 @@ class Mouse(Input):
                                      "event is deactivated.".format(corner))
         Mouse._quit_corner_location = corner
 
-        try:
+        with contextlib.suppress(Exception):
             Mouse._corner_rect_size = (int(corner_rect_size[0]),
                                        int(corner_rect_size[1]))
-        except Exception:
-            pass
 
     @staticmethod
     def process_quit_event(click_position=None, event_detected_function=None,

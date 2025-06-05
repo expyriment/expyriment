@@ -8,6 +8,7 @@ This module contains a class implementing the experiment structure.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import os
 try:
     import locale
@@ -985,15 +986,11 @@ type".format(permutation_type))
                             val = val.strip()
                             # try to convert to number
                             if val.find(".") >= 0:
-                                try:
+                                with contextlib.suppress(Exception):
                                     val = float(val)
-                                except Exception:
-                                    pass
                             else:
-                                try:
+                                with contextlib.suppress(Exception):
                                     val = int(val)
-                                except Exception:
-                                    pass
 
                             # set value to block or trial
                             if col in block_factors:

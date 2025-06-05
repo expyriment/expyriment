@@ -10,6 +10,7 @@ All classes in this module should be called directly via expyriment.misc.*:
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import os
 import sys
 import glob
@@ -636,10 +637,8 @@ def download_from_stash(content="all", branch=None):
         for member in files:
             filename = os.path.basename(member)
             if not filename:
-                try:
+                with contextlib.suppress(Exception):
                     os.mkdir(os.path.join(path, os.path.relpath(member, root)))
-                except Exception:
-                    pass
                 files_installed += 1
                 continue
             source = f_zip.open(member)
