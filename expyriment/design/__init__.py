@@ -16,4 +16,3 @@ from ._structure import Experiment, Block, Trial
 
 from .. import _internals
 _internals.active_exp = Experiment("None")
-

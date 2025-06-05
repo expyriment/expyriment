@@ -173,4 +173,3 @@ def cycled_latin_square(elements):
     # TODO: make deprecated with 1.0
 
     return latin_square(elements, permutation_type=P_CYCLED_LATIN_SQUARE)
-

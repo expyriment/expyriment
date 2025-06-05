@@ -28,4 +28,3 @@ def reader(the_file):
     for row in the_file:
         rtn.append([strn.strip() for strn in row.split(delimiter)])
     return rtn
-
