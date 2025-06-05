@@ -10,6 +10,7 @@ __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
+import contextlib
 from tempfile import mkdtemp as _mkdtemp
 from shutil import rmtree as _rmtree
 import atexit as _atexit
@@ -118,9 +119,7 @@ except Exception:
 
 def _remove_tempdir():
     global tempdir
-    try:
+    with contextlib.suppress(Exception):
         _rmtree(tempdir)
-    except Exception:
-        pass
 
 _atexit.register(_remove_tempdir)

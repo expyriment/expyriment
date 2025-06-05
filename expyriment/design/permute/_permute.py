@@ -46,7 +46,7 @@ def is_permutation_type(type_str):
 
     """
 
-    return type_str == P_RANDOM or type_str == P_CYCLED_LATIN_SQUARE or type_str == P_BALANCED_LATIN_SQUARE
+    return type_str in (P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE)
 
 
 def _cycle_list(arr):

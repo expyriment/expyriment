@@ -9,6 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import atexit
+import contextlib
 from types import ModuleType, FunctionType
 
 try:
@@ -258,10 +259,8 @@ The Python package 'pySerial' is not installed."""
     def close(self):
         """Close the serial port."""
 
-        try:
+        with contextlib.suppress(Exception):
             self._serial.close()
-        except Exception:
-            pass
 
     @property
     def has_input_history(self):

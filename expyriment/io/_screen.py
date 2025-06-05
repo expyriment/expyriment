@@ -6,8 +6,9 @@ A screen.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import os
+import contextlib
 import ctypes
+import os
 import platform
 
 import pygame
@@ -127,10 +128,8 @@ OpenGL will be deactivated!"
                 pygame.display.set_caption('Expyriment')
 
         else:
-            try:
+            with contextlib.suppress(Exception):
                 pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
-            except Exception:
-                pass
 
             pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
 

@@ -472,11 +472,10 @@ class Keyboard(Input):
                    process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True
-                elif event.type == pygame.KEYDOWN:
-                    if event.unicode in char:
-                        rt = int((get_time() - start) * 1000)
-                        found_char = event.unicode
-                        done = True
+                elif event.type == pygame.KEYDOWN and event.unicode in char:
+                    rt = int((get_time() - start) * 1000)
+                    found_char = event.unicode
+                    done = True
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
             if not done and low_performance:

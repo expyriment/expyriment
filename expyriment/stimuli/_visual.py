@@ -5,6 +5,7 @@ This module contains the base classes for visual stimuli.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
 import tempfile
 import os
 import copy
@@ -82,10 +83,8 @@ class _LaminaPanelSurface(object):
         """Call glDeleteTextures when deconstruction the object."""
 
         if getattr(self, '_txtr', None) is not None:
-            try:
+            with contextlib.suppress(Exception):
                 ogl.glDeleteTextures([self._txtr])
-            except Exception:
-                pass
 
     def convertMousePos(self, pos):
         """Convert 2d pixel mouse pos to 2d gl units.
@@ -258,15 +257,11 @@ class Visual(Stimulus):
 
         """
 
-        try:
+        with contextlib.suppress(Exception):
             self.clear_surface()
-        except Exception:
-            pass
         if self._compression_filename is not None:
-            try:
+            with contextlib.suppress(Exception):
                 os.remove(self._compression_filename)
-            except Exception:
-                pass
 
     @property
     def position(self):
@@ -658,10 +653,7 @@ class Visual(Stimulus):
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
             overlap = self_mask.overlap_area(other_mask, offset)
-            if overlap > 0 and overlap == self_mask.count():
-                return True
-            else:
-                return False
+            return overlap > 0 and overlap == self_mask.count()
 
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
@@ -683,10 +675,7 @@ class Visual(Stimulus):
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
             stimrect.center = (ox, oy)
-            if stimrect.contains(selfrect):
-                return True
-            else:
-                return False
+            return stimrect.contains(selfrect)
 
     def overlapping_with_stimulus(self, stimulus, mode="visible",
                                   use_absolute_position=True):
@@ -886,10 +875,7 @@ class Visual(Stimulus):
                 sy += 1
             selfrect.center = (sx, sy)
             p = geometry.coordinates2position(position, screen_size)
-            if selfrect.collidepoint(p):
-                return True
-            else:
-                return False
+            return selfrect.collidepoint(p)
 
     def plot(self, stimulus):
         """Plot the stimulus on the surface of another stimulus.

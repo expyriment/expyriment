@@ -59,10 +59,7 @@ def _histogram(data):
             str1 = "dRT: "
             str2 = "  n: "
         str1 += "%4d" % x
-        if x in hist:
-            value = hist[x]
-        else:
-            value = 0
+        value = hist.get(x, 0)
         str2 += "%4d" % value
         if x % 10 == 0:
             hist_str += str1 + "\n" + str2 + "\n\n"
@@ -145,10 +142,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         def has_peaks(data):
             cv = statistics.std(data) / statistics.mean(data)
-            if cv > 1:
-                return True
-            else:
-                return False
+            return cv > 1
 
         def get_local_peak(presentation_time, refresh_rate, spread=25):
             refresh_time = 1000 / refresh_rate

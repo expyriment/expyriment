@@ -11,6 +11,8 @@ Notes
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import contextlib
+
 from ... import _internals
 
 print("Misc plugins:")
@@ -22,7 +24,5 @@ for name, code in _internals.import_plugins_code("misc").items():
         print("Warning: Could not import {0}".format(name))
         print(" {0}".format(err))
 
-try:
+with contextlib.suppress(Exception):
     del (name, code)
-except Exception:
-    pass
