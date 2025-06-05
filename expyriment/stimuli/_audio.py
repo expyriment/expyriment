@@ -496,4 +496,3 @@ class Audio(Stimulus):
                 pygame.event.pump()
 
             time.sleep(0.0001)
-

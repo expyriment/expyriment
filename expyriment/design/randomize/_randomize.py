@@ -226,4 +226,3 @@ def make_multiplied_shuffled_list(list_, xtimes):
         _random.shuffle(tmp)
         newlist.extend(tmp)
     return newlist
-

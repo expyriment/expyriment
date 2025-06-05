@@ -2136,5 +2136,3 @@ def _get_next_permutation(values, levels):
                 return None
         else:
             return values
-
-

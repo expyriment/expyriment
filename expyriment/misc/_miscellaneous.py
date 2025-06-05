@@ -62,7 +62,7 @@ class MediaTime(float):
     >>> MediaTime((1, 1, 2))           # (hr, min, sec)
     >>> MediaTime('01:01:33.5')        # (hr:min:sec)
     >>> MediaTime('01:01:33.045')
-    >>> MediaTime('01:01:33,5')        # comma works too 
+    >>> MediaTime('01:01:33,5')        # comma works too
     >>> MediaTime(3600) == '01:00:00'  # True
 
     """

@@ -176,4 +176,3 @@ class PParallelDLPortIO(object):
             return (self.port.DlPortReadPortUchar( self.base + 2 ) >> 3) & 1 # Select Printer
         else:
             print('Pin %i cannot be read (by the PParallelDLPortIO.readPin() yet)' % (pinNumber))
-

@@ -782,4 +782,3 @@ If your mouse buttons do not work, you can quit by pressing q.
         result["testsuite_mouse_polling_time"] = str(polling_time) + " ms"
         result["testsuite_mouse_buttons_work"] = buttons_work
         return result
-
