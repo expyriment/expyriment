@@ -9,5 +9,12 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-from ._permute import is_permutation_type, P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE
-from ._permute import balanced_latin_square, cycled_latin_square, latin_square
+from ._permute import (
+    P_BALANCED_LATIN_SQUARE,
+    P_CYCLED_LATIN_SQUARE,
+    P_RANDOM,
+    balanced_latin_square,
+    cycled_latin_square,
+    is_permutation_type,
+    latin_square,
+)

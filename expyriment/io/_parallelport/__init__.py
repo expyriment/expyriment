@@ -23,8 +23,8 @@ port.
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
 import os
+import sys
 
 from ... import _internals, misc
 from ...io._input_output import Input, Output
@@ -463,7 +463,7 @@ class ParallelPort(Input, Output):
     def _self_test(exp):
         """Test the parallel port."""
 
-        from ... import stimuli, io
+        from ... import io, stimuli
         result = {}
         result["testsuite_parallel_port"] = ""
         result["testsuite_parallel_success"] = "No"

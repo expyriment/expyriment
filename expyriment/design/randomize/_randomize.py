@@ -8,8 +8,8 @@ __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
 
 
-from copy import copy as _copy
 import random as _random
+from copy import copy as _copy
 
 _random.seed()
 
@@ -126,7 +126,10 @@ def rand_norm(a, b, mu=None, sigma=None):
 
 def _compare_items(a, b):
     """Helper function for `shuffle_list` to compare two elements of a list"""
-    from .._structure import Trial, Block # needs to be imported here because of circular dependency
+    from .._structure import (  # needs to be imported here because of circular dependency
+        Block,
+        Trial,
+    )
     if (isinstance(a, Trial) and isinstance(b, Trial)) or\
        (isinstance(a, Block) and isinstance(b, Block)):
         return a.compare(b)

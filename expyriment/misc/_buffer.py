@@ -8,8 +8,8 @@ This module contains a class implementing an event buffer.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from ._clock import Clock
 from .. import _internals
+from ._clock import Clock
 
 
 class Buffer(object):

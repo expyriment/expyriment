@@ -14,9 +14,8 @@ import pygame
 
 from .. import _internals
 from ..misc._timer import get_time
+from ._input_output import Input, Output
 from ._keyboard import Keyboard
-from  ._input_output import Input, Output
-
 
 pygame.joystick.init()
 

@@ -10,9 +10,9 @@ __author__ = 'Florian Krause <florian@expyriment.org, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-from tempfile import mkdtemp as _mkdtemp
-from shutil import rmtree as _rmtree
 import atexit as _atexit
+from shutil import rmtree as _rmtree
+from tempfile import mkdtemp as _mkdtemp
 
 # Visual
 visual_position = (0, 0)

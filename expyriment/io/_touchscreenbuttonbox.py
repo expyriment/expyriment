@@ -14,8 +14,8 @@ from types import FunctionType
 import pygame
 
 from .. import _internals, stimuli
-from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
+from ..misc._timer import get_time
 from ._input_output import Input
 
 

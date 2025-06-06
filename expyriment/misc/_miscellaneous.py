@@ -10,14 +10,15 @@ All classes in this module should be called directly via expyriment.misc.*:
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import os
-import sys
-import glob
-import random
 import colorsys
+import glob
 import math
+import os
+import random
+import sys
 
 import pygame
+
 try:
     import pygame._sdl2.audio as sdl2_audio
 except:
@@ -314,8 +315,8 @@ def add_fonts(folder):
     # a while. By having a watchdog thread, we can check if this is the case
     # and notify the user accordingly.
 
-    import time
     import threading
+    import time
 
     def watchdog_timer(state):
         time.sleep(1)
@@ -573,10 +574,10 @@ def download_from_stash(content="all", branch=None):
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()
 
-    from urllib.request import urlopen, Request
-    from tempfile import TemporaryFile
-    from zipfile import ZipFile
     from shutil import copyfileobj
+    from tempfile import TemporaryFile
+    from urllib.request import Request, urlopen
+    from zipfile import ZipFile
 
     if branch is None:
         branch = get_version().split(" ")[0]

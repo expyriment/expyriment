@@ -10,13 +10,13 @@ This module contains a class implementing a tone stimulus.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import os
-import math
-import wave
-import struct
 import itertools
-import tempfile
+import math
+import os
 import shutil
+import struct
+import tempfile
+import wave
 
 from . import defaults
 from ._audio import Audio

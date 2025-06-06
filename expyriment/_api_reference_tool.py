@@ -11,15 +11,15 @@ well as a function to call this browser or the online documentation.
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import inspect as _inspect
 import os
 import sys
 from pydoc import getdoc as _getdoc
-import inspect as _inspect
-from types import ModuleType, MethodType, FunctionType
+from types import FunctionType, MethodType, ModuleType
 
 import expyriment
-from ._internals import get_version
 
+from ._internals import get_version
 
 try:
     import tkinter as _tk  # future (Python 3)
@@ -88,11 +88,12 @@ def show_GUI():
     """Show the GUI."""
 
     from types import ModuleType
+
     import expyriment
-    import expyriment.io.extras
     import expyriment.design.extras
-    import expyriment.stimuli.extras
+    import expyriment.io.extras
     import expyriment.misc.extras
+    import expyriment.stimuli.extras
 
     if not isinstance(_tk, ModuleType):
         raise ImportError("""API Reference Tool could not be started.
@@ -502,8 +503,8 @@ def show_documentation(docu_type=None):
         print("     show_documentation(2) -- Open API Reference Tool")
         print("")
 
-    import subprocess
     import os
+    import subprocess
     import sys
     import webbrowser
 

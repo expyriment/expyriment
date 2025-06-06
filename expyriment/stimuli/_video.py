@@ -8,22 +8,21 @@ This module contains a class implementing video playback.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+import atexit
+import contextlib
 import os
 import sys
 import time
-import atexit
-import contextlib
 from types import FunctionType
 
 import pygame
 
-from . import defaults
-from . import _visual
+from .. import _internals
+from .._internals import CallbackQuitEvent
 from ..control import defaults as control_defaults
 from ..misc import Clock, MediaTime, which
 from ..misc._timer import get_time
-from .._internals import CallbackQuitEvent
-from .. import _internals
+from . import _visual, defaults
 
 
 # Fix for verbose moviepy 2.1.2
@@ -365,8 +364,8 @@ class Video(_visual.Stimulus):
                     if device_id is not None:
                         _sounddevice.default.device = None, device_id
 
-            from mediadecoder.states import PLAYING
             from mediadecoder.decoder import Decoder
+            from mediadecoder.states import PLAYING
 
             # Calculate target_resolution
             screen_size = _internals.active_exp.screen.surface.get_size()
@@ -570,8 +569,7 @@ class Video(_visual.Stimulus):
                         pygame_channel_id=self._pygame_channel_id)
 
                 elif self._audio_backend == "sounddevice":
-                    from mediadecoder.soundrenderers import \
-                        SoundrendererSounddevice
+                    from mediadecoder.soundrenderers import SoundrendererSounddevice
                     self._audio = SoundrendererSounddevice(
                         self._file.audioformat)
                 self._file.set_audiorenderer(self._audio)

@@ -14,20 +14,20 @@ try:
     import locale as _locale
 except ImportError:
     _locale = None  # Does not exist on Android
-import sys as _sys
-from types import ModuleType
-from glob import glob as _glob
-from copy import copy as _copy
 import codecs as _codecs
 import re as _re
+import sys as _sys
+from copy import copy as _copy
+from glob import glob as _glob
+from types import ModuleType
 
 try:
     import numpy as _np
 except Exception:
     _np = None
-from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
 from ...misc import string_sort_array as _py2py3_sort_array
+from ...misc import unicode2byte as _unicode2str
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,

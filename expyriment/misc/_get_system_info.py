@@ -6,12 +6,13 @@ Get System Information.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
-import os
 import glob
+import os
 import platform
-import subprocess
 import socket
+import subprocess
+import sys
+
 try:
     import OpenGL as _ogl
 except ImportError:
@@ -91,14 +92,16 @@ def get_system_info(as_string=False):
 
     """
 
-    from ..io import SerialPort, ParallelPort
     from .._internals import get_settings_folder
+    from ..io import ParallelPort, SerialPort
     from ._miscellaneous import get_display_info
     try:
         from platform import linux_distribution
     except Exception:
         try:
-            from distro import linux_distribution #TODO: only available for Linux, should it be a suggested package dependency?
+            from distro import (
+                linux_distribution,  #TODO: only available for Linux, should it be a suggested package dependency?
+            )
         except Exception:
             def linux_distribution():
                 name = ""

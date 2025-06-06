@@ -13,13 +13,13 @@ from types import FunctionType
 
 import pygame
 
-from . import defaults
 from .. import _internals
-from ..misc import compare_codes
 from .._internals import CallbackQuitEvent
+from ..misc import compare_codes
 from ..misc._timer import get_time
+from . import defaults
+from ._input_output import Input
 from ._keyboard import Keyboard
-from  ._input_output import Input
 
 
 class TriggerInput(Input):

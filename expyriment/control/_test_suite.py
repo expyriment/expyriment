@@ -12,19 +12,20 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 
 import pygame
+
 try:
     import OpenGL.GL as ogl
 except Exception:
     ogl = None
 
-from . import defaults, initialize, end, start_audiosystem, stop_audiosystem
-from .. import stimuli, io, _internals, design, control
 import expyriment
 
-from .. import misc
-from ..misc import constants, statistics, list_fonts, unicode2byte
-from ..misc._timer import get_time
+from .. import _internals, control, design, io, misc, stimuli
 from ..design import randomize
+from ..misc import constants, list_fonts, statistics, unicode2byte
+from ..misc._timer import get_time
+from . import defaults, end, initialize, start_audiosystem, stop_audiosystem
+
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -744,12 +745,12 @@ def run_test_suite(item=None):
     """
 
     # test imports
+    from .._internals import get_version
     from ..design import extras as _test1
-    from ..stimuli import extras as _test2
     from ..io import extras as _test3
     from ..misc import extras as _test4
     from ..misc import get_system_info
-    from .._internals import get_version
+    from ..stimuli import extras as _test2
 
     quit_experiment = False
     if not _internals.active_exp.is_initialized:

@@ -11,6 +11,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import atexit
 import os
+
 try:
     import locale
 except ImportError:
@@ -18,18 +19,22 @@ except ImportError:
 import codecs
 import re
 import sys
-import uuid
 import time
-from time import strftime
-from platform import uname
+import uuid
 from itertools import combinations
+from platform import uname
+from time import strftime
 
-from . import defaults
-from .. import _internals
-from .. import misc
+from .. import _internals, misc
+from ..misc import (
+    byte2unicode,
+    get_experiment_secure_hash,
+    module_hashes_as_string,
+    statistics,
+    unicode2byte,
+)
 from ..misc._timer import get_time
-from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
-from ..misc import statistics
+from . import defaults
 from ._input_output import Input, Output
 
 

@@ -10,9 +10,10 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 from copy import deepcopy
 
-from .._internals import Expyriment_object
 from .. import _internals
+from .._internals import Expyriment_object
 from ..misc import byte2unicode
+
 
 class Stimulus(Expyriment_object):
     """A class implementing a very general experimental stimulus.

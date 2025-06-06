@@ -13,13 +13,13 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
 
+from .. import _internals
+from ..misc import find_font, unicode2byte
 from . import defaults
 from ._stimulus import Stimulus
-from ._visual import Visual
-from ._textline import TextLine
 from ._textbox import TextBox
-from ..misc import find_font, unicode2byte
-from .. import _internals
+from ._textline import TextLine
+from ._visual import Visual
 
 
 class TextScreen(Visual):

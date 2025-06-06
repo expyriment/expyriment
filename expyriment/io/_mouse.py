@@ -13,11 +13,12 @@ from types import FunctionType
 
 import pygame
 
-from . import defaults
-from ..misc._timer import get_time
-from ..misc import is_android_running
-from ._input_output  import Input
 from .. import _internals, misc
+from ..misc import is_android_running
+from ..misc._timer import get_time
+from . import defaults
+from ._input_output import Input
+
 
 class Mouse(Input):
     """A class implementing a mouse input.
