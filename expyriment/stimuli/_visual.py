@@ -458,8 +458,7 @@ class Visual(Stimulus):
 
         """
 
-        surface = pygame.surface.Surface((0, 0))
-        return surface
+        return pygame.surface.Surface((0, 0))
 
     def _set_surface(self, surface):
         """Set the surface (from internal use only).
