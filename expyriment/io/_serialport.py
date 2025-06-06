@@ -9,7 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import atexit
-from types import ModuleType, FunctionType
+from types import FunctionType, ModuleType
 
 try:
     import serial
@@ -20,10 +20,10 @@ except Exception:
 
 import pygame
 
-from . import defaults
-from ._input_output import Input, Output
 from .. import _internals, misc
 from .._internals import CallbackQuitEvent
+from . import defaults
+from ._input_output import Input, Output
 
 
 class SerialPort(Input, Output):

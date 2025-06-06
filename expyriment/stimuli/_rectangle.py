@@ -12,9 +12,10 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
 
+from .. import _internals
 from . import defaults
 from ._visual import Visual
-from .. import _internals
+
 
 class Rectangle(Visual):
     """A class implementing a rectangle stimulus."""

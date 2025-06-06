@@ -10,8 +10,9 @@ This module contains a class implementing a blank screen stimulus.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from ._canvas import Canvas
 from .. import _internals
+from ._canvas import Canvas
+
 
 class BlankScreen(Canvas):
     """A class implementing a blank screen."""

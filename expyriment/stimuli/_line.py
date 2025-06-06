@@ -13,12 +13,18 @@ Oliver Lindemann <oliver@expyriment.org>'
 import math
 from copy import copy
 
-from . import defaults
-from ._visual import Visual
-from ._shape import Shape
 from .. import _internals
-from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect, points2vertices, lines_intersection_point
 from ..misc._timer import get_time
+from ..misc.geometry import (
+    XYPoint,
+    lines_intersect,
+    lines_intersection_point,
+    points2vertices,
+    vertices_rectangle,
+)
+from . import defaults
+from ._shape import Shape
+from ._visual import Visual
 
 
 class Line(Visual):

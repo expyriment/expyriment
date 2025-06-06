@@ -10,10 +10,11 @@ This module contains a class implementing a fixation cross stimulus.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from . import defaults
-from ._shape import Shape
 from .. import _internals
 from ..misc.geometry import vertices_cross
+from . import defaults
+from ._shape import Shape
+
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""

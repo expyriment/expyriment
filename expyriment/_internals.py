@@ -243,6 +243,6 @@ def import_all_extras():
     """Import all extra plugins."""
 
     from .design import extras
-    from .misc import extras
     from .io import extras
+    from .misc import extras
     from .stimuli import extras

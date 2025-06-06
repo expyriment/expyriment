@@ -10,19 +10,18 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 from . import defaults
 from ._audio import Audio
-from ._video import Video
+from ._blankscreen import BlankScreen
 from ._canvas import Canvas
 from ._circle import Circle
-from ._rectangle import Rectangle
-from ._line import Line
 from ._ellipse import Ellipse
-from ._shape import Shape
-from ._blankscreen import BlankScreen
-from ._textline import TextLine
 from ._fixcross import FixCross
-from ._textbox import TextBox
-from ._textscreen import TextScreen
-from ._picture import Picture
-from ._tone import Tone
-
+from ._line import Line
 from ._obsolete import Dot, Frame
+from ._picture import Picture
+from ._rectangle import Rectangle
+from ._shape import Shape
+from ._textbox import TextBox
+from ._textline import TextLine
+from ._textscreen import TextScreen
+from ._tone import Tone
+from ._video import Video

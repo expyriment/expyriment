@@ -12,16 +12,21 @@ import pygame
 
 try:
     import android
-    import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
+    import android.show_keyboard as android_show_keyboard
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-from . import defaults
 from .. import _internals, stimuli
-from ..misc import find_font, unicode2byte, constants, \
-                 numpad_digit_code2ascii, is_android_running
 from .._internals import CallbackQuitEvent
+from ..misc import (
+    constants,
+    find_font,
+    is_android_running,
+    numpad_digit_code2ascii,
+    unicode2byte,
+)
+from . import defaults
 from ._input_output import Input
 
 

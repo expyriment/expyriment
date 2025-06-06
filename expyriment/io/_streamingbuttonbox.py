@@ -14,11 +14,11 @@ from types import FunctionType
 
 import pygame
 
-from . import defaults
 from .. import _internals
-from ..misc import compare_codes
 from .._internals import CallbackQuitEvent, skip_wait_methods
+from ..misc import compare_codes
 from ..misc._timer import get_time
+from . import defaults
 from ._input_output import Input, Output
 
 

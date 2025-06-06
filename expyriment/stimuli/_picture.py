@@ -14,6 +14,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 
 import pygame
+
 from .. import _internals
 from ..misc import unicode2byte
 from . import defaults
@@ -78,8 +79,7 @@ class Picture(Visual):
     @staticmethod
     def _demo(exp=None):
         if exp is None:
-            from .. import __file__
-            from .. import control
+            from .. import __file__, control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
             exp_ = control.initialize()

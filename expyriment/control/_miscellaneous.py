@@ -12,10 +12,10 @@ from types import FunctionType
 
 import pygame
 
-from . import defaults
 from .. import _internals
 from .._internals import CallbackQuitEvent
 from ..misc import is_idle_running, is_ipython_running
+from . import defaults
 
 
 def start_audiosystem():
@@ -229,11 +229,11 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
-    from .. import design,stimuli, io, control,misc
-    from ..io import extras as ioextras
+    from .. import control, design, io, misc, stimuli
     from ..design import extras as designextras
-    from ..stimuli import extras as stimuliextras
+    from ..io import extras as ioextras
     from ..misc import extras as miscextras
+    from ..stimuli import extras as stimuliextras
 
     defaults = {}
     defaults = _get_module_values(defaults, design.defaults)

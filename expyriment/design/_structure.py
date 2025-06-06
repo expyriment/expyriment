@@ -9,25 +9,26 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
+
 try:
     import locale
 except ImportError:
     locale = None  # Does not exist on Android
-import sys
-from types import FunctionType
 import codecs
 import re
+import sys
+from types import FunctionType
+
 try:
     import csv
 except ImportError:
     from ..misc import _csv_reader_android as csv
 from copy import deepcopy
 
-from . import defaults
 from .. import _internals
-from ..misc import constants, Clock, unicode2byte, byte2unicode, string_sort_array
+from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
+from . import defaults, permute
 from .randomize import rand_int, shuffle_list
-from . import permute
 
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
