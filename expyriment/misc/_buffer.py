@@ -143,8 +143,7 @@ class Buffer:
 
         """
 
-        bcopy = self._memory[:]
-        return bcopy
+        return self._memory[:]
 
 
 class ByteBuffer(Buffer):

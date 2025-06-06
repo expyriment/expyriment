@@ -66,8 +66,7 @@ def join_data():
     if len(folder) <= 0:
         folder = "data"
     start_with = input(" data files start with [optional]? ")
-    d = data_preprocessing.Aggregator(folder, start_with)
-    return d
+    return data_preprocessing.Aggregator(folder, start_with)
 
 
 def main():
