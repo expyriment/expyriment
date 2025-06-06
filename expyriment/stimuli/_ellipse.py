@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 An ellipse stimulus.
 
