@@ -905,7 +905,7 @@ class Video(_visual.Stimulus):
         while self.is_playing and self.time < time:
 
             if _internals.skip_wait_methods:
-                return
+                return None
 
             if self.new_frame_available:
                 self.update()

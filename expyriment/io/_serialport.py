@@ -397,7 +397,7 @@ The Python package 'pySerial' is not installed."""
         """
 
         if _internals.skip_wait_methods:
-            return
+            return None
 
         rtn_string = b""
         if duration is not None:
