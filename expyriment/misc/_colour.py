@@ -9,6 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import colorsys
+import operator
 
 from . import round
 
@@ -167,7 +168,7 @@ class Colour(object):
         """Get a dictionary of all known colour names."""
 
         from collections import OrderedDict
-        return OrderedDict(sorted(_colours.items(), key=lambda t: t[0]))
+        return OrderedDict(sorted(_colours.items(), key=operator.itemgetter(0)))
 
     @staticmethod
     def is_rgb(value):

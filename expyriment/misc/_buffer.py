@@ -143,7 +143,7 @@ class Buffer(object):
 
         """
 
-        bcopy = self._memory[:]
+        bcopy = self._memory.copy()
         return bcopy
 
 
