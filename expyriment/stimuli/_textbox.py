@@ -331,11 +331,10 @@ class TextBox(Visual):
             _text = byte2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
-        surface = self.render_textrect(self.format_block(_text),
-                                       _font, rect, self.text_colour,
-                                       self.background_colour,
-                                       self.text_justification)
-        return surface
+        return self.render_textrect(self.format_block(_text),
+                                    _font, rect, self.text_colour,
+                                    self.background_colour,
+                                    self.text_justification)
 
     # The following code is taken from the word-wrapped text display module by
     # David Clark (http://www.pygame.org/pcr/text_rect/index.php).
