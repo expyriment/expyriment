@@ -254,7 +254,7 @@ class Visual(Stimulus):
                                      "or compressed stimulus!"
 
     def __del__(self):
-        """ Clear surface and ogl_screen when when the objects is deconstructed.
+        """ Clear surface and ogl_screen when the objects is deconstructed.
 
         """
 
@@ -971,7 +971,7 @@ class Visual(Stimulus):
         """"Compress the stimulus.
 
         This will create a temporary file on the disk where the surface of the
-        stimululs is written to.
+        stimulus is written to.
         The surface will now be read from the disk to free memory.
         Compressed stimuli cannot do surface operations!
         Preloading compressed stimuli is possible and highly recommended.
@@ -1432,7 +1432,7 @@ class Visual(Stimulus):
         Parameters
         ----------
         level : int
-            level of bluring
+            level of blurring
 
         Returns
         -------

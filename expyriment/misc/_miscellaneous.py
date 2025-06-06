@@ -460,7 +460,7 @@ def is_idle_running():
 
 def is_interactive_mode():
     """Return if Python is running in interactive mode (such as IDLE or
-    IPthon)
+    IPython)
 
     Returns
     -------

@@ -65,7 +65,7 @@ class TextMenu(Input):
         justification : int, optional
             text justification: 0 (left), 1 (center), 2 (right)
         scroll_menu : int, optional
-            maximum length of a item list before a scroll menu will
+            maximum length of an item list before a scroll menu will
             be display. If the parameter is 0 of False scroll menu
             will not be displayed
         background_stimulus : visual expyriment stimulus, optional

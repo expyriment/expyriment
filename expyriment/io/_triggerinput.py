@@ -144,7 +144,7 @@ class TriggerInput(Input):
         (e.g. by calling this method)!
         Returns None if no history is used.
 
-        If bitwise_comparision = True, the function performs a bitwise
+        If bitwise_comparison = True, the function performs a bitwise
         comparison (logical and) between code and received input and waits
         until a certain bit pattern is set.
 
@@ -179,7 +179,7 @@ class TriggerInput(Input):
         (e.g. by calling this method)!
         Returns None if no history is used.
 
-        If bitwise_comparision = True, the function performs a bitwise
+        If bitwise_comparison = True, the function performs a bitwise
         comparison (logical and) between code and received input and waits
         until a certain bit pattern is set.
 

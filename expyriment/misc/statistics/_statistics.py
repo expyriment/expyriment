@@ -1,7 +1,7 @@
 """
 The statistics module.
 
-This module contains miscellaneous stastistical functions for expyriment.
+This module contains miscellaneous statistical functions for expyriment.
 
 """
 

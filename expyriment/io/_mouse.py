@@ -483,7 +483,7 @@ class Mouse(Input):
         Returns
         -------
         event_id : int
-            id of the event that quited waiting
+            id of the event that quit waiting
         move : bool
             True if a motion occurred
         pos : (int, int)
@@ -510,7 +510,7 @@ class Mouse(Input):
         old_pos = pygame.mouse.get_pos()
         btn_id = None
         rt = None
-        motion_occured = False
+        motion_occurred = False
         if buttons is None:
             buttons = [0, 1, 2, 3, 4]
         else:
@@ -535,7 +535,7 @@ class Mouse(Input):
                     if _internals.active_exp.keyboard.process_control_keys():
                         break
             if wait_motion:
-                motion_occured = old_pos != pygame.mouse.get_pos()
+                motion_occurred = old_pos != pygame.mouse.get_pos()
             if wait_button:
                 if wait_for_buttonup:
                     btn_id = self.get_last_button_up_event()
@@ -545,7 +545,7 @@ class Mouse(Input):
             if btn_id ==-1:
                 btn_id = None
                 break
-            elif btn_id in buttons or motion_occured:
+            elif btn_id in buttons or motion_occurred:
                 rt = int((get_time() - start) * 1000)
                 break
             elif (duration is not None and \
@@ -558,8 +558,8 @@ class Mouse(Input):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-            "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occured))
-        return btn_id, motion_occured, position_in_expy_coordinates, rt
+            "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occurred))
+        return btn_id, motion_occurred, position_in_expy_coordinates, rt
 
 
     def wait_press(self, buttons=None, duration=None, wait_for_buttonup=False,
@@ -587,7 +587,7 @@ class Mouse(Input):
         Returns
         -------
         event_id : int
-            id of the event that quited waiting
+            id of the event that quit waiting
         pos : (int, int)
             mouse position (tuple)
         rt : int
