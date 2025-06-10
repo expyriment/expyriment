@@ -696,7 +696,7 @@ class Experiment:
 
         rtn = shuffle_list(self._blocks, max_repetitions=max_repetitions,
                            n_segments=n_segments)
-        if rtn == False:
+        if rtn is False:
             print("Warning: Could not find an appropriate block " + \
                   "randomization!")
         return rtn
@@ -1751,7 +1751,7 @@ class Block:
 
         rtn = shuffle_list(self._trials, max_repetitions=max_repetitions,
                            n_segments=n_segments)
-        if rtn == False:
+        if rtn is False:
             print("Warning: Could not find an appropriate trial " + \
                   "randomization!")
         return rtn

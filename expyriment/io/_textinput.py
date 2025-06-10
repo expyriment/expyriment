@@ -19,7 +19,7 @@ except ImportError:
 
 from . import defaults
 from .. import _internals, stimuli
-from ..misc import find_font, unicode2byte, constants, \
+from ..misc import find_font, constants, \
                  numpad_digit_code2ascii, is_android_running
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
@@ -527,7 +527,7 @@ class TextInput(Input):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            _exp = control.initialize()
         textinput = TextInput(message="Subject Number:",
                               message_colour=(160, 70, 250),
                               user_text_size=30,

@@ -10,8 +10,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 import sys
 
-import pygame
-
 from . import __version__
 
 
@@ -206,16 +204,16 @@ def import_plugins_code(package):
                 # find name of first class --> class_name
                 class_name = None
                 with open(init_file) as init_fl:
-                    for l in init_fl:
-                        if l.strip().startswith("class "):
-                            l = l[(l.find("class ")+6):]
-                            e = (l.find("("), l.find(":"))
+                    for line in init_fl:
+                        if line.strip().startswith("class "):
+                            line = line[(line.find("class ")+6):]
+                            e = (line.find("("), line.find(":"))
                             if e[1]>1:
                                 if e[0]>1:
                                     e = min(e)
                                 else:
                                     e = e[1]
-                                class_name = l[:e]
+                                class_name = line[:e]
                                 break # file loop (for..)
 
                 if class_name is not None:

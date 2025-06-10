@@ -11,8 +11,8 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-import sys, os
-from importlib import import_module
+import os
+import sys
 from importlib.util import find_spec
 
 #from . import control, io, show_documentation
@@ -207,8 +207,8 @@ letter arguments run single commands""",
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
         if args[x] is True:
             raise DeprecationWarning(
-                "'{0}' is deprecated! Please use 'opengl'. " +\
-                "See '-h' or '--help' for more information".format(x))
+                "'{0}' is deprecated! Please use 'opengl'. ".format(x) +\
+                "See '-h' or '--help' for more information")
 
     if args['opengl'] is not None:
         mode = args['opengl']

@@ -66,9 +66,9 @@ class Screen(Output):
 
         Output.__init__(self)
         self._colour = colour
-        if opengl == False:
+        if opengl is False:
             opengl = 0
-        elif opengl == True:
+        elif opengl is True:
             opengl = 2
         elif opengl > 2:
             warn_message = "OpenGL mode '{0}' does not exist. \
@@ -91,7 +91,7 @@ OpenGL will be deactivated!"
 
         # Set HiDPI mode on Windows (if SDL environment variable is not set)
         if platform.system() == "Windows":
-            if not "SDL_WINDOWS_DPI_AWARENESS" in os.environ:
+            if "SDL_WINDOWS_DPI_AWARENESS" not in os.environ:
                 os.environ["SDL_WINDOWS_DPI_AWARENESS"] = "permonitorv2"
 
         pygame.display.init()

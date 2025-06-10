@@ -25,6 +25,7 @@ try:
     import numpy as _np
 except Exception:
     _np = None
+from ... import __version__
 from ...misc import unicode2byte as _unicode2str
 from ...misc import byte2unicode as _str2unicode
 from ...misc import string_sort_array as _py2py3_sort_array
@@ -231,7 +232,7 @@ def get_experiment_duration(event_filename):
 
     data, _, _, _ = read_datafile(event_filename)
 
-    start = end = None
+    start = stop = None
     for r in data:
         if r[1] == "Experiment":
             if r[2] == "started":
@@ -718,7 +719,7 @@ The Python package 'Numpy' is not installed."""
                 self._variables = vnames
             else:
                 if vnames != self._variables:
-                    message = "Different variables in ".format(flname)
+                    message = "Different variables in {0}".format(flname)
                     message = message + "\n{0}".format(vnames)
                     message = message + "\ninstead of\n{0}".format(
                         self._variables)

@@ -51,7 +51,6 @@ def _histogram(data):
             hist[x] = 1
     #make string representation
     hist_str = ""
-    cnt = 0
     str1 = None
     for x in range(min(hist.keys()), max(hist.keys())+1):
         if str1 is None:
@@ -412,13 +411,13 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    info = f"""This will test the auditory stimulus presentation capabilities of your system.
+    info = """This will test the auditory stimulus presentation capabilities of your system.
 You will be asked to select the audio device, format, and buffer size to test.
 Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Auditory stimulus presentation test", info)
+    text = stimuli.TextScreen("Auditory stimulus presentation test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -502,12 +501,12 @@ Afterwards, a test tone will be played back to you with the chosen settings.
         pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
                               audio_format[2], allowedchanges=0)
         start_audiosystem()
-    except:
+    except Exception:
         info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
 
 [Press RETURN to continue]
         """
-        text = stimuli.TextScreen(f"Audio format not supported", info)
+        text = stimuli.TextScreen("Audio format not supported", info)
         while True:
             text.present()
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -530,7 +529,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Audio playback test", info)
+    text = stimuli.TextScreen("Audio playback test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -720,7 +719,7 @@ def _find_self_tests():
     for module in ["expyriment.io", "expyriment.io.extras"]:
         exec("classes = dir({0})".format(module), namesspace)
         for cl in namesspace['classes']:
-            if not cl.startswith("_") and not cl in ["False", "None", "True"]:
+            if not cl.startswith("_") and cl not in ["False", "None", "True"]:
                 exec("method = dir({0}.{1})".format(module, cl), namesspace)
                 if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])

@@ -234,7 +234,7 @@ class Mouse(Input):
                         {'key': _internals.active_exp.keyboard.get_quit_key()})
                     return _internals.active_exp.keyboard.process_control_keys(
                         key_event=simulated_key,
-                        event_detected_function=event_deteced_function,
+                        event_detected_function=event_detected_function,
                         quit_confirmed_function=quit_confirmed_function,
                         quit_detected_function=quit_denied_function)
         return False
