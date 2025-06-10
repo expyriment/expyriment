@@ -303,7 +303,7 @@ class Shape(Visual):
 
     @property
     def points_on_screen(self):
-        """Returns shape as list of tuples (x, y) resenting points on the
+        """Returns shape as list of tuples (x, y) representing points on the
         screen. see Shape.xy_points_on_screen.
 
         In contrast to Shape.points, it takes into account the position on
