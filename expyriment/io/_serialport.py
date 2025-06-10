@@ -22,7 +22,7 @@ import pygame
 
 from . import defaults
 from ._input_output import Input, Output
-from .. import _internals, misc
+from .. import _internals, misc, __version__
 from .._internals import CallbackQuitEvent
 
 
@@ -133,7 +133,7 @@ The Python package 'pySerial' is not installed."""
                                     stopbits, timeout, xonxoff, rtscts,
                                     dsrdtr)
         if not self._serial.isOpen():
-            raise IOError("Could not open serial port")
+            raise OSError("Could not open serial port")
 
         atexit.register(self.close)
 
@@ -265,7 +265,7 @@ The Python package 'pySerial' is not installed."""
 
     @property
     def has_input_history(self):
-        """Returns if a input_history exists or not (True / False)."""
+        """Returns if an input_history exists or not (True / False)."""
 
         return isinstance(self._input_history, misc.ByteBuffer)
 
@@ -300,7 +300,7 @@ The Python package 'pySerial' is not installed."""
     def read_input(self):
         """Read all input from serial port.
 
-        If a input_history is used, all received data will be added.
+        If an input_history is used, all received data will be added.
 
         Returns
         -------
@@ -335,7 +335,7 @@ The Python package 'pySerial' is not installed."""
     def poll(self):
         """Poll the serial port.
 
-        If a input_history is used, it will be added.
+        If an input_history is used, it will be added.
 
         Returns
         -------
@@ -397,7 +397,7 @@ The Python package 'pySerial' is not installed."""
         """
 
         if _internals.skip_wait_methods:
-            return
+            return None
 
         rtn_string = b""
         if duration is not None:
@@ -460,8 +460,7 @@ The Python package 'pySerial' is not installed."""
 
         if not isinstance(serial, ModuleType):
             return None
-        ports = sorted([x[0] for x in list_com_ports()])
-        return ports
+        return sorted([x[0] for x in list_com_ports()])
 
     def send(self, data):
         """Send data via the serial port.

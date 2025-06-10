@@ -56,7 +56,7 @@ class InputFile(Input):
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The input file '{0}' does not exist.".format(
+            raise OSError("The input file '{0}' does not exist.".format(
                 self._filename))
 
         if encoding is None:
@@ -330,8 +330,7 @@ class OutputFile(Output):
             mainfile_name = os.path.split(sys.argv[0])[1].replace(".py", "")
             for filename in file_list:
                 if filename.startswith(mainfile_name) and \
-                        (filename.endswith(DataFile._file_suffix) or
-                         filename.endswith(EventFile._file_suffix)):
+                        filename.endswith((DataFile._file_suffix, EventFile._file_suffix)):
                     tmp = filename.replace(mainfile_name, "")\
                                   .replace(DataFile._file_suffix, "")\
                                   .replace(EventFile._file_suffix, "")
@@ -462,7 +461,7 @@ class DataFile(OutputFile):
 
         """
 
-        self._subject_info.append(u"{0}s {1}{2}".format(
+        self._subject_info.append("{0}s {1}{2}".format(
             self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
@@ -480,7 +479,7 @@ class DataFile(OutputFile):
         """
 
         for line in text.splitlines():
-            self._experiment_info.append(u"{0}e {1}{2}".format(
+            self._experiment_info.append("{0}e {1}{2}".format(
                 self.comment_char, line, defaults.outputfile_eol))
 
     @property
@@ -710,12 +709,12 @@ class EventFile(OutputFile):
         """appending the inter event interval summary to event file, if log_event_tag have been set while presentation
         this function will be called at exit"""
 
-        for l in self._inter_event_intervall_log.summary():
-            self.write_comment(l)
+        for line in self._inter_event_intervall_log.summary():
+            self.write_comment(line)
 
 
 
-class _InterEventIntervallLog():
+class _InterEventIntervallLog:
     """This class is used to log the intervals of tagged events to get a
     summary of the timing at the end of the event file
     """

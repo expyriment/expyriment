@@ -4,15 +4,11 @@ This module also contains the currently active experiment:
             active_exp
 """
 
-from builtins import object
-
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 import sys
-
-import pygame
 
 from . import __version__
 
@@ -48,7 +44,7 @@ active_exp = None  # expyriment.design.__init__ sets active_exp to
 skip_wait_methods = False  # global toggle, can be changed by set_develop_mode
 
 
-class Expyriment_object(object):
+class Expyriment_object:
     """A class implementing a general Expyriment object.
 
        Parent of all stimuli and IO objects.
@@ -82,12 +78,12 @@ class Expyriment_object(object):
         return self._logging
 
 
-class CallbackQuitEvent(object):
+class CallbackQuitEvent:
 
     """A CallbackQuitEvent.
 
     If a callback function returns a CallbackQuitEvent object the currently processed
-    the wait or event loop function will be quited.
+    wait or event loop function will be quit.
 
     """
 
@@ -98,7 +94,7 @@ class CallbackQuitEvent(object):
         ----------
         data : any data type, optional
             you might use this variable to return data or values from your
-            callback function to your main function, since the quited wait or
+            callback function to your main function, since the quit wait or
             event loop function will return this CallbackQuitEvent
 
         See Also
@@ -208,16 +204,16 @@ def import_plugins_code(package):
                 # find name of first class --> class_name
                 class_name = None
                 with open(init_file) as init_fl:
-                    for l in init_fl:
-                        if l.strip().startswith("class "):
-                            l = l[(l.find("class ")+6):]
-                            e = (l.find("("), l.find(":"))
+                    for line in init_fl:
+                        if line.strip().startswith("class "):
+                            line = line[(line.find("class ")+6):]
+                            e = (line.find("("), line.find(":"))
                             if e[1]>1:
                                 if e[0]>1:
                                     e = min(e)
                                 else:
                                     e = e[1]
-                                class_name = l[:e]
+                                class_name = line[:e]
                                 break # file loop (for..)
 
                 if class_name is not None:

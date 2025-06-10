@@ -20,7 +20,6 @@ from ..io import (
     Mouse,
     TextInput,
     TouchScreenButtonBox,
-    _keyboard,
 )
 from ..io._screen import Screen
 from ..misc import is_android_running
@@ -167,7 +166,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        experiment.data.add_subject_info(u"{0} = {1}".format(
+        experiment.data.add_subject_info("{0} = {1}".format(
             f, _permuted_bws_factor_condition))
 
     if experiment.events is not None:
@@ -184,7 +183,6 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
         text.present()
         text.present()  # for flipping with double buffer
         text.present()  # for flipping with triple buffer
-    default_textline_size = stimuli.TextLine(text="").text_size
     while number > 0:
         counter = stimuli.TextLine(
             "{num:02d}".format(num=number),
@@ -232,7 +230,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
         the text to be shown at the pause screen (default="Paused")
 
     key : int, optional
-        the key to be pressed for continueing (default=misc.constants.K_RETURN)
+        the key to be pressed for continuing (default=misc.constants.K_RETURN)
 
 
     """
@@ -391,7 +389,7 @@ def initialize(experiment=None):
     This initializes an experiment defined by 'experiment' as well as the
     underlying expyriment system. If 'experiment' is None, a new Experiment
     object will be created and returned. Furthermore, a screen, a clock, a
-    keyboard and a event file are created and added to the experiment. The
+    keyboard and an event file are created and added to the experiment. The
     initialization screen is shown for a short delay to ensure that Python
     is fully initialized and time accurate. Afterwards, "Preparing
     experiment..." is presented on the screen.

@@ -87,7 +87,7 @@ def position2visual_angle(position, viewing_distance, monitor_size):
         position (x,y) to convert
     viewing_distance : numeric
         viewing distance in cm
-    monitior_size : numeric
+    monitor_size : numeric
         physical size of the monitor in cm (x, y)
 
     Returns
@@ -115,7 +115,7 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
         position in visual angle (x,y) to convert
     viewing_distance : numeric
         viewing distance in cm
-    monitior_size : (numeric, numeric)
+    monitor_size : (numeric, numeric)
         physical size of the monitor in cm (x, y)
 
     Returns
@@ -278,7 +278,7 @@ def polar2cartesian(polar, radians=False):
     return (polar[0]*_math.cos(a), polar[0]*_math.sin(a))
 
 
-class XYPoint(object):
+class XYPoint:
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
         """Initialize a XYPoint.

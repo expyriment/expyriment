@@ -1,3 +1,7 @@
+[build-system]
+requires = ["flit_core>=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
 [project]
 authors = [
   {name = "Florian Krause", email = "florian@expyriment.org"},
@@ -35,8 +39,8 @@ video = ["mediadecoder>=0.2.2,<1"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/expyriment/expyriment/issues"
-"Documentation" = "http://docs.expyriment.org"
-"Homepage" = 'http://www.expyriment.org'
+"Documentation" = "https://docs.expyriment.org/"
+"Homepage" = 'https://expyriment.org/'
 
 [project.scripts]
 expyriment="expyriment.cli:main"

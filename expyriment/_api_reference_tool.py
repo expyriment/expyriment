@@ -15,24 +15,20 @@ import os
 import sys
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
-from types import ModuleType, MethodType, FunctionType
+from types import MethodType, FunctionType
 
-import expyriment
 from ._internals import get_version
 
 
 try:
-    import tkinter as _tk  # future (Python 3)
+    import tkinter as _tk
 except Exception:
     _tk = None
-
-try:
-    import tkinter.ttk as _ttk
+else:
+    import tkinter.ttk as _ttk # overrides basic Tk widgets with Ttk
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
-except Exception:
-    _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -513,13 +509,13 @@ def show_documentation(docu_type=None):
         print("Welcome to Expyriment {0}".format(get_version()))
         print("")
         author = __author__.replace(",", ",\n        ")
-        print("Website: http://expyriment.org")
+        print("Website: https://expyriment.org")
         print("License: GNU GPL v3")
         print("Authors: {0}".format(author))
         call_info()
     elif docu_type == 1:
         webbrowser.open(
-            "http://docs.expyriment.org/",
+            "https://docs.expyriment.org/",
             new=1)
     elif docu_type == 2:
         python_executable = sys.executable.replace("pythonw.exe", "python.exe")

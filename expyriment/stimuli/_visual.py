@@ -33,7 +33,7 @@ from ..misc._timer import get_time
 random.seed()
 
 
-class _LaminaPanelSurface(object):
+class _LaminaPanelSurface:
     """A class implementing an OpenGL surface."""
 
     # The following code is based on part of the Lamina module by David Keeney
@@ -254,7 +254,7 @@ class Visual(Stimulus):
                                      "or compressed stimulus!"
 
     def __del__(self):
-        """ Clear surface and ogl_screen when when the objects is deconstructed.
+        """ Clear surface and ogl_screen when the objects is deconstructed.
 
         """
 
@@ -458,8 +458,7 @@ class Visual(Stimulus):
 
         """
 
-        surface = pygame.surface.Surface((0, 0))
-        return surface
+        return pygame.surface.Surface((0, 0))
 
     def _set_surface(self, surface):
         """Set the surface (from internal use only).
@@ -658,10 +657,7 @@ class Visual(Stimulus):
             self_mask = pygame.mask.from_surface(self._get_surface())
             other_mask = pygame.mask.from_surface(stimulus._get_surface())
             overlap = self_mask.overlap_area(other_mask, offset)
-            if overlap > 0 and overlap == self_mask.count():
-                return True
-            else:
-                return False
+            return overlap > 0 and overlap == self_mask.count()
 
         elif mode == "surface":
             screen_size = _internals.active_exp.screen.surface.get_size()
@@ -683,10 +679,7 @@ class Visual(Stimulus):
             stimrect.right = stimrect.right + 1
             stimrect.bottom = stimrect.bottom + 1
             stimrect.center = (ox, oy)
-            if stimrect.contains(selfrect):
-                return True
-            else:
-                return False
+            return stimrect.contains(selfrect)
 
     def overlapping_with_stimulus(self, stimulus, mode="visible",
                                   use_absolute_position=True):
@@ -886,10 +879,7 @@ class Visual(Stimulus):
                 sy += 1
             selfrect.center = (sx, sy)
             p = geometry.coordinates2position(position, screen_size)
-            if selfrect.collidepoint(p):
-                return True
-            else:
-                return False
+            return selfrect.collidepoint(p)
 
     def plot(self, stimulus):
         """Plot the stimulus on the surface of another stimulus.
@@ -971,7 +961,7 @@ class Visual(Stimulus):
         """"Compress the stimulus.
 
         This will create a temporary file on the disk where the surface of the
-        stimululs is written to.
+        stimulus is written to.
         The surface will now be read from the disk to free memory.
         Compressed stimuli cannot do surface operations!
         Preloading compressed stimuli is possible and highly recommended.
@@ -1432,7 +1422,7 @@ class Visual(Stimulus):
         Parameters
         ----------
         level : int
-            level of bluring
+            level of blurring
 
         Returns
         -------

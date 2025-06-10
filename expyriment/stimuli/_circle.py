@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A circle stimulus.
 
@@ -9,8 +7,6 @@ This module contains a class implementing a circle stimulus.
 
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
-
-import math
 
 from . import defaults
 from ._ellipse import Ellipse

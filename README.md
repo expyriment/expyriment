@@ -27,7 +27,7 @@ running program. It is therefore also suited for students, as well as for
 experimental psychologists and neuroscientists with little programming
 experience.
 
-- Project Homepage: http://www.expyriment.org
+- Project Homepage: https://expyriment.org
 
 *GNU General Public License v3* (see [details])
 Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.org)
@@ -35,24 +35,24 @@ Florian Krause (florian@expyriment.org) & Oliver Lindemann (oliver@expyriment.or
 Documentation
 =============
 Documentation can be found in the directory "documentation".
-For online documentation see: http://docs.expyriment.org
+For online documentation see: https://docs.expyriment.org
 
 Examples
 ========
-For online examples see: http://stash.expyriment.org/examples
+For online examples see: https://github.com/expyriment/expyriment-stash/tree/master/examples
 
 Installation
 ============
 The latest stable release of Expyriment can be found at Github:
 https://github.com/expyriment/expyriment/releases/latest
 For detailed installation instructions, please see the online documentation:
-http://docs.expyriment.org/Installation.html
+https://docs.expyriment.org/Installation.html
 
 Reference
 =========
 Krause, F., & Lindemann, O. (2014). Expyriment: A Python library for cognitive
 and neuroscientific experiments. *Behavior Research Methods*, 46(2), 416-428.
-http://dx.doi.org/10.3758/s13428-013-0390-6
+https://doi.org/10.3758/s13428-013-0390-6
 
 [details]: https://github.com/expyriment/expyriment/blob/master/COPYING.txt
 

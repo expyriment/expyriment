@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A text box stimulus.
 
@@ -17,7 +15,7 @@ import pygame
 
 from . import defaults
 from .. import _internals
-from ..misc import find_font, unicode2byte, byte2unicode
+from ..misc import find_font, byte2unicode
 from ._visual import Visual
 
 
@@ -108,7 +106,7 @@ class TextBox(Visual):
             with open(self.text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(text_font))
+            raise OSError("Font '{0}' not found!".format(text_font))
         if text_bold is not None:
             self._text_bold = text_bold
         else:
@@ -331,11 +329,10 @@ class TextBox(Visual):
             _text = byte2unicode(self.text).encode('latin-1')
         else:
             _text = self.text
-        surface = self.render_textrect(self.format_block(_text),
-                                       _font, rect, self.text_colour,
-                                       self.background_colour,
-                                       self.text_justification)
-        return surface
+        return self.render_textrect(self.format_block(_text),
+                                    _font, rect, self.text_colour,
+                                    self.background_colour,
+                                    self.text_justification)
 
     # The following code is taken from the word-wrapped text display module by
     # David Clark (http://www.pygame.org/pcr/text_rect/index.php).

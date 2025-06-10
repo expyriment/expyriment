@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """The expyriment testsuite.
 
 This module contains several functions to test the machine expyriment is
@@ -12,19 +11,20 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 
 import pygame
+
 try:
     import OpenGL.GL as ogl
 except Exception:
     ogl = None
 
-from . import defaults, initialize, end, start_audiosystem, stop_audiosystem
-from .. import stimuli, io, _internals, design, control
 import expyriment
 
-from .. import misc
-from ..misc import constants, statistics, list_fonts, unicode2byte
-from ..misc._timer import get_time
+from .. import _internals, control, design, io, misc, stimuli
 from ..design import randomize
+from ..misc import constants, list_fonts, statistics, unicode2byte
+from ..misc._timer import get_time
+from . import defaults, end, initialize, start_audiosystem, stop_audiosystem
+
 
 def _make_graph(x, y, colour):
     """Make the graph."""
@@ -45,24 +45,20 @@ def _histogram(data):
 
     hist = {}
     for x in data: # make histogram
-        x = int(round(x))
+        x = round(x)
         if x in hist:
             hist[x] += 1
         else:
             hist[x] = 1
     #make string representation
     hist_str = ""
-    cnt = 0
     str1 = None
     for x in range(min(hist.keys()), max(hist.keys())+1):
         if str1 is None:
             str1 = "dRT: "
             str2 = "  n: "
         str1 += "%4d" % x
-        if x in hist:
-            value = hist[x]
-        else:
-            value = 0
+        value = hist.get(x, 0)
         str2 += "%4d" % value
         if x % 10 == 0:
             hist_str += str1 + "\n" + str2 + "\n\n"
@@ -145,10 +141,7 @@ After the test, you will be asked to indicate which (if any) of those two square
 
         def has_peaks(data):
             cv = statistics.std(data) / statistics.mean(data)
-            if cv > 1:
-                return True
-            else:
-                return False
+            return cv > 1
 
         def get_local_peak(presentation_time, refresh_rate, spread=25):
             refresh_time = 1000 / refresh_rate
@@ -183,7 +176,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             peak = get_local_peak(key, refresh_rate)
             if peaks and peak is not None:
                 inaccuracies.extend(
-                    [abs(int(round(peak)) - key)] * hist[key])
+                    [abs(round(peak) - key)] * hist[key])
             else:
                 inaccuracies.extend(
                     [key % max(1, (1000 / refresh_rate))] * hist[key])
@@ -417,13 +410,13 @@ After the test, you will be asked to indicate which (if any) of those two square
 def _audio_playback(exp):
     """Test the audio playback"""
 
-    info = f"""This will test the auditory stimulus presentation capabilities of your system.
+    info = """This will test the auditory stimulus presentation capabilities of your system.
 You will be asked to select the audio device, format, and buffer size to test.
 Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Auditory stimulus presentation test", info)
+    text = stimuli.TextScreen("Auditory stimulus presentation test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -507,18 +500,18 @@ Afterwards, a test tone will be played back to you with the chosen settings.
         pygame.mixer.pre_init(audio_format[0], audio_format[1][0],
                               audio_format[2], allowedchanges=0)
         start_audiosystem()
-    except:
+    except Exception:
         info = f"""'{audio_device}' does not support '{audio_format[0]} Hz, {audio_format[1][1]}, {audio_format[2]} {ch}'.
 
 [Press RETURN to continue]
         """
-        text = stimuli.TextScreen(f"Audio format not supported", info)
+        text = stimuli.TextScreen("Audio format not supported", info)
         while True:
             text.present()
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
             if key is not None:
                 break
-            return
+            return None
         return "", ""
 
     # Get buffer size
@@ -535,7 +528,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
 
 [Press RETURN to continue]
 """
-    text = stimuli.TextScreen(f"Audio playback test", info)
+    text = stimuli.TextScreen("Audio playback test", info)
     while True:
         text.present()
         key, rt_ = exp.keyboard.wait([constants.K_RETURN])
@@ -592,7 +585,7 @@ click center          --  Quit
     if scaling > 2:
         scaling = 2
 
-    default_text = u"""The quick brown fox jumps over the lazy dog.
+    default_text = """The quick brown fox jumps over the lazy dog.
 ABCDEFGHIJKLMNOPQRSTUVWXYZ ÄÖÜ
 abcdefghijklmnopqrstuvwxyz äöü
 1234567890.:,;ßéèê(*!?')"""
@@ -725,7 +718,7 @@ def _find_self_tests():
     for module in ["expyriment.io", "expyriment.io.extras"]:
         exec("classes = dir({0})".format(module), namesspace)
         for cl in namesspace['classes']:
-            if not cl.startswith("_") and not cl in ["False", "None", "True"]:
+            if not cl.startswith("_") and cl not in ["False", "None", "True"]:
                 exec("method = dir({0}.{1})".format(module, cl), namesspace)
                 if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
@@ -742,12 +735,12 @@ def run_test_suite(item=None):
     """
 
     # test imports
+    from .._internals import get_version
     from ..design import extras as _test1
-    from ..stimuli import extras as _test2
     from ..io import extras as _test3
     from ..misc import extras as _test4
     from ..misc import get_system_info
-    from .._internals import get_version
+    from ..stimuli import extras as _test2
 
     quit_experiment = False
     if not _internals.active_exp.is_initialized:
@@ -879,4 +872,5 @@ def run_test_suite(item=None):
         exp.screen.clear()
         exp.screen.update()
 
+    return results
     return results

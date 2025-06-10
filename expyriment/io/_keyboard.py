@@ -77,13 +77,13 @@ class _QuitControl:
                            quit_confirmed_function=None,
                            quit_denied_function=None):
         for func in _list(event_detected_function):
-            if not func in cls.event_detected_functions:
+            if func not in cls.event_detected_functions:
                 cls.event_detected_functions.append(func)
         for func in _list(quit_confirmed_function):
-            if not func in cls.quit_confirmed_functions:
+            if func not in cls.quit_confirmed_functions:
                 cls.quit_confirmed_functions.append(func)
         for func in _list(quit_denied_function):
-            if not func in cls.quit_denied_functions:
+            if func not in cls.quit_denied_functions:
                 cls.quit_denied_functions.append(func)
 
     @classmethod
@@ -192,18 +192,18 @@ class Keyboard(Input):
 
         self._default_keys = value
 
-    @staticmethod
-    def get_quit_key():
+    @classmethod
+    def get_quit_key(cls):
         """Returns the currently defined quit key """
 
-        return quit_control.quit_key
+        return cls.quit_control.quit_key
 
 
-    @staticmethod
-    def set_quit_key(value):
+    @classmethod
+    def set_quit_key(cls, value):
         """Set the currently defined quit key"""
 
-        quit_control.quit_key = value
+        cls.quit_control.quit_key = value
 
     def clear(self):
         """Clear the event queue from keyboard events."""
@@ -252,7 +252,7 @@ class Keyboard(Input):
         first cleared!
 
         Unlike the wait method, events are only logged on loglevel 2 when no
-        keys are specified. this is to prevent excesive default logging when
+        keys are specified. this is to prevent excessive default logging when
         used repeatedly in a loop.
 
         """
@@ -484,7 +484,7 @@ class Keyboard(Input):
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(
-                    u"Keyboard,received,{0},wait_char".format(
+                    "Keyboard,received,{0},wait_char".format(
                         found_char))
             else:
                 _internals.active_exp._event_file_log(

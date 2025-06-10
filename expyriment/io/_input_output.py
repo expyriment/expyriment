@@ -11,7 +11,6 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-from . import defaults
 from .._internals import Expyriment_object
 
 

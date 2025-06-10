@@ -12,7 +12,7 @@ from ._clock import Clock
 from .. import _internals
 
 
-class Buffer(object):
+class Buffer:
     """A class implementing a general event buffer."""
 
     def __init__(self, name="Buffer", clock=None):
@@ -143,14 +143,13 @@ class Buffer(object):
 
         """
 
-        bcopy = self._memory[:]
-        return bcopy
+        return self._memory[:]
 
 
 class ByteBuffer(Buffer):
     """A class implementing a buffer for bytes.
 
-    The ByteBuffer class is also used for the input_histoy of serial and
+    The ByteBuffer class is also used for the input_history of serial and
     parallel ports.
 
     """

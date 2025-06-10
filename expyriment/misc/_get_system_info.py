@@ -8,7 +8,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
 import os
-import glob
 import platform
 import subprocess
 import socket
@@ -27,7 +26,7 @@ try:
     import parallel as _parallel
 except ImportError:
     _parallel = None
-except WindowsError:
+except OSError:
     _parallel = None
 try:
     import numpy as _numpy
@@ -91,7 +90,7 @@ def get_system_info(as_string=False):
 
     """
 
-    from ..io import SerialPort, ParallelPort
+    from ..io import ParallelPort
     from .._internals import get_settings_folder
     from ._miscellaneous import get_display_info
     try:
@@ -111,13 +110,11 @@ def get_system_info(as_string=False):
                     with open(release_file) as f:
                         for line in f:
                             if not name_found and \
-                                    (line.startswith("NAME=") or \
-                                    line.startswith("DISTRIB_ID=")):
+                                    line.startswith(("NAME=", "DISTRIB_ID=")):
                                 name = line.split("=")[-1].strip().strip('"')
                                 name_found = True
                             if not version_found and \
-                                    (line.startswith("VERSION_ID=") or \
-                                    line.startswith("DISTRIB_RELEASE=")):
+                                    line.startswith(("VERSION_ID=", "DISTRIB_RELEASE=")):
                                 version = line.split("=")[-1].strip().strip('"')
                                 version_found = True
                 return (name, version)
@@ -254,7 +251,7 @@ def get_system_info(as_string=False):
                 def __init__(self):
                     # Initialize this to the size of MEMORYSTATUSEX
                     self.dwLength = 2 * 4 + 7 * 8  # size = 2 ints, 7 longs
-                    return super(MEMORYSTATUSEX, self).__init__()
+                    super().__init__()
 
             stat = MEMORYSTATUSEX()
             ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(stat))
@@ -271,8 +268,12 @@ def get_system_info(as_string=False):
             ret = ctypes.windll.kernel32.GetDiskFreeSpaceExW(
                 str(current_folder), ctypes.byref(_),
                 ctypes.byref(disk_total), ctypes.byref(disk_free))
-            hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
-            hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
+            if ret:
+                hardware_disk_space_total = str(disk_total.value // 1024 ** 2) + " MB"
+                hardware_disk_space_free = str(disk_free.value // 1024 ** 2) + " MB"
+            else:
+                hardware_disk_space_total = ""
+                hardware_disk_space_free = ""
         except Exception:
             hardware_disk_space_total = ""
             hardware_disk_space_free = ""
@@ -486,7 +487,6 @@ def get_system_info(as_string=False):
     info["hardware_cpu_type"] = platform.processor()
     info["hardware_disk_space_free"] = hardware_disk_space_free
     info["hardware_disk_space_total"] = hardware_disk_space_total
-    display_info = get_display_info()
     info["hardware_displays"] = get_display_info()
     try:
         socket.gethostbyname("google.com")

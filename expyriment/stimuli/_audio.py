@@ -53,7 +53,7 @@ class Audio(Stimulus):
         self._start_time = 0
         self._paused_time = 0
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The audio file {0} does not exists".format(
+            raise OSError("The audio file {0} does not exists".format(
                 self._filename))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
@@ -378,7 +378,7 @@ class Audio(Stimulus):
         ----------
         log_event_tag : numeral or string, optional
             if log_event_tag is defined and if logging is switched on for this
-            stimulus (default), a summary of the inter-event-intervalls are
+            stimulus (default), a summary of the inter-event-intervals are
             appended at the end of the event file
 
         Notes

@@ -19,7 +19,7 @@ except ImportError:
 
 from . import defaults
 from .. import _internals, stimuli
-from ..misc import find_font, unicode2byte, constants, \
+from ..misc import find_font, constants, \
                  numpad_digit_code2ascii, is_android_running
 from .._internals import CallbackQuitEvent
 from ._input_output import Input
@@ -131,7 +131,7 @@ class TextInput(Input):
             with open(self._message_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(message_font))
+            raise OSError("Font '{0}' not found!".format(message_font))
         if message_bold is not None:
             self._message_bold = message_bold
         else:
@@ -166,7 +166,7 @@ class TextInput(Input):
             with open(self._user_text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(user_text_font))
+            raise OSError("Font '{0}' not found!".format(user_text_font))
         if user_text_colour is None:
             user_text_colour = defaults.textinput_user_text_colour
         if user_text_colour is not None:
@@ -527,7 +527,7 @@ class TextInput(Input):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            _exp = control.initialize()
         textinput = TextInput(message="Subject Number:",
                               message_colour=(160, 70, 250),
                               user_text_size=30,

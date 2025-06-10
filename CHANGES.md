@@ -106,7 +106,7 @@ Changed:
 - OpenGL mode "3" has been removed: OpenGL mode "2" (default) now does what
   "3" used to do (i.e. "alternative blocking")
 - updated command line interface options:
-    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are depreated
+    - ``-0``, ``-g``, ``--no-opengl``, ``-1``, ``-2``, ``-3`` are deprecated
     - OpenGL mode can now be set with new option ``--opengl``
     - all arguments are now also available as alternative long names
 - io.TextMenu: `width` is now an optional parameter. If not defined, surface
@@ -143,7 +143,7 @@ New Features:
 - all visual stimuli now have ``get_surface_array`` & ``set_surface_array``
   methods for direct pixel manipulations with numpy
 - all visual stimuli have a getter and setter for the position in polar
-  coordinates: ``polar_coordiante``
+  coordinates: ``polar_coordinate``
 - ``cartesian2polar`` & ``polar2cartesian`` in ``misc.geometry``
 - ``design``: trials, blocks and experiment objects have the method
   ``has_factor`` to check if a factor is defined
@@ -188,7 +188,7 @@ Changed:
   ``position2coordinates``
 - ``position2coordinates`` & ``coordinates2position`` have a new optional
   argument to calculate positions relative to a surfaces
-- ``stimuli.Circle``: ``get_polar_coordiantes`` & ``set_polar_coordiantes`` are
+- ``stimuli.Circle``: ``get_polar_coordinates`` & ``set_polar_coordinates`` are
   obsolete; use ``polar_position``
 - ``design``: ``Trial().get_factor``, ``Block().get_factor`` and
   ``Experiment().get_bws_factor`` now raise an exception if the factor is not
@@ -215,7 +215,7 @@ Fixed:
 - bug in ``io.Keyboard.wait``
 - bug when drawing textures to screen (OpenGL) leading to 1-pixel inaccuracies
 - bug in ``stimuli.Ellipse`` with uneven `line_width` argument
-- ``io.TextIput``: argument ``background_stimulus`` now takes all Expyriment
+- ``io.TextInput``: argument ``background_stimulus`` now takes all Expyriment
   stimuli
 - ``misc.get_system_info()`` uses ``PIL.__version__``
 - ``io.TextMenu`` mouse wheel scrolling
@@ -296,10 +296,10 @@ New Features:
 - new feature: Expyriment asks in interactive mode if initializing a fullscreen
 - new method: stimulus.visual.scale_to_fullscreen
 - new class: design.extras.StimulationProtocol
-- new method in data_preprocessing: save to to R data frame
+- new method in data_preprocessing: save to R data frame
 - new method in data_preprocessing: get_experiment_duration
 - new method/property: misc.get_monitor_resolution & Screen.monitor_resolution
-- new mouse function: experiments can be quited by mouse events (triple click);
+- new mouse function: experiments can be quit by mouse events (triple click);
   see documentation of property "mouse_quit_event". This function is only switched
   on per default under Android
 - new method visual stimuli.replace
@@ -358,7 +358,7 @@ Fixed:
 - stimuli with odd dimensions missed a pixel in each dimension in OpenGL mode
 - bug in stimuli.Audio.unload() and stimuli.Video.unload()
 - bug in io.ParallelPort.poll (now io.extras.SimpleParallelPort)
-- bug in Shape: shapes now comensate for the Pygame bug of extended polygons
+- bug in Shape: shapes now compensate for the Pygame bug of extended polygons
   along the horizontal axes
 - bug in stimuli.extras.DotCloud: colour of dots could not be changed
 
@@ -508,7 +508,7 @@ Changed:
 - stimuli.Dot is deprecated now, use stimuli.Circle instead
 - stimuli.Shape: is_point_inside and is_shape_overlapping are deprecated now
 - stimuli.Shape.native_scaling does now optionally scale also the line_width
-- stimuli.Frame: property line_width is now renmes to frame_line_width. Since
+- stimuli.Frame: property line_width is now renamed to frame_line_width. Since
   line_width is a property the underlying shape and always 0 (filled shapes)
 - stimuli.Frame is deprecated now, use stimuli.Rectangle with line_width > 0
 - stimuli.Rectangle was rewritten and is not inherited from Shape anymore;
@@ -518,8 +518,8 @@ Version 0.5.2 (13 Jun 2012)
 ---------------------------
 New Features:
 - data_preprocessing.print_n_trials(variables)
-- data_preporcessing.get_variable_data: get data as numpy arrays.
-- data_preporcessing.add_variable: add data from numpy.
+- data_preprocessing.get_variable_data: get data as numpy arrays.
+- data_preprocessing.add_variable: add data from numpy.
 - read trials from csv file into a block design.block.add_trials_from_csv_file
 - block.read_design (counterpart to save_design)
 - the main event_file logs now also the standard output and Python errors
@@ -537,13 +537,13 @@ Fixed:
 - Fixes and adjustments for default logging
 - API browser now works on OS X
 - API browser fonts on Windows
-- several bug fixes in data_preporcessing
+- several bug fixes in data_preprocessing
 
 Version 0.5.1 (07 Mar 2012)
 ---------------------------
 Fixed:
 - Bug in Serial Port test when no input is received
-- Bug for get_verrsion() under Python 2.6 under OS X
+- Bug for get_version() under Python 2.6 under OS X
 
 Changed:
 - Text colour for API HTML reference

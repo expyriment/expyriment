@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A text screen stimulus.
 
@@ -18,7 +16,8 @@ from ._stimulus import Stimulus
 from ._visual import Visual
 from ._textline import TextLine
 from ._textbox import TextBox
-from ..misc import find_font, unicode2byte
+from ..misc import find_font
+
 from .. import _internals
 
 
@@ -90,7 +89,7 @@ class TextScreen(Visual):
             with open(self._heading_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(heading_font))
+            raise OSError("Font '{0}' not found!".format(heading_font))
         if heading_size is None:
             heading_size = defaults.textscreen_heading_size
         if heading_size:
@@ -128,7 +127,7 @@ class TextScreen(Visual):
             with open(self._text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise IOError("Font '{0}' not found!".format(text_font))
+            raise OSError("Font '{0}' not found!".format(text_font))
         if text_size is None:
             self._text_size = defaults.textscreen_text_size
         if text_size is not None:

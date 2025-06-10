@@ -18,7 +18,7 @@ from .. import _internals
 from ._timer import get_time
 
 
-class Clock(object) :
+class Clock :
     """Basic timing class.
 
     Unit of time is milliseconds.
@@ -124,7 +124,7 @@ class Clock(object) :
         """
 
         if _internals.skip_wait_methods:
-            return
+            return None
         start = self.time
         if low_performance or isinstance(callback_function, FunctionType) or \
            (process_control_events or \

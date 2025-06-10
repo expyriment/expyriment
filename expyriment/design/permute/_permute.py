@@ -46,7 +46,7 @@ def is_permutation_type(type_str):
 
     """
 
-    return type_str == P_RANDOM or type_str == P_CYCLED_LATIN_SQUARE or type_str == P_BALANCED_LATIN_SQUARE
+    return type_str in (P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE)
 
 
 def _cycle_list(arr):
@@ -84,7 +84,7 @@ def _balanced_latin_square_sequence(n_elements, row):
 def latin_square(elements, permutation_type=P_RANDOM):
     """A latin square permutation of elements.
 
-    If elements is a integer the elements=[0,..., elements] is used.
+    If elements is an integer the elements=[0,..., elements] is used.
 
     Parameters
     ----------

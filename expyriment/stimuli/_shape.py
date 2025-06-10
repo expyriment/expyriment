@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 A Shape stimulus.
 
@@ -11,14 +9,13 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import copy
-from math import sqrt
 import pygame
 
 from . import defaults
 from ._visual import Visual
 from .. import _internals
 from ..misc._timer import get_time
-from ..misc.geometry import XYPoint, lines_intersect, position2coordinates
+from ..misc.geometry import XYPoint, lines_intersect
 
 
 def _get_shape_rect(points):
@@ -56,7 +53,7 @@ class Shape(Visual):
 
         A shape is an object described by vertices. For more details about
         vertex representations see:
-        http://en.wikipedia.org/wiki/Vertex_(geometry)
+        https://en.wikipedia.org/wiki/Vertex_(geometry)
 
         The vertex representation describes the contour of an object. Think of
         it as if you would draw with a pen. You start somewhere and make
@@ -236,13 +233,13 @@ class Shape(Visual):
 
     @property
     def debug_contour_colour(self):
-        """Getter for conture_colour."""
+        """Getter for contour_colour."""
 
         return self._debug_contour_colour
 
     @debug_contour_colour.setter
     def debug_contour_colour(self, colour):
-        """Setter for conture_colour."""
+        """Setter for contour_colour."""
 
         if self.has_surface:
             raise AttributeError(Shape._getter_exception_message.format(
@@ -268,7 +265,7 @@ class Shape(Visual):
 
         Notes
         -----
-        Fom version 0.9.1 on, this is a pygame.Rect
+        From version 0.9.1 on, this is a pygame.Rect
 
         """
 
@@ -608,7 +605,7 @@ class Shape(Visual):
         Parameters
         ----------
         level : int
-            level of bluring
+            level of blurring
 
         Returns
         -------

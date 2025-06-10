@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Colour class.
 
 This module contains a class implementing an RGB colour.
@@ -159,7 +158,7 @@ _colours = {
 }
 
 
-class Colour(object):
+class Colour:
     """Implements a class representing an RGB colour."""
 
     @staticmethod
@@ -185,7 +184,7 @@ class Colour(object):
 
         """
 
-        if not len(value) == 3:
+        if len(value) != 3:
             return False
         elif False in [isinstance(x, int) for x in value]:
             return False
@@ -210,7 +209,7 @@ class Colour(object):
 
         """
 
-        if not value in _colours.keys():
+        if value not in _colours.keys():
             return False
         else:
             return True
@@ -259,7 +258,7 @@ class Colour(object):
 
         """
 
-        if not len(value) == 3:
+        if len(value) != 3:
             return False
         elif False in [isinstance(x, int) for x in value]:
             return False
