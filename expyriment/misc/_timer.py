@@ -5,8 +5,8 @@ This module provides a high-resolution timer via the function get_time()
 Thanks to Luca Filippin for the code examples.
 
 Credits and references:
-      http://stackoverflow.com/questions/1205722/how-do-i-get-monotonic-time-durations-in-python
-      http://stackoverflow.com/questions/1824399/get-mach-absolute-time-uptime-in-nanoseconds-in-python
+      https://stackoverflow.com/questions/1205722/how-do-i-get-monotonic-time-durations-in-python
+      https://stackoverflow.com/questions/1824399/get-mach-absolute-time-uptime-in-nanoseconds-in-python
       https://mail.python.org/pipermail/python-dev/2009-October/093173.html
 """
 
