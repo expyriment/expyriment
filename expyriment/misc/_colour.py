@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Colour class.
 
 This module contains a class implementing an RGB colour.
@@ -159,7 +158,7 @@ _colours = {
 }
 
 
-class Colour(object):
+class Colour:
     """Implements a class representing an RGB colour."""
 
     @staticmethod

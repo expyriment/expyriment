@@ -252,7 +252,7 @@ class Keyboard(Input):
         first cleared!
 
         Unlike the wait method, events are only logged on loglevel 2 when no
-        keys are specified. this is to prevent excesive default logging when
+        keys are specified. this is to prevent excessive default logging when
         used repeatedly in a loop.
 
         """
@@ -484,7 +484,7 @@ class Keyboard(Input):
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(
-                    u"Keyboard,received,{0},wait_char".format(
+                    "Keyboard,received,{0},wait_char".format(
                         found_char))
             else:
                 _internals.active_exp._event_file_log(

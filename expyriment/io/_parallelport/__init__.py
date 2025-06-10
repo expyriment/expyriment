@@ -491,7 +491,7 @@ class ParallelPort(Input, Output):
                    "communication works correctly.\n\n" \
                    "You will be asked to enter a port address. " \
                    "On Windows this will be a hexadecimal number (e.g. " \
-                   "'0x0378', which is ofter the address of LPT1). " \
+                   "'0x0378', which is often the address of LPT1). " \
                    "On Linux it will be of the form '/dev/parportX', "\
                    "where X denotes the number of the port.\n\n" \
                    "Once the port is opened, a list of control, status and " \

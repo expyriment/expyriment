@@ -167,7 +167,7 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        experiment.data.add_subject_info(u"{0} = {1}".format(
+        experiment.data.add_subject_info("{0} = {1}".format(
             f, _permuted_bws_factor_condition))
 
     if experiment.events is not None:
@@ -232,7 +232,7 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
         the text to be shown at the pause screen (default="Paused")
 
     key : int, optional
-        the key to be pressed for continueing (default=misc.constants.K_RETURN)
+        the key to be pressed for continuing (default=misc.constants.K_RETURN)
 
 
     """

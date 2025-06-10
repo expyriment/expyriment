@@ -10,7 +10,7 @@ Calls are merely defined to give user appropriate error feedback
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-class Dot(object):
+class Dot:
     """OBSOLETE CLASS: Please use Circle!"""
 
     def __init__(self, radius=None, colour=None, position=None):
@@ -21,7 +21,7 @@ class Dot(object):
         raise DeprecationWarning("Dot is an obsolete class. Please use Circle!")
 
 
-class Frame(object):
+class Frame:
     """OBSOLETE CLASS: Please use Rectangle!"""
 
     def __init__(self, size=None, position=None, frame_line_width=None,

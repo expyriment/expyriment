@@ -87,7 +87,7 @@ class Video(_visual.Stimulus):
                           (e.g., 0.5 * original)
                 `True`  - Resizing of video to fit screen
                 `False` - No resizing of video
-            Resizing using a single value will always maintain the orignal
+            Resizing using a single value will always maintain the original
             aspect ratio.
             When given a list or tuple of (width, height), resizing of each
             dimension can be controlled individually, and the values can be:
@@ -137,7 +137,7 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
 
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The video file {0} does not exists".format(
+            raise OSError("The video file {0} does not exists".format(
                 self._filename))
 
         try:
@@ -191,7 +191,7 @@ class Video(_visual.Stimulus):
         else:
             self._filename = value
             if not(os.path.isfile(self._filename)):
-                raise IOError(u"The video file {0} does not exists".format(
+                raise OSError("The video file {0} does not exists".format(
                     self._filename))
 
     @property

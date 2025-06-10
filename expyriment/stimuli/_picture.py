@@ -40,7 +40,7 @@ class Picture(Visual):
         Visual.__init__(self, position, log_comment=filename)
         self._filename = filename
         if not(os.path.isfile(self._filename)):
-            raise IOError(u"The picture file '{0}' does not exist".format(
+            raise OSError("The picture file '{0}' does not exist".format(
                 filename))
 
     _getter_exception_message = "Cannot set {0} if surface exists!"

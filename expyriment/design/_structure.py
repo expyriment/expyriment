@@ -32,7 +32,7 @@ from . import permute
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
 
-class Experiment(object):
+class Experiment:
     """A class implementing a basic experiment."""
 
     def __init__(self, name=None, foreground_colour=None,
@@ -203,7 +203,7 @@ class Experiment(object):
         return self._is_initialized
 
     def __str__(self):
-        tmp_str = u"Experiment: {0}\n".format(self.name)
+        tmp_str = "Experiment: {0}\n".format(self.name)
         if len(self.bws_factor_names) <= 0:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
@@ -216,10 +216,10 @@ class Experiment(object):
                 _bws_factor = \
                     [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
-                tmp_str = tmp_str + u"    {0} = [{1}]\n".format(
-                    f, u", ".join(_bws_factor))
+                tmp_str = tmp_str + "    {0} = [{1}]\n".format(
+                    f, ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + u"{0}\n".format(block.summary)
+            tmp_str = tmp_str + "{0}\n".format(block.summary)
         return tmp_str
 
     @property
@@ -837,40 +837,40 @@ type".format(permutation_type))
 
         """
 
-        rtn = u"#exp: {0}\n".format(self.name)
+        rtn = "#exp: {0}\n".format(self.name)
         if len(self.experiment_info) > 0:
             for txt in self.experiment_info:
-                rtn += u"#xpi: {0}\n".format(txt)
+                rtn += "#xpi: {0}\n".format(txt)
         if len(self.bws_factor_names) > 0:
             for factor_name in self.bws_factor_names:
-                rtn += u"#bws: {0}=".format(factor_name)
+                rtn += "#bws: {0}=".format(factor_name)
                 for txt in self.get_bws_factor(factor_name):
-                    rtn += u"{0},".format(txt)
+                    rtn += "{0},".format(txt)
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += u"#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
+            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
         if len(self.data_variable_names) > 0:
             rtn += "#dvn: "
             for txt in self.data_variable_names:
-                rtn += u"{0},".format(txt)
+                rtn += "{0},".format(txt)
             rtn = rtn[:-1] + "\n"
 
         rtn += "block_cnt,block_id"
         bl_factors = self.block_list_factor_names
         factors = self.trial_factor_names
         for f in bl_factors:
-            rtn += u",block_{0}".format(f)
+            rtn += ",block_{0}".format(f)
         rtn += ",trial_cnt,trial_id"
         for f in factors:
-            rtn += u",{0}".format(f)
+            rtn += ",{0}".format(f)
 
         for bl_cnt, bl in enumerate(self.blocks):
             for tr_cnt, tr in enumerate(bl.trials):
-                rtn += u"\n{0},{1}".format(bl_cnt, bl.id)
+                rtn += "\n{0},{1}".format(bl_cnt, bl.id)
                 for f in bl_factors:
-                    rtn += u",{0}".format(bl.get_factor(f, return_none_if_not_defined=True))
-                rtn += u",{0},{1}".format(tr_cnt, tr.id)
+                    rtn += ",{0}".format(bl.get_factor(f, return_none_if_not_defined=True))
+                rtn += ",{0},{1}".format(tr_cnt, tr.id)
                 for f in factors:
-                    rtn += u",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
+                    rtn += ",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
 
         return rtn
 
@@ -976,7 +976,7 @@ type".format(permutation_type))
                             message = "Can't read design file. " + \
                                 "The file '{0}' ".format(filename) + \
                                 "does not contain an Expyriment trial list."
-                            raise IOError(message)
+                            raise OSError(message)
                     else:
                         block_cnt = None
                         trial_cnt = None
@@ -1057,11 +1057,11 @@ type".format(permutation_type))
         """
 
         if self.is_initialized and self.events is not None:
-            self.events.log(u"design,log,{0}".format(additional_comment))
+            self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    u"design: {0}".format(ln).replace(":#", "-"))
-            self.events.log(u"design,logged,{0}".format(
+                    "design: {0}".format(ln).replace(":#", "-"))
+            self.events.log("design,logged,{0}".format(
                 additional_comment))
 
     def register_wait_callback_function(self, function):
@@ -1144,7 +1144,7 @@ type".format(permutation_type))
         return (self._wait_callback_function is not None)
 
 
-class Block(object):
+class Block:
     """A class implementing an experimental block."""
 
     _trial_cnt_variable_name = "trial_cnt"  # variable names for csv in/output
@@ -1204,16 +1204,16 @@ class Block(object):
             name = ""
         else:
             name = self.name
-        rtn = u"""Block {0}: {1}
+        rtn = """Block {0}: {1}
     block factors: {2}
     n trials: {3}""".format(self.id, name,
                             self.factors_as_text,
                             len(self.trials))
 
         if include_trial_IDs:
-            rtn = rtn + u"""
+            rtn = rtn + """
     trial IDs = {0}""".format([t.id for t in self.trials])
-        rtn = rtn + u"""
+        rtn = rtn + """
     trial factors: """
         for f in self.trial_factor_names:
             val = []
@@ -1223,7 +1223,7 @@ class Block(object):
             string_sort_array(val)
             val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
-            rtn = rtn + u"{0} = [{1}]\n                   ".format(
+            rtn = rtn + "{0} = [{1}]\n                   ".format(
                 f, ", ".join(val))
 
         return rtn
@@ -1239,7 +1239,7 @@ class Block(object):
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + \
-                u"{0} = {1}\n                   ".format(
+                "{0} = {1}\n                   ".format(
                     f, self.get_factor(f, return_none_if_not_defined=True))
         all_factors = all_factors.rstrip()
         if len(all_factors) >= 1 and all_factors[-1] == ",":
@@ -1802,7 +1802,7 @@ class Block(object):
         return rtn
 
 
-class Trial(object):
+class Trial:
     """A class implementing an experimental trial."""
 
     def __init__(self):
@@ -1915,7 +1915,7 @@ class Trial(object):
         """Return all factor names and values as csv string line"""
         all_factors = ""
         for f in self.factor_names:
-            all_factors = all_factors + u"{0}={1}, ".format(
+            all_factors = all_factors + "{0}={1}, ".format(
                 f, str(self.get_factor(f, return_none_if_not_defined=True)))
         return all_factors
 

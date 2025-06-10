@@ -60,10 +60,11 @@ def mode(data):
 
     freq = frequency_table(data)
     Fmax = max(freq.values())
-    for x, f in list(freq.items()):
+    for x, f in freq.items():
         if f == Fmax:
-            break
-    return x
+            return x
+    return None
+
 
 def mean(data):
     """Returns the mean of data.
