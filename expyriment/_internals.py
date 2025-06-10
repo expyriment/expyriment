@@ -82,6 +82,7 @@ def show_documentation(docu_type=None):
             stdin=None,
             stdout=None,
             cwd=path)
+        stdout, stderr = _proc.communicate()  # Wait for process to complete
     else:
         print(f"Unknown documentation type: {docu_type}")
         call_info()
