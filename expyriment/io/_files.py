@@ -330,8 +330,7 @@ class OutputFile(Output):
             mainfile_name = os.path.split(sys.argv[0])[1].replace(".py", "")
             for filename in file_list:
                 if filename.startswith(mainfile_name) and \
-                        (filename.endswith(DataFile._file_suffix) or
-                         filename.endswith(EventFile._file_suffix)):
+                        filename.endswith((DataFile._file_suffix, EventFile._file_suffix)):
                     tmp = filename.replace(mainfile_name, "")\
                                   .replace(DataFile._file_suffix, "")\
                                   .replace(EventFile._file_suffix, "")
