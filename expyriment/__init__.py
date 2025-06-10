@@ -1,4 +1,4 @@
-"""A Python library for cognitive and neuroscientific experiments
+"""A Python library for cognitive and neuroscientific experiments.
 
 Expyriment is an open-source and platform independent light-weight Python
 library for designing and conducting timing-critical behavioural and
@@ -46,8 +46,8 @@ if _sys.version_info[0] != 3 or _sys.version_info[1] < 9:
                       "  is Expyriment 0.10.")
 
 try:
-    import os
-    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+    import os as _os
+    _os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
     import pygame as _pygame
     if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
@@ -62,15 +62,15 @@ except ImportError:
                       "\nPlease install Pygame(>=2.5.2,<3).")
 
 try:
-    import logging
-    logging.basicConfig(level=logging.INFO)
-    logging.getLogger('OpenGL.plugins').setLevel(logging.ERROR)
-    logging.getLogger('OpenGL.acceleratesupport').setLevel(logging.ERROR)
+    import logging as _logging
+    _logging.basicConfig(level=_logging.INFO)
+    _logging.getLogger('OpenGL.plugins').setLevel(_logging.ERROR)
+    _logging.getLogger('OpenGL.acceleratesupport').setLevel(_logging.ERROR)
 
     import OpenGL as _OpenGL
-    pyopengl_version = tuple(map(int, (_OpenGL.__version__.split("."))))
+    _pyopengl_version = tuple(map(int, (_OpenGL.__version__.split("."))))
 
-    if not pyopengl_version[0] == 3:
+    if not _pyopengl_version[0] == 3:
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
                         int(_OpenGL.version.__version__[0]),
@@ -82,7 +82,7 @@ try:
     # Try patching PyOpenGL <= 3.1.7 for Python >= 3.12:
     # https://github.com/mcfletch/pyopengl/pull/100
     try:
-      if pyopengl_version <= (3, 1, 7) and _sys.version_info >= (3, 12):
+      if _pyopengl_version <= (3, 1, 7) and _sys.version_info >= (3, 12):
           _OpenGL.FormatHandler.by_name("ctypesparameter").check.append(
               "_ctypes.CArgObject")
     except Exception:
@@ -113,7 +113,7 @@ except Exception:
 from . import _internals, control, design, io, misc, stimuli
 
 if not misc.is_android_running():
-    from ._api_reference_tool import show_documentation
+    from ._internals import show_documentation
 
 # add extras folder if it exists
 if _internals.get_plugins_folder() is not None:

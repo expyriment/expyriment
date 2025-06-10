@@ -33,6 +33,59 @@ def get_version():
             #no use of .major, .minor to ensure MacOS compatibility
     return "{0} (Python {1})".format(__version__, pv)
 
+def show_documentation(docu_type=None):
+    """Show the Expyriment documentation.
+
+    Parameters
+    ----------
+    docu_type : int
+        the documentation type:
+        1 = open online documentation
+        2 = open API reference and search tool
+
+    """
+
+    def call_info():
+        print("")
+        print("Call show_documentation with the following arguments to get further information:")
+        print("     show_documentation(1) -- Open online documentation in web browser")
+        print("     show_documentation(2) -- Open API Reference Tool")
+        print("")
+
+    import subprocess
+    import os
+    import sys
+    import webbrowser
+
+    f = os.path.abspath(__file__)
+    path = os.path.abspath(os.path.join(os.path.split(f)[0], ".."))
+    if docu_type is None:
+        print("Welcome to Expyriment {0}".format(get_version()))
+        print("")
+        author = __author__.replace(",", ",\n        ")
+        print("Website: https://expyriment.org")
+        print("License: GNU GPL v3")
+        print("Authors: {0}".format(author))
+        call_info()
+    elif docu_type == 1:
+        webbrowser.open(
+            "https://docs.expyriment.org/",
+            new=1)
+    elif docu_type == 2:
+        python_executable = sys.executable.replace("pythonw.exe",
+                                                   "python.exe")
+        call = '"' + "{0}".format(python_executable) + \
+                '" -m expyriment._api_reference_tool'
+        _proc = subprocess.Popen(
+            call,
+            shell=True,
+            stdin=None,
+            stdout=None,
+            cwd=path)
+    else:
+        print(f"Unknown documentation type: {docu_type}")
+        call_info()
+
 
 # GLOBALLY NEEDED STUFF
 
@@ -82,8 +135,8 @@ class CallbackQuitEvent:
 
     """A CallbackQuitEvent.
 
-    If a callback function returns a CallbackQuitEvent object the currently processed
-    wait or event loop function will be quit.
+    If a callback function returns a CallbackQuitEvent object the currently
+    processed wait or event loop function will be quit.
 
     """
 

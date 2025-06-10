@@ -13,10 +13,12 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 import sys
+import platform
 from pydoc import getdoc as _getdoc
 import inspect as _inspect
 from types import MethodType, FunctionType
 
+import expyriment
 from ._internals import get_version
 
 
@@ -25,10 +27,24 @@ try:
 except Exception:
     _tk = None
 else:
-    import tkinter.ttk as _ttk # overrides basic Tk widgets with Ttk
-    # for OS X, if there is no Tile support
-    _root = _ttk.Tk()
-    _root.destroy()
+    try:
+        from tkinter import ttk as _ttk # overrides basic Tk widgets with Ttk
+        # for OS X, if there is no Tile support
+        _root.tk.eval('package require tile')
+        #_root = _ttk.Tk()
+        #_root.destroy()
+    except:
+        _ttk = _tk
+
+if platform.system() == "Windows":
+    FONTNAME = "Consolas"
+    FONTSIZE = 11
+elif platform.system() == "Darwin":
+    FONTNAME = "Menlo"
+    FONTSIZE = 12
+else:
+    FONTNAME = "Monospace"
+    FONTSIZE = 10
 
 def _get_doc_and_function(obj):
     rtn = []
@@ -84,7 +100,7 @@ def show_GUI():
     """Show the GUI."""
 
     from types import ModuleType
-    import expyriment
+    #import expyriment
     import expyriment.io.extras
     import expyriment.design.extras
     import expyriment.stimuli.extras
@@ -125,9 +141,10 @@ The Python package 'Tkinter' is not installed""")
 
     list_frame_outer = _ttk.Frame(left_frame)
     list_frame_inner = _ttk.Frame(list_frame_outer)
-    listbox = _tk.Listbox(list_frame_inner, width=40, font=("Courier", 10,
+    listbox = _tk.Listbox(list_frame_inner, width=40, font=(FONTNAME, FONTSIZE,
                                                            "bold"))
-    scroll1 = _ttk.Scrollbar(list_frame_inner, orient=_tk.HORIZONTAL, takefocus=0)
+    scroll1 = _ttk.Scrollbar(list_frame_inner, orient=_tk.HORIZONTAL,
+                             takefocus=0)
     scroll1.config(command=listbox.xview)
     listbox.configure(xscrollcommand=scroll1.set)
     scroll2 = _ttk.Scrollbar(list_frame_outer, takefocus=0)
@@ -138,9 +155,10 @@ The Python package 'Tkinter' is not installed""")
     text_frame_outer = _ttk.Frame(right_frame)
     text_frame_inner = _ttk.Frame(text_frame_outer)
     text = _tk.Text(text_frame_inner, width=80, background='white',
-                   font=("Courier", 10), wrap=_tk.NONE, state=_tk.DISABLED,
-                   takefocus=1)
-    scroll3 = _ttk.Scrollbar(text_frame_inner, orient=_tk.HORIZONTAL, takefocus=0)
+                   font=(FONTNAME, FONTSIZE), wrap=_tk.NONE,
+                    state=_tk.DISABLED, takefocus=1)
+    scroll3 = _ttk.Scrollbar(text_frame_inner, orient=_tk.HORIZONTAL,
+                             takefocus=0)
     scroll3.config(command=text.xview)
     text.configure(xscrollcommand=scroll3.set)
     scroll4 = _ttk.Scrollbar(text_frame_outer, takefocus=0)
@@ -212,11 +230,13 @@ The Python package 'Tkinter' is not installed""")
                     item = item[2:]
                     text.config(state=_tk.NORMAL)
                     text.delete(1.0, _tk.END)
-                    text.tag_config("heading", font=("Courier", 12, "bold"))
+                    text.tag_config("heading", font=(FONTNAME, FONTSIZE + 2,
+                                                     "bold"))
                     text.insert(_tk.END, item, "heading")
-                    text.insert(_tk.END, "\n\n")
+                    text.insert(_tk.END, "\n\n\n")
                     if isinstance(eval(item), type):
                         text.insert(_tk.END, doc_dict[item])
+                        text.insert(_tk.END, "\n\n\n")
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         start = definition.find("def __init__(self") + 17
@@ -228,37 +248,43 @@ The Python package 'Tkinter' is not installed""")
                             call = "()"
                         call = call.replace(" " * 16,
                                             " " * len(item.split(".")[-1]))
-                        text.insert(_tk.END, "\n\n\n\n")
                         text.tag_config("item",
-                                        font=("Courier", 10, "bold"))
-                        text.tag_config("call", font=("Courier", 10,
+                                        font=(FONTNAME, FONTSIZE, "bold"))
+                        text.tag_config("call", font=(FONTNAME, FONTSIZE,
                                                       "italic"))
                         text.insert(_tk.END, item.split(".")[-1], "item")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
-                        text.insert(_tk.END, _getdoc(
-                            eval(item + "." + "__init__")))
+                        doc = _getdoc(eval(item + "." + "__init__"))
+                        doc = "    " + doc
+                        doc = doc.replace("\n", "\n    ")
+                        text.insert(_tk.END, doc)
                     elif isinstance(eval(item), FunctionType):
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
-                                        font=("Courier", 10, "bold"))
+                                        font=(FONTNAME, FONTSIZE, "bold"))
                         start = definition.find("(") + 1
                         end = definition.find(")", start)
                         call = "(" + definition[start:end].lstrip() + ")"
                         call = call.replace(
                             "    " + " "*len(item.split(".")[-1]) + " ",
                             " "*len(item.split(".")[-1] + " "))
-                        text.tag_config("call", font=("Courier", 10, "italic"))
+                        text.tag_config("call", font=(FONTNAME, FONTSIZE,
+                                                      "italic"))
                         text.insert(_tk.END, item.split(".")[-1], "item")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
-                        text.insert(_tk.END, doc_dict[item])
+                        doc = doc_dict[item]
+                        doc = "    " + doc
+                        doc = doc.replace("\n", "\n    ")
+                        text.insert(_tk.END, doc)
                     elif isinstance(eval(item), MethodType):
+                        text.insert(_tk.END, "\n")
                         definition = "".join(_inspect.getsourcelines(
                             eval(item))[0])
                         text.tag_config("item",
-                                        font=("Courier", 10, "bold"))
+                                        font=(FONTNAME, FONTSIZE, "bold"))
                         start = definition.find("(self") + 1
                         end = definition.find(")", start)
                         if definition[start + 4] == ",":
@@ -269,11 +295,15 @@ The Python package 'Tkinter' is not installed""")
                         call = call.replace(
                             "        " + " "*len(item.split(".")[-1]) + " ",
                             " "*len(item.split(".")[-1]) + " ")
-                        text.tag_config("call", font=("Courier", 10, "italic"))
+                        text.tag_config("call", font=(FONTNAME, FONTSIZE,
+                                                      "italic"))
                         text.insert(_tk.END, item.split(".")[-1], "item")
                         text.insert(_tk.END, call, "call")
                         text.insert(_tk.END, "\n\n")
-                        text.insert(_tk.END, doc_dict[item])
+                        doc = doc_dict[item]
+                        doc = "    " + doc
+                        doc = doc.replace("\n", "\n    ")
+                        text.insert(_tk.END, doc)
                     elif isinstance(eval(item), (int, bytes,bool, list,
                                               tuple, dict)):
                         pass
@@ -345,7 +375,8 @@ The Python package 'Tkinter' is not installed""")
                         for index, item in enumerate(items):
                             listbox.insert(_tk.END, item)
                             if item == ".." or \
-                                    isinstance(eval(item[2:]), (type, ModuleType)):
+                                    isinstance(eval(item[2:]),
+                                               (type, ModuleType)):
                                 listbox.itemconfig(index, fg="blue",
                                                    selectforeground="blue")
                         listbox.selection_set(0)
@@ -424,7 +455,7 @@ The Python package 'Tkinter' is not installed""")
         helpframe = _ttk.Frame(helpdialogue)
         helpframe.pack()
         helptextbox = _tk.Text(helpframe, highlightthickness=0, wrap=_tk.WORD,
-                               font=("Courier", 10))
+                               font=(FONTNAME, FONTSIZE))
         documentation = """The Expyriment API Reference Tool allows you to browse and search the Expyriment API.
 
 Double clicking on blue coloured items will show their content.
@@ -477,59 +508,6 @@ The following symbols are used to denote the type of an item:
 
     _tk.mainloop()
 
-
-def show_documentation(docu_type=None):
-    """Show the Expyriment documentation.
-
-
-    Parameters
-    ----------
-    docu_type : int
-        the documentation type:
-        1 = open online documentation
-        2 = open API reference and search tool
-
-    """
-
-    def call_info():
-        print("")
-        print("Call show_documentation with the following arguments to get further information:")
-        print("     show_documentation(1) -- Open online documentation in web browser")
-        print("     show_documentation(2) -- Open API Reference Tool")
-        print("")
-
-    import subprocess
-    import os
-    import sys
-    import webbrowser
-
-    f = os.path.abspath(__file__)
-    path = os.path.abspath(os.path.join(os.path.split(f)[0], ".."))
-    if docu_type is None:
-        print("Welcome to Expyriment {0}".format(get_version()))
-        print("")
-        author = __author__.replace(",", ",\n        ")
-        print("Website: https://expyriment.org")
-        print("License: GNU GPL v3")
-        print("Authors: {0}".format(author))
-        call_info()
-    elif docu_type == 1:
-        webbrowser.open(
-            "https://docs.expyriment.org/",
-            new=1)
-    elif docu_type == 2:
-        python_executable = sys.executable.replace("pythonw.exe", "python.exe")
-        call = '"' + "{0}".format(python_executable) + \
-                '" -m expyriment._api_reference_tool'
-        _proc = subprocess.Popen(
-            call,
-            shell=True,
-            stdin=None,
-            stdout=None,
-            cwd=path)
-    else:
-        print(f"Unknown documentation type: {docu_type}")
-        call_info()
 
 if __name__ == "__main__":
     show_GUI()
