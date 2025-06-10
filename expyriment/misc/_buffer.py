@@ -12,7 +12,7 @@ from ._clock import Clock
 from .. import _internals
 
 
-class Buffer(object):
+class Buffer:
     """A class implementing a general event buffer."""
 
     def __init__(self, name="Buffer", clock=None):

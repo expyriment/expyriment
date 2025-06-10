@@ -33,7 +33,7 @@ from ..misc._timer import get_time
 random.seed()
 
 
-class _LaminaPanelSurface(object):
+class _LaminaPanelSurface:
     """A class implementing an OpenGL surface."""
 
     # The following code is based on part of the Lamina module by David Keeney

@@ -278,7 +278,7 @@ def polar2cartesian(polar, radians=False):
     return (polar[0]*_math.cos(a), polar[0]*_math.sin(a))
 
 
-class XYPoint(object):
+class XYPoint:
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
         """Initialize a XYPoint.

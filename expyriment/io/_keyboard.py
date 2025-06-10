@@ -484,7 +484,7 @@ class Keyboard(Input):
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(
-                    u"Keyboard,received,{0},wait_char".format(
+                    "Keyboard,received,{0},wait_char".format(
                         found_char))
             else:
                 _internals.active_exp._event_file_log(
