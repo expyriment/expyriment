@@ -21,17 +21,14 @@ from ._internals import get_version
 
 
 try:
-    import tkinter as _tk  # future (Python 3)
+    import tkinter as _tk
 except Exception:
     _tk = None
-
-try:
-    import tkinter.ttk as _ttk
+else:
+    import tkinter.ttk as _ttk # overrides basic Tk widgets with Ttk
     # for OS X, if there is no Tile support
     _root = _ttk.Tk()
     _root.destroy()
-except Exception:
-    _ttk = _tk  # for Python < 2.7 # TODO Python 3 support only
 
 def _get_doc_and_function(obj):
     rtn = []
