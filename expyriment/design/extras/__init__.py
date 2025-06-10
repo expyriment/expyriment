@@ -2,8 +2,8 @@
 
 Notes
 -----
-    To us the extras module you have to import it manually by calling:
-    `import expyriment.design.extras`
+To us the extras module you have to import it manually by calling:
+`import expyriment.design.extras`
 
 
 """

@@ -1,10 +1,9 @@
-"""
-The misc extra package.
+"""The misc extra package.
 
 Notes
 -----
-    To us the extras module you have to import it manually by calling:
-    `import expyriment.misc.extras`
+To us the extras module you have to import it manually by calling:
+`import expyriment.misc.extras`
 
 """
 
