@@ -728,9 +728,10 @@ The Python package 'Numpy' is not installed."""
         if len(self._data_files) < 1:
             raise Exception("No data files found")
 
+
         print("found {0} subject_data sets".format(len(self._data_files)))
         print("found {0} variables: {1}".format(len(self._variables),
-                                                 [x for x in self._variables]))
+                                                 list(self._variables)))
 
     @property
     def data_files(self):
