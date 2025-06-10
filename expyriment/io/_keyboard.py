@@ -192,14 +192,14 @@ class Keyboard(Input):
 
         self._default_keys = value
 
-    @staticmethod
+    @classmethod
     def get_quit_key(cls):
         """Returns the currently defined quit key """
 
         return cls.quit_control.quit_key
 
 
-    @staticmethod
+    @classmethod
     def set_quit_key(cls, value):
         """Set the currently defined quit key"""
 
