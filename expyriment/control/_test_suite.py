@@ -258,10 +258,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             position=(0, -int(20 * scaling)))
         if delayed_accurate > 50:
             results5_colour = [255, 0, 0]
-        elif 50 >= delayed_accurate > 5:
+        elif delayed_accurate > 5:
             results5_colour = [255, 255, 0]
-        else:
-            results5_colour = [0, 255, 0]
         if delayed_inaccurate > 10:
             results6_colour = [255, 0, 0]
         elif 10 >= delayed_inaccurate > 1:
