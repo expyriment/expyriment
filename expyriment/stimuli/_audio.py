@@ -378,7 +378,7 @@ class Audio(Stimulus):
         ----------
         log_event_tag : numeral or string, optional
             if log_event_tag is defined and if logging is switched on for this
-            stimulus (default), a summary of the inter-event-intervalls are
+            stimulus (default), a summary of the inter-event-intervals are
             appended at the end of the event file
 
         Notes

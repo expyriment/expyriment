@@ -150,7 +150,7 @@ class Buffer:
 class ByteBuffer(Buffer):
     """A class implementing a buffer for bytes.
 
-    The ByteBuffer class is also used for the input_histoy of serial and
+    The ByteBuffer class is also used for the input_history of serial and
     parallel ports.
 
     """

@@ -143,7 +143,7 @@ class StreamingButtonBox(Input, Output):
         Returns
         -------
         key : int
-            key code (or None) that quited waiting
+            key code (or None) that quit waiting
         rt : int
             reaction time
 

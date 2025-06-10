@@ -672,24 +672,24 @@ class Experiment:
         if method == 1: # make segments
             tmp = self._blocks
             self._blocks = []
-            types_occured = []
+            types_occurred = []
             cnt = 0
             n_segments = 1
             while len(tmp) > 0:
                 is_new = True
                 tr_type = tmp[cnt].factors_as_text
-                for occ in types_occured:
+                for occ in types_occurred:
                     if tr_type == occ:
                         is_new = False
                         break
                 if is_new:
                     self._blocks.append(tmp.pop(cnt))
-                    types_occured.append(tr_type)
+                    types_occurred.append(tr_type)
                     cnt = 0
                 else:
                     cnt = cnt + 1
                     if cnt >= len(tmp):
-                        types_occured = []
+                        types_occurred = []
                         cnt = 0
                         if len(tmp)>0:
                             n_segments += 1
@@ -729,7 +729,7 @@ a subject number needs to be defined for the permutation.")
                 subject_id = self.subject
 
         if not permute.is_permutation_type(permutation_type):
-                raise AttributeError("{0} is a unknown permutation \
+                raise AttributeError("{0} is an unknown permutation \
 type".format(permutation_type))
         if factor_names is None:
             factor_names = self.block_list_factor_names
@@ -831,7 +831,7 @@ type".format(permutation_type))
 
     @property
     def design_as_text(self):
-        """Getter for desing_as_text.
+        """Getter for design_as_text.
 
         Trial list as csv table.
 
@@ -1727,24 +1727,24 @@ class Block:
         if method == 1: # make segments
             tmp = self._trials
             self._trials = []
-            types_occured = []
+            types_occurred = []
             cnt = 0
             n_segments = 1
             while len(tmp) > 0:
                 is_new = True
                 tr_type = tmp[cnt].factors_as_text
-                for occ in types_occured:
+                for occ in types_occurred:
                     if tr_type == occ:
                         is_new = False
                         break
                 if is_new:
                     self._trials.append(tmp.pop(cnt))
-                    types_occured.append(tr_type)
+                    types_occurred.append(tr_type)
                     cnt = 0
                 else:
                     cnt = cnt + 1
                     if cnt >= len(tmp):
-                        types_occured = []
+                        types_occurred = []
                         cnt = 0
                         if len(tmp)>0:
                             n_segments += 1
