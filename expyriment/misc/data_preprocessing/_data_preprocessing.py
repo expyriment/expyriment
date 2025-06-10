@@ -327,25 +327,19 @@ The Python package 'Numpy' is not installed."""
 
     def __str__(self):
         """Getter for the current design as text string."""
-        design_str = "Data\n"
-        design_str = design_str + "- file name: " + self._file_name + "\n"
-        design_str = design_str + "- folder: " + self._data_folder + "\n"
-        design_str = design_str + "- {0} subject_data sets\n".format(
-            len(self._data_files))
-        design_str = design_str + "- {0} variables: {1}\n".format(
-            len(self.variables), self.variables)
-        design_str = design_str + "- recoded variables: {0}\n".format(
-            self._recode_txt)
-        design_str = design_str + "- computed variables: {0}\n".format(
-            self._computes_txt)
-        design_str = design_str + "Design\n"
-        design_str = design_str + "- independent Variables: {0}\n".format(
-            self._iv_txt)
-        design_str = design_str + "- dependent Variables: {0}\n".format(
-            self._dv_txt)
-        design_str = design_str + "- exclude: {0}\n".format(
-            self._exclusions_txt)
-        return design_str
+        return f"""\
+Data
+- file name: {self._file_name}
+- folder: {self._data_folder}
+- {len(self._data_files)} subject_data sets
+- {len(self.variables)} variables: {self.variables}
+- recoded variables: {self._recode_txt}
+- computed variables: {self._computes_txt}
+Design
+- independent Variables: {self._iv_txt}
+- dependent Variables: {self._dv_txt}
+- exclude: {self._exclusions_txt}
+"""
 
     def _parse_syntax(self, syntax, throw_exception):
         """Preprocess relation and operation syntax.

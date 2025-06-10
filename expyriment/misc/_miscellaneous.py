@@ -689,7 +689,7 @@ def get_audio_devices(input_devices=False):
     """
 
     if sdl2_audio is None:
-        return
+        return None
 
     is_initialized = pygame.mixer.get_init()
     if not is_initialized:

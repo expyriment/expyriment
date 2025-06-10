@@ -397,7 +397,7 @@ The Python package 'pySerial' is not installed."""
         """
 
         if _internals.skip_wait_methods:
-            return
+            return None
 
         rtn_string = b""
         if duration is not None:
@@ -460,8 +460,7 @@ The Python package 'pySerial' is not installed."""
 
         if not isinstance(serial, ModuleType):
             return None
-        ports = sorted([x[0] for x in list_com_ports()])
-        return ports
+        return sorted([x[0] for x in list_com_ports()])
 
     def send(self, data):
         """Send data via the serial port.

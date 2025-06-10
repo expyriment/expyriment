@@ -513,7 +513,7 @@ Afterwards, a test tone will be played back to you with the chosen settings.
             key, rt_ = exp.keyboard.wait([constants.K_RETURN])
             if key is not None:
                 break
-            return
+            return None
         return "", ""
 
     # Get buffer size
