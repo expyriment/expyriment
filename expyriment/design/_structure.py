@@ -2072,9 +2072,7 @@ class Trial:
     def copy(self):
         """Return a copy of the trial."""
 
-        stimlist = []
-        for stim in self._stimuli:
-            stimlist.append(stim)
+        stimlist = self._stimuli.copy()
         self._stimuli = None
         rtn = deepcopy(self)
         self._stimuli = rtn._stimuli = stimlist
