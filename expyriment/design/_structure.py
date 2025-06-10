@@ -794,8 +794,8 @@ type".format(permutation_type))
 
         Returns
         -------
-        pos: int
-         positions as a list or None if not in block list.
+        pos: list of int
+            positions as a list or None if not in block list.
 
         """
 
