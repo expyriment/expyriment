@@ -11,20 +11,22 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-from .._internals import Expyriment_object
+from abc import ABC
+
+from .._internals import ExpyrimentObject
 
 
-class Input(Expyriment_object):
+class Input(ExpyrimentObject, ABC):
     """A class implementing a general input."""
 
     def __init__(self):
         """Create an input."""
-        Expyriment_object.__init__(self)
+        ExpyrimentObject.__init__(self)
 
 
-class Output(Expyriment_object):
+class Output(ExpyrimentObject, ABC):
     """A class implementing a general output."""
 
     def __init__(self):
         """Create an output."""
-        Expyriment_object.__init__(self)
+        ExpyrimentObject.__init__(self)
