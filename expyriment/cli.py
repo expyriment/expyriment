@@ -206,7 +206,7 @@ letter arguments run single commands""",
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
         if args[x] is True:
             raise DeprecationWarning(
-                "'{}' is deprecated! Please use 'opengl'. ".format(x) +\
+                f"'{x}' is deprecated! Please use 'opengl'. " +\
                 "See '-h' or '--help' for more information")
 
     if args['opengl'] is not None:
@@ -237,7 +237,7 @@ letter arguments run single commands""",
     if args["display_resolution"] is not None:
         res = [int(x) for x in args["display_resolution"].split("x")]
         statements.append(
-            "xpy.control.defaults.display_resolution = {}".format(res))
+            f"xpy.control.defaults.display_resolution = {res}")
         print("* Setting display resolution to {}".format(
             args["display_resolution"]))
 
@@ -249,7 +249,7 @@ letter arguments run single commands""",
     if args["window_size"] is not None:
         res = [int(x) for x in args["window_size"].split("x")]
         statements.append(
-            "xpy.control.defaults.display_resolution = {}".format(res))
+            f"xpy.control.defaults.display_resolution = {res}")
         print("* Setting window size to {}".format(
             args["window_size"]))
 
@@ -294,8 +294,7 @@ letter arguments run single commands""",
             if len(branches) == 1:
                 sys.stdout.write(" from which branch? ([master])? ")
             else:
-                sys.stdout.write(" from which branch? (master/[{}])? ".format(
-                branches[1]))
+                sys.stdout.write(f" from which branch? (master/[{branches[1]}])? ")
             branch = input()
             if branch == "":
                 if len(branches) == 1:

@@ -106,7 +106,7 @@ def latin_square(elements, permutation_type=P_RANDOM):
     """
 
     if not is_permutation_type(permutation_type):
-        raise AttributeError("'{}' is an unknown permutation type".format(permutation_type))
+        raise AttributeError(f"'{permutation_type}' is an unknown permutation type")
 
     assert isinstance(elements, (list, tuple, int))
 

@@ -924,7 +924,7 @@ class Visual(Stimulus):
         stimulus._get_surface().blit(surface, rect)
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,plotted,{},{}".format(self.id, stimulus.id), 2)
+                f"Stimulus,plotted,{self.id},{stimulus.id}", 2)
         return int((get_time() - start) * 1000)
 
     def clear_surface(self):
@@ -954,7 +954,7 @@ class Visual(Stimulus):
         self._set_surface(None)
         if self._logging:
             _internals.active_exp._event_file_log(
-                            "Stimulus,surface cleared,{}".format(self.id), 2)
+                            f"Stimulus,surface cleared,{self.id}", 2)
         return int((get_time() - start) * 1000)
 
     def compress(self):
@@ -987,7 +987,7 @@ class Visual(Stimulus):
 
             if self._logging:
                 _internals.active_exp._event_file_log(
-                                "Stimulus,compressed,{}".format(self.id), 2)
+                                f"Stimulus,compressed,{self.id}", 2)
         return int((get_time() - start) * 1000)
 
     def decompress(self):
@@ -1013,7 +1013,7 @@ class Visual(Stimulus):
 
             if self._logging:
                 _internals.active_exp._event_file_log(
-                            "Stimulus,decompressed,{}".format(self.id), 2)
+                            f"Stimulus,decompressed,{self.id}", 2)
         return int((get_time() - start) * 1000)
 
     def preload(self, inhibit_ogl_compress=False):
@@ -1068,7 +1068,7 @@ class Visual(Stimulus):
             self._is_preloaded = True
         if self._logging:
             _internals.active_exp._event_file_log(
-                                "Stimulus,preloaded,{}".format(self.id), 2)
+                                f"Stimulus,preloaded,{self.id}", 2)
 
         return int((get_time() - start) * 1000)
 
@@ -1113,14 +1113,14 @@ class Visual(Stimulus):
                 and keep_surface:
                 self.compress()
         if self.is_preloaded and self._logging:
-            _internals.active_exp._event_file_log("Stimulus,unloaded,{}"\
-                                       .format(self.id), 2)
+            _internals.active_exp._event_file_log(f"Stimulus,unloaded,{self.id}"\
+                                       , 2)
         if not keep_surface:
             self._is_compressed = False
             self._surface = None
             if self._logging:
-                _internals.active_exp._event_file_log("Stimulus,surface cleared,{}"\
-                                       .format(self.id), 2)
+                _internals.active_exp._event_file_log(f"Stimulus,surface cleared,{self.id}"\
+                                       , 2)
 
         self._is_preloaded = False
         return int((get_time() - start) * 1000)
@@ -1187,14 +1187,14 @@ class Visual(Stimulus):
             screen.blit(self._get_surface(), rect)
 
         if self._logging:
-            _internals.active_exp._event_file_log("Stimulus,drawn,{}"\
-                                   .format(self.id), 2,
+            _internals.active_exp._event_file_log(f"Stimulus,drawn,{self.id}"\
+                                   , 2,
                                  log_event_tag=log_event_tag)
         if update:
             _internals.active_exp.screen.update()
         if self._logging:
-            _internals.active_exp._event_file_log("Stimulus,presented,{}"\
-                                   .format(self.id), 1,
+            _internals.active_exp._event_file_log(f"Stimulus,presented,{self.id}"\
+                                   , 1,
                                  log_event_tag=log_event_tag)
         if preloading_required:
             self.unload(keep_surface=keep_surface)
@@ -1284,7 +1284,7 @@ class Visual(Stimulus):
                                                       degree))
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,rotated,{}, degree={}".format(self.id, degree))
+                f"Stimulus,rotated,{self.id}, degree={degree}")
         return int((get_time() - start) * 1000)
 
     def scale(self, factors):
@@ -1338,7 +1338,7 @@ class Visual(Stimulus):
             self.flip(flip)
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,scaled,{}, factors={}".format(self.id, factors), 2)
+                f"Stimulus,scaled,{self.id}, factors={factors}", 2)
         return int((get_time() - start) * 1000)
 
     def scale_to_fullscreen(self, keep_aspect_ratio=True):
@@ -1410,7 +1410,7 @@ class Visual(Stimulus):
                                                   booleans[0], booleans[1]))
         if self._logging:
             _internals.active_exp._event_file_log(
-            "Stimulus,flipped,{}, booleans={}".format(self.id, booleans), 2)
+            f"Stimulus,flipped,{self.id}, booleans={booleans}", 2)
         return int((get_time() - start) * 1000)
 
     def blur(self, level):
@@ -1441,7 +1441,7 @@ class Visual(Stimulus):
         self.scale((level, level))
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Stimulus,blurred,{}, level={}".format(self.id, level), 2)
+                f"Stimulus,blurred,{self.id}, level={level}", 2)
         return int((get_time() - start) * 1000)
 
     def scramble(self, grain_size):
@@ -1492,8 +1492,7 @@ class Visual(Stimulus):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-                            "Stimulus,scrambled,{}, grain_size={}".format(
-                                     self.id, grain_size), 2)
+                            f"Stimulus,scrambled,{self.id}, grain_size={grain_size}", 2)
         return int((get_time() - start) * 1000)
 
     def add_noise(self, grain_size, percentage, colour):
@@ -1543,6 +1542,6 @@ class Visual(Stimulus):
             dot.plot(self)
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "Stimulus,noise added,{}, grain_size={}, percentage={}"\
-                        .format(self.id, grain_size, percentage))
+                    f"Stimulus,noise added,{self.id}, grain_size={grain_size}, percentage={percentage}"\
+                        )
         return int((get_time() - start) * 1000)
