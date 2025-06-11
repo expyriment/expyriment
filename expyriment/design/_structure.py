@@ -750,12 +750,10 @@ type".format(permutation_type))
                 all_factor_combi.append(combi)
 
         # Get the permutation
-        if permutation_type == constants.P_BALANCED_LATIN_SQUARE:
-            permutation = permute.balanced_latin_square(all_factor_combi)
-            idx = (subject_id - 1) % len(permutation)
-            permutation = permutation[idx]
-        elif permutation_type == constants.P_CYCLED_LATIN_SQUARE:
-            permutation = permute.cycled_latin_square(all_factor_combi)
+        if permutation_type in [constants.P_BALANCED_LATIN_SQUARE,
+                                constants.P_CYCLED_LATIN_SQUARE]:
+            permutation = permute.latin_square(all_factor_combi,
+                                               permutation_type=permutation_type)
             idx = (subject_id - 1) % len(permutation)
             permutation = permutation[idx]
         else:

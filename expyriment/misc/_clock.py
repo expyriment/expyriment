@@ -65,12 +65,6 @@ class Clock :
 
         return int((get_time() - self.__init_time) * 1000)
 
-    @property
-    def cpu_time(self):
-        """OBSOLETE property: Please use monotonic_time()."""
-        # TODO: make deprecated with 1.0
-
-        return get_time()
 
     @property
     def stopwatch_time(self):
