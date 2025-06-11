@@ -1797,7 +1797,7 @@ class Block:
         for trial in self._trials:
             owntrials.append(trial)
             triallist.append(trial.copy())
-        self._trials = None
+        self._trials = []
         rtn = deepcopy(self)
         self._trials = owntrials
         rtn._trials = triallist
@@ -2074,10 +2074,8 @@ class Trial:
     def copy(self):
         """Return a copy of the trial."""
 
-        stimlist = []
-        for stim in self._stimuli:
-            stimlist.append(stim)
-        self._stimuli = None
+        stimlist = self._stimuli.copy()
+        self._stimuli = []
         rtn = deepcopy(self)
         self._stimuli = rtn._stimuli = stimlist
         return rtn
