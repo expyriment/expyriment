@@ -558,7 +558,7 @@ class Mouse(Input):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-            "Mouse,received,{0}-{1},wait_event".format(btn_id, motion_occurred))
+            "Mouse,received,{}-{},wait_event".format(btn_id, motion_occurred))
         return btn_id, motion_occurred, position_in_expy_coordinates, rt
 
 
@@ -720,7 +720,7 @@ class Mouse(Input):
         stimuli.TextLine("Thanks").present()
         polling_time = misc.statistics.mode(motion)
 
-        info = """Your mouse polling time is {0} ms.
+        info = """Your mouse polling time is {} ms.
 
 [Press RETURN to continue] """.format(polling_time)
         text = stimuli.TextScreen("Results", info)

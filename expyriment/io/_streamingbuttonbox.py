@@ -64,7 +64,7 @@ class StreamingButtonBox(Input, Output):
 
         self._interface.clear()
         if self._logging:
-            _internals.active_exp._event_file_log("{0},cleared".format(
+            _internals.active_exp._event_file_log("{},cleared".format(
             self.__class__.__name__), 2)
 
     def check(self, codes=None, bitwise_comparison=False):
@@ -95,14 +95,14 @@ class StreamingButtonBox(Input, Output):
                 if codes is None and read != self._baseline:
                     if self._logging:
                         _internals.active_exp._event_file_log(
-                        "{0},received,{1},check".format(
+                        "{},received,{},check".format(
                             self.__class__.__name__,
                             read), 2)
                     return read
                 elif compare_codes(read, codes, bitwise_comparison):
                     if self._logging:
                         _internals.active_exp._event_file_log(
-                        "{0},received,{1},check".format(
+                        "{},received,{},check".format(
                             self.__class__.__name__,
                             read))
                     return read
@@ -195,7 +195,7 @@ class StreamingButtonBox(Input, Output):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-                                "{0},received,{1},wait".format(
+                                "{},received,{},wait".format(
                                                 self.__class__.__name__,
                                                 found))
         return found, rt

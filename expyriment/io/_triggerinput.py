@@ -133,7 +133,7 @@ class TriggerInput(Input):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-                            "TriggerInput,received,{0},wait".format(found))
+                            "TriggerInput,received,{},wait".format(found))
         return found, rt
 
     def get_triggers(self, code=None, bitwise_comparison=False):
