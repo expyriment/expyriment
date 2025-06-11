@@ -9,13 +9,12 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
-import time
 from types import FunctionType
 
 import pygame
 
 from .. import _internals
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, low_performance_sleep
 from ..misc import MediaTime
 from ..misc._timer import get_time
 from ._stimulus import Stimulus
@@ -444,7 +443,7 @@ class Audio(Stimulus):
             else:
                 pygame.event.pump()
 
-            time.sleep(0.0001)
+            low_performance_sleep()
 
 
     def wait_end(self, callback_function=None, process_control_events=True):
@@ -495,5 +494,5 @@ class Audio(Stimulus):
             else:
                 pygame.event.pump()
 
-            time.sleep(0.0001)
+            _internals.low_performance_sleep()
 

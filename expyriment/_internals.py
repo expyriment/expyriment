@@ -9,8 +9,13 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import os
 import sys
+from time import sleep
 
 from . import __version__
+
+
+def low_performance_sleep():
+    sleep(0.0001)
 
 
 def get_version():
@@ -52,8 +57,8 @@ def show_documentation(docu_type=None):
         print("     show_documentation(2) -- Open API Reference Tool")
         print("")
 
-    import subprocess
     import os
+    import subprocess
     import sys
     import webbrowser
 
@@ -293,6 +298,6 @@ def import_all_extras():
     """Import all extra plugins."""
 
     from .design import extras
-    from .misc import extras
     from .io import extras
+    from .misc import extras
     from .stimuli import extras

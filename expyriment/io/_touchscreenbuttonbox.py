@@ -8,14 +8,13 @@ This module contains a class implementing a touchscreen button box.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import time
 from types import FunctionType
 
 import pygame
 
 from .. import _internals, stimuli
-from ..misc._timer import get_time
 from .._internals import CallbackQuitEvent
+from ..misc._timer import get_time
 from ._input_output import Input
 
 
@@ -297,6 +296,6 @@ class TouchScreenButtonBox(Input):
                 pressed_button_field, rt = None, None
                 break
             if low_performance:
-                time.sleep(0.0001)
+                _internals.low_performance_sleep()
 
         return pressed_button_field, rt

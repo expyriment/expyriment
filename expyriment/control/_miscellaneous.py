@@ -7,15 +7,14 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
-import time
 from types import FunctionType
 
 import pygame
 
-from . import defaults
 from .. import _internals
-from .._internals import CallbackQuitEvent
+from .._internals import CallbackQuitEvent, low_performance_sleep
 from ..misc import is_idle_running, is_ipython_running
+from . import defaults
 
 
 def start_audiosystem():
@@ -122,7 +121,7 @@ def wait_end_audiosystem(channel=None, callback_function=None,
             else:
                 pygame.event.pump()
 
-        time.sleep(0.0001)
+        low_performance_sleep()
 
 
 def set_skip_wait_methods(on=True):
@@ -228,11 +227,11 @@ def get_defaults(search_str="", as_string=False):
 
     """
 
-    from .. import design,stimuli, io, control,misc
-    from ..io import extras as ioextras
+    from .. import control, design, io, misc, stimuli
     from ..design import extras as designextras
-    from ..stimuli import extras as stimuliextras
+    from ..io import extras as ioextras
     from ..misc import extras as miscextras
+    from ..stimuli import extras as stimuliextras
 
     defaults = {}
     defaults = _get_module_values(defaults, design.defaults)

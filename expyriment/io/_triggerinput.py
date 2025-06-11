@@ -8,18 +8,17 @@ This module contains a class implementing a trigger input.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import time
 from types import FunctionType
 
 import pygame
 
-from . import defaults
 from .. import _internals
-from ..misc import compare_codes
 from .._internals import CallbackQuitEvent
+from ..misc import compare_codes
 from ..misc._timer import get_time
+from . import defaults
+from ._input_output import Input
 from ._keyboard import Keyboard
-from  ._input_output import Input
 
 
 class TriggerInput(Input):
@@ -130,7 +129,7 @@ class TriggerInput(Input):
             if Keyboard.process_control_keys():
                     break
             if low_performance:
-                time.sleep(0.0001)
+                _internals.low_performance_sleep()
 
         if self._logging:
             _internals.active_exp._event_file_log(

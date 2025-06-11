@@ -145,7 +145,7 @@ class Clock :
                     else:
                         pygame.event.pump()
                 if low_performance:
-                    time.sleep(0.0001)
+                    _internals.low_performance_sleep()
 
         else:
             looptime = 200

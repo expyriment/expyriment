@@ -7,15 +7,13 @@ This module contains a class implementing a pygame gamepad.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import time
 from types import FunctionType
 
 import pygame
 
 from .. import _internals
 from ..misc._timer import get_time
-from  ._input_output import Input, Output
-
+from ._input_output import Input, Output
 
 pygame.joystick.init()
 
@@ -286,7 +284,7 @@ class GamePad(Input, Output):
                         done = True
                         break
                 if low_performance:
-                    time.sleep(0.0001)
+                    _internals.low_performance_sleep()
 
         if self._logging:
             _internals.active_exp._event_file_log(

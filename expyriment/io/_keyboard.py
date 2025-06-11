@@ -10,7 +10,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 
 import sys
-import time
 from types import FunctionType
 
 import pygame
@@ -394,7 +393,7 @@ class Keyboard(Input):
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
             if not done and low_performance:
-                time.sleep(0.0001)
+                _internals.low_performance_sleep()
         if self._logging:
             _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
                                               .format(found_key))
@@ -480,7 +479,7 @@ class Keyboard(Input):
             if duration and not done:
                 done = int((get_time() - start) * 1000) >= duration
             if not done and low_performance:
-                time.sleep(0.0001)
+                _internals.low_performance_sleep()
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(

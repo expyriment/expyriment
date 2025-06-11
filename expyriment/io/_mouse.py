@@ -8,16 +8,16 @@ This module contains a class implementing pygame mouse input.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import time
 from types import FunctionType
 
 import pygame
 
-from . import defaults
-from ..misc._timer import get_time
-from ..misc import is_android_running
-from ._input_output  import Input
 from .. import _internals, misc
+from ..misc import is_android_running
+from ..misc._timer import get_time
+from . import defaults
+from ._input_output import Input
+
 
 class Mouse(Input):
     """A class implementing a mouse input.
@@ -552,7 +552,7 @@ class Mouse(Input):
                     int((get_time() - start) * 1000) >= duration):
                 break
             if low_performance:
-                time.sleep(0.0001)
+                _internals.low_performance_sleep()
 
         position_in_expy_coordinates = self.position
 
@@ -698,6 +698,7 @@ class Mouse(Input):
         """
 
         from .. import stimuli
+
         # measure mouse polling time
         info = """This will test how timing accurate your mouse is.
 
