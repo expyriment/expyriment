@@ -353,8 +353,8 @@ class XYPoint:
 
         """
 
-        self._x = self._x + v._x
-        self._y = self._y + v._y
+        self._x += v._x
+        self._y += v._y
         return self
 
     def distance(self, p):

@@ -207,21 +207,21 @@ class Experiment:
     def __str__(self):
         tmp_str = "Experiment: {0}\n".format(self.name)
         if len(self.bws_factor_names) <= 0:
-            tmp_str = tmp_str + "no between subject factors\n"
+            tmp_str += "no between subject factors\n"
         else:
-            tmp_str = tmp_str + "between subject factors (permutation type: "
+            tmp_str += "between subject factors (permutation type: "
             if self.bws_factor_randomized:
-                tmp_str = tmp_str + "random)\n"
+                tmp_str += "random)\n"
             else:
-                tmp_str = tmp_str + "latin square)\n"
+                tmp_str += "latin square)\n"
             for f in self.bws_factor_names:
                 _bws_factor = \
                     [x if isinstance(x, str) else
                      repr(x) for x in self._bws_factors[f]]
-                tmp_str = tmp_str + "    {0} = [{1}]\n".format(
+                tmp_str += "    {0} = [{1}]\n".format(
                     f, ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str = tmp_str + "{0}\n".format(block.summary)
+            tmp_str += "{0}\n".format(block.summary)
         return tmp_str
 
     @property
@@ -689,7 +689,7 @@ class Experiment:
                     types_occurred.append(tr_type)
                     cnt = 0
                 else:
-                    cnt = cnt + 1
+                    cnt += 1
                     if cnt >= len(tmp):
                         types_occurred = []
                         cnt = 0
@@ -840,37 +840,39 @@ type".format(permutation_type))
         rtn = "#exp: {0}\n".format(self.name)
         if len(self.experiment_info) > 0:
             for txt in self.experiment_info:
-                rtn += "#xpi: {0}\n".format(txt)
+                rtn = f"{rtn}#xpi: {txt}\n"
         if len(self.bws_factor_names) > 0:
             for factor_name in self.bws_factor_names:
-                rtn += "#bws: {0}=".format(factor_name)
+                rtn = f"{rtn}#bws: {factor_name}="
                 for txt in self.get_bws_factor(factor_name):
-                    rtn += "{0},".format(txt)
+                    rtn = f"{rtn}{txt},"
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
+            rtn = f"{rtn}#bws-rand: {int(self.bws_factor_randomized)}\n"
         if len(self.data_variable_names) > 0:
-            rtn += "#dvn: "
+            rtn = f"{rtn}#dvn: "
             for txt in self.data_variable_names:
-                rtn += "{0},".format(txt)
+                rtn = f"{rtn}{txt},"
             rtn = rtn[:-1] + "\n"
 
-        rtn += "block_cnt,block_id"
+        rtn = f"{rtn}block_cnt,block_id"
         bl_factors = self.block_list_factor_names
         factors = self.trial_factor_names
         for f in bl_factors:
-            rtn += ",block_{0}".format(f)
-        rtn += ",trial_cnt,trial_id"
+            rtn = f"{rtn},block_{f}"
+        rtn = f"{rtn},trial_cnt,trial_id"
         for f in factors:
-            rtn += ",{0}".format(f)
+            rtn = f"{rtn},{f}"
 
         for bl_cnt, bl in enumerate(self.blocks):
             for tr_cnt, tr in enumerate(bl.trials):
-                rtn += "\n{0},{1}".format(bl_cnt, bl.id)
+                rtn = f"{rtn}\n{bl_cnt},{bl.id}"
                 for f in bl_factors:
-                    rtn += ",{0}".format(bl.get_factor(f, return_none_if_not_defined=True))
-                rtn += ",{0},{1}".format(tr_cnt, tr.id)
+                    factor = bl.get_factor(f, return_none_if_not_defined=True)
+                    rtn = f"{rtn},{factor}"
+                rtn = f"{rtn},{tr_cnt},{tr.id}"
                 for f in factors:
-                    rtn += ",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
+                    factor = tr.get_factor(f, return_none_if_not_defined=True)
+                    rtn = f"{rtn},{factor}"
 
         return rtn
 
@@ -1211,9 +1213,9 @@ class Block:
                             len(self.trials))
 
         if include_trial_IDs:
-            rtn = rtn + """
+            rtn += """
     trial IDs = {0}""".format([t.id for t in self.trials])
-        rtn = rtn + """
+        rtn += """
     trial factors: """
         for f in self.trial_factor_names:
             val = []
@@ -1223,7 +1225,7 @@ class Block:
             string_sort_array(val)
             val = [repr(x) if not isinstance(x, str) \
                    else x for x in val]
-            rtn = rtn + "{0} = [{1}]\n                   ".format(
+            rtn += "{0} = [{1}]\n                   ".format(
                 f, ", ".join(val))
 
         return rtn
@@ -1392,7 +1394,7 @@ class Block:
         log_txt = "Block,trial added,{0}, {1}".format(self.name,
                                                       self._trials[-1]._id)
         if random_position:
-            log_txt = log_txt + ", random position"
+            log_txt += ", random position"
         _internals.active_exp._event_file_log(log_txt, 2)
 
     def remove_trial(self, position):
@@ -1480,11 +1482,11 @@ class Block:
                                self._trial_id_variable_name)
         factors = self.trial_factor_names
         for f in factors:
-            rtn = rtn + ",{0}".format(f)
+            rtn += ",{0}".format(f)
         for cnt, tr in enumerate(self.trials):
-            rtn = rtn + "\n{0},{1}".format(cnt, tr.id)
+            rtn += "\n{0},{1}".format(cnt, tr.id)
             for f in factors:
-                rtn = rtn + ",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
+                rtn += ",{0}".format(tr.get_factor(f, return_none_if_not_defined=True))
         return rtn
 
     def save_design(self, filename):
@@ -1915,7 +1917,7 @@ class Trial:
         """Return all factor names and values as csv string line"""
         all_factors = ""
         for f in self.factor_names:
-            all_factors = all_factors + "{0}={1}, ".format(
+            all_factors += "{0}={1}, ".format(
                 f, str(self.get_factor(f, return_none_if_not_defined=True)))
         return all_factors
 
