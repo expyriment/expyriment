@@ -12,11 +12,10 @@ import os
 
 import pygame
 
+from .. import _internals
+from ..misc import byte2unicode, find_font
 from . import defaults
 from ._visual import Visual
-from ..misc import find_font, byte2unicode
-from .. import _internals
-
 
 # Keep track of open file handles and previously loaded font objects
 open_filehandles = []

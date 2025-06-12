@@ -9,13 +9,14 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import copy
+
 import pygame
 
-from . import defaults
-from ._visual import Visual
 from .. import _internals
 from ..misc._timer import get_time
 from ..misc.geometry import XYPoint, lines_intersect
+from . import defaults
+from ._visual import Visual
 
 
 def _get_shape_rect(points):

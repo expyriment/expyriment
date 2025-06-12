@@ -5,16 +5,17 @@ This module contains the base classes for visual stimuli.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import tempfile
-import os
 import copy
-import random
 import itertools
+import os
+import random
+import tempfile
 
 import pygame
+
 try:
-    import OpenGL.GLU as oglu
     import OpenGL.GL as ogl
+    import OpenGL.GLU as oglu
 except ImportError:
     oglu = None
     ogl = None
@@ -23,12 +24,11 @@ try:
 except ImportError:
     np = None
 
-from . import defaults
-from .. import _internals
-from ._stimulus import Stimulus
-from .. import misc
+from .. import _internals, misc
 from ..misc import geometry, unicode2byte
 from ..misc._timer import get_time
+from . import defaults
+from ._stimulus import Stimulus
 
 random.seed()
 
