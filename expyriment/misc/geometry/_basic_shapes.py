@@ -10,7 +10,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import math as _math
+
 from ._geometry import XYPoint, points2vertices
+
 
 def _angular_vertex(angle, length):
     """Helper function.

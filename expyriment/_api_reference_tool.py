@@ -11,16 +11,16 @@ well as a function to call this browser or the online documentation.
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import os
-import sys
-import platform
-from pydoc import getdoc as _getdoc
 import inspect as _inspect
-from types import MethodType, FunctionType
+import os
+import platform
+import sys
+from pydoc import getdoc as _getdoc
+from types import FunctionType, MethodType
 
 import expyriment
-from ._internals import get_version
 
+from ._internals import get_version
 
 try:
     import tkinter as _tk
@@ -28,7 +28,7 @@ except Exception:
     _tk = None
 else:
     try:
-        from tkinter import ttk as _ttk # overrides basic Tk widgets with Ttk
+        from tkinter import ttk as _ttk  # overrides basic Tk widgets with Ttk
         # for OS X, if there is no Tile support
         _root.tk.eval('package require tile')
         #_root = _ttk.Tk()
@@ -100,11 +100,13 @@ def show_GUI():
     """Show the GUI."""
 
     from types import ModuleType
+
+    import expyriment.design.extras
+
     #import expyriment
     import expyriment.io.extras
-    import expyriment.design.extras
-    import expyriment.stimuli.extras
     import expyriment.misc.extras
+    import expyriment.stimuli.extras
 
     if not isinstance(_tk, ModuleType):
         raise ImportError("""API Reference Tool could not be started.

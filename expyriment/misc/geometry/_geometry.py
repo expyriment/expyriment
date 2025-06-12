@@ -9,7 +9,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import math as _math
+
 from ... import _internals
+
 
 def coordinates2position(coordinates, surface_size=None):
     """Convert coordinates on the screen or surface to an

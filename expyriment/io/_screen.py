@@ -6,19 +6,20 @@ A screen.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import os
 import ctypes
+import os
 import platform
 
 import pygame
+
 try:
     import OpenGL.GL as ogl
 except ImportError:
     ogl = None
 
 from .. import _internals
-from ._input_output import Output
 from ..misc.geometry import position2coordinates
+from ._input_output import Output
 
 
 class Screen(Output):

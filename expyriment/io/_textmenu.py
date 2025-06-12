@@ -8,12 +8,11 @@ This module contains a class implementing a TextMenu.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+from .. import _internals, misc, stimuli
 from . import defaults
+from ._input_output import Input
 from ._keyboard import Keyboard
 from ._mouse import Mouse
-from ._input_output import Input
-from .. import stimuli, misc
-from .. import _internals
 
 
 class TextMenu(Input):
