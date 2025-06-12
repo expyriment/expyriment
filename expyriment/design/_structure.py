@@ -776,8 +776,7 @@ type".format(permutation_type))
         """Sort the blocks according to their indices from low to high."""
 
         blocks_new = []
-        id_list = [x.id for x in self._blocks]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._blocks)
         for id in id_list:
             position = [i for i, x in enumerate(self._blocks)
                         if x.id == id][0]
@@ -1760,8 +1759,7 @@ class Block:
         """Sort the trials according to their indices from low to high."""
 
         trials_new = []
-        id_list = [x.id for x in self._trials]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._trials)
         for _id in id_list:
             position = [i for i, x in enumerate(self._trials)
                         if x.id == _id][0]
@@ -2042,8 +2040,7 @@ class Trial:
         """Sort the stimuli according to their IDs from low to high."""
 
         stimuli_new = []
-        id_list = [x.id for x in self._stimuli]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._stimuli)
         for _id in id_list:
             position = [i for i, x in enumerate(self._stimuli)
                         if x.id == _id][0]
