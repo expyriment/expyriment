@@ -516,7 +516,7 @@ class Video(_visual.Stimulus):
                 self._audio.stream.stop()
                 self._audio_started = False
             self.pause()
-        else:
+        elif not self.is_playing:
             if not self._is_preloaded:
                 self.preload()
             if self._logging:
@@ -547,9 +547,6 @@ class Video(_visual.Stimulus):
                             channel = pygame.mixer.Channel(channel_id)
                             if not channel.get_busy():
                                 self._pygame_channel_id = channel_id
-                                if self._pygame_channel_volume is not None:
-                                    channel.set_volume(
-                                        self._pygame_channel_volume)
                                 break
                     else:
                         warn_message = "Temporary audiosystem in use! "
@@ -612,6 +609,7 @@ class Video(_visual.Stimulus):
             while hasattr(self._file._clock, "thread") and \
                     self._file._clock.thread.is_alive():
                 pass  # if thread not fully stopped
+            channel.set_volume(self._pygame_channel_volume)
             _internals.active_exp.keyboard.quit_control.unregister_functions(
                 event_detected_function=self.pause,
                 quit_confirmed_function=self.stop,
