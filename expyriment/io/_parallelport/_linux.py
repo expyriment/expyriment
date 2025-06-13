@@ -137,4 +137,4 @@ class PParallelLinux:
         elif pinNumber==17:
             return (self.port.PPRCONTROL() >> 3) & 1 # 0 = Select Printer
         else:
-            print('Pin %i cannot be read (by PParallelLinux.readPin() yet)' % (pinNumber))
+            print(f'Pin {pinNumber} cannot be read (by PParallelLinux.readPin() yet)')

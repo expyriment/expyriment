@@ -147,4 +147,4 @@ class PParallelInpOut32:
         elif pinNumber==17:
             return (self.port.Inp32( self.base + 2 ) >> 3) & 1 # 0 = Select Printer
         else:
-            print('Pin %i cannot be read (by the PParallelInpOut32.readPin() yet)' % (pinNumber))
+            print(f'Pin {pinNumber} cannot be read (by the PParallelInpOut32.readPin() yet)')

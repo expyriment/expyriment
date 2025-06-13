@@ -215,8 +215,7 @@ class TouchScreenButtonBox(Input):
 
             if self._logging and pressed_button_field is not None:
                 _internals.active_exp._event_file_log(
-                                "{0},received, button press,check".format(
-                                    self.__class__.__name__))
+                                f"{self.__class__.__name__},received, button press,check")
         return pressed_button_field, touch_time
 
     def _get_button_field(self, position, button_fields):

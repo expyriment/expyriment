@@ -288,5 +288,5 @@ class GamePad(Input, Output):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-                            "Gamepad,received,{0},wait_press".format(_button))
+                            f"Gamepad,received,{_button},wait_press")
         return _button, rt
