@@ -250,8 +250,7 @@ def get_defaults(search_str="", as_string=False):
                 tmp[key] = defaults[key]
         defaults = tmp
     if as_string:
-        sorted_keys = list(defaults.keys())
-        sorted_keys.sort()
+        sorted_keys = sorted(defaults.keys())
         rtn = ""
         for key in sorted_keys:
             tabs = "\t" * (4 - int((len(key) + 1) // 8))
