@@ -86,6 +86,7 @@ letter arguments run single commands""",
                         help="the experiment script to be executed",
                         nargs='?')
     # DEPRECATED
+    # will be removed with 1.1
     parser.add_argument("-0", "-g", "--no-opengl", action="store_true",
                         help="DEPRECATED: no OpenGL (no vsync / no blocking)")
 

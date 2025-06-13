@@ -10,9 +10,10 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
 
+from .. import _internals
 from . import defaults
 from ._visual import Visual
-from .. import _internals
+
 
 class Rectangle(Visual):
     """A class implementing a rectangle stimulus."""
@@ -269,11 +270,6 @@ class Rectangle(Visual):
                 surface.fill(self._colour, special_flags=pygame.BLEND_RGB_MAX)
 
         return surface
-
-    def is_point_inside(self, point_xy):
-        """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
-
-        raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
 
     @staticmethod
     def _demo(exp=None):

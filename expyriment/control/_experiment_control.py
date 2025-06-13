@@ -13,22 +13,14 @@ import pygame
 
 from .. import _internals, design, misc, stimuli
 from .._internals import get_version
-from ..io import (
-    DataFile,
-    EventFile,
-    Keyboard,
-    Mouse,
-    TextInput,
-    TouchScreenButtonBox,
-)
+from ..io import DataFile, EventFile, Keyboard, Mouse, TextInput, TouchScreenButtonBox
 from ..io._screen import Screen
 from ..misc import is_android_running
 from . import defaults
 from ._miscellaneous import _set_stdout_logging, start_audiosystem
 
 
-def start(experiment=None, auto_create_subject_id=None, subject_id=None,
-            skip_ready_screen=False):
+def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False):
     """Start an experiment.
 
     This starts the currently initialized experiment and asks for the subject
@@ -44,8 +36,6 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
 
     Parameters
     ----------
-    experiment : design.Experiment, optional (DEPRECATED)
-        don't use this parameter, it only exists to keep backward compatibility
     auto_create_subject_id : bool, optional
         if True new subject id will be created automatically
     subject_id : integer, optional
@@ -62,11 +52,8 @@ def start(experiment=None, auto_create_subject_id=None, subject_id=None,
 
     """
 
-    if experiment is None:
-        experiment = _internals.active_exp
-    if experiment != _internals.active_exp:
-        raise Exception("Experiment is not the currently initialized " +
-                        "experiment!")
+    experiment = _internals.active_exp
+
     if experiment.is_started:
         raise Exception("Experiment is already started!")
     if subject_id is not None:
@@ -458,7 +445,6 @@ fullscreen.""")
         raise DeprecationWarning("'expyriment.control.defaults.open_gl' is " +\
                                  "deprecated! Please use " + \
                                  "'expyriment.control.defaults.opengl'.")
-        defaults.opengl = defaults.open_gl
     experiment._screen = Screen(colour=(0, 0, 0),
                                 opengl=defaults.opengl,
                                 window_mode=defaults.window_mode,

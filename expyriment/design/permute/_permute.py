@@ -8,7 +8,7 @@ This module implements permutation of blocks, trials and conditions.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from ...misc.constants import P_RANDOM, P_CYCLED_LATIN_SQUARE, P_BALANCED_LATIN_SQUARE
+from ...misc.constants import P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, P_RANDOM
 from ..randomize import rand_int_sequence
 
 
@@ -161,16 +161,4 @@ def latin_square(elements, permutation_type=P_RANDOM):
         return _square_of_elements(elements, square)
 
 
-def balanced_latin_square(elements):
-    """"OBSOLETE METHOD: Please use 'latin_square'."""
-    # TODO: make deprecated with 1.0
-
-    return latin_square(elements, permutation_type=P_BALANCED_LATIN_SQUARE)
-
-
-def cycled_latin_square(elements):
-    """"OBSOLETE METHOD: Please use 'latin_square'."""
-    # TODO: make deprecated with 1.0
-
-    return latin_square(elements, permutation_type=P_CYCLED_LATIN_SQUARE)
 

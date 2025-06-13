@@ -68,18 +68,6 @@ class Circle(Ellipse):
         else:
             self._radius = value
 
-    def get_polar_coordiantes(self):
-        """"OBSOLETE METHOD: Please use 'polar_coordinate'."""
-
-        raise DeprecationWarning("get_polar_coordiantes is obsolete. " +
-                                 "Please use the property polar_position")
-
-    def set_polar_coordinates(self, radial, angle_in_degrees):
-        """"OBSOLETE METHOD: Please use 'set_polar_coordinates'."""
-
-        raise DeprecationWarning("set_polar_coordinates is obsolete. " +
-                                 "Please use the property polar_position")
-
     def overlapping_with_circle(self, other, minimal_gap=0):
         """Return True if touching or overlapping with another circle.
 

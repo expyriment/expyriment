@@ -9,13 +9,14 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import copy
+
 import pygame
 
-from . import defaults
-from ._visual import Visual
 from .. import _internals
 from ..misc._timer import get_time
 from ..misc.geometry import XYPoint, lines_intersect
+from . import defaults
+from ._visual import Visual
 
 
 def _get_shape_rect(points):
@@ -475,11 +476,6 @@ class Shape(Visual):
         pt = XYPoint(position)
         return pt.is_inside_polygon(self.xy_points_on_screen)
 
-    def is_point_inside(self, point_xy):
-        """"OBSOLETE METHOD: Please use 'overlapping_with_position'."""
-
-        raise DeprecationWarning("is_point_inside is an obsolete method. Please use overlapping_with_position")
-
     def overlapping_with_shape(self, other):
         """Return true if shape overlaps with other shape.
 
@@ -517,11 +513,6 @@ class Shape(Visual):
                         if lines_intersect(s1[from1], s1[to1], s2[from2], s2[to2]):
                             return True
         return False
-
-    def is_shape_overlapping(self, shape2):
-        """OBSOLETE METHOD: Please use 'overlapping_with_shape'."""
-
-        raise DeprecationWarning("is_shape_overlapping is an obsolete method. Please use overlapping_with_shape.")
 
     def native_rotate(self, degree):
         """Rotate the shape.
