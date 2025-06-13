@@ -222,10 +222,11 @@ class OutputFile(Output):
 
         rtn = os.path.split(sys.argv[0])[1].replace(".py", "")
         if _internals.active_exp.is_started:
-            rtn = rtn + '_' + repr(_internals.active_exp.subject).zfill(3)
+            rtn = f"{rtn}_{_internals.active_exp.subject!r:0>3}"
         if self._time_stamp:
-            rtn = rtn + '_' + strftime(
+            d = strftime(
                 "%Y%m%d%H%M", _internals.active_exp.clock.init_localtime)
+            rtn = f"{rtn}_{d}"
         return rtn + self.suffix
 
     def save(self):
@@ -427,14 +428,14 @@ class DataFile(OutputFile):
             line = ""
             for counter, elem in enumerate(data):
                 if counter > 0:
-                    line = line + self.delimiter
+                    line += self.delimiter
                 if not isinstance(elem, (str, bytes)):
                     elem = str(elem)
                 if '"' in byte2unicode(elem):
                     elem = byte2unicode(elem).replace('"', '""')
                 if ',' in byte2unicode(elem):
                     elem = '"{0}"'.format(byte2unicode(elem))
-                line = line + elem
+                line += elem
             self.write_line(line)
         else:
             if not isinstance(data, (str, bytes)):
