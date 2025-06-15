@@ -88,6 +88,17 @@ New Features:
       devices
 
 Changed:
+- deprecated and obsolete classes, methods and parameter were removed
+	- paramenter `experiment` in control.start
+	- permute.balanced_latin_square(), permute.cycled_latin_square()
+	- geometry.position2coordinate(), geometry.points_to_vertice()
+	- statistics.frequence_table()
+	- stimulus.Dot, stimulus. Frame
+	- Clock.cpu_time()
+	- Visual.replace()
+	- Circle.get_polar_coordiantes(), Circle.set_polar_coordinates()
+	- FixCross.cross_size
+	- Shape.is_point_inside(), Shape.is_shape_overlapping()
 - package building with flit and pyproject.toml
 - revision number and build data (`__revision__`, `__date__`) removed from
   source files

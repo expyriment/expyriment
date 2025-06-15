@@ -8,16 +8,17 @@ This module contains a class implementing a fixation cross stimulus.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from . import defaults
-from ._shape import Shape
 from .. import _internals
 from ..misc.geometry import vertices_cross
+from . import defaults
+from ._shape import Shape
+
 
 class FixCross(Shape):
     """A class implementing a general fixation cross."""
 
     def __init__(self, size=None, position=None, line_width=None,
-                 colour=None, anti_aliasing=None, cross_size=None):
+                 colour=None, anti_aliasing=None):
         """Create a fixation cross.
 
         Parameters
@@ -34,15 +35,7 @@ class FixCross(Shape):
             anti aliasing parameter (good anti_aliasing with 10)
 
 
-        Notes
-        -----
-        The parameter cross_size is now OBSOLETE. Please use 'size' and
-        specify x and y dimensions.
-
         """
-
-        if cross_size is not None and size is None:
-            raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
         if position is None:
             position = defaults.fixcross_position
@@ -72,12 +65,6 @@ class FixCross(Shape):
         """Getter for size."""
 
         return self._size
-
-    @property
-    def cross_size(self):
-        """OBSOLETE property, please use size"""
-
-        raise DeprecationWarning("Property cross_size is obsolete. Please use size")
 
     @property
     def line_width(self):

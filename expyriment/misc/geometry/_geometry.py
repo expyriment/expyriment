@@ -9,7 +9,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import math as _math
+
 from ... import _internals
+
 
 def coordinates2position(coordinates, surface_size=None):
     """Convert coordinates on the screen or surface to an
@@ -41,12 +43,6 @@ def coordinates2position(coordinates, surface_size=None):
         rtn[1] -= 1
     return rtn
 
-def position2coordinate(coordinate, surface_size=None):
-    """"OBSOLETE FUNCTION: Please use 'position2coordinates'."""
-
-    raise DeprecationWarning("position2coordinate is an obsolete function. Please use position2coordinates.")
-
-    position2coordinates(coordinate, surface_size=None)
 
 def position2coordinates(position, surface_size=None):
     """Convert an Expyriment position to coordinates on the
@@ -136,11 +132,6 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
 def tuples2points(list_of_tuples):
     """Converts a list of tuples (x,y) to a list of misc.XYPoints"""
     return list(map(lambda v:XYPoint(x=v[0], y=v[1]), list_of_tuples))
-
-def points_to_vertices(points):
-    """OBSOLETE FUNCTION! Please use `points2vertices`!"""
-
-    raise DeprecationWarning("points_to_vertices is an obsolete function. Please use points2vertices.")
 
 def points2vertices(points):
     """Returns vertex representation of the points (list of misc.XYPoints)
