@@ -13,7 +13,7 @@ import math as _math
 from ... import _internals
 
 
-def coordinates2position(coordinates, surface_size=None):
+def coordinates_to_position(coordinates, surface_size=None):
     """Convert coordinates on the screen or surface to an
     Expyriment position.
 
@@ -44,7 +44,7 @@ def coordinates2position(coordinates, surface_size=None):
     return rtn
 
 
-def position2coordinates(position, surface_size=None):
+def position_to_coordinates(position, surface_size=None):
     """Convert an Expyriment position to coordinates on the
     screen or surface.
 
@@ -74,7 +74,7 @@ def position2coordinates(position, surface_size=None):
         rtn[1] -= 1
     return rtn
 
-def position2visual_angle(position, viewing_distance, monitor_size):
+def position_to_visual_angle(position, viewing_distance, monitor_size):
     """Convert an expyriment position (pixel) to a visual angle from center.
 
     Parameters
@@ -101,7 +101,7 @@ def position2visual_angle(position, viewing_distance, monitor_size):
              2.0 * _math.atan((cm[1] / 2) / viewing_distance))
     return (angle[0] * 180 / _math.pi, angle[1] * 180 / _math.pi)
 
-def visual_angle2position(visual_angle, viewing_distance, monitor_size):
+def visual_angle_to_position(visual_angle, viewing_distance, monitor_size):
     """Convert an position defined as visual angle from center to expyriment
     position (pixel).
 
@@ -129,11 +129,11 @@ def visual_angle2position(visual_angle, viewing_distance, monitor_size):
     return (cm[0] * screen_size[0] / monitor_size[0],
             cm[1] * screen_size[1] / monitor_size[1])
 
-def tuples2points(list_of_tuples):
+def tuples_to_points(list_of_tuples):
     """Converts a list of tuples (x,y) to a list of misc.XYPoints"""
     return list(map(lambda v:XYPoint(x=v[0], y=v[1]), list_of_tuples))
 
-def points2vertices(points):
+def points_to_vertices(points):
     """Returns vertex representation of the points (list of misc.XYPoints)
 
     Parameters
@@ -218,7 +218,7 @@ def lines_intersection_point(pa, pb, pc, pd):
     return XYPoint(x=x,y=y)
 
 
-def cartesian2polar(xy, radians=False):
+def cartesian_to_polar(xy, radians=False):
     """Convert a cartesian coordinate (x,y) to a polar coordinate
     (radial, angle[degrees]).
 
@@ -243,7 +243,7 @@ def cartesian2polar(xy, radians=False):
     else:
         return (radial, _math.degrees(ang))
 
-def polar2cartesian(polar, radians=False):
+def polar_to_cartesian(polar, radians=False):
     """Convert a polar coordinate (radial, angle[degrees]) to a polar
     coordinate (x, y)
 
@@ -341,7 +341,7 @@ class XYPoint:
     def polar(self):
         """Getter for polar coordinate the point """
 
-        return cartesian2polar((self._x, self._y))
+        return cartesian_to_polar((self._x, self._y))
 
     def move(self, v):
         """Move the point along the coordinates specified by the vector v.
@@ -389,12 +389,12 @@ class XYPoint:
         """
 
         #cart -> polar
-        r, ang = cartesian2polar(xy = (self._x - rotation_centre[0],
+        r, ang = cartesian_to_polar(xy = (self._x - rotation_centre[0],
                                        self._y - rotation_centre[1]),
                                  radians=True)
         ang -= _math.radians(degree)
         #polar -> cart
-        self._x, self._y = polar2cartesian(polar=(r, ang), radians=True)
+        self._x, self._y = polar_to_cartesian(polar=(r, ang), radians=True)
         self._x += rotation_centre[0]
         self._y += rotation_centre[1]
 

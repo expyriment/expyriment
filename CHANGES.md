@@ -128,7 +128,14 @@ Changed:
     - additions and improvements
     - format changes for ``as_text`` output
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
-
+- renaming geometry functions:
+    - position2coordinates() to position_to_coordinates()
+    - coordinates2position() to coordinates_to_position()
+    - cartesian2polar() to cartesian_to_polar()
+    - position2visual_angle() to position_to_visual_angle()
+    - tuples2points() to tuples_to_points()
+    - polar2cartesian() to polar_to_cartesian()
+    - visual_angle2position() to visual_angle_to_position()
 Fixed:
 - bug in colour.is_hex & colour.is_colour
 - data_preprocessing: adds suffix ".csv" to filename when writing csv files
