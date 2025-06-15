@@ -114,7 +114,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 ln = ln.replace("#date:", "")
                 subject_info["date"] = ln.strip()
             else:
-                comments = comments + "\n" + ln
+                comments = f"{comments}\n{ln}"
     fl.close()
     # strip variables
     variables = [x.strip() for x in variables]
@@ -138,7 +138,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
     """
 
     if len(_os.path.splitext(filename)[1]) == 0:
-        filename = filename + ".csv"
+        filename = f"{filename}.csv"
     _sys.stdout.write("write file: {0}".format(filename))
     try:
         _locale_enc = _locale.getdefaultlocale()[1]
@@ -630,9 +630,9 @@ Design
                 for c, x in enumerate(tmp_comb):
                     comb_values.append(iv_values[c][x])
                     if len(txt) > 0:
-                        txt = txt + "_"
-                    txt = txt + "{0}{1}".format(self.variables[self._iv[c]],
-                                                 comb_values[-1])
+                        txt += "_"
+                    txt += "{0}{1}".format(self.variables[self._iv[c]],
+                                           comb_values[-1])
                 names.append(txt)
                 factor_combinations.append(comb_values)
                 tmp_comb = increase_combination(tmp_comb, n_levels)
@@ -713,10 +713,9 @@ Design
                 self._variables = vnames
             else:
                 if vnames != self._variables:
-                    message = "Different variables in {0}".format(flname)
-                    message = message + "\n{0}".format(vnames)
-                    message = message + "\ninstead of\n{0}".format(
-                        self._variables)
+                    message = (f"Different variables in {flname}"
+                               f"\n{vnames}"
+                               f"\ninstead of\n{self._variables}")
                     raise RuntimeError(message)
             self._data_files.append(flname)
 
