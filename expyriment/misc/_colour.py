@@ -456,7 +456,7 @@ class Colour:
 
 # Helper functions
 def multiply(v, d):
-    return tuple(map(lambda x:int(round(x*d)), v))
+    return tuple(map(lambda x:round(x*d), v))
 
 def divide(v, d):
     return tuple(map(lambda x:x/float(d), v))
