@@ -268,5 +268,3 @@ def vertices_frame(size, frame_thickness):
              (size[0] - 2 * frame_thickness - 1, 0),
              (0, size[1] - 2 * frame_thickness - 1),
              (-(size[0] - 2 * frame_thickness - 2), 0)]
-             (0, size[1] - 2 * frame_thickness - 1),
-             (-(size[0] - 2 * frame_thickness - 2), 0)]
