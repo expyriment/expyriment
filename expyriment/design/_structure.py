@@ -1790,15 +1790,17 @@ class Block:
     def copy(self):
         """Return a copy of the block."""
 
-        owntrials = []
-        triallist = []
-        for trial in self._trials:
-            owntrials.append(trial)
-            triallist.append(trial.copy())
+        # reset self._trials to avoid deep-copying it
+        trials = self._trials
         self._trials = []
+
+        # deep-copy everything except self._trials
         rtn = deepcopy(self)
-        self._trials = owntrials
-        rtn._trials = triallist
+        self._trials = trials
+
+        # manually half-deep-copy self._trials
+        rtn._trials = [trial.copy() for trial in trials]
+
         return rtn
 
 
@@ -2072,10 +2074,17 @@ class Trial:
     def copy(self):
         """Return a copy of the trial."""
 
-        stimlist = self._stimuli.copy()
+        # reset self._stimuli to avoid deep-copying it
+        stimlist = self._stimuli
         self._stimuli = []
+
+        # deep-copy everything except self._stimuli
         rtn = deepcopy(self)
-        self._stimuli = rtn._stimuli = stimlist
+        self._stimuli = stimlist
+
+        # DO NOT shallow-copy self._stimuli: is this really what you want?
+        rtn._stimuli = stimlist
+
         return rtn
 
     def preload_stimuli(self):
