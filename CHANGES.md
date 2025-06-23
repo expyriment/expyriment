@@ -88,6 +88,17 @@ New Features:
       devices
 
 Changed:
+- deprecated and obsolete classes, methods and parameter were removed
+	- paramenter `experiment` in control.start
+	- permute.balanced_latin_square(), permute.cycled_latin_square()
+	- geometry.position2coordinate(), geometry.points_to_vertice()
+	- statistics.frequence_table()
+	- stimulus.Dot, stimulus. Frame
+	- Clock.cpu_time()
+	- Visual.replace()
+	- Circle.get_polar_coordiantes(), Circle.set_polar_coordinates()
+	- FixCross.cross_size
+	- Shape.is_point_inside(), Shape.is_shape_overlapping()
 - package building with flit and pyproject.toml
 - revision number and build data (`__revision__`, `__date__`) removed from
   source files
@@ -117,7 +128,14 @@ Changed:
     - additions and improvements
     - format changes for ``as_text`` output
 - renaming: misc.py2py3_sort_array --> misc.string_sort_array
-
+- renaming geometry functions:
+    - position2coordinates() to position_to_coordinates()
+    - coordinates2position() to coordinates_to_position()
+    - cartesian2polar() to cartesian_to_polar()
+    - position2visual_angle() to position_to_visual_angle()
+    - tuples2points() to tuples_to_points()
+    - polar2cartesian() to polar_to_cartesian()
+    - visual_angle2position() to visual_angle_to_position()
 Fixed:
 - bug in colour.is_hex & colour.is_colour
 - data_preprocessing: adds suffix ".csv" to filename when writing csv files

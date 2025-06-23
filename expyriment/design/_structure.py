@@ -9,25 +9,27 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import os
+
 try:
     import locale
 except ImportError:
     locale = None  # Does not exist on Android
-import sys
-from types import FunctionType
 import codecs
 import re
+import sys
+from types import FunctionType
+
 try:
     import csv
 except ImportError:
     from ..misc import _csv_reader_android as csv
+
 from copy import deepcopy
 
-from . import defaults
 from .. import _internals
-from ..misc import constants, Clock, unicode2byte, byte2unicode, string_sort_array
+from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
+from . import defaults, permute
 from .randomize import rand_int, shuffle_list
-from . import permute
 
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
@@ -748,12 +750,10 @@ type".format(permutation_type))
                 all_factor_combi.append(combi)
 
         # Get the permutation
-        if permutation_type == constants.P_BALANCED_LATIN_SQUARE:
-            permutation = permute.balanced_latin_square(all_factor_combi)
-            idx = (subject_id - 1) % len(permutation)
-            permutation = permutation[idx]
-        elif permutation_type == constants.P_CYCLED_LATIN_SQUARE:
-            permutation = permute.cycled_latin_square(all_factor_combi)
+        if permutation_type in [constants.P_BALANCED_LATIN_SQUARE,
+                                constants.P_CYCLED_LATIN_SQUARE]:
+            permutation = permute.latin_square(all_factor_combi,
+                                               permutation_type=permutation_type)
             idx = (subject_id - 1) % len(permutation)
             permutation = permutation[idx]
         else:
@@ -1795,7 +1795,7 @@ class Block:
         for trial in self._trials:
             owntrials.append(trial)
             triallist.append(trial.copy())
-        self._trials = None
+        self._trials = []
         rtn = deepcopy(self)
         self._trials = owntrials
         rtn._trials = triallist
@@ -2072,10 +2072,8 @@ class Trial:
     def copy(self):
         """Return a copy of the trial."""
 
-        stimlist = []
-        for stim in self._stimuli:
-            stimlist.append(stim)
-        self._stimuli = None
+        stimlist = self._stimuli.copy()
+        self._stimuli = []
         rtn = deepcopy(self)
         self._stimuli = rtn._stimuli = stimlist
         return rtn

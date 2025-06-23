@@ -10,7 +10,9 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import math as _math
-from ._geometry import XYPoint, points2vertices
+
+from ._geometry import XYPoint, points_to_vertices
+
 
 def _angular_vertex(angle, length):
     """Helper function.
@@ -132,7 +134,7 @@ def vertices_trapezoid(width_top, width_bottom, height):
     left_top = XYPoint(x = 0 + (width_bottom-width_top)/2.0, y = height)
     right_top = XYPoint(x = width_bottom - (width_bottom-width_top)/2.0, y = height)
     return list(map(lambda xy: (int(xy[0]), int(xy[1])),
-                    points2vertices((left_top, right_top, right_bottom, left_bottom))))
+                    points_to_vertices((left_top, right_top, right_bottom, left_bottom))))
 
 
 def vertices_triangle(angle, length1, length2):

@@ -11,12 +11,14 @@ Oliver Lindemann <oliver@expyriment.org>'
 import math
 from copy import copy
 
-from . import defaults
-from ._visual import Visual
-from ._shape import Shape
 from .. import _internals
-from ..misc.geometry import XYPoint, vertices_rectangle, lines_intersect, points2vertices, lines_intersection_point
 from ..misc._timer import get_time
+from ..misc.geometry import (XYPoint, lines_intersect,
+                             lines_intersection_point, points_to_vertices,
+                             vertices_rectangle)
+from . import defaults
+from ._shape import Shape
+from ._visual import Visual
 
 
 class Line(Visual):
@@ -281,7 +283,7 @@ class Line(Visual):
                     id_insert +=1 # because it is later used to determine the join point
             rtn = Shape(colour=line_shape_a.colour,
                         anti_aliasing=line_shape_a.anti_aliasing,
-                        vertex_list=tuple(points2vertices(a_modified)))
+                        vertex_list=tuple(points_to_vertices(a_modified)))
 
             rtn.move((b_points[id_b_joinpoint].x - rtn.xy_points_on_screen[id_insert].x,
                      b_points[id_b_joinpoint].y - rtn.xy_points_on_screen[id_insert].y))
@@ -303,6 +305,12 @@ class Line(Visual):
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
             exp_ = control.initialize()
+        p1 = (-180, 15)
+        p2 = (200, 0)
+        line = Line(p1, p2, 2)
+        line.present()
+        if exp is None:
+            exp_.clock.wait(1000)
         p1 = (-180, 15)
         p2 = (200, 0)
         line = Line(p1, p2, 2)
