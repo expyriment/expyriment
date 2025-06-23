@@ -6,13 +6,15 @@ This module contains the base classes for stimuli.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+from abc import ABC
 from copy import deepcopy
 
-from .._internals import Expyriment_object
 from .. import _internals
+from .._internals import ExpyrimentObject
 from ..misc import byte2unicode
 
-class Stimulus(Expyriment_object):
+
+class Stimulus(ExpyrimentObject, ABC):
     """A class implementing a very general experimental stimulus.
 
     All other stimulus classes are based on this one.
@@ -33,7 +35,7 @@ class Stimulus(Expyriment_object):
 
         """
 
-        Expyriment_object.__init__(self)
+        ExpyrimentObject.__init__(self)
         self._id = Stimulus._id_counter
         Stimulus._id_counter += 1
 

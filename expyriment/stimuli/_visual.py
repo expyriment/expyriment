@@ -10,6 +10,7 @@ import itertools
 import os
 import random
 import tempfile
+from abc import ABC
 
 import pygame
 
@@ -163,7 +164,7 @@ class _LaminaPanelSurface:
     # End of code based on Lamina module
 
 
-class Visual(Stimulus):
+class Visual(Stimulus, ABC):
     """A class implementing a general visual stimulus.
 
     All other visual stimuli should be subclassed from this class since it
