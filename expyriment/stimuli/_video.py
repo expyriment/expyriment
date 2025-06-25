@@ -20,6 +20,7 @@ from .._internals import CallbackQuitEvent
 from ..control import defaults as control_defaults
 from ..misc import Clock, MediaTime, which
 from ..misc._timer import get_time
+from ._stimulus import Stimulus
 from . import _visual, defaults
 
 
@@ -105,10 +106,7 @@ class Video(_visual.Stimulus):
 
         """
 
-        from ..io import Keyboard
-
         _visual.Stimulus.__init__(self, filename)
-        self.Keyboard = Keyboard()
         self._filename = filename
         self._is_preloaded = False
         self._is_paused = False
@@ -117,8 +115,10 @@ class Video(_visual.Stimulus):
         self._surface_locked = False
         self._pygame_channel_id = None
         self._pygame_channel_volume = None
+        self._audio = None
         self._audio_started = False
         self._start_position = 0
+        self._pause_position = 0
 
         if audio_backend is not None:
             self._audio_backend = audio_backend
@@ -261,7 +261,12 @@ class Video(_visual.Stimulus):
         """Property to get the current playback time (in seconds)."""
 
         if self._is_preloaded:
-            return MediaTime(self._file.current_playtime)
+            if self._is_paused:
+                return MediaTime(self._pause_position)
+            elif self.is_playing:
+                return MediaTime(self._file.current_playtime)
+            else:
+                return MediaTime(self._start_position)
 
     @property
     def frame(self):
@@ -317,6 +322,30 @@ class Video(_visual.Stimulus):
 
         if self._is_preloaded:
             return self._file.clip.audio is not None
+
+    def copy(self):
+        """Copy the stimulus.
+
+        Returns
+        -------
+        copy: expyriment.stimuli.Audio
+
+        """
+
+        was_preloaded = self._is_preloaded
+        was_playing = self.is_playing
+        was_paused = self._is_paused
+        timestamp = self.time
+        self.unload()
+        rtn = Stimulus.copy(self)
+        if was_preloaded:
+            self.preload()
+            rtn.preload()
+            self.seek(timestamp)
+            rtn.seek(timestamp)
+            if was_playing or was_paused:
+                self.play()
+        return rtn
 
     def preload(self):
         """Preload stimulus to memory.
@@ -469,7 +498,7 @@ class Video(_visual.Stimulus):
 
         start = get_time()
         if self._is_preloaded:
-            self._file.stop()
+            self.stop()
             del self._file
             self._file = None
             self._surface = None
@@ -590,7 +619,7 @@ class Video(_visual.Stimulus):
         """Stop the video stimulus."""
 
         if self._is_preloaded:
-            if self.audio_backend == "pygame" and self._audio_started  and \
+            if self.audio_backend == "pygame" and self._audio_started and \
                     self._pygame_channel_id is not None:
                 channel = pygame.mixer.Channel(self._pygame_channel_id)
                 self._pygame_channel_volume = channel.get_volume()
@@ -601,20 +630,26 @@ class Video(_visual.Stimulus):
             self._file.seek(0)
             self._frame = -1
             self._start_position = 0
+            self._pause_position = 0
+            self._is_paused = False
             if self._audio_started:
                 self._audio.close_stream()
                 self._audio_started = False
                 while self._file.audioframe_handler.is_alive():
                     pass  # if thread not fully stopped
+                self._audio = None
             while hasattr(self._file._clock, "thread") and \
                     self._file._clock.thread.is_alive():
                 pass  # if thread not fully stopped
-            channel.set_volume(self._pygame_channel_volume)
+            try:
+                channel.set_volume(self._pygame_channel_volume)
+            except UnboundLocalError:  # when called via atexit
+                pass
+
             _internals.active_exp.keyboard.quit_control.unregister_functions(
                 event_detected_function=self.pause,
                 quit_confirmed_function=self.stop,
                 quit_denied_function=self.pause)
-
 
     def pause(self):
         """Pause the video stimulus."""
@@ -630,9 +665,11 @@ class Video(_visual.Stimulus):
                     channel.set_volume(self._pygame_channel_volume)
             while not self._file.audioqueue.empty():
                 self._file.audioqueue.get()
+            self._pause_position = self.time
             self._file.pause()
             if self._is_paused:
                 self._is_paused = False
+                self._pause_po_position = 0
             else:
                 self._is_paused = True
 

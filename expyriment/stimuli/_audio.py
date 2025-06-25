@@ -102,7 +102,7 @@ class Audio(Stimulus):
             elif self.is_playing:
                 return MediaTime(get_time() - self._start_time)
             else:
-                return 0
+                return MediaTime(self._start_position)
 
     def copy(self):
         """Copy the stimulus.
@@ -110,15 +110,25 @@ class Audio(Stimulus):
         Returns
         -------
         copy: expyriment.stimuli.Audio
-            Returned copy will NOT be is_preloaded!
 
         """
 
-        was_loaded = self._is_preloaded
+        was_preloaded = self._is_preloaded
+        was_playing = self.is_playing
+        was_paused = self._is_paused
+        timestamp = self.time
+        #self._channel = None
+        self.stop()
         self.unload()
         rtn = Stimulus.copy(self)
-        if was_loaded:
+        if was_preloaded:
             self.preload()
+            rtn.preload()
+            if was_playing or was_paused:
+                self.seek(timestamp)
+                rtn.seek(timestamp)
+            if was_playing or was_paused:
+                self.play()
         return rtn
 
     def preload(self):
@@ -159,6 +169,7 @@ class Audio(Stimulus):
 
         start = get_time()
         if self._is_preloaded:
+            self.stop()
             self._file = None
             self._sound_array = None
             self._is_preloaded = False
@@ -242,6 +253,7 @@ class Audio(Stimulus):
 
         if self._is_preloaded:
             self._file.stop()
+            self._channel = None
             self.seek(0)
             self._start_position = 0
             self._start_time = 0
