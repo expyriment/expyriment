@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'  # TODO: Test if this doesn't trigger with dev releases as well!
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
   build:
     name: Build a final release
@@ -39,5 +39,5 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
-      - name: Publish to Test PyPI
+      - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
