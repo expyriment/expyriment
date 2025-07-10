@@ -369,6 +369,12 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         sys.exit()
     return True
 
+def initialise(experiment=None):
+    """Mirrors control.initialize().
+
+    Please use British spelling and call control.initialize()."""
+
+    return initialize(experiment)
 
 def initialize(experiment=None):
     """Initialize an experiment.
