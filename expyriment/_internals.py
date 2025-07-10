@@ -288,7 +288,7 @@ def post_import_hook():
     if home is None:
         return ""
 
-    filename = home + os.sep + "post_import.py"
+    filename = os.join(home, "post_import.py")
     if os.path.isfile(filename):
         print("process {0}".format(filename))
         return _run_py_file_command(filename)
