@@ -45,6 +45,3 @@ video = ["mediadecoder>=0.2.2,<1"]
 
 [project.scripts]
 expyriment="expyriment.cli:main"
-
-[tool.setuptools.package-data]
-"expyriment" = ["*.png", "_fonts/*.*"]
