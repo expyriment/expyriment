@@ -10,8 +10,10 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 
 
 from .. import _internals
-from . import defaults, permute, randomize
-from . import randomize as randomise
+
+# randomize is DEPRECATED Use randomise.
+from . import defaults, permute, randomise
+from . import randomise as randomize
 from ._structure import Block, Experiment, Trial
 
 _internals.active_exp = Experiment("None")

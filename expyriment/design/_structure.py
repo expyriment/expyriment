@@ -29,7 +29,7 @@ from copy import deepcopy
 from .. import _internals
 from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
 from . import defaults, permute
-from .randomize import rand_int, shuffle_list
+from .randomise import rand_int, shuffle_list
 
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
@@ -668,10 +668,10 @@ class Experiment:
         method : int, optional
             method of block randomization (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
             this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
@@ -1721,10 +1721,10 @@ class Block:
         method : int, optional
             method of trial randomization (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
             this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
@@ -2028,9 +2028,9 @@ class Trial:
         Parameters
         ----------
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
         n_segments : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
 
         Returns
         -------
@@ -2040,7 +2040,7 @@ class Trial:
 
         See Also
         ----------
-        expyriment.design.randomize.shuffle_list
+        expyriment.design.randomise.shuffle_list
 
         """
 

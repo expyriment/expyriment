@@ -1,4 +1,4 @@
-"""The expyriment randomize module.
+"""The expyriment randomise module.
 
 This module contains various functions for randomizing data
 
@@ -150,7 +150,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
         function returns `False` and the list will be randomised without
         constrains (see Notes); default = -1
     n_segments : int, optional
-        randomize list per segment, i.e., list will be divided into n equal
+        randomise list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
         randomised; if n_segments is < 2, this parameter has no effect;
         default = 0
