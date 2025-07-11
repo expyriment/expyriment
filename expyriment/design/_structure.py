@@ -200,16 +200,12 @@ class Experiment:
 
     @property
     def is_initialised(self):
-        """Getter for is_initialised.
-
-        DEPRECATED! Use is_initialised instead.
-
-        """
+        """Getter for is_initialised."""
 
         return self._is_initialised
 
     @property
-    def is_initialised(self):
+    def is_initialized(self):
         """Getter for is_initialised."""
 
         return self._is_initialised
@@ -322,6 +318,28 @@ class Experiment:
 
     @bws_factor_randomised.setter
     def bws_factor_randomised(self, value):
+        """Setter for bws_factor_randomised."""
+
+        self._bws_factor_randomised = value
+
+    @property
+    def bws_factor_randomized(self):
+        """Getter for bws_factor_randomised.
+
+        Notes
+        -----
+        Is between subject factor randomised? (True/False).
+
+        If True conditions will be assigned randomised
+        otherwise (default) conditions will be systematically permuted across
+        subjects.
+
+        """
+
+        return self._bws_factor_randomised
+
+    @bws_factor_randomized.setter
+    def bws_factor_randomized(self, value):
         """Setter for bws_factor_randomised."""
 
         self._bws_factor_randomised = value
@@ -649,16 +667,16 @@ class Experiment:
     def shuffle_blocks(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all blocks.
 
-        The function returns False if no randomization could be found that
+        The function returns False if no randomisation could be found that
         fulfills the max immediate block repetition criterion. The different
         type of blocks are only defined by the factors. Shuffle does not
         take into account the added trials.
 
-        The following randomization methods are defined:
+        The following randomisation methods are defined:
 
-                0 = total randomization of block order (default)
+                0 = total randomisation of block order (default)
 
-                1 = randomization within small miniblocks. Each miniblock
+                1 = randomisation within small miniblocks. Each miniblock
                 contains one block of each type (only defined by factors!);
                 in other words, copies of one block type are always in
                 different miniblocks
@@ -666,17 +684,17 @@ class Experiment:
         Parameters
         ----------
         method : int, optional
-            method of block randomization (default=0)
+            method of block randomisation (default=0)
         max_repetitions : int, optional
             see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
-            this parameter will be only considered for randomization method 0;
+            this parameter will be only considered for randomisation method 0;
             see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
         succeeded : bool
-            returns if randomization was successful and fulfilled the specified
+            returns if randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         """
@@ -710,7 +728,7 @@ class Experiment:
                            n_segments=n_segments)
         if rtn is False:
             print("Warning: Could not find an appropriate block " + \
-                  "randomization!")
+                  "randomisation!")
         return rtn
 
     def permute_blocks(self, permutation_type, factor_names=None,
@@ -1702,16 +1720,16 @@ class Block:
     def shuffle_trials(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all trials.
 
-        The function returns False if no randomization could be found that
+        The function returns False if no randomisation could be found that
         fulfills the max immediate trial repetition criterion. The different
         type of trials are only defined by the factors. Shuffle does not
         take into account the added stimuli.
 
-        The following randomization methods are defined:
+        The following randomisation methods are defined:
 
-                0 = total randomization of trial order (default)
+                0 = total randomisation of trial order (default)
 
-                1 = randomization within small miniblocks. Each miniblock
+                1 = randomisation within small miniblocks. Each miniblock
                 contains one trial of each type (only defined by factors!);
                 in other words, copies of one trial type are always in
                 different miniblocks
@@ -1719,17 +1737,17 @@ class Block:
         Parameters
         ----------
         method : int, optional
-            method of trial randomization (default=0)
+            method of trial randomisation (default=0)
         max_repetitions : int, optional
             see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
-            this parameter will be only considered for randomization method 0;
+            this parameter will be only considered for randomisation method 0;
             see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
         succeeded : bool
-            returns if randomization was successful and fulfilled the specified
+            returns if randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         """
@@ -1763,7 +1781,7 @@ class Block:
                            n_segments=n_segments)
         if rtn is False:
             print("Warning: Could not find an appropriate trial " + \
-                  "randomization!")
+                  "randomisation!")
         return rtn
 
     def sort_trials(self):
@@ -2035,7 +2053,7 @@ class Trial:
         Returns
         -------
         success : bool
-            randomization was successful and fulfilled the specified
+            randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         See Also

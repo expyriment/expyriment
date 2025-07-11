@@ -29,7 +29,8 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
     Eventually, "Ready" will be shown on the screen and the method waits for
     ENTER to be pressed.
 
-    After experiment start the following additional properties are available:
+    After the experiment has been started, the following additional properties
+    are available:
 
     * experiment.subject -- the current subject id
     * experiment.data    -- the main data file
@@ -160,9 +161,17 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
         experiment.events._time_stamp = experiment.data._time_stamp
         experiment.events.rename(experiment.events.standard_file_name)
 
-    number = defaults.initialise_delay - int(experiment.clock.time // 1000)
+    initialise_delay = defaults.initialise_delay
+    if hasattr(defaults, "initialize_delay"):
+        initialise_delay = defaults.initialize_delay
+        print(f"WARNING: Both control.defaults.initialise_delay and "
+              f"control.defaults.initialize_delay are defined. The value of "
+              f"control.defaults.initialize_delay ({initialise_delay}) will "
+              f"be used!")
+
+    number = initialise_delay - int(experiment.clock.time // 1000)
     if number > 0:
-        text = stimuli.TextLine("Initializing, please wait...",
+        text = stimuli.TextLine("Initialising, please wait...",
                                 text_size=int(experiment.text_size * 1.2),
                                 text_colour=(160, 70, 250),
                                 position=(0, 0))
@@ -369,28 +378,19 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         sys.exit()
     return True
 
-def initialize(experiment=None):
-    """Mirrors control.initialise().
-
-    DEPRECATED!  Please use British spelling and call initialise() instead.
-
-    """
-
-    return initialise(experiment)
-
 def initialise(experiment=None):
-    """initialise an experiment.
+    """Initialise an experiment.
 
     This initialises an experiment defined by 'experiment' as well as the
     underlying expyriment system. If 'experiment' is None, a new Experiment
     object will be created and returned. Furthermore, a screen, a clock, a
     keyboard and an event file are created and added to the experiment. The
-    initialization screen is shown for a short delay to ensure that Python
+    initialisation screen is shown for a short delay to ensure that Python
     is fully initialised and time accurate. Afterwards, "Preparing
     experiment..." is presented on the screen.
 
-    After experiment initialise the following additional properties are
-    available:
+    After the experiment has been initialised, the following additional
+    properties are available:
 
     - experiment.screen   -- the current screen
     - experiment.clock    -- the main clock
@@ -521,7 +521,16 @@ fullscreen.""")
     start = experiment.clock.time
     r = [x for x in range(256) if x % 5 == 0]
     stopped = False
-    if defaults.initialise_delay > 0:
+
+    initialise_delay = defaults.initialise_delay
+    if hasattr(defaults, "initialize_delay"):
+        initialise_delay = defaults.initialize_delay
+        print(f"WARNING: Both control.defaults.initialise_delay and "
+              f"control.defaults.initialize_delay are defined. The value of "
+              f"control.defaults.initialize_delay ({initialise_delay}) will "
+              f"be used!")
+
+    if initialise_delay > 0:
         for x in r:
             canvas._get_surface().set_alpha(x)
             canvas2.clear_surface()

@@ -1,6 +1,6 @@
 """The expyriment randomise module.
 
-This module contains various functions for randomizing data
+This module contains various functions for randomising data
 
 """
 
@@ -138,7 +138,7 @@ def _compare_items(a, b):
 
 
 def shuffle_list(list_, max_repetitions=-1, n_segments=0):
-    """Shuffle any list of objects. In place randomization of the list.
+    """Shuffle any list of objects. In place randomisation of the list.
 
     Parameters
     ----------
@@ -158,7 +158,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
     Returns
     -------
     success : bool
-        returns if randomization was successful and fulfilled the specified
+        returns if randomisation was successful and fulfilled the specified
         constrains (see max_repetitions)
 
     Notes
