@@ -12,7 +12,7 @@ license = "GPL-3.0-or-later"
 license-files=["COPYING.txt"]
 name = "expyriment"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dynamic = ["version"]
 keywords = ["experiment control", "open science",
             "neuroscience", "experimental psychology"]
@@ -24,19 +24,11 @@ classifiers = [
 dependencies = [
   "pygame>=2.5.2,<3",
   "pyopengl>=3,<4",
-]
-
-[project.optional-dependencies]
-all = [
   "numpy>=1.6,<3",
   "pyserial>=3,<4",
   "pyparallel>=0.2,<1",
-  "mediadecoder>=0.2.2,<1",
+  "mediadecoder>=0.2.3,<1",
 ]
-data_preprocessing = ["numpy>=1.6,<3"]
-parallelport_linux = ["pyparallel>=0.2,<1"]
-serialport = ["pyserial>=3,<4"]
-video = ["mediadecoder>=0.2.2,<1"]
 
 [project.urls]
 "Bug Tracker" = "https://github.com/expyriment/expyriment/issues"
