@@ -220,7 +220,7 @@ class Experiment:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
             tmp_str = tmp_str + "between subject factors (permutation type: "
-            if self.bws_factor_randomized:
+            if self.bws_factor_randomised:
                 tmp_str = tmp_str + "random)\n"
             else:
                 tmp_str = tmp_str + "latin square)\n"
@@ -305,26 +305,26 @@ class Experiment:
                 self.data.add_experiment_info(elem)
 
     @property
-    def bws_factor_randomized(self):
-        """Getter for bws_factor_randomized.
+    def bws_factor_randomised(self):
+        """Getter for bws_factor_randomised.
 
         Notes
         -----
-        Is between subject factor randomized? (True/False).
+        Is between subject factor randomised? (True/False).
 
-        If True conditions will be assigned randomized
+        If True conditions will be assigned randomised
         otherwise (default) conditions will be systematically permuted across
         subjects.
 
         """
 
-        return self._bws_factor_randomized
+        return self._bws_factor_randomised
 
-    @bws_factor_randomized.setter
-    def bws_factor_randomized(self, value):
-        """Setter for bws_factor_randomized."""
+    @bws_factor_randomised.setter
+    def bws_factor_randomised(self, value):
+        """Setter for bws_factor_randomised."""
 
-        self._bws_factor_randomized = value
+        self._bws_factor_randomised = value
 
     def add_bws_factor(self, factor_name, conditions):
         """Add a between subject factor.
@@ -355,7 +355,7 @@ class Experiment:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
-        self._randomized_condition_for_subject[factor_name] = {}
+        self._randomised_condition_for_subject[factor_name] = {}
 
     def has_bws_factor(self, factor_name):
         """Checks if a factor is defined.
@@ -436,14 +436,14 @@ class Experiment:
                 return None  # Factor not defined
             else:
                 cond_idx = 0
-                if self.bws_factor_randomized:
+                if self.bws_factor_randomised:
                     try:
-                        cond_idx = self._randomized_condition_for_subject[
+                        cond_idx = self._randomised_condition_for_subject[
                             factor_name][subject_id]
-                    except Exception:  # If not yet randomized for this subject, do it
+                    except Exception:  # If not yet randomised for this subject, do it
                         cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
-                        self._randomized_condition_for_subject[
+                        self._randomised_condition_for_subject[
                             factor_name][subject_id] = cond_idx
 
                 else:  # Permutation
@@ -468,8 +468,8 @@ class Experiment:
         # Can't use dict_keys, because dicts don't keep the order
         self._bws_factors_names = []
 
-        self._randomized_condition_for_subject = {}
-        self.bws_factor_randomized = False
+        self._randomised_condition_for_subject = {}
+        self.bws_factor_randomised = False
 
     @property
     def bws_factor_names(self):
@@ -857,7 +857,7 @@ type".format(permutation_type))
                 for txt in self.get_bws_factor(factor_name):
                     rtn += "{0},".format(txt)
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
+            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomised))
         if len(self.data_variable_names) > 0:
             rtn += "#dvn: "
             for txt in self.data_variable_names:
@@ -959,7 +959,7 @@ type".format(permutation_type))
                         for tmp in ln[6:].split(","):
                             self.add_data_variable_names(tmp.strip())
                     elif ln.startswith("#bws-rand:"):
-                        self.bws_factor_randomized = (ln[11] == "1")
+                        self.bws_factor_randomised = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
                         print(tmp[1].strip().split(","))
