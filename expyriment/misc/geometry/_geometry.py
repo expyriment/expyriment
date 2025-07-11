@@ -272,7 +272,7 @@ def polar_to_cartesian(polar, radians=False):
 class XYPoint:
     """ The Expyriment point class """
     def __init__(self, x=None, y=None, xy=None):
-        """Initialize a XYPoint.
+        """initialise a XYPoint.
 
         Parameters
         ----------

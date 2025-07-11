@@ -11,6 +11,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import atexit
 import os
+
 try:
     import locale
 except ImportError:
@@ -18,18 +19,22 @@ except ImportError:
 import codecs
 import re
 import sys
-import uuid
 import time
-from time import strftime
-from platform import uname
+import uuid
 from itertools import combinations
+from platform import uname
+from time import strftime
 
-from . import defaults
-from .. import _internals
-from .. import misc
+from .. import _internals, misc
+from ..misc import (
+    byte2unicode,
+    get_experiment_secure_hash,
+    module_hashes_as_string,
+    statistics,
+    unicode2byte,
+)
 from ..misc._timer import get_time
-from ..misc import unicode2byte, byte2unicode, get_experiment_secure_hash, module_hashes_as_string
-from ..misc import statistics
+from . import defaults
 from ._input_output import Input, Output
 
 
@@ -182,7 +187,7 @@ class OutputFile(Output):
         self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
             _internals.get_version(), self._suffix,
             locale_enc))
-        if _internals.active_exp.is_initialized:
+        if _internals.active_exp.is_initialised:
             self.write_comment("date: {0}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
                                _internals.active_exp.clock.init_localtime)))
@@ -371,7 +376,7 @@ class DataFile(OutputFile):
 
         """
 
-        if _internals.active_exp.is_initialized:
+        if _internals.active_exp.is_initialised:
             self._subject = _internals.active_exp.subject
         else:
             self._subject = None
@@ -628,9 +633,9 @@ class EventFile(OutputFile):
         if clock is not None:
             self._clock = clock
         else:
-            if not _internals.active_exp.is_initialized:
+            if not _internals.active_exp.is_initialised:
                 raise RuntimeError(
-                    "Cannot find a clock. Initialize Expyriment!")
+                    "Cannot find a clock. initialise Expyriment!")
             self._clock = _internals.active_exp.clock
 
         try:

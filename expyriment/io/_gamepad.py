@@ -42,9 +42,9 @@ class GamePad(Input, Output):
 
         """
 
-        if not _internals.active_exp.is_initialized:
+        if not _internals.active_exp.is_initialised:
             raise RuntimeError(
-                "Cannot create GamePad before expyriment.initialize()!")
+                "Cannot create GamePad before expyriment.initialise()!")
         Input.__init__(self)
         Output.__init__(self)
         self.track_button_events = track_button_events
@@ -260,7 +260,7 @@ class GamePad(Input, Output):
                     _button = rtn_callback
                     rt = int((get_time() - start) * 1000)
                     done = True
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     _button = rtn_callback

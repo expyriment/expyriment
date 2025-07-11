@@ -29,7 +29,7 @@ from copy import deepcopy
 from .. import _internals
 from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
 from . import defaults, permute
-from .randomize import rand_int, shuffle_list
+from .randomise import rand_int, shuffle_list
 
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
@@ -91,7 +91,7 @@ class Experiment:
         self._block_id_counter = 0
 
         self._is_started = False
-        self._is_initialized = False
+        self._is_initialised = False
         self._keyboard = None
         self._mouse = None
         self._clock = None
@@ -99,7 +99,7 @@ class Experiment:
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = None  # will be set from initialize
+        self._log_level = None  # will be set from initialise
         self._wait_callback_function = None
 
     @property
@@ -199,10 +199,20 @@ class Experiment:
         return self._is_started
 
     @property
-    def is_initialized(self):
-        """Getter for is_initialized."""
+    def is_initialised(self):
+        """Getter for is_initialised.
 
-        return self._is_initialized
+        DEPRECATED! Use is_initialised instead.
+
+        """
+
+        return self._is_initialised
+
+    @property
+    def is_initialised(self):
+        """Getter for is_initialised."""
+
+        return self._is_initialised
 
     def __str__(self):
         tmp_str = "Experiment: {0}\n".format(self.name)
@@ -210,7 +220,7 @@ class Experiment:
             tmp_str = tmp_str + "no between subject factors\n"
         else:
             tmp_str = tmp_str + "between subject factors (permutation type: "
-            if self.bws_factor_randomized:
+            if self.bws_factor_randomised:
                 tmp_str = tmp_str + "random)\n"
             else:
                 tmp_str = tmp_str + "latin square)\n"
@@ -295,26 +305,26 @@ class Experiment:
                 self.data.add_experiment_info(elem)
 
     @property
-    def bws_factor_randomized(self):
-        """Getter for bws_factor_randomized.
+    def bws_factor_randomised(self):
+        """Getter for bws_factor_randomised.
 
         Notes
         -----
-        Is between subject factor randomized? (True/False).
+        Is between subject factor randomised? (True/False).
 
-        If True conditions will be assigned randomized
+        If True conditions will be assigned randomised
         otherwise (default) conditions will be systematically permuted across
         subjects.
 
         """
 
-        return self._bws_factor_randomized
+        return self._bws_factor_randomised
 
-    @bws_factor_randomized.setter
-    def bws_factor_randomized(self, value):
-        """Setter for bws_factor_randomized."""
+    @bws_factor_randomised.setter
+    def bws_factor_randomised(self, value):
+        """Setter for bws_factor_randomised."""
 
-        self._bws_factor_randomized = value
+        self._bws_factor_randomised = value
 
     def add_bws_factor(self, factor_name, conditions):
         """Add a between subject factor.
@@ -345,7 +355,7 @@ class Experiment:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
-        self._randomized_condition_for_subject[factor_name] = {}
+        self._randomised_condition_for_subject[factor_name] = {}
 
     def has_bws_factor(self, factor_name):
         """Checks if a factor is defined.
@@ -426,14 +436,14 @@ class Experiment:
                 return None  # Factor not defined
             else:
                 cond_idx = 0
-                if self.bws_factor_randomized:
+                if self.bws_factor_randomised:
                     try:
-                        cond_idx = self._randomized_condition_for_subject[
+                        cond_idx = self._randomised_condition_for_subject[
                             factor_name][subject_id]
-                    except Exception:  # If not yet randomized for this subject, do it
+                    except Exception:  # If not yet randomised for this subject, do it
                         cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
-                        self._randomized_condition_for_subject[
+                        self._randomised_condition_for_subject[
                             factor_name][subject_id] = cond_idx
 
                 else:  # Permutation
@@ -458,8 +468,8 @@ class Experiment:
         # Can't use dict_keys, because dicts don't keep the order
         self._bws_factors_names = []
 
-        self._randomized_condition_for_subject = {}
-        self.bws_factor_randomized = False
+        self._randomised_condition_for_subject = {}
+        self.bws_factor_randomised = False
 
     @property
     def bws_factor_names(self):
@@ -501,7 +511,7 @@ class Experiment:
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
-        The logging of events can be also changed before initialize via the
+        The logging of events can be also changed before initialise via the
         default value `expyriment.control.defaults.event_logging`.
 
         """
@@ -658,10 +668,10 @@ class Experiment:
         method : int, optional
             method of block randomization (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
             this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
@@ -847,7 +857,7 @@ type".format(permutation_type))
                 for txt in self.get_bws_factor(factor_name):
                     rtn += "{0},".format(txt)
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomized))
+            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomised))
         if len(self.data_variable_names) > 0:
             rtn += "#dvn: "
             for txt in self.data_variable_names:
@@ -949,7 +959,7 @@ type".format(permutation_type))
                         for tmp in ln[6:].split(","):
                             self.add_data_variable_names(tmp.strip())
                     elif ln.startswith("#bws-rand:"):
-                        self.bws_factor_randomized = (ln[11] == "1")
+                        self.bws_factor_randomised = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
                         print(tmp[1].strip().split(","))
@@ -1024,7 +1034,7 @@ type".format(permutation_type))
     def _event_file_log(self, log_text, log_level=1, log_event_tag=None):
         # log_level 1 = default, 2 = extensive, 0 or False = off
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1032,7 +1042,7 @@ type".format(permutation_type))
 
     def _event_file_warn(self, warning, log_level=1):
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1041,7 +1051,7 @@ type".format(permutation_type))
     def log_design_to_event_file(self, additional_comment=""):
         """Log the design (as comment) to the current main event file.
 
-        If no experiment is initialized or no event file exists the function
+        If no experiment is initialised or no event file exists the function
         will not do anything. This function will be automatically called after
         an experiment has been started.
 
@@ -1056,7 +1066,7 @@ type".format(permutation_type))
 
         """
 
-        if self.is_initialized and self.events is not None:
+        if self.is_initialised and self.events is not None:
             self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
@@ -1711,10 +1721,10 @@ class Block:
         method : int, optional
             method of trial randomization (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
             this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
@@ -2018,9 +2028,9 @@ class Trial:
         Parameters
         ----------
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
         n_segments : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
 
         Returns
         -------
@@ -2030,7 +2040,7 @@ class Trial:
 
         See Also
         ----------
-        expyriment.design.randomize.shuffle_list
+        expyriment.design.randomise.shuffle_list
 
         """
 

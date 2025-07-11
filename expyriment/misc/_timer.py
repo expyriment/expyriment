@@ -119,6 +119,6 @@ except Exception:
                 """Get high-resolution time stamp (float) """
                 return time.time()
 
-        print("Warning: Failed to initialize monotonic timer. Python's "
+        print("Warning: Failed to initialise monotonic timer. Python's "
                              "time.{}() function will be used.".format(
                         timer_used))

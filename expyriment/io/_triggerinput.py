@@ -106,7 +106,7 @@ class TriggerInput(Input):
         while True:
             if isinstance(callback_function, FunctionType):
                 callback_function()
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback, int((get_time() - start) * 1000)

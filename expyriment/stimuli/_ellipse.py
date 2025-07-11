@@ -10,9 +10,10 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
 
+from .. import _internals
 from . import defaults
 from ._visual import Visual
-from .. import _internals
+
 
 class Ellipse(Visual):
     """A class implementing a basic 2D ellipse."""
@@ -181,7 +182,7 @@ class Ellipse(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         ellipse = Ellipse(radii=[200, 100], anti_aliasing=10)
         ellipse.present()
         if exp is None:

@@ -8,8 +8,9 @@ This module contains a class implementing a blank screen stimulus.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from ._canvas import Canvas
 from .. import _internals
+from ._canvas import Canvas
+
 
 class BlankScreen(Canvas):
     """A class implementing a blank screen."""
@@ -40,7 +41,7 @@ class BlankScreen(Canvas):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         blankscreen = BlankScreen()
         blankscreen.present()
         if exp is None:

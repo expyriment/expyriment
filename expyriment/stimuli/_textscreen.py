@@ -11,14 +11,13 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import pygame
 
+from .. import _internals
+from ..misc import find_font
 from . import defaults
 from ._stimulus import Stimulus
-from ._visual import Visual
-from ._textline import TextLine
 from ._textbox import TextBox
-from ..misc import find_font
-
-from .. import _internals
+from ._textline import TextLine
+from ._visual import Visual
 
 
 class TextScreen(Visual):
@@ -490,7 +489,7 @@ class TextScreen(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         textscreen = TextScreen("Hello World",
                                 "Line one.\nLine two.\nLine three.")
         textscreen.present()

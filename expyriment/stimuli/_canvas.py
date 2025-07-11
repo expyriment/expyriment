@@ -88,7 +88,7 @@ class Canvas(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         cnvs = Canvas((200, 200), colour=(255, 255, 255))
         cnvs.present()
         if exp is None:

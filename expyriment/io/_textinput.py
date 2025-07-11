@@ -12,16 +12,15 @@ import pygame
 
 try:
     import android
-    import android.show_keyboard as android_show_keyboard
     import android.hide_keyboard as android_hide_keyboard
+    import android.show_keyboard as android_show_keyboard
 except ImportError:
     android_show_keyboard = android_hide_keyboard = None
 
-from . import defaults
 from .. import _internals, stimuli
-from ..misc import find_font, constants, \
-                 numpad_digit_code2ascii, is_android_running
 from .._internals import CallbackQuitEvent
+from ..misc import constants, find_font, is_android_running, numpad_digit_code2ascii
+from . import defaults
 from ._input_output import Input
 
 
@@ -89,9 +88,9 @@ class TextInput(Input):
 
         """
 
-        if not _internals.active_exp.is_initialized:
+        if not _internals.active_exp.is_initialised:
             raise RuntimeError(
-                "Cannot create TextInput before expyriment.initialize()!")
+                "Cannot create TextInput before expyriment.initialise()!")
         Input.__init__(self)
         self._message = message
         if position is not None:
@@ -527,7 +526,7 @@ class TextInput(Input):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            _exp = control.initialize()
+            _exp = control.initialise()
         textinput = TextInput(message="Subject Number:",
                               message_colour=(160, 70, 250),
                               user_text_size=30,

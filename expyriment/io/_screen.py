@@ -28,7 +28,7 @@ class Screen(Output):
     Each experiment and all stimuli need a screen instance to function.
     They are expecting this screen instance to be referenced in
     expyriment._active_exp.screen.
-    Calling expyriment.control.initialize(exp) will automatically create such
+    Calling expyriment.control.initialise(exp) will automatically create such
     a screen instance and will additionally reference it in exp.screen for
     easy access.
 
@@ -97,7 +97,7 @@ OpenGL will be deactivated!"
 
         pygame.display.init()
 
-        if _internals.active_exp.is_initialized:
+        if _internals.active_exp.is_initialised:
             self._display_resolution = \
                         _internals.active_exp.screen.display_resolution
         else:
@@ -285,7 +285,7 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen).
+        Each initialised experiment has its one screen (exp.screen).
         Please use always the screen of your current experiment.
 
         """
@@ -298,7 +298,7 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen).
+        Each initialised experiment has its one screen (exp.screen).
         Please use always the screen of your current experiment.
 
         """
@@ -311,7 +311,7 @@ machine!")
 
         Notes
         -----
-        Each initialized experiment has its one screen (exp.screen).
+        Each initialised experiment has its one screen (exp.screen).
         Please use always the screen of your current experiment.
 
         """

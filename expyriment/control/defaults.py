@@ -2,7 +2,7 @@
 Default settings for the control package. ::
 
     audiosystem_autostart : bool
-        start the audiosystem when Expyriment is initialized
+        start the audiosystem when Expyriment is initialised
 
     audiosystem_bit_depth : int
         8   = 8 bit unsigned integer (8-bit audio)
@@ -68,7 +68,7 @@ Default settings for the control package. ::
     goodbye_text : str
         the text to be shown when ending an experiment
 
-    initialize_delay : int
+    initialise_delay : int
         a delay (in seconds) to wait before running an experiment to give
         Python time to start properly
 
@@ -159,8 +159,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 from ..misc import constants as _constants
 
-
-initialize_delay = 10  # After approximately 10 seconds Python is timecritical
+initialise_delay = 10  # After approximately 10 seconds Python is timecritical
 auto_create_subject_id = False
 goodbye_text = "Ending experiment..."
 goodbye_delay = 3000

@@ -8,8 +8,8 @@ This module contains a class implementing an event buffer.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-from ._clock import Clock
 from .. import _internals
+from ._clock import Clock
 
 
 class Buffer:
@@ -31,7 +31,7 @@ class Buffer:
         if clock is not None:
             self._clock = clock
         else:
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 self._clock = _internals.active_exp.clock
             else:
                 self._clock = Clock()

@@ -9,7 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import atexit
-from types import ModuleType, FunctionType
+from types import FunctionType, ModuleType
 
 try:
     import serial
@@ -20,10 +20,10 @@ except Exception:
 
 import pygame
 
+from .. import __version__, _internals, misc
+from .._internals import CallbackQuitEvent
 from . import defaults
 from ._input_output import Input, Output
-from .. import _internals, misc, __version__
-from .._internals import CallbackQuitEvent
 
 
 class SerialPort(Input, Output):
@@ -79,7 +79,7 @@ class SerialPort(Input, Output):
         """
 
         if not isinstance(serial, ModuleType):
-            message = """SerialPort can not be initialized.
+            message = """SerialPort can not be initialised.
 The Python package 'pySerial' is not installed."""
             raise ImportError(message)
 
@@ -113,7 +113,7 @@ The Python package 'pySerial' is not installed."""
         if clock is not None:
             self._clock = clock
         else:
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 self._clock = _internals.active_exp.clock
             else:
                 self._clock = misc.Clock()
@@ -414,7 +414,7 @@ The Python package 'pySerial' is not installed."""
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     rtn_string = rtn_callback
                     break
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     rtn_string = rtn_callback

@@ -12,6 +12,7 @@ Oliver Lindemann <oliver@expyriment.org>'
 import os
 
 import pygame
+
 from .. import _internals
 from . import defaults
 from ._visual import Visual
@@ -75,11 +76,10 @@ class Picture(Visual):
     @staticmethod
     def _demo(exp=None):
         if exp is None:
-            from .. import __file__
-            from .. import control
+            from .. import __file__, control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         directory = os.path.dirname(__file__)
         picture = Picture(os.path.join(directory, "expyriment_logo.png"))
         picture.present()

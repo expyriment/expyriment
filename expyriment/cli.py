@@ -41,7 +41,7 @@ import expyriment as xpy
 # DESIGN
 exp = xpy.design.Experiment(name="My Experiment")
 
-xpy.control.initialize(exp)
+xpy.control.initialise(exp)
 
 
 # RUN
@@ -111,7 +111,7 @@ letter arguments run single commands""",
 
     parser.add_argument("-f", "--fast-mode",
                         action="store_true",
-                        help="fast mode (no initialize delay and fast quitting)")
+                        help="fast mode (no initialise delay and fast quitting)")
 
     parser.add_argument("-i", "--intensive-logging",
                         action="store_true",
@@ -197,7 +197,7 @@ letter arguments run single commands""",
 
     if args['fast_mode']:
         print("* Fast mode")
-        statements.append("xpy.control.defaults.initialize_delay = 0")
+        statements.append("xpy.control.defaults.initialise_delay = 0")
         statements.append("xpy.control.defaults.fast_quit = True")
 
     if args['window_mode']:
@@ -320,15 +320,15 @@ letter arguments run single commands""",
         statements.append("expyriment = xpy")
         #xpy.control.defaults.window_mode = True
         statements.append("xpy.control.defaults.stdout_logging = False")
-        #exp = xpy.control.initialize()
+        #exp = xpy.control.initialise()
         statements.append(
             """print("Expyriment is available as both 'expyriment' and 'xpy'.")""")
         statements.append(
-            """print("Run 'exp = xpy.control.initialize()' to quickly initialize a new experiment.")""")
+            """print("Run 'exp = xpy.control.initialise()' to quickly initialise a new experiment.")""")
 
         if find_spec("IPython") is not None:
             statements.append(
-                f"""get_ipython().history_manager.store_inputs(get_ipython().execution_count - 1, "exp = xpy.control.initialize()")""")
+                f"""get_ipython().history_manager.store_inputs(get_ipython().execution_count - 1, "exp = xpy.control.initialise()")""")
             command = "\n".join(statements)
             os.execvp(sys.executable, [sys.executable, '-m', 'IPython',
                                        '--no-banner', '-i', '-c', command])
@@ -337,7 +337,7 @@ letter arguments run single commands""",
             history_file = os.path.expanduser("~/.python_history")
             if os.path.exists(history_file):
                 with open(history_file, 'a') as f:
-                    f.write("exp = xpy.control.initialize()\n")
+                    f.write("exp = xpy.control.initialise()\n")
             command = "\n".join(statements)
             os.execvp(sys.executable, [sys.executable, '-i', '-c', command])
             #import code
@@ -362,7 +362,7 @@ letter arguments run single commands""",
             #            readline.add_history(command)
 
             #console = CustomInteractiveConsole(locals=locals())
-            #console.add_to_history("exp = xpy.control.initialize()")
+            #console.add_to_history("exp = xpy.control.initialise()")
             #code.interact(local=console.locals, banner=banner)
 
 

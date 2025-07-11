@@ -277,7 +277,7 @@ class Rectangle(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         rect = Rectangle((20, 200), colour=(255, 0, 255))
         rect.present()
         if exp is None:
