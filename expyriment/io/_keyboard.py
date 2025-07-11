@@ -103,7 +103,7 @@ class _QuitControl:
 class Keyboard(Input):
     """A class implementing a keyboard input.
 
-    Calling `expyriment.control.initialize(exp)` will automatically create a
+    Calling `expyriment.control.initialise(exp)` will automatically create a
     keyboard instance and will reference it in exp.keyboard for easy access.
 
     """
@@ -366,7 +366,7 @@ class Keyboard(Input):
                     done = True
                     found_key = rtn_callback
                     rt = int((get_time() - start) * 1000)
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     done = True
@@ -376,7 +376,7 @@ class Keyboard(Input):
                     _internals.active_exp.mouse.process_quit_event():
                     done = True
             for event in pygame.event.get([pygame.KEYDOWN, pygame.KEYUP]):
-                if _internals.active_exp.is_initialized and \
+                if _internals.active_exp.is_initialised and \
                    process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True
@@ -457,7 +457,7 @@ class Keyboard(Input):
                     done = True
                     rt = int((get_time() - start) * 1000)
                     found_char = rtn_callback
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     done = True
@@ -467,7 +467,7 @@ class Keyboard(Input):
                         _internals.active_exp.mouse.process_quit_event():
                     done = True
             for event in pygame.event.get([pygame.KEYUP, pygame.KEYDOWN]):
-                if _internals.active_exp.is_initialized and \
+                if _internals.active_exp.is_initialised and \
                    process_control_events and \
                    Keyboard.process_control_keys(event):
                     done = True

@@ -23,7 +23,7 @@ from .. import _internals, control, design, io, misc, stimuli
 from ..design import randomize
 from ..misc import constants, list_fonts, statistics, unicode2byte
 from ..misc._timer import get_time
-from . import defaults, end, initialize, start_audiosystem, stop_audiosystem
+from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
 
 def _make_graph(x, y, colour):
@@ -743,12 +743,12 @@ def run_test_suite(item=None):
     from ..stimuli import extras as _test2
 
     quit_experiment = False
-    if not _internals.active_exp.is_initialized:
-        defaults.initialize_delay = 0
+    if not _internals.active_exp.is_initialised:
+        defaults.initialise_delay = 0
         defaults.event_logging = 0
         exp = design.Experiment()
         exp.testsuite = True
-        initialize(exp)
+        initialise(exp)
         quit_experiment = True
     else:
         exp = _internals.active_exp

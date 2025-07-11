@@ -91,7 +91,7 @@ class Experiment:
         self._block_id_counter = 0
 
         self._is_started = False
-        self._is_initialized = False
+        self._is_initialised = False
         self._keyboard = None
         self._mouse = None
         self._clock = None
@@ -99,7 +99,7 @@ class Experiment:
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = None  # will be set from initialize
+        self._log_level = None  # will be set from initialise
         self._wait_callback_function = None
 
     @property
@@ -199,10 +199,20 @@ class Experiment:
         return self._is_started
 
     @property
-    def is_initialized(self):
-        """Getter for is_initialized."""
+    def is_initialised(self):
+        """Getter for is_initialised.
 
-        return self._is_initialized
+        DEPRECATED! Use is_initialised instead.
+
+        """
+
+        return self._is_initialised
+
+    @property
+    def is_initialised(self):
+        """Getter for is_initialised."""
+
+        return self._is_initialised
 
     def __str__(self):
         tmp_str = "Experiment: {0}\n".format(self.name)
@@ -501,7 +511,7 @@ class Experiment:
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
-        The logging of events can be also changed before initialize via the
+        The logging of events can be also changed before initialise via the
         default value `expyriment.control.defaults.event_logging`.
 
         """
@@ -1024,7 +1034,7 @@ type".format(permutation_type))
     def _event_file_log(self, log_text, log_level=1, log_event_tag=None):
         # log_level 1 = default, 2 = extensive, 0 or False = off
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1032,7 +1042,7 @@ type".format(permutation_type))
 
     def _event_file_warn(self, warning, log_level=1):
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1041,7 +1051,7 @@ type".format(permutation_type))
     def log_design_to_event_file(self, additional_comment=""):
         """Log the design (as comment) to the current main event file.
 
-        If no experiment is initialized or no event file exists the function
+        If no experiment is initialised or no event file exists the function
         will not do anything. This function will be automatically called after
         an experiment has been started.
 
@@ -1056,7 +1066,7 @@ type".format(permutation_type))
 
         """
 
-        if self.is_initialized and self.events is not None:
+        if self.is_initialised and self.events is not None:
             self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(

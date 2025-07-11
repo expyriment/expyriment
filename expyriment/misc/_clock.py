@@ -128,7 +128,7 @@ class Clock :
                     rtn_callback = callback_function()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                         return rtn_callback
-                if _internals.active_exp.is_initialized:
+                if _internals.active_exp.is_initialised:
                     rtn_callback = _internals.active_exp._execute_wait_callback()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                         return rtn_callback
@@ -144,7 +144,7 @@ class Clock :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                if _internals.active_exp.is_initialized:
+                if _internals.active_exp.is_initialised:
                     while (self.time < start + (waiting_time - looptime)):
                         if process_control_events:
                             if _internals.active_exp.mouse.process_quit_event() or \
