@@ -119,16 +119,16 @@ class Clock :
 
         if _internals.skip_wait_methods:
             return None
-        start = self.time
+        start = get_time()
         if low_performance or isinstance(callback_function, FunctionType) or \
            (process_control_events or \
              _internals.active_exp.is_callback_registered):
-            while (self.time < start + waiting_time):
+            while (get_time() < start + waiting_time / 1000):
                 if isinstance(callback_function, FunctionType):
                     rtn_callback = callback_function()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                         return rtn_callback
-                if _internals.active_exp.is_initialised:
+                if _internals.active_exp.is_initialized:
                     rtn_callback = _internals.active_exp._execute_wait_callback()
                     if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                         return rtn_callback
@@ -144,8 +144,8 @@ class Clock :
         else:
             looptime = 200
             if (waiting_time > looptime):
-                if _internals.active_exp.is_initialised:
-                    while (self.time < start + (waiting_time - looptime)):
+                if _internals.active_exp.is_initialized:
+                    while (get_time() < start + (waiting_time - looptime) / 1000):
                         if process_control_events:
                             if _internals.active_exp.mouse.process_quit_event() or \
                                _internals.active_exp.keyboard.process_control_keys():
@@ -154,7 +154,7 @@ class Clock :
                             pygame.event.pump()
                 else:
                     time.sleep((waiting_time - looptime) // 1000)
-            while (self.time < start + waiting_time):
+            while (get_time() < start + waiting_time / 1000):
                 pass
 
     def wait_seconds(self, time_sec, callback_function=None,
