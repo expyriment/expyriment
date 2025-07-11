@@ -26,7 +26,7 @@ from ..misc._timer import get_time
 from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
 
-def _make_graph(x, y, colour):
+def _make_graph(x, y, colour): ## FIXME Obsolete function that is never called.
     """Make the graph."""
 
     graph = stimuli.Canvas(size=(max(x) * 3 + 10, max(y) * 3 + 10))

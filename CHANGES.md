@@ -88,6 +88,8 @@ New Features:
       devices
 
 Changed:
+- Python 2 support has been removed
+  Expyriment now only works with Python 3.9 or higher
 - deprecated and obsolete classes, methods and parameter were removed
 	- paramenter `experiment` in control.start
 	- permute.balanced_latin_square(), permute.cycled_latin_square()
@@ -102,8 +104,6 @@ Changed:
 - package building with flit and pyproject.toml
 - revision number and build data (`__revision__`, `__date__`) removed from
   source files
-- Python 2 support has been removed
-  Expyriment now only works with Python 3.9 or higher
 - Documentation not shipped with Expyriment anymore (i.e. no offline
   documentation available, only online)
 - rewrite of permutation module
@@ -136,6 +136,12 @@ Changed:
     - tuples2points() to tuples_to_points()
     - polar2cartesian() to polar_to_cartesian()
     - visual_angle2position() to visual_angle_to_position()
+- renaming objects for a more consistent British spelling
+  - method control.initialise().
+	- module design.randomize -> ...design.randomise
+	- property Experiment.is_initialized -> ...is_initialised
+	- property Experiment.bws_factor_randomized -> ..bws_factor_randomised
+	- constant control.defaults.initialize_delay -> ...initialise_delay
 Fixed:
 - bug in colour.is_hex & colour.is_colour
 - data_preprocessing: adds suffix ".csv" to filename when writing csv files
