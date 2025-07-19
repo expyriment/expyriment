@@ -91,7 +91,7 @@ Changed:
 - Python 2 support has been removed
   Expyriment now only works with Python 3.9 or higher
 - deprecated and obsolete classes, methods and parameter were removed
-	- paramenter `experiment` in control.start
+	- parameter `experiment` in control.start
 	- permute.balanced_latin_square(), permute.cycled_latin_square()
 	- geometry.position2coordinate(), geometry.points_to_vertice()
 	- statistics.frequence_table()
