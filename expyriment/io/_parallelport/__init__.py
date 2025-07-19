@@ -449,7 +449,7 @@ class ParallelPort(Input, Output):
 
         if sys.platform.startswith("linux"):
             dev = os.listdir('/dev')
-            ports = list(sorted([p for p in dev if p.startswith("parport")]))
+            ports = sorted([p for p in dev if p.startswith("parport")])
         else:
             ports = []
 
