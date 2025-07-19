@@ -167,8 +167,7 @@ class Tone(Audio):
             *(map(sum, zip(*channel)) \
               for channel in channels)), n_samples)
         fid, filename = tempfile.mkstemp(dir=defaults.tempdir,
-                        prefix="freq{0}_dur{1}_".format(self.frequency,
-                                                       self.duration),
+                        prefix=f"freq{self.frequency}_dur{self.duration}_",
                         suffix=".wav")
         os.close(fid)
         w = wave.open(filename, 'w')

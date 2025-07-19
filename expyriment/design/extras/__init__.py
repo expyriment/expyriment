@@ -19,8 +19,8 @@ for name, code in _internals.import_plugins_code("design").items():
     try:
         exec(code)
     except Exception as err:
-        print("Warning: Could not import {0}".format(name))
-        print(" {0}".format(err))
+        print(f"Warning: Could not import {name}")
+        print(f" {err}")
 
 try:
     del (name, code)

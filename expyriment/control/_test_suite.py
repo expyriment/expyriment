@@ -46,15 +46,15 @@ def _histogram(data):
         if str1 is None:
             str1 = "dRT: "
             str2 = "  n: "
-        str1 += "%4d" % x
+        str1 += f"{x:4d}"
         value = hist.get(x, 0)
-        str2 += "%4d" % value
+        str2 += f"{value:4d}"
         if x % 10 == 0:
-            hist_str += str1 + "\n" + str2 + "\n\n"
+            hist_str += f"{str1}\n{str2}\n\n"
             str1 = None
 
     if str1 is not None:
-        hist_str += str1 + "\n" + str2 + "\n\n"
+        hist_str += f"{str1}\n{str2}\n\n"
     return hist, hist_str
 
 def _stimulus_timing(exp):
@@ -208,11 +208,9 @@ After the test, you will be asked to indicate which (if any) of those two square
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
-        r = "{0} Hz (~ every {1} ms)".format(
-            int(misc.py2_round(refresh_rate)),
-            misc.py2_round(1000/refresh_rate, 1))
+        r = f"{int(misc.py2_round(refresh_rate))} Hz (~ every {misc.py2_round(1000/refresh_rate, 1)} ms)"
         results1 = stimuli.TextScreen(
-            "", "Estimated Screen Refresh Rate:     {0}\n\n".format(r),
+            "", f"Estimated Screen Refresh Rate:     {r}\n\n",
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results1_colour,
             position=(0, int(40 * scaling)))
@@ -222,7 +220,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results2_colour = [0, 255, 0]
         results2 = stimuli.TextScreen(
             "",
-            "Detected Framebuffer Pages:        {0}\n\n".format(response+1),
+            f"Detected Framebuffer Pages:        {response+1}\n\n",
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results2_colour,
             position=(0, int(20 * scaling)))
@@ -234,7 +232,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results3_colour = [0, 255, 0]
         results3 = stimuli.TextScreen(
             "",
-            "Average Reporting Inaccuracy:      {0} ms\n\n".format(inaccuracy),
+            f"Average Reporting Inaccuracy:      {inaccuracy} ms\n\n",
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results3_colour,
             position=(0, -int(20 * scaling)))
@@ -256,8 +254,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             results4_colour = [0, 255, 0]
         results4 = stimuli.TextScreen(
             "",
-            "Unexplained Presentation Delays:   {0} %\n\n\n".format(
-                delayed_accurate + delayed_inaccurate),
+            f"Unexplained Presentation Delays:   {delayed_accurate + delayed_inaccurate} %\n\n\n",
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results4_colour,
             position=(0, -int(60 * scaling)))
@@ -516,7 +513,7 @@ abcdefghijklmnopqrstuvwxyz äöü
     info_screen()
     while True:
         font_str = all_fonts[font_id]
-        font_description = "font '{0}', size {1}".format(font_str, size)
+        font_description = f"font '{font_str}', size {size}"
         if italic:
             font_description += ", italic"
         if bold:
@@ -536,7 +533,7 @@ abcdefghijklmnopqrstuvwxyz äöü
                 text_colour=(255, 255, 255)).plot(canvas)
         except Exception:
             stimuli.TextLine(text="Sorry, I can't display the text with " +
-                "{0}".format(font_description),
+                f"{font_description}",
                 text_colour=constants.C_EXPYRIMENT_ORANGE).plot(canvas)
         canvas.present()
         mouse.clear()
@@ -611,10 +608,10 @@ def _find_self_tests():
     namesspace = {}
     namesspace["expyriment"] = expyriment
     for module in ["expyriment.io", "expyriment.io.extras"]:
-        exec("classes = dir({0})".format(module), namesspace)
+        exec(f"classes = dir({module})", namesspace)
         for cl in namesspace['classes']:
             if not cl.startswith("_") and cl not in ["False", "None", "True"]:
-                exec("method = dir({0}.{1})".format(module, cl), namesspace)
+                exec(f"method = dir({module}.{cl})", namesspace)
                 if "_self_test" in namesspace['method']:
                     rtn.append([module, cl])
     return rtn
@@ -654,11 +651,11 @@ def run_test_suite(item=None):
             "2) Auditory stimulus presentation",
             "3) Font Viewer"]
     for mod, cl in _find_self_tests():
-        test_functions.append("rtn = {0}.{1}._self_test(exp)".format(mod, cl))
-        menu.append("{0}) {1} test".format(len(test_functions), cl))
+        test_functions.append(f"rtn = {mod}.{cl}._self_test(exp)")
+        menu.append(f"{len(test_functions)}) {cl} test")
 
-    menu.append("{0}) Write protocol".format(len(test_functions) + 1))
-    menu.append("{0}) Quit".format(len(test_functions) + 2))
+    menu.append(f"{len(test_functions) + 1}) Write protocol")
+    menu.append(f"{len(test_functions) + 2}) Quit")
     test_functions.extend(['rtn = _write_protocol(exp, results)',
                             'go_on=False;rtn=[];'])
 
@@ -671,7 +668,7 @@ def run_test_suite(item=None):
     pict.scale(0.3 * scaling)
     pict.plot(background)
 
-    v = stimuli.TextLine("Version {0}".format(get_version()),
+    v = stimuli.TextLine(f"Version {get_version()}",
                          text_size=int(10 * scaling),
                          text_colour=constants.C_EXPYRIMENT_PURPLE)
     v.move((0, int(160 * scaling)))

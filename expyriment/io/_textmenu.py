@@ -142,7 +142,7 @@ class TextMenu(Input):
                     [stimuli._visual.Visual, stimuli.Shape]:
                 self._background_stimulus = background_stimulus
             else:
-                raise TypeError("{0} ".format(type(background_stimulus)) +
+                raise TypeError(f"{type(background_stimulus)} " +
                                 "is not a valid background stimulus. " +
                                 "Use an expyriment visual stimulus.")
         else:

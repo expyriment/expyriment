@@ -39,11 +39,10 @@ class Stimulus(ExpyrimentObject, ABC):
         self._id = Stimulus._id_counter
         Stimulus._id_counter += 1
 
-        log_txt = "Stimulus,created,{0},{1}".format(self.id,
-                                                    self.__class__.__name__)
+        log_txt = f"Stimulus,created,{self.id},{self.__class__.__name__}"
 
         if log_comment is not None:
-            log_txt = "{0},{1}".format(log_txt, byte2unicode(log_comment))
+            log_txt = f"{log_txt},{byte2unicode(log_comment)}"
         if self._logging:
             _internals.active_exp._event_file_log(log_txt, 2)
 
@@ -63,6 +62,5 @@ class Stimulus(ExpyrimentObject, ABC):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "Stimulus,created,{0},{1},copied from {2}".format(
-                    copy.id, copy.__class__.__name__, self.id))
+                    f"Stimulus,created,{copy.id},{copy.__class__.__name__},copied from {self.id}")
         return copy

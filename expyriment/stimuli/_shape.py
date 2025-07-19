@@ -167,8 +167,7 @@ class Shape(Visual):
     _getter_exception_message = "Cannot perform {0} if surface exists!"
 
     def __repr__(self):
-        return  "vertices: {0}; points: {1}".format(self.vertices,
-                                                    self.points)
+        return  f"vertices: {self.vertices}; points: {self.points}"
 
     @property
     def colour(self):

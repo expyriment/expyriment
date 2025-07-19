@@ -105,7 +105,7 @@ class TextBox(Visual):
             with open(self.text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise OSError("Font '{0}' not found!".format(text_font))
+            raise OSError(f"Font '{text_font}' not found!")
         if text_bold is not None:
             self._text_bold = text_bold
         else:

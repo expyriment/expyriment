@@ -341,13 +341,11 @@ class Colour:
         elif Colour.is_name(colour):
             self.name = colour
         else:
-            raise ValueError("'{0}' is not a valid colour!".format(colour) + \
+            raise ValueError(f"'{colour}' is not a valid colour!" + \
             "\nUse RGB tuple, Hex triplet or colour name.")
 
     def __str__(self):
-        return "Colour(red={0}, green={1}, blue={2})".format(self._rgb[0],
-                                                             self._rgb[1],
-                                                             self._rgb[2])
+        return f"Colour(red={self._rgb[0]}, green={self._rgb[1]}, blue={self._rgb[2]})"
 
     def __eq__(self, other):
         return self._rgb == other._rgb
@@ -373,15 +371,13 @@ class Colour:
         if Colour.is_rgb(value):
             self._rgb = tuple(value)
         else:
-            raise ValueError("'{0}' is not a valid RGB colour!".format(value))
+            raise ValueError(f"'{value}' is not a valid RGB colour!")
 
     @property
     def hex(self):
         """Getter for colour in Hex format "#RRGGBB"."""
 
-        return '#{:02X}{:02X}{:02X}'.format(self._rgb[0],
-                                            self._rgb[1],
-                                            self._rgb[2])
+        return f'#{self._rgb[0]:02X}{self._rgb[1]:02X}{self._rgb[2]:02X}'
     @hex.setter
     def hex(self, value):
         """Setter for colour in Hex format "#RRGGBB"."""
@@ -390,7 +386,7 @@ class Colour:
             c = value.lstrip("#")
             self._rgb = tuple(int(c[i:i + 2], 16) for i in (0, 2, 4))
         else:
-            raise ValueError("'{0}' is not a valid Hex colour!".format(value))
+            raise ValueError(f"'{value}' is not a valid Hex colour!")
 
     @property
     def name(self):
@@ -408,7 +404,7 @@ class Colour:
         if Colour.is_name(value):
             self._rgb = _colours[value.lower()]
         else:
-            raise ValueError("'{0}' is not a valid colour name!".format(value))
+            raise ValueError(f"'{value}' is not a valid colour name!")
 
     @property
     def hsv(self):
@@ -428,7 +424,7 @@ class Colour:
             hsv.extend(divide(value[1:], 100))
             self._rgb = multiply(colorsys.hsv_to_rgb(*hsv), 255)
         else:
-            raise ValueError("'{0}' is not a valid HSV colour!".format(value))
+            raise ValueError(f"'{value}' is not a valid HSV colour!")
 
     @property
     def hsl(self):
@@ -448,7 +444,7 @@ class Colour:
             hsl.extend(divide(value[1:], 100))
             self._rgb = multiply(colorsys.hls_to_rgb(*hsl), 255)
         else:
-            raise ValueError("'{0}' is not a valid HSL colour!".format(value))
+            raise ValueError(f"'{value}' is not a valid HSL colour!")
 
 
 # Helper functions

@@ -120,5 +120,4 @@ except Exception:
                 return time.time()
 
         print("Warning: Failed to initialise monotonic timer. Python's "
-                             "time.{}() function will be used.".format(
-                        timer_used))
+                             f"time.{timer_used}() function will be used.")
