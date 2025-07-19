@@ -33,7 +33,7 @@ else:
         _root.tk.eval('package require tile')
         #_root = _ttk.Tk()
         #_root.destroy()
-    except:
+    except Exception:
         _ttk = _tk
 
 if platform.system() == "Windows":
