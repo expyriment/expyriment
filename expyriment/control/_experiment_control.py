@@ -23,13 +23,14 @@ from ._miscellaneous import _set_stdout_logging, start_audiosystem
 def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False):
     """Start an experiment.
 
-    This starts the currently initialized experiment and asks for the subject
+    This starts the currently initialised experiment and asks for the subject
     number. When the subject number is entered and confirmed by ENTER, a data
     file is created.
     Eventually, "Ready" will be shown on the screen and the method waits for
     ENTER to be pressed.
 
-    After experiment start the following additional properties are available:
+    After the experiment has been started, the following additional properties
+    are available:
 
     * experiment.subject -- the current subject id
     * experiment.data    -- the main data file
@@ -160,9 +161,17 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
         experiment.events._time_stamp = experiment.data._time_stamp
         experiment.events.rename(experiment.events.standard_file_name)
 
-    number = defaults.initialize_delay - int(experiment.clock.time // 1000)
+    initialise_delay = defaults.initialise_delay
+    if hasattr(defaults, "initialize_delay"):
+        initialise_delay = defaults.initialize_delay
+        print(f"WARNING: Both control.defaults.initialise_delay and "
+              f"control.defaults.initialize_delay are defined. The value of "
+              f"control.defaults.initialize_delay ({initialise_delay}) will "
+              f"be used!")
+
+    number = initialise_delay - int(experiment.clock.time // 1000)
     if number > 0:
-        text = stimuli.TextLine("Initializing, please wait...",
+        text = stimuli.TextLine("Initialising, please wait...",
                                 text_size=int(experiment.text_size * 1.2),
                                 text_colour=(160, 70, 250),
                                 position=(0, 0))
@@ -222,8 +231,8 @@ def pause(text="Paused", key=misc.constants.K_RETURN):
 
     """
 
-    if not _internals.active_exp.is_initialized:
-        raise Exception("Experiment is not initialized!")
+    if not _internals.active_exp.is_initialised:
+        raise Exception("Experiment is not initialised!")
     experiment = _internals.active_exp
     experiment._event_file_log("Experiment,paused")
     screen_colour = experiment.screen.colour
@@ -276,7 +285,7 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
 
     """
 
-    if not _internals.active_exp.is_initialized:
+    if not _internals.active_exp.is_initialised:
         if pre_quit_function is not None:
             if isinstance(pre_quit_function, (tuple, list)):
                 for function in pre_quit_function:
@@ -369,20 +378,19 @@ def end(goodbye_text=None, goodbye_delay=None, confirmation=False,
         sys.exit()
     return True
 
+def initialise(experiment=None):
+    """Initialise an experiment.
 
-def initialize(experiment=None):
-    """Initialize an experiment.
-
-    This initializes an experiment defined by 'experiment' as well as the
+    This initialises an experiment defined by 'experiment' as well as the
     underlying expyriment system. If 'experiment' is None, a new Experiment
     object will be created and returned. Furthermore, a screen, a clock, a
     keyboard and an event file are created and added to the experiment. The
-    initialization screen is shown for a short delay to ensure that Python
-    is fully initialized and time accurate. Afterwards, "Preparing
+    initialisation screen is shown for a short delay to ensure that Python
+    is fully initialised and time accurate. Afterwards, "Preparing
     experiment..." is presented on the screen.
 
-    After experiment initialize the following additional properties are
-    available:
+    After the experiment has been initialised, the following additional
+    properties are available:
 
     - experiment.screen   -- the current screen
     - experiment.clock    -- the main clock
@@ -393,12 +401,12 @@ def initialize(experiment=None):
     Parameters
     ----------
     experiment : design.Experiment, optional
-        the experiment to initialize
+        the experiment to initialise
 
     Returns
     -------
     exp : design.Experiment
-        initialized experiment
+        initialised experiment
 
     """
 
@@ -411,7 +419,7 @@ def initialize(experiment=None):
     if misc.is_interactive_mode() and not defaults.window_mode \
         and not hasattr(experiment, "testsuite"):
         print("""
-Python is running in an interactive shell but Expyriment wants to initialize a
+Python is running in an interactive shell but Expyriment wants to initialise a
 fullscreen.""")
         quest = "Do you want to switch to windows mode?"
         ans = input(quest + " (Y/n) ").strip().lower()
@@ -443,7 +451,7 @@ fullscreen.""")
     experiment._clock = misc.Clock()
     if hasattr(defaults, "open_gl"):
         raise DeprecationWarning("'expyriment.control.defaults.open_gl' is " +\
-                                 "deprecated! Please use " + \
+                                 "DEPRECATED! Please use " + \
                                  "'expyriment.control.defaults.opengl'.")
     experiment._screen = Screen(colour=(0, 0, 0),
                                 opengl=defaults.opengl,
@@ -470,7 +478,7 @@ fullscreen.""")
             pass
     experiment._data = None
     experiment._subject = None
-    experiment._is_initialized = True  # required before EventFile
+    experiment._is_initialised = True  # required before EventFile
     if old_logging > 0:
         experiment._events = EventFile(
             additional_suffix=experiment.filename_suffix, time_stamp=True)
@@ -513,7 +521,16 @@ fullscreen.""")
     start = experiment.clock.time
     r = [x for x in range(256) if x % 5 == 0]
     stopped = False
-    if defaults.initialize_delay > 0:
+
+    initialise_delay = defaults.initialise_delay
+    if hasattr(defaults, "initialize_delay"):
+        initialise_delay = defaults.initialize_delay
+        print(f"WARNING: Both control.defaults.initialise_delay and "
+              f"control.defaults.initialize_delay are defined. The value of "
+              f"control.defaults.initialize_delay ({initialise_delay}) will "
+              f"be used!")
+
+    if initialise_delay > 0:
         for x in r:
             canvas._get_surface().set_alpha(x)
             canvas2.clear_surface()

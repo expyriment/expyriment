@@ -42,7 +42,7 @@ class _LaminaPanelSurface:
     # into expyriment (e.g. positioning)
     def __init__(self, surface, quadDims=(-1, 1, 1, 1),
                  position=(0, 0)):
-        """Initialize new instance.
+        """initialise new instance.
 
         Parameters
         ----------
@@ -246,7 +246,7 @@ class Visual(Stimulus, ABC):
 
         self._was_compressed_before_preload = None
 
-        if not _internals.active_exp.is_initialized:
+        if not _internals.active_exp.is_initialised:
             warn_message = "Stimulus created before initializing " + \
                            "(experiment defaults won't apply)!"
             print("Warning: " + warn_message)
@@ -1048,9 +1048,9 @@ class Visual(Stimulus, ABC):
         """
 
         start = get_time()
-        if not _internals.active_exp.is_initialized:
+        if not _internals.active_exp.is_initialised:
             message = "Can't preload stimulus. Expyriment needs to be " + \
-                      "initialized before preloading a stimulus."
+                      "initialised before preloading a stimulus."
             raise RuntimeError(message)
         self._was_compressed_before_preload = self.is_compressed
         if not self.is_preloaded:
@@ -1156,7 +1156,7 @@ class Visual(Stimulus, ABC):
 
         """
 
-        if not _internals.active_exp.is_initialized or\
+        if not _internals.active_exp.is_initialised or\
                              _internals.active_exp.screen is None:
             raise RuntimeError("Cannot not find a screen!")
 

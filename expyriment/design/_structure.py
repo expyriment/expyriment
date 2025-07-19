@@ -29,7 +29,7 @@ from copy import deepcopy
 from .. import _internals
 from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
 from . import defaults, permute
-from .randomize import rand_int, shuffle_list
+from .randomise import rand_int, shuffle_list
 
 _FACTOR_NOT_EXIST = "The factor '{0}' does not exist!\nUse has_factor(name) to check if a factor is defined."
 _BWS_FACTOR_NOT_EXIST = "The bws-factor '{0}' does not exist!\nUse has_bws_factor(name) to check if a bws-factor is defined."
@@ -91,7 +91,7 @@ class Experiment:
         self._block_id_counter = 0
 
         self._is_started = False
-        self._is_initialized = False
+        self._is_initialised = False
         self._keyboard = None
         self._mouse = None
         self._clock = None
@@ -99,7 +99,7 @@ class Experiment:
         self._screen = None
         self._data = None
         self._events = None
-        self._log_level = None  # will be set from initialize
+        self._log_level = None  # will be set from initialise
         self._wait_callback_function = None
 
     @property
@@ -199,10 +199,16 @@ class Experiment:
         return self._is_started
 
     @property
-    def is_initialized(self):
-        """Getter for is_initialized."""
+    def is_initialised(self):
+        """Getter for is_initialised."""
 
-        return self._is_initialized
+        return self._is_initialised
+
+    @property
+    def is_initialized(self):
+        """Getter for is_initialised."""
+
+        return self._is_initialised
 
     def __str__(self):
         tmp_str = "Experiment: {0}\n".format(self.name)
@@ -295,26 +301,48 @@ class Experiment:
                 self.data.add_experiment_info(elem)
 
     @property
-    def bws_factor_randomized(self):
-        """Getter for bws_factor_randomized.
+    def bws_factor_randomised(self):
+        """Getter for bws_factor_randomised.
 
         Notes
         -----
-        Is between subject factor randomized? (True/False).
+        Is between subject factor randomised? (True/False).
 
-        If True conditions will be assigned randomized
+        If True conditions will be assigned randomised
         otherwise (default) conditions will be systematically permuted across
         subjects.
 
         """
 
-        return self._bws_factor_randomized
+        return self._bws_factor_randomised
+
+    @bws_factor_randomised.setter
+    def bws_factor_randomised(self, value):
+        """Setter for bws_factor_randomised."""
+
+        self._bws_factor_randomised = value
+
+    @property
+    def bws_factor_randomized(self):
+        """Getter for bws_factor_randomised.
+
+        Notes
+        -----
+        Is between subject factor randomised? (True/False).
+
+        If True conditions will be assigned randomised
+        otherwise (default) conditions will be systematically permuted across
+        subjects.
+
+        """
+
+        return self._bws_factor_randomised
 
     @bws_factor_randomized.setter
     def bws_factor_randomized(self, value):
-        """Setter for bws_factor_randomized."""
+        """Setter for bws_factor_randomised."""
 
-        self._bws_factor_randomized = value
+        self._bws_factor_randomised = value
 
     def add_bws_factor(self, factor_name, conditions):
         """Add a between subject factor.
@@ -345,7 +373,7 @@ class Experiment:
             conditions = [conditions]
         self._bws_factors[factor_name] = conditions
         self._bws_factors_names.append(factor_name)
-        self._randomized_condition_for_subject[factor_name] = {}
+        self._randomised_condition_for_subject[factor_name] = {}
 
     def has_bws_factor(self, factor_name):
         """Checks if a factor is defined.
@@ -426,14 +454,14 @@ class Experiment:
                 return None  # Factor not defined
             else:
                 cond_idx = 0
-                if self.bws_factor_randomized:
+                if self.bws_factor_randomised:
                     try:
-                        cond_idx = self._randomized_condition_for_subject[
+                        cond_idx = self._randomised_condition_for_subject[
                             factor_name][subject_id]
-                    except Exception:  # If not yet randomized for this subject, do it
+                    except Exception:  # If not yet randomised for this subject, do it
                         cond_idx = rand_int(
                             0, len(self._bws_factors[factor_name]) - 1)
-                        self._randomized_condition_for_subject[
+                        self._randomised_condition_for_subject[
                             factor_name][subject_id] = cond_idx
 
                 else:  # Permutation
@@ -458,8 +486,8 @@ class Experiment:
         # Can't use dict_keys, because dicts don't keep the order
         self._bws_factors_names = []
 
-        self._randomized_condition_for_subject = {}
-        self.bws_factor_randomized = False
+        self._randomised_condition_for_subject = {}
+        self.bws_factor_randomised = False
 
     @property
     def bws_factor_names(self):
@@ -501,7 +529,7 @@ class Experiment:
         suggested to switch of the logging of individual stimuli or IO event.
         (see the method `.set_logging()` of this objects)
 
-        The logging of events can be also changed before initialize via the
+        The logging of events can be also changed before initialise via the
         default value `expyriment.control.defaults.event_logging`.
 
         """
@@ -639,16 +667,16 @@ class Experiment:
     def shuffle_blocks(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all blocks.
 
-        The function returns False if no randomization could be found that
+        The function returns False if no randomisation could be found that
         fulfills the max immediate block repetition criterion. The different
         type of blocks are only defined by the factors. Shuffle does not
         take into account the added trials.
 
-        The following randomization methods are defined:
+        The following randomisation methods are defined:
 
-                0 = total randomization of block order (default)
+                0 = total randomisation of block order (default)
 
-                1 = randomization within small miniblocks. Each miniblock
+                1 = randomisation within small miniblocks. Each miniblock
                 contains one block of each type (only defined by factors!);
                 in other words, copies of one block type are always in
                 different miniblocks
@@ -656,17 +684,17 @@ class Experiment:
         Parameters
         ----------
         method : int, optional
-            method of block randomization (default=0)
+            method of block randomisation (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
-            this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            this parameter will be only considered for randomisation method 0;
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
         succeeded : bool
-            returns if randomization was successful and fulfilled the specified
+            returns if randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         """
@@ -700,7 +728,7 @@ class Experiment:
                            n_segments=n_segments)
         if rtn is False:
             print("Warning: Could not find an appropriate block " + \
-                  "randomization!")
+                  "randomisation!")
         return rtn
 
     def permute_blocks(self, permutation_type, factor_names=None,
@@ -776,8 +804,7 @@ type".format(permutation_type))
         """Sort the blocks according to their indices from low to high."""
 
         blocks_new = []
-        id_list = [x.id for x in self._blocks]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._blocks)
         for id in id_list:
             position = [i for i, x in enumerate(self._blocks)
                         if x.id == id][0]
@@ -847,7 +874,7 @@ type".format(permutation_type))
                 for txt in self.get_bws_factor(factor_name):
                     rtn = f"{rtn}{txt},"
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn = f"{rtn}#bws-rand: {int(self.bws_factor_randomized)}\n"
+            rtn += "#bws-rand: {0}\n".format(int(self.bws_factor_randomised))
         if len(self.data_variable_names) > 0:
             rtn = f"{rtn}#dvn: "
             for txt in self.data_variable_names:
@@ -951,7 +978,7 @@ type".format(permutation_type))
                         for tmp in ln[6:].split(","):
                             self.add_data_variable_names(tmp.strip())
                     elif ln.startswith("#bws-rand:"):
-                        self.bws_factor_randomized = (ln[11] == "1")
+                        self.bws_factor_randomised = (ln[11] == "1")
                     elif ln.startswith("#bws:"):
                         tmp = ln[6:].split("=")
                         print(tmp[1].strip().split(","))
@@ -1026,7 +1053,7 @@ type".format(permutation_type))
     def _event_file_log(self, log_text, log_level=1, log_event_tag=None):
         # log_level 1 = default, 2 = extensive, 0 or False = off
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1034,7 +1061,7 @@ type".format(permutation_type))
 
     def _event_file_warn(self, warning, log_level=1):
         """ Helper function to log event in the global experiment event file"""
-        if self.is_initialized and\
+        if self.is_initialised and\
                 self._log_level > 0 and\
                 self._log_level >= log_level and \
                 self.events is not None:
@@ -1043,7 +1070,7 @@ type".format(permutation_type))
     def log_design_to_event_file(self, additional_comment=""):
         """Log the design (as comment) to the current main event file.
 
-        If no experiment is initialized or no event file exists the function
+        If no experiment is initialised or no event file exists the function
         will not do anything. This function will be automatically called after
         an experiment has been started.
 
@@ -1058,7 +1085,7 @@ type".format(permutation_type))
 
         """
 
-        if self.is_initialized and self.events is not None:
+        if self.is_initialised and self.events is not None:
             self.events.log("design,log,{0}".format(additional_comment))
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
@@ -1694,16 +1721,16 @@ class Block:
     def shuffle_trials(self, method=0, max_repetitions=None, n_segments=None):
         """Shuffle all trials.
 
-        The function returns False if no randomization could be found that
+        The function returns False if no randomisation could be found that
         fulfills the max immediate trial repetition criterion. The different
         type of trials are only defined by the factors. Shuffle does not
         take into account the added stimuli.
 
-        The following randomization methods are defined:
+        The following randomisation methods are defined:
 
-                0 = total randomization of trial order (default)
+                0 = total randomisation of trial order (default)
 
-                1 = randomization within small miniblocks. Each miniblock
+                1 = randomisation within small miniblocks. Each miniblock
                 contains one trial of each type (only defined by factors!);
                 in other words, copies of one trial type are always in
                 different miniblocks
@@ -1711,17 +1738,17 @@ class Block:
         Parameters
         ----------
         method : int, optional
-            method of trial randomization (default=0)
+            method of trial randomisation (default=0)
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list` (default = None)
+            see documentation of `randomise.shuffle_list` (default = None)
         n_segments : int, optional
-            this parameter will be only considered for randomization method 0;
-            see documentation of `randomize.shuffle_list` (default = None)
+            this parameter will be only considered for randomisation method 0;
+            see documentation of `randomise.shuffle_list` (default = None)
 
         Returns
         -------
         succeeded : bool
-            returns if randomization was successful and fulfilled the specified
+            returns if randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         """
@@ -1755,15 +1782,14 @@ class Block:
                            n_segments=n_segments)
         if rtn is False:
             print("Warning: Could not find an appropriate trial " + \
-                  "randomization!")
+                  "randomisation!")
         return rtn
 
     def sort_trials(self):
         """Sort the trials according to their indices from low to high."""
 
         trials_new = []
-        id_list = [x.id for x in self._trials]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._trials)
         for _id in id_list:
             position = [i for i, x in enumerate(self._trials)
                         if x.id == _id][0]
@@ -2020,19 +2046,19 @@ class Trial:
         Parameters
         ----------
         max_repetitions : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
         n_segments : int, optional
-            see documentation of `randomize.shuffle_list`, default = None
+            see documentation of `randomise.shuffle_list`, default = None
 
         Returns
         -------
         success : bool
-            randomization was successful and fulfilled the specified
+            randomisation was successful and fulfilled the specified
             constrains (see max_repetitions)
 
         See Also
         ----------
-        expyriment.design.randomize.shuffle_list
+        expyriment.design.randomise.shuffle_list
 
         """
 
@@ -2044,8 +2070,7 @@ class Trial:
         """Sort the stimuli according to their IDs from low to high."""
 
         stimuli_new = []
-        id_list = [x.id for x in self._stimuli]
-        id_list.sort()
+        id_list = sorted(x.id for x in self._stimuli)
         for _id in id_list:
             position = [i for i, x in enumerate(self._stimuli)
                         if x.id == _id][0]

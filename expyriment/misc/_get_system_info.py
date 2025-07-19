@@ -6,11 +6,12 @@ Get System Information.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
 import os
 import platform
-import subprocess
 import socket
+import subprocess
+import sys
+
 try:
     import OpenGL as _ogl
 except ImportError:
@@ -90,14 +91,16 @@ def get_system_info(as_string=False):
 
     """
 
-    from ..io import ParallelPort
     from .._internals import get_settings_folder
+    from ..io import ParallelPort
     from ._miscellaneous import get_display_info
     try:
         from platform import linux_distribution
     except Exception:
         try:
-            from distro import linux_distribution #TODO: only available for Linux, should it be a suggested package dependency?
+            from distro import (
+                linux_distribution,  # TODO: only available for Linux, should it be a suggested package dependency?
+            )
         except Exception:
             def linux_distribution():
                 name = ""
@@ -249,7 +252,7 @@ def get_system_info(as_string=False):
                             ("sullAvailExtendedVirtual", ctypes.c_ulonglong), ]
 
                 def __init__(self):
-                    # Initialize this to the size of MEMORYSTATUSEX
+                    # initialise this to the size of MEMORYSTATUSEX
                     self.dwLength = 2 * 4 + 7 * 8  # size = 2 ints, 7 longs
                     super().__init__()
 

@@ -138,8 +138,8 @@ class MediaTime(float):
         return float(self) >= self.convert_to_seconds(other)
 
 
-def round(number, ndigits=0): # TODO: overrides Python's round, maybe renaming?
-    """Round half away from zero.
+def _py2_round(number, ndigits=0):
+    """Round half away from zero and always return a float.
 
     This method implements the Python 2 way of rounding.
     For "bankers rounding" (round half to even), please use the builtin `round`
@@ -437,7 +437,7 @@ def get_monitor_resolution():
     """
     # will be remove with 1.1
     pygame.display.init()
-    if active_exp.is_initialized:
+    if active_exp.is_initialised:
         return active_exp.screen.display_resolution
     else:
         return get_display_info[0]["maximal_resolution"]
@@ -568,8 +568,8 @@ def download_from_stash(content="all", branch=None):
 
     def show_progress(count, total, status=''):
         bar_len = 40
-        filled_len = int(round(bar_len * count / float(total)))
-        percents = round(100.0 * count / float(total), 1)
+        filled_len = int(_py2_round(bar_len * count / float(total)))
+        percents = _py2_round(100.0 * count / float(total), 1)
         bar = '=' * filled_len + ' ' * (bar_len - filled_len)
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()
@@ -692,13 +692,13 @@ def get_audio_devices(input_devices=False):
     if sdl2_audio is None:
         return None
 
-    is_initialized = pygame.mixer.get_init()
-    if not is_initialized:
+    is_initialised = pygame.mixer.get_init()
+    if not is_initialised:
         pygame.mixer.init()
 
     audio_devices = sdl2_audio.get_audio_device_names(input_devices)
 
-    if not is_initialized:
+    if not is_initialised:
         pygame.mixer.quit()
 
     return audio_devices

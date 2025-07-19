@@ -23,8 +23,8 @@ port.
 __author__ = 'Florian Krause <florian@expyriment.org> \
 Oliver Lindemann <oliver@expyriment.org>'
 
-import sys
 import os
+import sys
 
 from ... import _internals, misc
 from ...io._input_output import Input, Output
@@ -129,7 +129,7 @@ class ParallelPort(Input, Output):
                 _message = "Please install the Python package 'PyParallel'."
             else:
                 _message = "Not available on your computer."
-            message = "ParallelPort cannot be initialized! {0}".format(
+            message = "ParallelPort cannot be initialised! {0}".format(
                 _message)
             raise ImportError(message)
 
@@ -447,15 +447,11 @@ class ParallelPort(Input, Output):
 
         """
 
-        ports = []
         if sys.platform.startswith("linux"):
             dev = os.listdir('/dev')
-            for p in dev:
-                if p.startswith("parport"):
-                    ports.append(p)
+            ports = list(sorted(p in dev if p.startswith("parport")))
         else:
-            pass
-        ports.sort()
+            ports = []
 
         return ports
 
@@ -463,7 +459,7 @@ class ParallelPort(Input, Output):
     def _self_test(exp):
         """Test the parallel port."""
 
-        from ... import stimuli, io
+        from ... import io, stimuli
         result = {}
         result["testsuite_parallel_port"] = ""
         result["testsuite_parallel_success"] = "No"
@@ -479,7 +475,7 @@ class ParallelPort(Input, Output):
                 _message = "Not available on your computer."
             while True:
                 stimuli.TextScreen(
-                    "ParallelPort cannot be initialized!",
+                    "ParallelPort cannot be initialised!",
                     _message + "\n\n[Press RETURN to continue]").present()
                 key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
                 if key is not None:

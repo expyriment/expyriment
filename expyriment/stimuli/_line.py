@@ -13,9 +13,13 @@ from copy import copy
 
 from .. import _internals
 from ..misc._timer import get_time
-from ..misc.geometry import (XYPoint, lines_intersect,
-                             lines_intersection_point, points_to_vertices,
-                             vertices_rectangle)
+from ..misc.geometry import (
+    XYPoint,
+    lines_intersect,
+    lines_intersection_point,
+    points_to_vertices,
+    vertices_rectangle,
+)
 from . import defaults
 from ._shape import Shape
 from ._visual import Visual
@@ -304,7 +308,7 @@ class Line(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         p1 = (-180, 15)
         p2 = (200, 0)
         line = Line(p1, p2, 2)

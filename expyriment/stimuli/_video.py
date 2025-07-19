@@ -20,8 +20,8 @@ from .._internals import CallbackQuitEvent
 from ..control import defaults as control_defaults
 from ..misc import Clock, MediaTime, which
 from ..misc._timer import get_time
-from ._stimulus import Stimulus
 from . import _visual, defaults
+from ._stimulus import Stimulus
 
 
 # Fix for verbose moviepy 2.1.2
@@ -359,9 +359,9 @@ class Video(_visual.Stimulus):
 
         start = get_time()
         if not self._is_preloaded:
-            if not _internals.active_exp.is_initialized:
+            if not _internals.active_exp.is_initialised:
                 message = "Can't preload video. Expyriment needs to be " + \
-                          "initialized before preloading a video."
+                          "initialised before preloading a video."
                 raise RuntimeError(message)
 
             if self.get_ffmpeg_binary() is None:
@@ -946,7 +946,7 @@ class Video(_visual.Stimulus):
                 rtn_callback = callback_function()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback
