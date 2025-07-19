@@ -46,15 +46,15 @@ def _histogram(data):
         if str1 is None:
             str1 = "dRT: "
             str2 = "  n: "
-        str1 += "%4d" % x
+        str1 += f"{x:4d}"
         value = hist.get(x, 0)
-        str2 += "%4d" % value
+        str2 += f"{value:4d}"
         if x % 10 == 0:
-            hist_str += str1 + "\n" + str2 + "\n\n"
+            hist_str += f"{str1}\n{str2}\n\n"
             str1 = None
 
     if str1 is not None:
-        hist_str += str1 + "\n" + str2 + "\n\n"
+        hist_str += f"{str1}\n{str2}\n\n"
     return hist, hist_str
 
 def _stimulus_timing(exp):
