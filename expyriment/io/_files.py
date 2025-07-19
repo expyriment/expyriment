@@ -26,13 +26,8 @@ from platform import uname
 from time import strftime
 
 from .. import _internals, misc
-from ..misc import (
-    byte2unicode,
-    get_experiment_secure_hash,
-    module_hashes_as_string,
-    statistics,
-    unicode2byte,
-)
+from ..misc import (byte2unicode, get_experiment_secure_hash,
+                    module_hashes_as_string, statistics, unicode2byte)
 from ..misc._timer import get_time
 from . import defaults
 from ._input_output import Input, Output
@@ -782,9 +777,9 @@ class _InterEventIntervallLog:
                 txt = "{0} --> {1}: n={2}".format(a,b, len(iei))
                 if len(iei)>0:
                     txt += ", mean={0}, median={1}, std={2}".format(
-                                misc.round(statistics.mean(iei),2),
-                                misc.round(statistics.median(iei),2),
-                                misc.round(statistics.std(iei),2),
+                                misc.py2_round(statistics.mean(iei),2),
+                                misc.py2_round(statistics.median(iei),2),
+                                misc.py2_round(statistics.std(iei),2),
                                 )
                 rtn.append(txt)
         return rtn

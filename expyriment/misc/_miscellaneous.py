@@ -138,7 +138,7 @@ class MediaTime(float):
         return float(self) >= self.convert_to_seconds(other)
 
 
-def _py2_round(number, ndigits=0):
+def py2_round(number, ndigits=0):
     """Round half away from zero and always return a float.
 
     This method implements the Python 2 way of rounding.
@@ -568,8 +568,8 @@ def download_from_stash(content="all", branch=None):
 
     def show_progress(count, total, status=''):
         bar_len = 40
-        filled_len = int(_py2_round(bar_len * count / float(total)))
-        percents = _py2_round(100.0 * count / float(total), 1)
+        filled_len = int(py2_round(bar_len * count / float(total)))
+        percents = py2_round(100.0 * count / float(total), 1)
         bar = '=' * filled_len + ' ' * (bar_len - filled_len)
         sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
         sys.stdout.flush()

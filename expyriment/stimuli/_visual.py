@@ -108,7 +108,7 @@ class _LaminaPanelSurface:
 
         screensize = pygame.display.get_surface().get_size()
         bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                       int(misc.round(self._winsize[0] / 2)) + \
+                                       int(misc.py2_round(self._winsize[0] / 2)) + \
                                        self._position[0],
                                        screensize[1] // 2 - \
                                        self._winsize[1] // 2 + \
@@ -120,16 +120,16 @@ class _LaminaPanelSurface:
                                         self._winsize[1] // 2 + \
                                         self._position[1], 0)
         topleft = oglu.gluUnProject(screensize[0] // 2 - \
-                                    int(misc.round(self._winsize[0] / 2)) + \
+                                    int(misc.py2_round(self._winsize[0] / 2)) + \
                                     self._position[0],
                                     screensize[1] // 2 + \
-                                    int(misc.round(self._winsize[1] / 2)) + \
+                                    int(misc.py2_round(self._winsize[1] / 2)) + \
                                     self._position[1], 0)
         topright = oglu.gluUnProject(screensize[0] // 2 + \
                                      self._winsize[0] // 2 + \
                                      self._position[0],
                                      screensize[1] // 2 + \
-                                     int(misc.round(self._winsize[1] / 2)) + \
+                                     int(misc.py2_round(self._winsize[1] / 2)) + \
                                      self._position[1], 0)
 
 
@@ -300,7 +300,7 @@ class Visual(Stimulus, ABC):
         """
 
         pos = geometry.polar_to_cartesian(value)
-        self.reposition((int(misc.round(pos[0])), int(misc.round(pos[1]))))
+        self.reposition((int(misc.py2_round(pos[0])), int(misc.py2_round(pos[1]))))
 
     @property
     def absolute_position(self):
@@ -1330,8 +1330,8 @@ class Visual(Stimulus, ABC):
             factors[1] = abs(factors[1])
         self._set_surface(pygame.transform.smoothscale(
             self._get_surface(),
-            (int(misc.round(self.surface_size[0] * factors[0])),
-             int(misc.round(self.surface_size[1] * factors[1])))))
+            (int(misc.py2_round(self.surface_size[0] * factors[0])),
+             int(misc.py2_round(self.surface_size[1] * factors[1])))))
         if True in flip:
             self.flip(flip)
         if self._logging:

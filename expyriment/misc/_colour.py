@@ -9,9 +9,6 @@ Oliver Lindemann <oliver@expyriment.org>'
 
 import colorsys
 
-from . import round
-
-
 # The named colours are the 140 HTML colour names:
 #    see https://www.w3schools.com/colors/colors_names.asp
 # In addition, named colours including "gray" are also available in the

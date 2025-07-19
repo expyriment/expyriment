@@ -25,6 +25,7 @@ from ..misc import constants, list_fonts, statistics, unicode2byte
 from ..misc._timer import get_time
 from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
+
 def _histogram(data):
     """Returns the hist of the data (list of numbers) as dict and
     as string representation
@@ -169,14 +170,14 @@ After the test, you will be asked to indicate which (if any) of those two square
                 inaccuracies.extend(
                     [key % max(1, (1000 / refresh_rate))] * hist[key])
             if key != 0:
-                if key % int(misc.round(1000 / refresh_rate)) == 0:
+                if key % int(misc.py2_round(1000 / refresh_rate)) == 0:
                     delayed_presentations_accurate += hist[key]
                 else:
                     delayed_presentations_inaccurate += hist[key]
-        inaccuracy = int(misc.round(sum(inaccuracies) / len(inaccuracies)))
-        delayed_accurate = int(misc.round(
+        inaccuracy = int(misc.py2_round(sum(inaccuracies) / len(inaccuracies)))
+        delayed_accurate = int(misc.py2_round(
             100 * delayed_presentations_accurate/len(to_do_time)))
-        delayed_inaccurate = int(misc.round(
+        delayed_inaccurate = int(misc.py2_round(
             100 * delayed_presentations_inaccurate/len(to_do_time)))
 
         respkeys = {constants.K_F1:0, constants.K_F2:1, constants.K_F3:2,
@@ -200,16 +201,16 @@ After the test, you will be asked to indicate which (if any) of those two square
             scaling = 2
 
         info = stimuli.TextScreen("Results", "")
-        if int(misc.round(refresh_rate))  < 50 or \
-                int(misc.round(refresh_rate)) > 360:
+        if int(misc.py2_round(refresh_rate))  < 50 or \
+                int(misc.py2_round(refresh_rate)) > 360:
             results1_colour = [255, 0, 0]
-        elif int(misc.round(refresh_rate)) not in (60, 75, 120, 144, 240):
+        elif int(misc.py2_round(refresh_rate)) not in (60, 75, 120, 144, 240):
             results1_colour = [255, 255, 0]
         else:
             results1_colour = [0, 255, 0]
         r = "{0} Hz (~ every {1} ms)".format(
-            int(misc.round(refresh_rate)),
-            misc.round(1000/refresh_rate, 1))
+            int(misc.py2_round(refresh_rate)),
+            misc.py2_round(1000/refresh_rate, 1))
         results1 = stimuli.TextScreen(
             "", "Estimated Screen Refresh Rate:     {0}\n\n".format(r),
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
@@ -766,5 +767,6 @@ def run_test_suite(item=None):
         exp.screen.clear()
         exp.screen.update()
 
+    return results
     return results
     return results

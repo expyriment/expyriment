@@ -11,8 +11,8 @@ import os as _os
 
 import pygame as _pygame
 
-from ..misc import byte2unicode as _str2unicode
 from ..misc._colour import Colour as _Colour
+from ..misc._miscellaneous import byte2unicode as _str2unicode
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE

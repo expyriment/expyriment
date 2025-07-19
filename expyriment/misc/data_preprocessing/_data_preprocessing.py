@@ -25,10 +25,11 @@ try:
     import numpy as _np
 except Exception:
     _np = None
+
 from ... import __version__
-from ...misc import byte2unicode as _str2unicode
-from ...misc import string_sort_array as _py2py3_sort_array
-from ...misc import unicode2byte as _unicode2str
+from ...misc._miscellaneous import byte2unicode as _str2unicode
+from ...misc._miscellaneous import string_sort_array as _py2py3_sort_array
+from ...misc._miscellaneous import unicode2byte as _unicode2str
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
