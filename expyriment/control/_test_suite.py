@@ -25,18 +25,6 @@ from ..misc import constants, list_fonts, statistics, unicode2byte
 from ..misc._timer import get_time
 from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
-
-def _make_graph(x, y, colour): ## FIXME Obsolete function that is never called.
-    """Make the graph."""
-
-    graph = stimuli.Canvas(size=(max(x) * 3 + 10, max(y) * 3 + 10))
-    for counter in range(len(x)):
-        dot = stimuli.Dot(radius=1, colour=colour)
-        dot.position = (x[counter] * 3 - graph.size[0] // 2 + 5,
-                        y[counter] * 3 - graph.size[1] // 2 + 5)
-        dot.plot(graph)
-    return graph
-
 def _histogram(data):
     """Returns the hist of the data (list of numbers) as dict and
     as string representation
@@ -249,8 +237,8 @@ After the test, you will be asked to indicate which (if any) of those two square
             text_font="freemono", text_size=int(16 * scaling), text_bold=True,
             text_justification=0, text_colour=results3_colour,
             position=(0, -int(20 * scaling)))
-        if delayed_accurate > 50:
-            results5_colour = [255, 0, 0]
+        if delayed_accurate <= 5:
+            results5_colour = [0, 255, 0]
         elif delayed_accurate > 5:
             results5_colour = [255, 255, 0]
         if delayed_inaccurate > 10:
@@ -310,99 +298,6 @@ After the test, you will be asked to indicate which (if any) of those two square
                 break
         return (to_do_time, actual_time, refresh_rate, inaccuracy,
                 delayed_accurate, delayed_inaccurate, response)
-
-#     def _test2():
-#         info = """This will test if stimulus presentation can be synchronized to the refreshrate of the screen.
-# A good result is a fast, constant and smooth flickering without any distortions (e.g. horizontal stripes, tearing).
-# The estimated refreshrate should resemble your actual screen refreshrate (common refreshrates are between 40 and 240 Hz).
-#
-# [Press RETURN to continue]"""
-#
-#         text = stimuli.TextScreen("Stimulus presentation test (2)", info)
-#         text.present()
-#         exp.keyboard.wait([constants.K_RETURN])
-#         black = stimuli.BlankScreen(colour=constants.C_BLACK)
-#         black.preload()
-#         white = stimuli.BlankScreen(colour=constants.C_WHITE)
-#         white.preload()
-#         times = []
-#         black.present()
-#         for _x in range(100):
-#             start = get_time()
-#             black.present()
-#             times.append(get_time() - start)
-#             start = get_time()
-#             white.present()
-#             times.append(get_time() - start)
-#         refresh_rate = 1000 / (statistics.mean(times) * 1000)
-#         info = """Your estimated refresh rate is {0} Hz.
-#
-# [Press RETURN to continue]
-# """.format(refresh_rate)
-#         text = stimuli.TextScreen("Results", info)
-#         text.present()
-#         exp.keyboard.wait([constants.K_RETURN])
-#         text = stimuli.TextScreen(
-#             "Was the flickering fast, constant and smooth, without any distortions?",
-#             "[Press Y or N]")
-#         text.present()
-#         key, _rt = exp.keyboard.wait([constants.K_y,
-#                                       constants.K_n])
-#         if key == constants.K_y:
-#             response2 = "Yes"
-#         elif key == constants.K_n:
-#             response2 = "No"
-#
-#         return refresh_rate, response2
-
-#     def _test2():
-#         info = """This will test the video card's settings for multiple buffers and page flipping.
-# If none of the following squares are constantly blinking, page flipping is not activated and buffer contents are copied.
-# If only the left square is constantly blinking, page flipping is activated and a double buffer is used.
-# If additionally the right square is constantly blinking, page flipping is activated and a triple buffer is used.
-#
-# [Press RETURN to continue]"""
-#
-#         text = stimuli.TextScreen("Visual stimulus presentation test (2)", info)
-#         text.present()
-#         exp.keyboard.wait([constants.K_RETURN])
-#         c1 = stimuli.Canvas((400, 400))
-#         c2 = stimuli.Canvas((400, 400))
-#         c3 = stimuli.Canvas((400, 400))
-#         frame1 = stimuli.Rectangle((100, 100), position=(-100, 0))
-#         frame2 = stimuli.Rectangle((100, 100), position=(100, 0))
-#         bg = stimuli.Rectangle((90, 90), colour=exp.background_colour)
-#         bg.plot(frame1)
-#         bg.plot(frame2)
-#         frame1.plot(c1)
-#         frame2.plot(c2)
-#         frame1.plot(c3)
-#         frame2.plot(c3)
-#         c1.preload()
-#         c2.preload()
-#         c3.preload()
-#         c1.present()
-#         c2.present()
-#         c3.present()
-#         for _x in range(50):
-#             d = stimuli.Dot(1, colour=(1, 1, 1))
-#             d.present(clear=False)
-#             exp.clock.wait(100)
-#         text = stimuli.TextScreen(
-#             "How many squares were constantly blinking?",
-#             "[Press 0, 1 or 2]")
-#         text.present()
-#         key, _rt = exp.keyboard.wait([constants.K_0,
-#                                       constants.K_1,
-#                                       constants.K_2])
-#         if key == constants.K_0:
-#             response3 = 0
-#         elif key == constants.K_1:
-#             response3 = 1
-#         elif key == constants.K_2:
-#             response3 = 2
-#
-#         return (response3,)
 
     return _test1()
 

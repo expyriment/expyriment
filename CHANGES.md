@@ -104,6 +104,8 @@ Changed:
 - package building with flit and pyproject.toml
 - revision number and build data (`__revision__`, `__date__`) removed from
   source files
+- Python 2 support has been removed
+  Expyriment now only works with Python 3.10 or higher
 - Documentation not shipped with Expyriment anymore (i.e. no offline
   documentation available, only online)
 - rewrite of permutation module
