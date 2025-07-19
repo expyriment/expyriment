@@ -8,12 +8,11 @@ This module contains a class implementing a TextMenu.
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
+from .. import _internals, misc, stimuli
 from . import defaults
+from ._input_output import Input
 from ._keyboard import Keyboard
 from ._mouse import Mouse
-from ._input_output import Input
-from .. import stimuli, misc
-from .. import _internals
 
 
 class TextMenu(Input):
@@ -364,7 +363,7 @@ class TextMenu(Input):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            _exp = control.initialize()
+            _exp = control.initialise()
         menu = TextMenu(heading="Expyriment TextMenu",
                         menu_items=["Items 1", "Items 1", "Items 3",
                                     "Items 4", "Items 5"],

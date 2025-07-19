@@ -31,7 +31,7 @@ def start_audiosystem():
         pygame.mixer.init()
         pygame.mixer.init()  # needed on some systems
     except Exception:
-        message = "Audiosystem could not be initialized with given parameters."
+        message = "Audiosystem could not be initialised with given parameters."
         raise RuntimeError(message)
 
 
@@ -102,7 +102,7 @@ def wait_end_audiosystem(channel=None, callback_function=None,
                 else:
                     channel.stop()
                 return rtn_callback
-        if _internals.active_exp.is_initialized:
+        if _internals.active_exp.is_initialised:
             rtn_callback = _internals.active_exp._execute_wait_callback()
             if isinstance(rtn_callback, CallbackQuitEvent):
                 if channel is None:
@@ -148,7 +148,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
     -----
     The function set the following global variables
 
-    >>> expyriment.control.defaults.initialize_delay = 0
+    >>> expyriment.control.defaults.initialise_delay = 0
     >>> expyriment.control.defaults.window_mode = True
     >>> expyriment.control.defaults.fast_quit = True
     >>> expyriment.control.defaults.auto_create_subject_id = True
@@ -169,7 +169,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
 
     from .. import io
     if on:
-        defaults._mode_settings = [defaults.initialize_delay,
+        defaults._mode_settings = [defaults.initialise_delay,
                                    defaults.window_mode,
                                    defaults.fast_quit,
                                    io.defaults.outputfile_time_stamp,
@@ -180,7 +180,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
         if skip_wait_methods:
             set_skip_wait_methods(True)
         print("*** DEVELOP MODE ***")
-        defaults.initialize_delay = 0
+        defaults.initialise_delay = 0
         defaults.window_mode = True
         defaults.fast_quit = True
         io.defaults.outputfile_time_stamp = False
@@ -188,7 +188,7 @@ def set_develop_mode(on=True, intensive_logging=False, skip_wait_methods=False):
     else:
         print("*** NORMAL MODE ***")
         if defaults._mode_settings is not None:
-            defaults.initialize_delay = defaults._mode_settings[0]
+            defaults.initialise_delay = defaults._mode_settings[0]
             defaults.window_mode = defaults._mode_settings[1]
             defaults.fast_quit = defaults._mode_settings[2]
             io.defaults.outputfile_time_stamp = \
