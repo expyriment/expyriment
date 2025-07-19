@@ -185,7 +185,7 @@ def is_venv():
 
     Note
     ----
-    Only covers virual environments created with `virtualenv`, `venv`, and
+    Only covers virtual environments created with `virtualenv`, `venv`, and
     `pyvnenv`.
 
     """
