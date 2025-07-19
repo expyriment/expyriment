@@ -88,7 +88,7 @@ class TextLine(Visual):
             with open(self._text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise OSError("Font '{0}' not found!".format(text_font))
+            raise OSError("Font '{}' not found!".format(text_font))
         if text_bold is not None:
             self._text_bold = text_bold
         else:

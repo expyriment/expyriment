@@ -207,7 +207,7 @@ letter arguments run single commands""",
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
         if args[x] is True:
             raise DeprecationWarning(
-                "'{0}' is deprecated! Please use 'opengl'. ".format(x) +\
+                "'{}' is deprecated! Please use 'opengl'. ".format(x) +\
                 "See '-h' or '--help' for more information")
 
     if args['opengl'] is not None:
@@ -231,27 +231,27 @@ letter arguments run single commands""",
         statements.append("xpy.control.defaults.auto_create_subject_id = True")
 
     if args["display"] is not None and args["display"] >= 0:
-        print("* Using display #{0}".format(args["display"]))
-        statements.append("xpy.control.defaults.display = {0}".format(
+        print("* Using display #{}".format(args["display"]))
+        statements.append("xpy.control.defaults.display = {}".format(
             args['display']))
 
     if args["display_resolution"] is not None:
         res = [int(x) for x in args["display_resolution"].split("x")]
         statements.append(
-            "xpy.control.defaults.display_resolution = {0}".format(res))
-        print("* Setting display resolution to {0}".format(
+            "xpy.control.defaults.display_resolution = {}".format(res))
+        print("* Setting display resolution to {}".format(
             args["display_resolution"]))
 
     if args["text_size"] is not None:
         statements.append(
-            "xpy.design.defaults.experiment_text_size = {0}".format(
+            "xpy.design.defaults.experiment_text_size = {}".format(
                 args['text_size']))
 
     if args["window_size"] is not None:
         res = [int(x) for x in args["window_size"].split("x")]
         statements.append(
-            "xpy.control.defaults.display_resolution = {0}".format(res))
-        print("* Setting window size to {0}".format(
+            "xpy.control.defaults.display_resolution = {}".format(res))
+        print("* Setting window size to {}".format(
             args["window_size"]))
 
     # commands
@@ -295,7 +295,7 @@ letter arguments run single commands""",
             if len(branches) == 1:
                 sys.stdout.write(" from which branch? ([master])? ")
             else:
-                sys.stdout.write(" from which branch? (master/[{0}])? ".format(
+                sys.stdout.write(" from which branch? (master/[{}])? ".format(
                 branches[1]))
             branch = input()
             if branch == "":
@@ -370,7 +370,7 @@ letter arguments run single commands""",
     elif args["SCRIPT"] is not None:
         script = os.path.abspath(args["SCRIPT"])
         if not os.path.isfile(script):
-            print("Can't find {0}!".format(args["SCRIPT"]))
+            print("Can't find {}!".format(args["SCRIPT"]))
             exit()
             local_namespace = {}
         exec("\n".join(statements), globals(), local_namespace)

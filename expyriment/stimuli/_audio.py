@@ -52,7 +52,7 @@ class Audio(Stimulus):
         self._start_time = 0
         self._paused_time = 0
         if not(os.path.isfile(self._filename)):
-            raise OSError("The audio file {0} does not exists".format(
+            raise OSError("The audio file {} does not exists".format(
                 self._filename))
 
     _getter_exception_message = "Cannot set {0} if preloaded!"
@@ -232,7 +232,7 @@ class Audio(Stimulus):
                 filename = self._filename
 
             _internals.active_exp._event_file_log(
-                "Stimulus,played,{0}".format(filename), 1,
+                "Stimulus,played,{}".format(filename), 1,
                                  log_event_tag=log_event_tag)
         return self._channel
 

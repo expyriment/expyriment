@@ -60,7 +60,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
     if subject_id is not None:
         if not isinstance(subject_id, int):
             raise Exception("Subject id must be an integer. " +
-                    "{0} is not allowed.".format(type(subject_id)))
+                    "{} is not allowed.".format(type(subject_id)))
         auto_create_subject_id = True
     elif auto_create_subject_id is None:
         auto_create_subject_id = defaults.auto_create_subject_id
@@ -100,7 +100,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
             subject_id = default_number
             while True:
                 text = stimuli.TextLine(
-                    text="{0}".format(subject_id),
+                    text="{}".format(subject_id),
                     text_size=28,
                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE)
                 btn = TouchScreenButtonBox(
@@ -154,7 +154,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        experiment.data.add_subject_info("{0} = {1}".format(
+        experiment.data.add_subject_info("{} = {}".format(
             f, _permuted_bws_factor_condition))
 
     if experiment.events is not None:
@@ -495,7 +495,7 @@ fullscreen.""")
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
     logo.scale(0.6 * scaling)
-    text = stimuli.TextLine("Version {0}".format(get_version()),
+    text = stimuli.TextLine("Version {}".format(get_version()),
                             text_size=int(20 * scaling),
                             text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
@@ -506,9 +506,9 @@ fullscreen.""")
     text.plot(canvas)
     hash_ = misc.get_experiment_secure_hash()
     if hash_ is not None:
-        txt = "{0} ({1})".format(os.path.split(sys.argv[0])[1], hash_)
+        txt = "{} ({})".format(os.path.split(sys.argv[0])[1], hash_)
         if len(misc.module_hashes_as_string())>0:
-            txt += ", {0}".format(
+            txt += ", {}".format(
                         misc.module_hashes_as_string())
         text2 = stimuli.TextLine(txt,
             text_size=int(14 * scaling),

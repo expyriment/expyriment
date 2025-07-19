@@ -130,7 +130,7 @@ class TextInput(Input):
             with open(self._message_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise OSError("Font '{0}' not found!".format(message_font))
+            raise OSError("Font '{}' not found!".format(message_font))
         if message_bold is not None:
             self._message_bold = message_bold
         else:
@@ -165,7 +165,7 @@ class TextInput(Input):
             with open(self._user_text_font, 'rb') as f:
                 pygame.font.Font(f, 10)
         except Exception:
-            raise OSError("Font '{0}' not found!".format(user_text_font))
+            raise OSError("Font '{}' not found!".format(user_text_font))
         if user_text_colour is None:
             user_text_colour = defaults.textinput_user_text_colour
         if user_text_colour is not None:
@@ -202,7 +202,7 @@ class TextInput(Input):
             if background_stimulus.__class__.__bases__[0] == stimuli._visual.Visual:
                 self._background_stimulus = background_stimulus
             else:
-                raise TypeError("{0} ".format(type(background_stimulus)) +
+                raise TypeError("{} ".format(type(background_stimulus)) +
                                      "is not a valid background stimulus. " +
                                      "Use an expyriment visual stimulus.")
         else:
@@ -514,7 +514,7 @@ class TextInput(Input):
         got = "".join(self._user)
         if self._logging:
             _internals.active_exp._event_file_log(
-                "TextInput,entered,{0}".format(got))
+                "TextInput,entered,{}".format(got))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
         return got

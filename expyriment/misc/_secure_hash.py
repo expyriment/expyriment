@@ -102,7 +102,7 @@ def module_hashes_as_string():
     if len(secure_hashes)>1:
         txt = ""
         for fl, sha in get_module_hash_dictionary().items():
-            txt += "{0} ({1}), ".format(fl, sha)
+            txt += "{} ({}), ".format(fl, sha)
         return txt[:-2]
     else:
         return ""
@@ -110,7 +110,7 @@ def module_hashes_as_string():
 def cout_hashes():
     """helper function that prints hash information"""
     if get_experiment_secure_hash() is not None:
-        print("Main file: {0} ({1})".format(main_file,
+        print("Main file: {} ({})".format(main_file,
                             get_experiment_secure_hash()))
         if len(secure_hashes)>1:
             print("Modules: " + module_hashes_as_string())

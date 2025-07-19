@@ -56,7 +56,7 @@ class InputFile(Input):
         self._current_line = 1
         self._lines = []
         if not(os.path.isfile(self._filename)):
-            raise OSError("The input file '{0}' does not exist.".format(
+            raise OSError("The input file '{}' does not exist.".format(
                 self._filename))
 
         if encoding is None:
@@ -168,7 +168,7 @@ class OutputFile(Output):
         if not os.path.isdir(directory):
             os.mkdir(directory)
         self._filename = self.standard_file_name
-        self._fullpath = directory + "{0}{1}".format(os.path.sep, self._filename)
+        self._fullpath = directory + "{}{}".format(os.path.sep, self._filename)
 
         atexit.register(self.save)
 
@@ -179,11 +179,11 @@ class OutputFile(Output):
             locale_enc = locale.getdefaultlocale()[1]
         except Exception:
             locale_enc = "UTF-8"
-        self.write_comment("Expyriment {0}, {1}-file, coding: {2}".format(
+        self.write_comment("Expyriment {}, {}-file, coding: {}".format(
             _internals.get_version(), self._suffix,
             locale_enc))
         if _internals.active_exp.is_initialised:
-            self.write_comment("date: {0}".format(time.strftime(
+            self.write_comment("date: {}".format(time.strftime(
                                "%a %b %d %Y %H:%M:%S",
                                _internals.active_exp.clock.init_localtime)))
 
@@ -303,7 +303,7 @@ class OutputFile(Output):
     def rename(self, new_filename):
         """Renames the output file."""
         self.save()
-        new_fullpath = self.directory + "{0}{1}".format(os.path.sep, new_filename)
+        new_fullpath = self.directory + "{}{}".format(os.path.sep, new_filename)
         if os.path.isfile(new_fullpath):
             cnt = 1
             while True:
@@ -381,7 +381,7 @@ class DataFile(OutputFile):
         if additional_suffix is None:
             additional_suffix = ''
         if len(additional_suffix) > 0:
-            suffix = ".{0}{1}".format(additional_suffix, self._file_suffix)
+            suffix = ".{}{}".format(additional_suffix, self._file_suffix)
         else:
             suffix = self._file_suffix
         OutputFile.__init__(self, suffix, directory, time_stamp=time_stamp)
@@ -395,15 +395,15 @@ class DataFile(OutputFile):
         self._variable_names = []
 
         self.write_comment("--EXPERIMENT INFO")
-        self.write_comment("e mainfile: {0}".format(os.path.split(
+        self.write_comment("e mainfile: {}".format(os.path.split(
                                                     sys.argv[0])[1]))
 
-        self.write_comment("e sha1: {0}".format(
+        self.write_comment("e sha1: {}".format(
                                     get_experiment_secure_hash()))
-        self.write_comment("e modules: {0}".format(
+        self.write_comment("e modules: {}".format(
                             module_hashes_as_string()))
         self.write_comment("--SUBJECT INFO")
-        self.write_comment("s id: {0}".format(self._subject))
+        self.write_comment("s id: {}".format(self._subject))
         self.write_comment("#")
         self._variable_names_changed = True
         self.save()
@@ -434,7 +434,7 @@ class DataFile(OutputFile):
                 if '"' in byte2unicode(elem):
                     elem = byte2unicode(elem).replace('"', '""')
                 if ',' in byte2unicode(elem):
-                    elem = '"{0}"'.format(byte2unicode(elem))
+                    elem = '"{}"'.format(byte2unicode(elem))
                 line += elem
             self.write_line(line)
         else:
@@ -462,7 +462,7 @@ class DataFile(OutputFile):
 
         """
 
-        self._subject_info.append("{0}s {1}{2}".format(
+        self._subject_info.append("{}s {}{}".format(
             self.comment_char, text, defaults.outputfile_eol))
 
     def add_experiment_info(self, text):
@@ -480,7 +480,7 @@ class DataFile(OutputFile):
         """
 
         for line in text.splitlines():
-            self._experiment_info.append("{0}e {1}{2}".format(
+            self._experiment_info.append("{}e {}{}".format(
                 self.comment_char, line, defaults.outputfile_eol))
 
     @property
@@ -488,7 +488,7 @@ class DataFile(OutputFile):
         """Getter for variable_names."""
 
         vn = self.delimiter.join(self._variable_names)
-        return "subject_id,{0}".format(vn)
+        return "subject_id,{}".format(vn)
 
     def clear_variable_names(self):
         """Remove all variable names from data file.
@@ -540,7 +540,7 @@ class DataFile(OutputFile):
         if len(self._subject_info) > 0 or len(self._experiment_info) > 0  \
                 or self._variable_names_changed:
             # Re-write header and varnames
-            tmpfile_name = "{0}{1}{2}".format(self.directory, os.path.sep, uuid.uuid4())
+            tmpfile_name = "{}{}{}".format(self.directory, os.path.sep, uuid.uuid4())
             os.rename(self._fullpath, tmpfile_name)
             fl = open(self._fullpath, 'wb+')
             tmpfl = open(tmpfile_name, 'r')
@@ -618,7 +618,7 @@ class EventFile(OutputFile):
         if additional_suffix is None:
             additional_suffix = ''
         if len(additional_suffix) > 0:
-            suffix = ".{0}{1}".format(additional_suffix, self._file_suffix)
+            suffix = ".{}{}".format(additional_suffix, self._file_suffix)
         else:
             suffix = self._file_suffix
         OutputFile.__init__(self, suffix, directory, time_stamp=time_stamp)
@@ -643,13 +643,13 @@ class EventFile(OutputFile):
             window_mode = "unknown"
             opengl = "unknown"
 
-        self.write_comment("sha1: {0}".format(
+        self.write_comment("sha1: {}".format(
                                     get_experiment_secure_hash()))
-        self.write_comment("modules: {0}".format(
+        self.write_comment("modules: {}".format(
                             module_hashes_as_string()))
-        self.write_comment("display: size={0}, window_mode={1}, opengl={2}".format(
+        self.write_comment("display: size={}, window_mode={}, opengl={}".format(
             display, window_mode, opengl))
-        self.write_comment("os: {0}".format(uname()))
+        self.write_comment("os: {}".format(uname()))
 
         self.write_line("Time,Type,Event,Value,Detail,Detail2")
         self.save()
@@ -774,9 +774,9 @@ class _InterEventIntervallLog:
                     b = a
                     a = tmp
                 iei = self._get_iei_intervalls(a, b)
-                txt = "{0} --> {1}: n={2}".format(a,b, len(iei))
+                txt = "{} --> {}: n={}".format(a,b, len(iei))
                 if len(iei)>0:
-                    txt += ", mean={0}, median={1}, std={2}".format(
+                    txt += ", mean={}, median={}, std={}".format(
                                 misc.py2_round(statistics.mean(iei),2),
                                 misc.py2_round(statistics.median(iei),2),
                                 misc.py2_round(statistics.std(iei),2),

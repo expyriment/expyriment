@@ -72,7 +72,7 @@ class Screen(Output):
         elif opengl is True:
             opengl = 2
         elif opengl > 2:
-            warn_message = "OpenGL mode '{0}' does not exist. \
+            warn_message = "OpenGL mode '{}' does not exist. \
                 OpenGL will be set to '2' (default)".format(opengl)
             print("Warning: " + warn_message)
             _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
@@ -275,7 +275,7 @@ machine!")
                 rectangles.append(pygame.Rect(rect_pos, stim_size))
             pygame.display.update(rectangles)
             if self._logging:
-                _internals.active_exp._event_file_log("Screen,stimuli updated,{0}"\
+                _internals.active_exp._event_file_log("Screen,stimuli updated,{}"\
                                 .format([stim.id for stim in stimuli]), 2)
             pygame.event.pump()
 

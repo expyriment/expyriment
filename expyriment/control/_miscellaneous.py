@@ -209,8 +209,8 @@ def _get_module_values(goal_dict, module):
     namespace = locals()
     for var in dir(module):
         if not var.startswith("_"):
-            exec("value = {0}.{1}".format(module.__name__, var), namespace)
-            goal_dict["{0}.{1}".format(module.__name__, var)] = namespace['value']
+            exec("value = {}.{}".format(module.__name__, var), namespace)
+            goal_dict["{}.{}".format(module.__name__, var)] = namespace['value']
     return goal_dict
 
 
@@ -355,7 +355,7 @@ def _set_stdout_logging(event_file):
             self._buffer.append(message)
             if message.endswith("\n"):
                 tmp = "".join(self._buffer).strip("\n")
-                self.event_file.log("{0},received,{1}".format(self.tag,
+                self.event_file.log("{},received,{}".format(self.tag,
                                                               repr(tmp)))
                 self._buffer = []
 

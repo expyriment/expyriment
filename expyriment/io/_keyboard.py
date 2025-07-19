@@ -286,12 +286,12 @@ class Keyboard(Input):
                 if event.key in keys:
                     if self._logging:
                         _internals.active_exp._event_file_log(
-                            "Keyboard,received,{0},check".format(event.key))
+                            "Keyboard,received,{},check".format(event.key))
                     return event.key
             else:
                 if self._logging:
                     _internals.active_exp._event_file_log(
-                        "Keyboard,received,{0},check".format(event.key), 2)
+                        "Keyboard,received,{},check".format(event.key), 2)
                 return event.key
         return None
 
@@ -395,7 +395,7 @@ class Keyboard(Input):
             if not done and low_performance:
                 _internals.low_performance_sleep()
         if self._logging:
-            _internals.active_exp._event_file_log("Keyboard,received,{0},wait"\
+            _internals.active_exp._event_file_log("Keyboard,received,{},wait"\
                                               .format(found_key))
         if android_hide_keyboard is not None:
             android_hide_keyboard()
@@ -483,7 +483,7 @@ class Keyboard(Input):
         if self._logging:
             if found_char is not None:
                 _internals.active_exp._event_file_log(
-                    "Keyboard,received,{0},wait_char".format(
+                    "Keyboard,received,{},wait_char".format(
                         found_char))
             else:
                 _internals.active_exp._event_file_log(

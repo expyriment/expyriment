@@ -397,7 +397,7 @@ def find_font(font):
     if font_file is not None:
         return font_file
     else:
-        warn_message = "Failed to find font {0}!".format(font)
+        warn_message = "Failed to find font {}!".format(font)
         print("Warning: " + warn_message)
         return ""
 
@@ -587,7 +587,7 @@ def download_from_stash(content="all", branch=None):
         r = Request(url, headers={"Accept-Encoding": "gzip; deflate"})
         u = urlopen(r)
     except Exception:
-        raise RuntimeError("Download of {0} failed!".format(url))
+        raise RuntimeError("Download of {} failed!".format(url))
 
     with TemporaryFile() as f:
         try:
@@ -601,17 +601,17 @@ def download_from_stash(content="all", branch=None):
                 file_size_dl += len(buffer)
                 f.write(buffer)
                 show_progress(file_size_dl, file_size,
-                              "downloading stash ({0})".format(branch))
+                              "downloading stash ({})".format(branch))
             sys.stdout.write("\n")
         except Exception:
             show_progress(0, 100,
-                          "downloading stash ({0})".format(branch))
+                          "downloading stash ({})".format(branch))
             chunk = u.read()
             while chunk:
                 f.write(chunk)
                 chunk = u.read()
             show_progress(100, 100,
-                          "downloading stash ({0})".format(branch))
+                          "downloading stash ({})".format(branch))
 
         if not os.path.isdir(get_settings_folder()):
             os.makedirs(get_settings_folder())
@@ -649,7 +649,7 @@ def download_from_stash(content="all", branch=None):
                 copyfileobj(source, target)
             files_installed += 1
             show_progress(files_installed, len(files),
-                          "installing content ({0})".format(content))
+                          "installing content ({})".format(content))
     print("")
 
 

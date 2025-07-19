@@ -37,8 +37,8 @@ import sys as _sys
 
 if _sys.version_info[0] != 3 or _sys.version_info[1] < 9:
 
-    raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Python {0}.{1}.".format(
+    raise RuntimeError("Expyriment {} ".format(__version__) +
+                      "is not compatible with Python {}.{}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
                       "\n\n  Please use Python 3.9+. Note, the last major "
@@ -51,13 +51,13 @@ try:
 
     import pygame as _pygame
     if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
-        raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Pygame {0}.{1}.{2}.".format(
+        raise RuntimeError("Expyriment {} ".format(__version__) +
+                      "is not compatible with Pygame {}.{}.{}.".format(
                           _pygame.vernum[0], _pygame.vernum[1],
                           _pygame.vernum[2]) +
                       "\nPlease install Pygame(>=2.5.2,<3)).")
 except ImportError:
-    raise ImportError("Expyriment {0} ".format(__version__) +
+    raise ImportError("Expyriment {} ".format(__version__) +
                       "needs the package 'Pygame')." +
                       "\nPlease install Pygame(>=2.5.2,<3).")
 
@@ -71,8 +71,8 @@ try:
     _pyopengl_version = tuple(map(int, (_OpenGL.__version__.split("."))))
 
     if not _pyopengl_version[0] == 3:
-        raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with PyOpenGL {0}.{1}.{2}.".format(
+        raise RuntimeError("Expyriment {} ".format(__version__) +
+                      "is not compatible with PyOpenGL {}.{}.{}.".format(
                         int(_OpenGL.version.__version__[0]),
                         int(_OpenGL.version.__version__[2]),
                         int(_OpenGL.version.__version__[4]),
@@ -90,14 +90,14 @@ try:
 
 except ImportError:
     print("No OpenGL support!" +
-          "\nExpyriment {0} ".format(__version__) +
+          "\nExpyriment {} ".format(__version__) +
           "needs the package 'PyOpenGL'."
           "\nPlease install PyOpenGL(>=3,<4) for OpenGL functionality.")
 
 
 from ._internals import get_version, import_all_extras
 
-print("Expyriment {0} ".format(get_version()))
+print("Expyriment {} ".format(get_version()))
 
 
 # Check if local 'test.py{c|o}' shadows 'test' package of standard library
