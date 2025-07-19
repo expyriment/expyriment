@@ -20,11 +20,10 @@ except Exception:
 import expyriment
 
 from .. import _internals, control, design, io, misc, stimuli
-from ..design import randomize
+from ..design import randomise
 from ..misc import constants, list_fonts, statistics, unicode2byte
 from ..misc._timer import get_time
-from . import defaults, end, initialize, start_audiosystem, stop_audiosystem
-
+from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
 def _histogram(data):
     """Returns the hist of the data (list of numbers) as dict and
@@ -100,7 +99,7 @@ After the test, you will be asked to indicate which (if any) of those two square
         s2.preload()
         to_do_time = list(range(0,25)) + list(range(100,125)) + \
                      list(range(200,225)) + list(range(300,325))
-        randomize.shuffle_list(to_do_time)
+        randomise.shuffle_list(to_do_time)
         actual_time = []
         for x in to_do_time:
             s1.present(clear=False)
@@ -108,7 +107,7 @@ After the test, you will be asked to indicate which (if any) of those two square
             exp.clock.wait(x)
             s2.present(clear=False)
             actual_time.append((get_time() - start) * 1000)
-            exp.clock.wait(randomize.rand_int(30, 60))
+            exp.clock.wait(randomise.rand_int(30, 60))
 
         # determine refresh rate
         s = stimuli.Circle(0, colour=exp.background_colour)  # 1 px
@@ -639,12 +638,12 @@ def run_test_suite(item=None):
     from ..stimuli import extras as _test2
 
     quit_experiment = False
-    if not _internals.active_exp.is_initialized:
-        defaults.initialize_delay = 0
+    if not _internals.active_exp.is_initialised:
+        defaults.initialise_delay = 0
         defaults.event_logging = 0
         exp = design.Experiment()
         exp.testsuite = True
-        initialize(exp)
+        initialise(exp)
         quit_experiment = True
     else:
         exp = _internals.active_exp

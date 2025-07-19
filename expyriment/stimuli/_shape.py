@@ -693,7 +693,7 @@ class Shape(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         sh = Shape(position=(10, 100), colour=(255, 0, 255))
         sh.add_vertices([(60, 60), (0, -120)])
         sh.present()

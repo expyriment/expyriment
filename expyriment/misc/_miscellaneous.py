@@ -437,7 +437,7 @@ def get_monitor_resolution():
     """
     # will be remove with 1.1
     pygame.display.init()
-    if active_exp.is_initialized:
+    if active_exp.is_initialised:
         return active_exp.screen.display_resolution
     else:
         return get_display_info[0]["maximal_resolution"]
@@ -692,13 +692,13 @@ def get_audio_devices(input_devices=False):
     if sdl2_audio is None:
         return None
 
-    is_initialized = pygame.mixer.get_init()
-    if not is_initialized:
+    is_initialised = pygame.mixer.get_init()
+    if not is_initialised:
         pygame.mixer.init()
 
     audio_devices = sdl2_audio.get_audio_device_names(input_devices)
 
-    if not is_initialized:
+    if not is_initialised:
         pygame.mixer.quit()
 
     return audio_devices

@@ -1,6 +1,6 @@
-"""The expyriment randomize module.
+"""The expyriment randomise module.
 
-This module contains various functions for randomizing data
+This module contains various functions for randomising data
 
 """
 
@@ -8,8 +8,8 @@ __author__ = 'Florian Krause <florian@expyriment.org>,\
               Oliver Lindemann <oliver@expyriment.org>'
 
 
-from copy import copy as _copy
 import random as _random
+from copy import copy as _copy
 
 _random.seed()
 
@@ -126,7 +126,10 @@ def rand_norm(a, b, mu=None, sigma=None):
 
 def _compare_items(a, b):
     """Helper function for `shuffle_list` to compare two elements of a list"""
-    from .._structure import Trial, Block # needs to be imported here because of circular dependency
+    from .._structure import (  # needs to be imported here because of circular dependency
+        Block,
+        Trial,
+    )
     if (isinstance(a, Trial) and isinstance(b, Trial)) or\
        (isinstance(a, Block) and isinstance(b, Block)):
         return a.compare(b)
@@ -135,7 +138,7 @@ def _compare_items(a, b):
 
 
 def shuffle_list(list_, max_repetitions=-1, n_segments=0):
-    """Shuffle any list of objects. In place randomization of the list.
+    """Shuffle any list of objects. In place randomisation of the list.
 
     Parameters
     ----------
@@ -144,18 +147,18 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
     max_repetitions : int, optional
         maximum number of allowed repetitions of one identical items; if no
         solution can be found (i.e., Python's recursion limit is reached), the
-        function returns `False` and the list will be randomized without
+        function returns `False` and the list will be randomised without
         constrains (see Notes); default = -1
     n_segments : int, optional
-        randomize list per segment, i.e., list will be divided into n equal
+        randomise list per segment, i.e., list will be divided into n equal
         sized segments and the order of elements within each segment will be
-        randomized; if n_segments is < 2, this parameter has no effect;
+        randomised; if n_segments is < 2, this parameter has no effect;
         default = 0
 
     Returns
     -------
     success : bool
-        returns if randomization was successful and fulfilled the specified
+        returns if randomisation was successful and fulfilled the specified
         constrains (see max_repetitions)
 
     Notes

@@ -22,7 +22,7 @@ from ._input_output import Input
 class Mouse(Input):
     """A class implementing a mouse input.
 
-    Calling ``expyriment.control.initialize(exp)`` will automatically create a
+    Calling ``expyriment.control.initialise(exp)`` will automatically create a
     mouse instance and will reference it in exp.mouse for easy access.
 
     """
@@ -35,7 +35,7 @@ class Mouse(Input):
 
     def __init__(self, show_cursor=True, track_button_events=None,
                  track_motion_events=None):
-        """Initialize a mouse input.
+        """initialise a mouse input.
 
         Parameters
         ----------
@@ -525,7 +525,7 @@ class Mouse(Input):
                     btn_id = rtn_callback
                     rt = int((get_time() - start) * 1000)
                     break
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, _internals.CallbackQuitEvent):
                     btn_id = rtn_callback

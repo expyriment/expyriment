@@ -13,11 +13,10 @@ import re
 
 import pygame
 
-from . import defaults
 from .. import _internals
-from ..misc import find_font, byte2unicode
+from ..misc import byte2unicode, find_font
+from . import defaults
 from ._visual import Visual
-
 
 # Keep track of open file handles and previously loaded font objects
 open_filehandles = []
@@ -472,7 +471,7 @@ class TextBox(Visual):
             from .. import control
             control.set_develop_mode(True)
             control.defaults.event_logging = 0
-            exp_ = control.initialize()
+            exp_ = control.initialise()
         textbox = TextBox("Line one.\nLine two.\nLine three.", size=(100, 100))
         textbox.present()
         if exp is None:

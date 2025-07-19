@@ -9,7 +9,7 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 from ...misc.constants import P_BALANCED_LATIN_SQUARE, P_CYCLED_LATIN_SQUARE, P_RANDOM
-from ..randomize import rand_int_sequence
+from ..randomise import rand_int_sequence
 
 
 def _empty_rect(n_rows, n_columns):
@@ -152,7 +152,7 @@ def latin_square(elements, permutation_type=P_RANDOM):
             for r in range(n):
                 square[r][c] = columns[c_idx[c]][r]
 
-        # randomize counter elements
+        # randomise counter elements
         square = _square_of_elements(rand_int_sequence(0, n - 1), idx_square=square)
 
     if isinstance(elements, int):

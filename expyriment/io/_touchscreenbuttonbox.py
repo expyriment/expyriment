@@ -22,7 +22,7 @@ class TouchScreenButtonBox(Input):
     """A class implementing a TouchScreenButtonBox."""
 
     def __init__(self, button_fields, stimuli=None, background_stimulus=None):
-        """Initialize a touchscreen button box.
+        """initialise a touchscreen button box.
 
         Parameters
         ----------
@@ -277,7 +277,7 @@ class TouchScreenButtonBox(Input):
                 rtn_callback = callback_function()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback, int((get_time()-start)*1000)
-            if _internals.active_exp.is_initialized:
+            if _internals.active_exp.is_initialised:
                 rtn_callback = _internals.active_exp._execute_wait_callback()
                 if isinstance(rtn_callback, CallbackQuitEvent):
                     return rtn_callback, int((get_time()-start)*1000)
