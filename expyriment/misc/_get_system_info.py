@@ -480,9 +480,7 @@ def get_system_info(as_string=False):
     else:
         serial_version = ""
     info["python_pyserial_version"] = serial_version
-    info["python_version"] = "{}.{}.{}".format(sys.version_info[0],
-                                                  sys.version_info[1],
-                                                  sys.version_info[2])
+    info["python_version"] = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"
 
     info["hardware_audio_card"] = hardware_audio_card
     info["hardware_cpu_architecture"] = platform.machine()

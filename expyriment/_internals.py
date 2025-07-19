@@ -33,11 +33,9 @@ def get_version():
 
     """
 
-    pv = "{}.{}.{}".format(sys.version_info[0],
-                              sys.version_info[1],
-                              sys.version_info[2])
+    pv = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"
             #no use of .major, .minor to ensure MacOS compatibility
-    return "{} (Python {})".format(__version__, pv)
+    return f"{__version__} (Python {pv})"
 
 def show_documentation(docu_type=None):
     """Show the Expyriment documentation.
@@ -66,12 +64,12 @@ def show_documentation(docu_type=None):
     f = os.path.abspath(__file__)
     path = os.path.abspath(os.path.join(os.path.split(f)[0], ".."))
     if docu_type is None:
-        print("Welcome to Expyriment {}".format(get_version()))
+        print(f"Welcome to Expyriment {get_version()}")
         print("")
         author = __author__.replace(",", ",\n        ")
         print("Website: https://expyriment.org")
         print("License: GNU GPL v3")
-        print("Authors: {}".format(author))
+        print(f"Authors: {author}")
         call_info()
     elif docu_type == 1:
         webbrowser.open(
@@ -80,7 +78,7 @@ def show_documentation(docu_type=None):
     elif docu_type == 2:
         python_executable = sys.executable.replace("pythonw.exe",
                                                    "python.exe")
-        call = '"' + "{}".format(python_executable) + \
+        call = '"' + f"{python_executable}" + \
                 '" -m expyriment._api_reference_tool'
         _proc = subprocess.Popen(
             call,
@@ -166,14 +164,14 @@ class CallbackQuitEvent:
         self.data = data
 
     def __str__(self):
-        return "CallbackQuitEvent: data={}".format(self.data)
+        return f"CallbackQuitEvent: data={self.data}"
 
 
 # IMPORTER FUNCTIONS
 
 def _run_py_file_command(path):
     # helper function to generate import command
-    return "compile(open('{0}', 'rb').read(), '{0}', 'exec')\n".format(path)
+    return f"compile(open('{path}', 'rb').read(), '{path}', 'exec')\n"
 
 def is_venv():
     """Return if Exyriment is running in a virtual environment.
@@ -277,8 +275,7 @@ def import_plugins_code(package):
                                 break # file loop (for..)
 
                 if class_name is not None:
-                    code[class_name] = "from {}.{} import {}\n".format(package,
-                                                                          entry, class_name)
+                    code[class_name] = f"from {package}.{entry} import {class_name}\n"
     return code
 
 def post_import_hook():
@@ -290,7 +287,7 @@ def post_import_hook():
 
     filename = os.path.join(home, "post_import.py")
     if os.path.isfile(filename):
-        print("process {}".format(filename))
+        print(f"process {filename}")
         return _run_py_file_command(filename)
     else:
         return ""

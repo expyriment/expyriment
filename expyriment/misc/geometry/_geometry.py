@@ -303,7 +303,7 @@ class XYPoint:
             self._y = y
 
     def __repr__(self):
-        return  "(x={}, y={})".format(self._x, self._y)
+        return  f"(x={self._x}, y={self._y})"
 
     @property
     def x(self):

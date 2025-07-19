@@ -126,8 +126,8 @@ class Mouse(Input):
         if corner is not None:
             if not isinstance(corner, int) or corner<0 or corner >3:
                 corner = None
-                print("Warning: {} is an unknown corner location. Mouse quit "
-                                     "event is deactivated.".format(corner))
+                print(f"Warning: {corner} is an unknown corner location. Mouse quit "
+                                     "event is deactivated.")
         Mouse._quit_corner_location = corner
 
         try:
@@ -558,7 +558,7 @@ class Mouse(Input):
 
         if self._logging:
             _internals.active_exp._event_file_log(
-            "Mouse,received,{}-{},wait_event".format(btn_id, motion_occurred))
+            f"Mouse,received,{btn_id}-{motion_occurred},wait_event")
         return btn_id, motion_occurred, position_in_expy_coordinates, rt
 
 
@@ -720,9 +720,9 @@ class Mouse(Input):
         stimuli.TextLine("Thanks").present()
         polling_time = misc.statistics.mode(motion)
 
-        info = """Your mouse polling time is {} ms.
+        info = f"""Your mouse polling time is {polling_time} ms.
 
-[Press RETURN to continue] """.format(polling_time)
+[Press RETURN to continue] """
         text = stimuli.TextScreen("Results", info)
         text.present()
         exp.keyboard.wait([misc.constants.K_RETURN])

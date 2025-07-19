@@ -170,7 +170,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
     """
 
     if not isinstance(list_, list):
-        raise TypeError("The parameter 'list_' is a {}, but has to be list. ".format(type(list_).__name__))
+        raise TypeError(f"The parameter 'list_' is a {type(list_).__name__}, but has to be list. ")
 
     if n_segments is None:
         n_segments = 0

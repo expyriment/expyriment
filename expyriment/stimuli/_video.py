@@ -134,8 +134,7 @@ class Video(_visual.Stimulus):
             self._position = defaults.video_position
 
         if not(os.path.isfile(self._filename)):
-            raise OSError("The video file {} does not exists".format(
-                self._filename))
+            raise OSError(f"The video file {self._filename} does not exists")
 
         try:
             import mediadecoder
@@ -153,8 +152,7 @@ class Video(_visual.Stimulus):
                     "\nPlease install sounddevice(>=0.3.,<1).")
 
         elif self._audio_backend != "pygame":
-            raise ValueError("Unknown audio backend '{}'!".format(
-                self._audio_backend))
+            raise ValueError(f"Unknown audio backend '{self._audio_backend}'!")
 
 
     def __del__(self):
@@ -188,8 +186,7 @@ class Video(_visual.Stimulus):
         else:
             self._filename = value
             if not(os.path.isfile(self._filename)):
-                raise OSError("The video file {} does not exists".format(
-                    self._filename))
+                raise OSError(f"The video file {self._filename} does not exists")
 
     @property
     def resizing(self):
@@ -218,7 +215,7 @@ class Video(_visual.Stimulus):
                 "audio_backend"))
         else:
             if value not in ("pygame", "sounddevice"):
-                raise ValueError("Unknown audio backend '{}'!".format(value))
+                raise ValueError(f"Unknown audio backend '{value}'!")
             self._audio_backed = value
 
     @property
@@ -550,7 +547,7 @@ class Video(_visual.Stimulus):
                 self.preload()
             if self._logging:
                 _internals.active_exp._event_file_log(
-                    "Video,playing,{}".format(self._filename),
+                    f"Video,playing,{self._filename}",
                     log_level=1, log_event_tag=log_event_tag)
             if self._file.audioformat and audio:
                 if self._audio_backend == "pygame":
@@ -565,8 +562,7 @@ class Video(_visual.Stimulus):
                                 control_defaults.audiosystem_buffer_size:
                             warn_message = "Audio will be out of sync due " +\
                                 "to too large audiosystem buffer size! " +\
-                                "({} samples)".format(
-                                    control_defaults.audiosystem_buffer_size)
+                                f"({control_defaults.audiosystem_buffer_size} samples)"
 
                             print(warn_message)
                             _internals.active_exp._event_file_warn(
@@ -580,11 +576,7 @@ class Video(_visual.Stimulus):
                     else:
                         warn_message = "Temporary audiosystem in use! "
                         warn_message += \
-                            "({} Hz, {}-bit, {} ch, {} samples)".format(
-                                control_defaults.audiosystem_sample_rate,
-                                abs(control_defaults.audiosystem_bit_depth),
-                                control_defaults.audiosystem_channels,
-                                buffer_size)
+                            f"({control_defaults.audiosystem_sample_rate} Hz, {abs(control_defaults.audiosystem_bit_depth)}-bit, {control_defaults.audiosystem_channels} ch, {buffer_size} samples)"
                         print(warn_message)
                         _internals.active_exp._event_file_warn(
                             "Video,warning," + warn_message)
@@ -867,10 +859,9 @@ class Video(_visual.Stimulus):
             if diff > 1:
                 warn_message = repr(diff - 1) + " video frame(s) dropped!"
                 if diff == 2:
-                    warn_message += " ({})".format(self._frame + 1)
+                    warn_message += f" ({self._frame + 1})"
                 else:
-                    warn_message += " ({}-{})".format(self._frame + 1,
-                                                        self._frame + diff)
+                    warn_message += f" ({self._frame + 1}-{self._frame + diff})"
                 print(warn_message)
                 _internals.active_exp._event_file_warn(
                     "Video,warning," + warn_message)

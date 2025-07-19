@@ -129,8 +129,7 @@ class ParallelPort(Input, Output):
                 _message = "Please install the Python package 'PyParallel'."
             else:
                 _message = "Not available on your computer."
-            message = "ParallelPort cannot be initialised! {}".format(
-                _message)
+            message = f"ParallelPort cannot be initialised! {_message}"
             raise ImportError(message)
 
         Input.__init__(self)
@@ -142,7 +141,7 @@ class ParallelPort(Input, Output):
             self._parallel = _ParallelPort(address=address)
         except Exception:
             raise RuntimeError(
-                "Could not initiate parallel port at {}".format(address))
+                f"Could not initiate parallel port at {address}")
         self.input_history = False  # dummy
         self._reverse = reverse
 
@@ -204,7 +203,7 @@ class ParallelPort(Input, Output):
         data = self._parallel.readData()
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "ParallelPort,received,{},read_data".format(data))
+                    f"ParallelPort,received,{data},read_data")
         return data
 
     def read_status(self):
@@ -227,15 +226,11 @@ class ParallelPort(Input, Output):
 
         # TODO: Proper implementation that does not rely on single pins!
 
-        bits = "{}{}{}{}{}".format(int(self.read_pin(11)),
-                                        int(self.read_pin(10)),
-                                        int(self.read_pin(12)),
-                                        int(self.read_pin(13)),
-                                        int(self.read_pin(15)))
+        bits = f"{int(self.read_pin(11))}{int(self.read_pin(10))}{int(self.read_pin(12))}{int(self.read_pin(13))}{int(self.read_pin(15))}"
         data = int(bits, 2)
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "ParallelPort,received,{},read_status".format(data), 2)
+                    f"ParallelPort,received,{data},read_status", 2)
         return data
 
     def read_control(self):
@@ -258,14 +253,11 @@ class ParallelPort(Input, Output):
 
         # TODO: Proper implementation that does not rely on single pins!
 
-        bits = "{}{}{}{}".format(int(self.read_pin(17)),
-                                     int(self.read_pin(16)),
-                                     int(self.read_pin(14)),
-                                     int(self.read_pin(1)))
+        bits = f"{int(self.read_pin(17))}{int(self.read_pin(16))}{int(self.read_pin(14))}{int(self.read_pin(1))}"
         data = int(bits, 2)
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "ParallelPort,received,{},read_control".format(data), 2)
+                    f"ParallelPort,received,{data},read_control", 2)
         return data
 
     def poll(self):
@@ -295,12 +287,12 @@ class ParallelPort(Input, Output):
         d = self.read_data()
         s = self.read_status()
 
-        data = (int('{:04b}'.format(c)[::1], 2) << 13) + \
-               (int('{:08b}'.format(d)[::1], 2) << 5) + \
+        data = (int(f'{c:04b}'[::1], 2) << 13) + \
+               (int(f'{d:08b}'[::1], 2) << 5) + \
                s
         if self._logging:
             _internals.active_exp._event_file_log(
-                    "ParallelPort,received,{},poll".format(data), 2)
+                    f"ParallelPort,received,{data},poll", 2)
         return data
 
     def read_pin(self, pin):
@@ -341,7 +333,7 @@ class ParallelPort(Input, Output):
         self._parallel.setData(data)
         if self._logging:
             _internals.active_exp._event_file_log(
-                                    "ParallelPort,set_data,{}".format(data), 2)
+                                    f"ParallelPort,set_data,{data}", 2)
 
     def set_control(self, data):
         """Send data via control pins.
@@ -369,7 +361,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(17, data & 8)
         if self._logging:
             _internals.active_exp._event_file_log(
-                                    "ParallelPort,set_control,{}".format(data), 2)
+                                    f"ParallelPort,set_control,{data}", 2)
 
     def send(self, data):
         """Send data via all output pins.
@@ -401,7 +393,7 @@ class ParallelPort(Input, Output):
         self._parallel.setPin(17, c & 8)
         if self._logging:
             _internals.active_exp._event_file_log(
-                                    "ParallelPort,send,{}".format(data), 2)
+                                    f"ParallelPort,send,{data}", 2)
 
     def set_pin(self, pin, state):
         """Set a desired output pin to be high(True) or low(False).
@@ -511,7 +503,7 @@ class ParallelPort(Input, Output):
             except Exception:
                 while True:
                     stimuli.TextScreen(
-                        "Could not open port address {}!".format(address),
+                        f"Could not open port address {address}!",
                         "[Press RETURN to continue]").present()
                     key, rt_ = exp.keyboard.wait(misc.constants.K_RETURN)
                     if key is not None:
@@ -646,21 +638,21 @@ class ParallelPort(Input, Output):
                     position=[0, 70])
 
                 rc = stimuli.TextLine(
-                    "{}".format(read_control),
+                    f"{read_control}",
                     text_colour=[0, 255, 0],
                     text_size=20,
                     position=[-260, 0])
                 rc.plot(results_canvas)
 
                 rd = stimuli.TextLine(
-                    "{}".format(read_data),
+                    f"{read_data}",
                     text_colour=[0, 255, 0],
                     text_size=20,
                     position=[-20, 0])
                 rd.plot(results_canvas)
 
                 rs = stimuli.TextLine(
-                    "{}".format(read_status),
+                    f"{read_status}",
                     text_colour=[0, 255, 0],
                     text_size=20,
                     position=[240, 0])
@@ -672,7 +664,7 @@ class ParallelPort(Input, Output):
                     position=[0, 140])
 
                 pd = stimuli.TextLine(
-                    "{}".format(read_poll),
+                    f"{read_poll}",
                     text_colour=[0, 255, 0], text_size=20)
                 pd.plot(poll_canvas)
 
@@ -694,14 +686,14 @@ class ParallelPort(Input, Output):
                 else:
                     c = 0
                 sc = stimuli.TextLine(
-                    "{}".format(c),
+                    f"{c}",
                     text_colour=[255, 0, 0],
                     text_size=20,
                     position=[-260, 0])
                 sc.plot(results_canvas2)
 
                 sd = stimuli.TextLine(
-                    "{}".format(send & 255),
+                    f"{send & 255}",
                     text_colour=[255, 0, 0],
                     text_size=20,
                     position=[-20, 0])
@@ -713,7 +705,7 @@ class ParallelPort(Input, Output):
                     position=[-100, -140])
 
                 ss = stimuli.TextLine(
-                    "{}".format(send),
+                    f"{send}",
                     text_colour=[255, 0, 0], text_size=20)
                 ss.plot(send_canvas)
 

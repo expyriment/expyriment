@@ -211,7 +211,7 @@ class Experiment:
         return self._is_initialised
 
     def __str__(self):
-        tmp_str = "Experiment: {}\n".format(self.name)
+        tmp_str = f"Experiment: {self.name}\n"
         if len(self.bws_factor_names) <= 0:
             tmp_str += "no between subject factors\n"
         else:
@@ -227,7 +227,7 @@ class Experiment:
                 tmp_str += "    {} = [{}]\n".format(
                     f, ", ".join(_bws_factor))
         for block in self.blocks:
-            tmp_str += "{}\n".format(block.summary)
+            tmp_str += f"{block.summary}\n"
         return tmp_str
 
     @property
@@ -554,8 +554,7 @@ class Experiment:
             self._block_id_counter += 1
 
         _internals.active_exp._event_file_log(
-            "Experiment,block added,{},{}".format(
-                self.name, self._blocks[-1]._id), 2)
+            f"Experiment,block added,{self.name},{self._blocks[-1]._id}", 2)
 
     def add_blocks_full_factorial(self, design_dict, copies=1):
         """Add blocks of all combinations of a full factorial design.
@@ -607,8 +606,7 @@ class Experiment:
         block = self._blocks.pop(position)
 
         _internals.active_exp._event_file_log(
-            "Experiment,block removed,{},{}".format(self.name,
-                                                      block.id), 2)
+            f"Experiment,block removed,{self.name},{block.id}", 2)
 
     def clear_blocks(self):
         """Remove all blocks from experiment."""
@@ -759,8 +757,8 @@ a subject number needs to be defined for the permutation.")
                 subject_id = self.subject
 
         if not permute.is_permutation_type(permutation_type):
-                raise AttributeError("{} is an unknown permutation \
-type".format(permutation_type))
+                raise AttributeError(f"{permutation_type} is an unknown permutation \
+type")
         if factor_names is None:
             factor_names = self.block_list_factor_names
 
@@ -864,7 +862,7 @@ type".format(permutation_type))
 
         """
 
-        rtn = "#exp: {}\n".format(self.name)
+        rtn = f"#exp: {self.name}\n"
         if len(self.experiment_info) > 0:
             for txt in self.experiment_info:
                 rtn = f"{rtn}#xpi: {txt}\n"
@@ -874,7 +872,7 @@ type".format(permutation_type))
                 for txt in self.get_bws_factor(factor_name):
                     rtn = f"{rtn}{txt},"
                 rtn = rtn[:-1] + "\n"  # delete last comma
-            rtn += "#bws-rand: {}\n".format(int(self.bws_factor_randomised))
+            rtn += f"#bws-rand: {int(self.bws_factor_randomised)}\n"
         if len(self.data_variable_names) > 0:
             rtn = f"{rtn}#dvn: "
             for txt in self.data_variable_names:
@@ -926,7 +924,7 @@ type".format(permutation_type))
                 locale_enc = locale.getdefaultlocale()[1]
             except Exception:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {} -*-\n".format(locale_enc)
+            header = f"# -*- coding: {locale_enc} -*-\n"
             f.write(unicode2byte(header + self.design_as_text))
 
     def load_design(self, filename, encoding=None):
@@ -1003,7 +1001,7 @@ type".format(permutation_type))
                                "cnt" in list(trial_factors.values()) and
                                "id" in list(trial_factors.values())):
                             message = "Can't read design file. " + \
-                                "The file '{}' ".format(filename) + \
+                                f"The file '{filename}' " + \
                                 "does not contain an Expyriment trial list."
                             raise OSError(message)
                     else:
@@ -1086,12 +1084,11 @@ type".format(permutation_type))
         """
 
         if self.is_initialised and self.events is not None:
-            self.events.log("design,log,{}".format(additional_comment))
+            self.events.log(f"design,log,{additional_comment}")
             for ln in self.design_as_text.splitlines():
                 self.events.write_comment(
-                    "design: {}".format(ln).replace(":#", "-"))
-            self.events.log("design,logged,{}".format(
-                additional_comment))
+                    f"design: {ln}".replace(":#", "-"))
+            self.events.log(f"design,logged,{additional_comment}")
 
     def register_wait_callback_function(self, function):
         """Register a wait callback function.
@@ -1233,15 +1230,13 @@ class Block:
             name = ""
         else:
             name = self.name
-        rtn = """Block {}: {}
-    block factors: {}
-    n trials: {}""".format(self.id, name,
-                            self.factors_as_text,
-                            len(self.trials))
+        rtn = f"""Block {self.id}: {name}
+    block factors: {self.factors_as_text}
+    n trials: {len(self.trials)}"""
 
         if include_trial_IDs:
-            rtn += """
-    trial IDs = {}""".format([t.id for t in self.trials])
+            rtn += f"""
+    trial IDs = {[t.id for t in self.trials]}"""
         rtn += """
     trial factors: """
         for f in self.trial_factor_names:
@@ -1268,8 +1263,7 @@ class Block:
         all_factors = ""
         for f in self.factor_names:
             all_factors = all_factors + \
-                "{} = {}\n                   ".format(
-                    f, self.get_factor(f, return_none_if_not_defined=True))
+                f"{f} = {self.get_factor(f, return_none_if_not_defined=True)}\n                   "
         all_factors = all_factors.rstrip()
         if len(all_factors) >= 1 and all_factors[-1] == ",":
             all_factors = all_factors[:-1]
@@ -1292,7 +1286,7 @@ class Block:
         else:
             message = "Factor values or factor conditions must to be a " + \
                 "String or a Number (i.e. float or integer).\n " + \
-                "{} is not allowed.".format(type(value))
+                f"{type(value)} is not allowed."
             raise TypeError(message)
 
     def has_factor(self, name):
@@ -1418,8 +1412,7 @@ class Block:
             self._trials[-1]._id = self._trial_id_counter
             self._trial_id_counter += 1
 
-        log_txt = "Block,trial added,{}, {}".format(self.name,
-                                                      self._trials[-1]._id)
+        log_txt = f"Block,trial added,{self.name}, {self._trials[-1]._id}"
         if random_position:
             log_txt += ", random position"
         _internals.active_exp._event_file_log(log_txt, 2)
@@ -1437,7 +1430,7 @@ class Block:
         trial = self._trials.pop(position)
 
         _internals.active_exp._event_file_log(
-            "Block,trial removed,{},{}".format(self.id, trial.id), 2)
+            f"Block,trial removed,{self.id},{trial.id}", 2)
 
     def clear_trials(self):
         """Clear all trials."""
@@ -1505,15 +1498,14 @@ class Block:
 
         """
 
-        rtn = "{},{}".format(self._trial_cnt_variable_name,
-                               self._trial_id_variable_name)
+        rtn = f"{self._trial_cnt_variable_name},{self._trial_id_variable_name}"
         factors = self.trial_factor_names
         for f in factors:
-            rtn += ",{}".format(f)
+            rtn += f",{f}"
         for cnt, tr in enumerate(self.trials):
-            rtn += "\n{},{}".format(cnt, tr.id)
+            rtn += f"\n{cnt},{tr.id}"
             for f in factors:
-                rtn += ",{}".format(tr.get_factor(f, return_none_if_not_defined=True))
+                rtn += f",{tr.get_factor(f, return_none_if_not_defined=True)}"
         return rtn
 
     def save_design(self, filename):
@@ -1532,7 +1524,7 @@ class Block:
                 locale_enc = locale.getdefaultlocale()[1]
             except Exception:
                 locale_enc = "UTF-8"
-            header = "# -*- coding: {} -*-\n".format(locale_enc)
+            header = f"# -*- coding: {locale_enc} -*-\n"
             f.write(unicode2byte(header + self.design_as_text))
 
     def read_design(self, filename):
@@ -1853,12 +1845,11 @@ class Trial:
         return self._id
 
     def __str__(self):
-        return """
-        Trial:   {}
+        return f"""
+        Trial:   {str(self.id)}
 
-        Stimuli: {}
-        """.format(str(self.id),
-                   [stimulus.id for stimulus in self.stimuli])
+        Stimuli: {[stimulus.id for stimulus in self.stimuli]}
+        """
 
     def set_factor(self, name, value):
         """Set a factor for the trial.
@@ -1877,7 +1868,7 @@ class Trial:
         else:
             message = "Factor values or factor conditions must to be a " + \
                 "string or a numeric (i.e. float or integer).\n " + \
-                "{} is not allowed.".format(type(value))
+                f"{type(value)} is not allowed."
             raise TypeError(message)
 
     def has_factor(self, name):
@@ -1943,8 +1934,7 @@ class Trial:
         """Return all factor names and values as csv string line"""
         all_factors = ""
         for f in self.factor_names:
-            all_factors += "{}={}, ".format(
-                f, str(self.get_factor(f, return_none_if_not_defined=True)))
+            all_factors += f"{f}={str(self.get_factor(f, return_none_if_not_defined=True))}, "
         return all_factors
 
     def compare(self, trial):
@@ -1981,7 +1971,7 @@ class Trial:
         self._stimuli.append(stimulus)
 
         _internals.active_exp._event_file_log(
-            "Trial,stimulus added,{},{}".format(self.id, stimulus.id), 2)
+            f"Trial,stimulus added,{self.id},{stimulus.id}", 2)
 
     def remove_stimulus(self, position):
         """Remove stimulus from trial.
@@ -1996,7 +1986,7 @@ class Trial:
         stimulus = self._stimuli.pop(position)
 
         _internals.active_exp._event_file_log(
-            "Trial,stimulus removed,{},{}".format(self.id, stimulus.id), 2)
+            f"Trial,stimulus removed,{self.id},{stimulus.id}", 2)
 
     def order_stimuli(self, order):
         """Order the stimuli.

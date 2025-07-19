@@ -62,11 +62,11 @@ def _read_module(mod, doc_dict):
     import expyriment
     namespace = locals()
     for cl in classes:
-        cl = "{}.{}".format(mod.__name__, cl)
+        cl = f"{mod.__name__}.{cl}"
         exec("_x =" + cl, namespace)
         doc_dict[cl], functions = _get_doc_and_function(namespace['_x'])
         for fnc in functions:
-            fnc = "{}.{}".format(cl, fnc)
+            fnc = f"{cl}.{fnc}"
             exec("_y =" + fnc, namespace)
             doc_dict[fnc], _tmp = _get_doc_and_function(namespace['_y'])
 
@@ -126,8 +126,7 @@ The Python package 'Tkinter' is not installed""")
 
     # Create e root window
     root = _tk.Tk()
-    root.title("Expyriment ({}) API Reference Tool".format(
-        expyriment.__version__))
+    root.title(f"Expyriment ({expyriment.__version__}) API Reference Tool")
     root.minsize(996, 561)
 
     # Create the GUI elements
@@ -424,8 +423,7 @@ The Python package 'Tkinter' is not installed""")
                                font=("Arial", "15", "bold"))
         aboutlabel1.pack()
         aboutlabel2 = _ttk.Label(aboutdialogue,
-                               text="Expyriment {}".format(
-                                   expyriment.get_version()),
+                               text=f"Expyriment {expyriment.get_version()}",
                                font=("Arial", "8", "italic"))
         aboutlabel2.pack()
         aboutlabel3 = _ttk.Label(aboutdialogue,

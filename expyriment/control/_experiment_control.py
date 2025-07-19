@@ -60,7 +60,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
     if subject_id is not None:
         if not isinstance(subject_id, int):
             raise Exception("Subject id must be an integer. " +
-                    "{} is not allowed.".format(type(subject_id)))
+                    f"{type(subject_id)} is not allowed.")
         auto_create_subject_id = True
     elif auto_create_subject_id is None:
         auto_create_subject_id = defaults.auto_create_subject_id
@@ -100,7 +100,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
             subject_id = default_number
             while True:
                 text = stimuli.TextLine(
-                    text="{}".format(subject_id),
+                    text=f"{subject_id}",
                     text_size=28,
                     text_colour=misc.constants.C_EXPYRIMENT_ORANGE)
                 btn = TouchScreenButtonBox(
@@ -154,8 +154,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
     for f in experiment.bws_factor_names:
         _permuted_bws_factor_condition = \
             experiment.get_permuted_bws_factor_condition(f)
-        experiment.data.add_subject_info("{} = {}".format(
-            f, _permuted_bws_factor_condition))
+        experiment.data.add_subject_info(f"{f} = {_permuted_bws_factor_condition}")
 
     if experiment.events is not None:
         experiment.events._time_stamp = experiment.data._time_stamp
@@ -181,7 +180,7 @@ def start(auto_create_subject_id=None, subject_id=None, skip_ready_screen=False)
         text.present()  # for flipping with triple buffer
     while number > 0:
         counter = stimuli.TextLine(
-            "{num:02d}".format(num=number),
+            f"{number:02d}",
             text_size= int(experiment.text_size * 0.9),
             text_font='FreeMono',
             text_bold=True,
@@ -495,7 +494,7 @@ fullscreen.""")
     logo = stimuli.Picture(misc.constants.EXPYRIMENT_LOGO_FILE,
                            position=(0, 100))
     logo.scale(0.6 * scaling)
-    text = stimuli.TextLine("Version {}".format(get_version()),
+    text = stimuli.TextLine(f"Version {get_version()}",
                             text_size=int(20 * scaling),
                             text_colour=misc.constants.C_EXPYRIMENT_PURPLE,
                             background_colour=(0, 0, 0),
@@ -506,10 +505,9 @@ fullscreen.""")
     text.plot(canvas)
     hash_ = misc.get_experiment_secure_hash()
     if hash_ is not None:
-        txt = "{} ({})".format(os.path.split(sys.argv[0])[1], hash_)
+        txt = f"{os.path.split(sys.argv[0])[1]} ({hash_})"
         if len(misc.module_hashes_as_string())>0:
-            txt += ", {}".format(
-                        misc.module_hashes_as_string())
+            txt += f", {misc.module_hashes_as_string()}"
         text2 = stimuli.TextLine(txt,
             text_size=int(14 * scaling),
             text_colour=misc.constants.C_EXPYRIMENT_ORANGE,

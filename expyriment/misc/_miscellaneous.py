@@ -397,7 +397,7 @@ def find_font(font):
     if font_file is not None:
         return font_file
     else:
-        warn_message = "Failed to find font {}!".format(font)
+        warn_message = f"Failed to find font {font}!"
         print("Warning: " + warn_message)
         return ""
 
@@ -571,7 +571,7 @@ def download_from_stash(content="all", branch=None):
         filled_len = int(py2_round(bar_len * count / float(total)))
         percents = py2_round(100.0 * count / float(total), 1)
         bar = '=' * filled_len + ' ' * (bar_len - filled_len)
-        sys.stdout.write('{:5.1f}% [{}] {}\r'.format(percents, bar, status))
+        sys.stdout.write(f'{percents:5.1f}% [{bar}] {status}\r')
         sys.stdout.flush()
 
     from shutil import copyfileobj
@@ -587,7 +587,7 @@ def download_from_stash(content="all", branch=None):
         r = Request(url, headers={"Accept-Encoding": "gzip; deflate"})
         u = urlopen(r)
     except Exception:
-        raise RuntimeError("Download of {} failed!".format(url))
+        raise RuntimeError(f"Download of {url} failed!")
 
     with TemporaryFile() as f:
         try:
@@ -601,17 +601,17 @@ def download_from_stash(content="all", branch=None):
                 file_size_dl += len(buffer)
                 f.write(buffer)
                 show_progress(file_size_dl, file_size,
-                              "downloading stash ({})".format(branch))
+                              f"downloading stash ({branch})")
             sys.stdout.write("\n")
         except Exception:
             show_progress(0, 100,
-                          "downloading stash ({})".format(branch))
+                          f"downloading stash ({branch})")
             chunk = u.read()
             while chunk:
                 f.write(chunk)
                 chunk = u.read()
             show_progress(100, 100,
-                          "downloading stash ({})".format(branch))
+                          f"downloading stash ({branch})")
 
         if not os.path.isdir(get_settings_folder()):
             os.makedirs(get_settings_folder())
@@ -649,7 +649,7 @@ def download_from_stash(content="all", branch=None):
                 copyfileobj(source, target)
             files_installed += 1
             show_progress(files_installed, len(files),
-                          "installing content ({})".format(content))
+                          f"installing content ({content})")
     print("")
 
 

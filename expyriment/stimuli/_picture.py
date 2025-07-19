@@ -38,8 +38,7 @@ class Picture(Visual):
         Visual.__init__(self, position, log_comment=filename)
         self._filename = filename
         if not(os.path.isfile(self._filename)):
-            raise OSError("The picture file '{}' does not exist".format(
-                filename))
+            raise OSError(f"The picture file '{filename}' does not exist")
 
     _getter_exception_message = "Cannot set {0} if surface exists!"
 
@@ -69,7 +68,7 @@ class Picture(Visual):
             surface = pygame.image.load(f).convert_alpha()
         if self._logging:
             _internals.active_exp._event_file_log(
-                "Picture,loaded,{}".format(self._filename), 1)
+                f"Picture,loaded,{self._filename}", 1)
         return surface
 
 

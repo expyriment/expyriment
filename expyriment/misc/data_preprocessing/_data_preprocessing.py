@@ -110,7 +110,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
                 if len(tmp) == 2:
                     subject_info[tmp[0].strip()] = tmp[1].strip()
                 else:
-                    subject_info["#s{}".format(len(subject_info))] = ln.strip()
+                    subject_info[f"#s{len(subject_info)}"] = ln.strip()
             elif ln.startswith("#date:"):
                 ln = ln.replace("#date:", "")
                 subject_info["date"] = ln.strip()
@@ -140,13 +140,13 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
 
     if len(_os.path.splitext(filename)[1]) == 0:
         filename = f"{filename}.csv"
-    _sys.stdout.write("write file: {}".format(filename))
+    _sys.stdout.write(f"write file: {filename}")
     try:
         _locale_enc = _locale.getdefaultlocale()[1]
     except Exception:
         _locale_enc = "UTF-8"
     with open(filename, 'wb') as f:
-        header = "# -*- coding: {} -*-\n".format(_locale_enc)
+        header = f"# -*- coding: {_locale_enc} -*-\n"
         f.write(_unicode2str(header))
         if varnames is not None:
             for c, v in enumerate(varnames):
@@ -163,7 +163,7 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
                 cnt += 1
             f.write(_unicode2str("\n"))
 
-    print(" ({} cells in {} rows)".format(cnt, len(data)))
+    print(f" ({cnt} cells in {len(data)} rows)")
 
 
 def write_concatenated_data(data_folder, file_name, output_file=None,
@@ -316,9 +316,8 @@ The Python package 'Numpy' is not installed."""
 
         _version = _np.version.version.split(".")
         if not int(_version[0]) == 1 and int(_version[1]) < 6:
-            raise ImportError("Expyriment {} ".format(__version__) +
-                              "is not compatible with Numpy {}.".format(
-                                  _np.version.version) +
+            raise ImportError(f"Expyriment {__version__} " +
+                              f"is not compatible with Numpy {_np.version.version}." +
                               "\nPlease install Numpy 1.6 or higher.")
 
         print("** Expyriment Data Preprocessor **")
@@ -358,7 +357,7 @@ Design
                 break
         if found is None:
             if throw_exception:
-                raise RuntimeError("Incorrect syntax: '{}'".format(syntax))
+                raise RuntimeError(f"Incorrect syntax: '{syntax}'")
             else:
                 return None
         else:
@@ -371,8 +370,7 @@ Design
             if variables == v:
                 return cnt
         if (throw_exception):
-            raise RuntimeError("Unknown variable name '{}'".format(
-                variables))
+            raise RuntimeError(f"Unknown variable name '{variables}'")
         return None
 
     def _add_independent_variable(self, variable):
@@ -389,14 +387,14 @@ Design
                 dv_txt = tmp[1].strip()
             except Exception:
                 raise RuntimeError(
-                    "Incorrect syntax for DV: '{}'".format(variable))
+                    f"Incorrect syntax for DV: '{variable}'")
             var_id = self._get_variable_id(dv_txt, True)
             if dv_fnc in self._dv_functions:
                 self._dv.append([dv_fnc, var_id])
             else:
                 raise RuntimeError(
                     "Unknown function for dependent variable:" +
-                    " '{}'".format(dv_fnc))
+                    f" '{dv_fnc}'")
 
     def _add_compute_variable(self, compute_syntax):
         """Add a new variable to be computed."""
@@ -410,15 +408,13 @@ Design
             syntax = syntax.replace("@@", "==")
             syntax = syntax.replace("##", "==")
         except Exception:
-            raise RuntimeError("Incorrect compute syntax: '{}'".format(
-                compute_syntax))
+            raise RuntimeError(f"Incorrect compute syntax: '{compute_syntax}'")
 
         variable_def = self._parse_syntax(syntax, throw_exception=True)
         if variable_def is None:
             variable_def = self._parse_operation(syntax, throw_exception=True)
         if self._get_variable_id(variable_name) is not None:
-            raise RuntimeError("Variable already defined '{}'".format(
-                variable_name))
+            raise RuntimeError(f"Variable already defined '{variable_name}'")
         else:
             self._variables.append(variable_name)
             self._computes.append([variable_name, variable_def])
@@ -430,8 +426,7 @@ Design
         if relation[1] in self._relations:
             self._exclusions.append(relation)
         else:
-            raise RuntimeError("Incorrect exclusion syntax: '{}'".format(
-                relation_syntax))
+            raise RuntimeError(f"Incorrect exclusion syntax: '{relation_syntax}'")
 
     def _add_variable_recoding(self, recode_syntax):
         """Add a new variable recoding rule."""
@@ -451,8 +446,7 @@ Design
             error = True
 
         if error:
-            raise RuntimeError("Incorrect recoding syntax: '{}'".format(
-                recode_syntax))
+            raise RuntimeError(f"Incorrect recoding syntax: '{recode_syntax}'")
         else:
             self._recode.append([var_id, excl_array])
 
@@ -510,16 +504,14 @@ Design
             idx = []
             if relation not in [">", "<", "=>", ">=", "=<", "<="]:
                 raise RuntimeError("Incorrect syntax for " +
-                                   "exception: '{} {}'".format(
-                                       relation, value))
+                                   f"exception: '{relation} {value}'")
             for cnt, row in enumerate(data):
                 # find name of combination
                 combi_str = self.variables[column_id]
                 for iv in self._iv:
                     _row_data = row[iv]
                     combi_str = combi_str + "_" + \
-                                "{}{}".format(self.variables[iv],
-                                                 _row_data)
+                                f"{self.variables[iv]}{_row_data}"
                 deviation = float(row[column_id]) - mean_stds[combi_str][0]
                 if (relation == ">" and
                     deviation > fac * mean_stds[combi_str][1]) or \
@@ -548,8 +540,7 @@ Design
                 comp = None  # should never occur
             if isinstance(comp, bool):
                 raise RuntimeError(
-                    "Incorrect syntax for " + "exception: '{} {}'".format(
-                        relation, value))
+                    "Incorrect syntax for " + f"exception: '{relation} {value}'")
             return _np.flatnonzero(comp)
 
     def _dv_mean_std(self, data, column_dv_id):
@@ -632,15 +623,14 @@ Design
                     comb_values.append(iv_values[c][x])
                     if len(txt) > 0:
                         txt += "_"
-                    txt += "{}{}".format(self.variables[self._iv[c]],
-                                           comb_values[-1])
+                    txt += f"{self.variables[self._iv[c]]}{comb_values[-1]}"
                 names.append(txt)
                 factor_combinations.append(comb_values)
                 tmp_comb = increase_combination(tmp_comb, n_levels)
 
         new_variable_names = ["subject_id"]
         for sv in self.subject_variables:
-            new_variable_names.append("{}".format(sv))
+            new_variable_names.append(f"{sv}")
 
         for dv in self._dv:
             if dv[0] == "n_trials":
@@ -649,9 +639,9 @@ Design
                 dv_txt = self.variables[dv[1]]
             if len(names) > 0:
                 for n in names:
-                    new_variable_names.append("{}_{}".format(dv_txt, n))
+                    new_variable_names.append(f"{dv_txt}_{n}")
             else:
-                new_variable_names.append("{}_total".format(dv_txt))
+                new_variable_names.append(f"{dv_txt}_total")
 
         return new_variable_names, factor_combinations
 
@@ -724,9 +714,8 @@ Design
             raise Exception("No data files found")
 
 
-        print("found {} subject_data sets".format(len(self._data_files)))
-        print("found {} variables: {}".format(len(self._variables),
-                                                 list(self._variables)))
+        print(f"found {len(self._data_files)} subject_data sets")
+        print(f"found {len(self._variables)} variables: {list(self._variables)}")
 
     @property
     def data_files(self):
@@ -834,12 +823,11 @@ Design
 
         # check filename
         if filename not in self._data_files:
-            raise RuntimeError("'{}' is not in the data list\n".format(
-                filename))
+            raise RuntimeError(f"'{filename}' is not in the data list\n")
 
         data, _vnames, subject_info, comments = \
             read_datafile(filename)
-        print("   reading {}".format(filename))
+        print(f"   reading {filename}")
 
         if recode_variables:
             for var_id, recoding in self._recode:
@@ -1243,11 +1231,11 @@ Design
         self.set_independent_variables(variables)
         result, varnames = self.aggregate()
         for row in result:
-            print("Subject {}".format(row[0]))
+            print(f"Subject {row[0]}")
             for cnt, var in enumerate(varnames):
                 if cnt > 0:
                     _row_data = row[cnt]
-                    print("\t{}:\t{}".format(var[4:], _row_data))
+                    print(f"\t{var[4:]}:\t{_row_data}")
         print("\n")
         self._dv = old_dv
         self._iv = old_iv
