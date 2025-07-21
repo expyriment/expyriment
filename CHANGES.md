@@ -4,7 +4,10 @@ Expyriment Release Notes
 Coming up
 ---------
 New Features:
-- Expyriment is now based on Pygame 2 (using SDL 2)
+- Expyriment is now based on Pygame 2 (using SDL 2) and depends also on
+  numpy & mediadecoder
+- It's no longer necessary to install additional features via pip with
+  `[feature]`, since all dependencies are installed by default.
 - test suite:
     - option to run single tests
     - improvements in reporting visual timing test results
@@ -148,6 +151,7 @@ Changed:
       ``design.Experiment.bws_factor_randomised``
 	- constant ``control.defaults.initialize_delay`` ->
       ``control.defaults.initialise_delay``
+
 Fixed:
 - bug in colour.is_hex & colour.is_colour
 - data_preprocessing: adds suffix ".csv" to filename when writing csv files
