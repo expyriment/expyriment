@@ -26,8 +26,13 @@ from platform import uname
 from time import strftime
 
 from .. import _internals, misc
-from ..misc import (byte2unicode, get_experiment_secure_hash,
-                    module_hashes_as_string, statistics, unicode2byte)
+from ..misc import (
+    byte2unicode,
+    get_experiment_secure_hash,
+    module_hashes_as_string,
+    statistics,
+    unicode2byte,
+)
 from ..misc._timer import get_time
 from . import defaults
 from ._input_output import Input, Output
