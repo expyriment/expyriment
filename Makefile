@@ -11,7 +11,7 @@ install:
 	flit install
 
 testpypi:
-	flit --repository testpypi publish
+	flit publish --repository testpypi
 
 publish:
 	flit publish
