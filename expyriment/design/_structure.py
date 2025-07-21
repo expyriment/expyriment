@@ -216,7 +216,7 @@ class Experiment:
             tmp_str += "no between subject factors\n"
         else:
             tmp_str += "between subject factors (permutation type: "
-            if self.bws_factor_randomized:
+            if self.bws_factor_randomised:
                 tmp_str += "random)\n"
             else:
                 tmp_str += "latin square)\n"

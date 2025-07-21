@@ -191,7 +191,7 @@ New Features:
   lines
 - ``stimuli.Line`` is internally based on ``stimuli.Shape`` and has the new
   methods ``get_shape`` and ``get_connected_shape``
-- new function ``misc.round``, implementing the old Python 2 rounding behaviour
+- new function ``misc.py2_round``, implementing the old Python 2 rounding behaviour
 - ``io.keyboard.check`` now has an argument ``check_for_keyup`` which will
   check for keyup events instead of keydown events
 - new class ``misc.Colour``: create colours by names, Hex strings or RGB values;

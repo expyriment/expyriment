@@ -328,7 +328,7 @@ letter arguments run single commands""",
 
         if find_spec("IPython") is not None:
             statements.append(
-                """get_ipython().history_manager.store_inputs(get_ipython().execution_count - 1, "exp = xpy.control.initialize()")""")
+                """get_ipython().history_manager.store_inputs(get_ipython().execution_count - 1, "exp = xpy.control.initialise()")""")
             command = "\n".join(statements)
             os.execvp(sys.executable, [sys.executable, '-m', 'IPython',
                                        '--no-banner', '-i', '-c', command])
