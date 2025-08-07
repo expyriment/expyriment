@@ -52,6 +52,10 @@ nosetests.xml
 
 # virtual environment
 venv/
+.venv/
+
+# UV
+uv.lock
 
 #### Expyriment specific
 test_suite_protocol.xpp
