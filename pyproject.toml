@@ -17,6 +17,8 @@ dynamic = ["version"]
 keywords = ["experiment control", "open science",
             "neuroscience", "experimental psychology"]
 classifiers = [
+  "Intended Audience :: Science/Research",
+  "Topic :: Software Development :: Libraries :: Python Modules",
   "Programming Language :: Python :: 3",
   "Operating System :: OS Independent"
 ]
