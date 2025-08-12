@@ -172,7 +172,7 @@ class Line(Visual):
         dist = XYPoint(self._start_point).distance(XYPoint(self._end_point))
         shape = Shape(vertex_list=vertices_rectangle(size=(dist,
                                                            self.line_width)),
-                      colour=self.colour, position=self.position, line_width=0,
+                      colour=self.colour, position=self.position,
                       anti_aliasing= self.anti_aliasing)
         diff = (self._end_point[0] - self._start_point[0],
                 self._end_point[1] - self._start_point[1])

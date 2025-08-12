@@ -47,9 +47,10 @@ class FixCross(Shape):
             self._colour = _internals.active_exp.foreground_colour
         if anti_aliasing is None:
             anti_aliasing = defaults.fixcross_anti_aliasing
-        Shape.__init__(self, position=position, line_width=0,
+        Shape.__init__(self, position=position,
                          colour=colour,
                          anti_aliasing=anti_aliasing)
+        self._line_width = line_width
         if size is None:
             size = defaults.fixcross_size
         if line_width is None:

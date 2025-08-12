@@ -44,7 +44,6 @@ class Shape(Visual):
     """A class implementing a shape."""
 
     def __init__(self, position=None, colour=None,
-                 line_width=None,
                  anti_aliasing=None,
                  vertex_list=None,
                  debug_contour_colour = None
