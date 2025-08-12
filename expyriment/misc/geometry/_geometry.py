@@ -134,7 +134,7 @@ def tuples_to_points(list_of_tuples):
     return list(map(lambda v:XYPoint(x=v[0], y=v[1]), list_of_tuples))
 
 def points_to_vertices(points):
-    """Returns vertex representation of the points (list of misc.XYPoints)
+    """Returns vertex representation of the points (list of tuples (x,y)).
 
     Parameters
     ----------

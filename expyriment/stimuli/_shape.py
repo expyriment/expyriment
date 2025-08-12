@@ -402,7 +402,7 @@ class Shape(Visual):
         Parameters
         ----------
         vertex_list : ((int, int))
-            list of vertices ((int, int))
+            list of vertices as tuples((int, int))
 
         """
         type_error_message = "The method add_vertices requires a list of" + \
