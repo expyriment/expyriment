@@ -132,15 +132,21 @@ Changed:
 - misc.get_system_info:
     - additions and improvements
     - format changes for ``as_text`` output
-- renaming: misc.py2py3_sort_array --> misc.string_sort_array
-- renaming geometry functions:
-    - position2coordinates() to position_to_coordinates()
-    - coordinates2position() to coordinates_to_position()
-    - cartesian2polar() to cartesian_to_polar()
-    - position2visual_angle() to position_to_visual_angle()
-    - tuples2points() to tuples_to_points()
-    - polar2cartesian() to polar_to_cartesian()
-    - visual_angle2position() to visual_angle_to_position()
+- renaming: `misc.py2py3_sort_array()` to `misc.string_sort_array()`
+- more consistent function naming in `misc`:
+  - `bytes2unicode()` to `byte_to_unicode()`
+  - `unicode2bytes()` to `unicode_to_byte()`
+  - `str2unicode()` to `str_to_unicode()`
+  - `unicode2str()` to `unicode_to_str()`
+  - `number2ascii()` to `numpad_digit_code_to_ascii()`
+- more consistent function naming in `misc.geometry`:
+    - `position2coordinates()` to `position_to_coordinates()`
+    - `coordinates2position`() to `coordinates_to_position()`
+    - `cartesian2polar()` to `cartesian_to_polar()`
+    - `position2visual_angle()` to `position_to_visual_angle()`
+    - `tuples2points()` to `tuples_to_points()`
+    - `polar2cartesian()` to `polar_to_cartesian()`
+
 - components with American spelling are now also available in British spelling,
   enhancing consistency with the overall spelling in the library:
     - method ``control.initialize`` -> ``control.initialise``
@@ -302,7 +308,7 @@ Changed:
 Fixed:
 - unicode bug on Windows for font files
 - unicode bug on Windows for Audio and Picture
-- bug fix in unicode2str
+- bug fix in unicode_to_str
 - bug fix Experiment.add_experiment_info
 - bug: issue #65, tempfolder at multiuser systems
 - minor bug fixes in _secure_hash.py, _files.py

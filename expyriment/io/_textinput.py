@@ -19,7 +19,7 @@ except ImportError:
 
 from .. import _internals, stimuli
 from .._internals import CallbackQuitEvent
-from ..misc import constants, find_font, is_android_running, numpad_digit_code2ascii
+from ..misc import constants, find_font, is_android_running, numpad_digit_code_to_ascii
 from . import defaults
 from ._input_output import Input
 
@@ -502,11 +502,11 @@ class TextInput(Input):
                         if is_android_running():
                             if inkey in filter:
                                 if inkey in constants.K_ALL_KEYPAD_DIGITS:
-                                    inkey = numpad_digit_code2ascii(inkey)
+                                    inkey = numpad_digit_code_to_ascii(inkey)
                                 self._user.append(chr(inkey))
                         else:
                             if inkey in constants.K_ALL_KEYPAD_DIGITS:
-                                self._user.append(chr(numpad_digit_code2ascii(
+                                self._user.append(chr(numpad_digit_code_to_ascii(
                                     inkey)))
                             elif string and ord(string) in filter:
                                 self._user.append(string)

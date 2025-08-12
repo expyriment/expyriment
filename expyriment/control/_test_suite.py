@@ -21,7 +21,7 @@ import expyriment
 
 from .. import _internals, control, design, io, misc, stimuli
 from ..design import randomise
-from ..misc import constants, list_fonts, statistics, unicode2byte
+from ..misc import constants, list_fonts, statistics, unicode_to_byte
 from ..misc._timer import get_time
 from . import defaults, end, initialise, start_audiosystem, stop_audiosystem
 
@@ -593,7 +593,7 @@ def _write_protocol(exp, results):
 
     filename = os.path.join(os.getcwd(), "test_suite_protocol.xpp")
     with open(filename, 'wb') as f:
-        f.write(unicode2byte(rtn))
+        f.write(unicode_to_byte(rtn))
     while True:
         text = stimuli.TextScreen(
             "Saved as",

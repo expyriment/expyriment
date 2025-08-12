@@ -14,7 +14,7 @@ import re
 import pygame
 
 from .. import _internals
-from ..misc import byte2unicode, find_font
+from ..misc import byte_to_unicode, find_font
 from . import defaults
 from ._visual import Visual
 
@@ -325,7 +325,7 @@ class TextBox(Visual):
 
         if not isinstance(self.text, str):
             # Pygame wants latin-1 encoding here for character strings
-            _text = byte2unicode(self.text).encode('latin-1')
+            _text = byte_to_unicode(self.text).encode('latin-1')
         else:
             _text = self.text
         return self.render_textrect(self.format_block(_text),

@@ -27,9 +27,9 @@ except Exception:
     _np = None
 
 from ... import __version__
-from ...misc._miscellaneous import byte2unicode as _str2unicode
+from ...misc._miscellaneous import byte_to_unicode as _str_to_unicode
 from ...misc._miscellaneous import string_sort_array as _py2py3_sort_array
-from ...misc._miscellaneous import unicode2byte as _unicode2str
+from ...misc._miscellaneous import unicode_to_byte as _unicode_to_str
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
@@ -87,7 +87,7 @@ def read_datafile(filename, only_header_and_variable_names=False, encoding=None,
     fl = _codecs.open(filename, 'rb', encoding[0], errors='replace')
     for ln in fl:
         # parse infos
-        ln = _str2unicode(ln.strip())
+        ln = _str_to_unicode(ln.strip())
         if not (ln.startswith("#")):
             if variables is None:
                 variables = ln.split(delimiter)
@@ -147,21 +147,21 @@ def write_csv_file(filename, data, varnames=None, delimiter=','):
         _locale_enc = "UTF-8"
     with open(filename, 'wb') as f:
         header = "# -*- coding: {0} -*-\n".format(_locale_enc)
-        f.write(_unicode2str(header))
+        f.write(_unicode_to_str(header))
         if varnames is not None:
             for c, v in enumerate(varnames):
                 if c > 0:
-                    f.write(_unicode2str(delimiter))
-                f.write(_unicode2str(v))
-            f.write(_unicode2str("\n"))
+                    f.write(_unicode_to_str(delimiter))
+                f.write(_unicode_to_str(v))
+            f.write(_unicode_to_str("\n"))
         cnt = 0
         for row in data:
             for c, v in enumerate(row):
                 if c > 0:
-                    f.write(_unicode2str(delimiter))
-                f.write(_unicode2str(v))
+                    f.write(_unicode_to_str(delimiter))
+                f.write(_unicode_to_str(v))
                 cnt += 1
-            f.write(_unicode2str("\n"))
+            f.write(_unicode_to_str("\n"))
 
     print(" ({0} cells in {1} rows)".format(cnt, len(data)))
 

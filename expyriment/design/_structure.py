@@ -27,7 +27,7 @@ except ImportError:
 from copy import deepcopy
 
 from .. import _internals
-from ..misc import Clock, byte2unicode, constants, string_sort_array, unicode2byte
+from ..misc import Clock, byte_to_unicode, constants, string_sort_array, unicode_to_byte
 from . import defaults, permute
 from .randomise import rand_int, shuffle_list
 
@@ -927,7 +927,7 @@ type".format(permutation_type))
             except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
-            f.write(unicode2byte(header + self.design_as_text))
+            f.write(unicode_to_byte(header + self.design_as_text))
 
     def load_design(self, filename, encoding=None):
         """Load the design from a csv file containing list of trials.
@@ -968,7 +968,7 @@ type".format(permutation_type))
             encoding = [encoding]
         with codecs.open(filename, 'rb', encoding[0], errors='replace') as fl:
             for ln in fl:
-                ln = byte2unicode(ln)
+                ln = byte_to_unicode(ln)
                 if ln[0] == "#":
                     if ln.startswith("#exp:"):
                         self._name = ln[6:].strip()
@@ -1533,7 +1533,7 @@ class Block:
             except Exception:
                 locale_enc = "UTF-8"
             header = "# -*- coding: {0} -*-\n".format(locale_enc)
-            f.write(unicode2byte(header + self.design_as_text))
+            f.write(unicode_to_byte(header + self.design_as_text))
 
     def read_design(self, filename):
         """Reads a list of trials from a csv file and clears the old block
@@ -1612,12 +1612,12 @@ class Block:
             reader = csv.reader(f)
             for r_cnt, row in enumerate(reader):
                 if r_cnt == 0:
-                    factor_names = [byte2unicode(x) for x in row]
+                    factor_names = [byte_to_unicode(x) for x in row]
                 else:
                     trial = Trial()
                     for c_cnt in range(0, len(row)):
-                        trial.set_factor(byte2unicode(factor_names[c_cnt]),
-                                         byte2unicode(row[c_cnt]))
+                        trial.set_factor(byte_to_unicode(factor_names[c_cnt]),
+                                         byte_to_unicode(row[c_cnt]))
                     self.add_trial(trial)
 
 

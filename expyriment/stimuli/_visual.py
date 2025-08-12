@@ -26,7 +26,7 @@ except ImportError:
     np = None
 
 from .. import _internals, misc
-from ..misc import geometry, unicode2byte
+from ..misc import geometry, unicode_to_byte
 from ..misc._timer import get_time
 from . import defaults
 from ._stimulus import Stimulus
@@ -1221,7 +1221,7 @@ class Visual(Stimulus, ABC):
         else:
             parts.append("bmp")
         filename = ".".join(parts)
-        pygame.image.save(self._get_surface(), unicode2byte(filename))
+        pygame.image.save(self._get_surface(), unicode_to_byte(filename))
 
     def picture(self):
         """Return the stimulus as Picture stimulus.
