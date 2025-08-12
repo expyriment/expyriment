@@ -39,3 +39,51 @@ dependencies = [
 
 [project.scripts]
 expyriment="expyriment.cli:main"
+
+[tool.ruff.lint]
+extend-select = [
+    "B",
+    "C4",
+    "EXE",
+    "PIE",
+    "PYI",
+    "SIM",
+    "FLY",
+    #"I",
+    "PGH",
+    "PLE",
+    "PLW",
+    "UP",
+]
+ignore = [
+    "B018",
+    "B026",
+    "B904",
+    "B905",
+    "C417",
+    "PIE790",
+    "PIE808",
+    "SIM102",
+    "SIM103",
+    "SIM105",
+    "SIM108",
+    "SIM114",
+    "SIM115",
+    "SIM117",
+    "SIM118",
+    "PLW0603",
+    "PLW2901",
+    "PLW0602",
+    "E402",
+    "E741",
+    "F401",
+    "F811",
+    "F821",
+    "F841",
+    "PLW1641",
+    "UP015",
+    "UP030",
+    "UP031",
+    "UP032",
+    "UP038",
+]
