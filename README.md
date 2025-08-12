@@ -43,8 +43,15 @@ For online examples see: https://github.com/expyriment/expyriment-stash/tree/mas
 
 Installation
 ============
+Expyriment can be installed via pip:
+
+```bash
+pip install expyriment
+```
+
 The latest stable release of Expyriment can be found at Github:
 https://github.com/expyriment/expyriment/releases/latest
+
 For detailed installation instructions, please see the online documentation:
 https://docs.expyriment.org/Installation.html
 
