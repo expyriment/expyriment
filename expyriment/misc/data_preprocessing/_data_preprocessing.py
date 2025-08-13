@@ -27,9 +27,9 @@ except Exception:
     _np = None
 
 from ... import __version__
-from ...misc._miscellaneous import byte_to_unicode as _str_to_unicode
+from ...misc._miscellaneous import bytes_to_unicode as _str_to_unicode
 from ...misc._miscellaneous import string_sort_array as _py2py3_sort_array
-from ...misc._miscellaneous import unicode_to_byte as _unicode_to_str
+from ...misc._miscellaneous import unicode_to_bytes as _unicode_to_str
 
 
 def read_datafile(filename, only_header_and_variable_names=False, encoding=None,

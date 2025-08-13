@@ -11,7 +11,7 @@ from copy import deepcopy
 
 from .. import _internals
 from .._internals import ExpyrimentObject
-from ..misc import byte_to_unicode
+from ..misc import bytes_to_unicode
 
 
 class Stimulus(ExpyrimentObject, ABC):
@@ -43,7 +43,7 @@ class Stimulus(ExpyrimentObject, ABC):
                                                     self.__class__.__name__)
 
         if log_comment is not None:
-            log_txt = "{0},{1}".format(log_txt, byte_to_unicode(log_comment))
+            log_txt = "{0},{1}".format(log_txt, bytes_to_unicode(log_comment))
         if self._logging:
             _internals.active_exp._event_file_log(log_txt, 2)
 

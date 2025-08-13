@@ -19,7 +19,7 @@ from ._get_system_info import get_system_info
 from ._miscellaneous import (
                              MediaTime,
                              add_fonts,
-                             byte_to_unicode,
+                             bytes_to_unicode,
                              compare_codes,
                              create_colours,
                              download_from_stash,
@@ -36,7 +36,7 @@ from ._miscellaneous import (
                              numpad_digit_code_to_ascii,
                              py2_round,
                              string_sort_array,
-                             unicode_to_byte,
+                             unicode_to_bytes,
                              which,
 )
 from ._secure_hash import (
@@ -45,5 +45,5 @@ from ._secure_hash import (
                              module_hashes_as_string,
 )
 
-add_fonts(byte_to_unicode(_path.abspath(_path.join(_path.dirname(__file__),
+add_fonts(bytes_to_unicode(_path.abspath(_path.join(_path.dirname(__file__),
                   "..", "_fonts"))))

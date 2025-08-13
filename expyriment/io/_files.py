@@ -27,11 +27,11 @@ from time import strftime
 
 from .. import _internals, misc
 from ..misc import (
-    byte_to_unicode,
+    bytes_to_unicode,
     get_experiment_secure_hash,
     module_hashes_as_string,
     statistics,
-    unicode_to_byte,
+    unicode_to_bytes,
 )
 from ..misc._timer import get_time
 from . import defaults
@@ -79,7 +79,7 @@ class InputFile(Input):
         with codecs.open(self._filename, 'rb', encoding[0],
                          errors='replace') as f:
             for line in f:
-                self._lines.append(byte_to_unicode(line).rstrip('\r\n'))
+                self._lines.append(bytes_to_unicode(line).rstrip('\r\n'))
 
     @property
     def filename(self):
@@ -239,7 +239,7 @@ class OutputFile(Output):
 
         start = get_time()
         if self._buffer != []:
-            buffer = [unicode_to_byte(x) for x in self._buffer]
+            buffer = [unicode_to_bytes(x) for x in self._buffer]
             with open(self._fullpath, 'ab') as f:
                 f.write(b"".join(buffer))
             self._buffer = []
@@ -436,10 +436,10 @@ class DataFile(OutputFile):
                     line += self.delimiter
                 if not isinstance(elem, (str, bytes)):
                     elem = str(elem)
-                if '"' in byte_to_unicode(elem):
-                    elem = byte_to_unicode(elem).replace('"', '""')
-                if ',' in byte_to_unicode(elem):
-                    elem = '"{0}"'.format(byte_to_unicode(elem))
+                if '"' in bytes_to_unicode(elem):
+                    elem = bytes_to_unicode(elem).replace('"', '""')
+                if ',' in bytes_to_unicode(elem):
+                    elem = '"{0}"'.format(bytes_to_unicode(elem))
                 line += elem
             self.write_line(line)
         else:
@@ -561,21 +561,21 @@ class DataFile(OutputFile):
                 else:
                     if section == "e":  # Previous line was last #e
                         if len(self._experiment_info) > 0:
-                            fl.write(unicode_to_byte("".join(self._experiment_info)))
+                            fl.write(unicode_to_bytes("".join(self._experiment_info)))
                             self._experiment_info = []
                         section = None
                     elif section == "s":  # Previous line was last #s
                         if len(self._subject_info) > 0:
-                            fl.write(unicode_to_byte("".join(self._subject_info)))
+                            fl.write(unicode_to_bytes("".join(self._subject_info)))
                             self._subject_info = []
                         section = None
 
                         # Re-write variable names after #s-section
-                        fl.write(unicode_to_byte(
+                        fl.write(unicode_to_bytes(
                             self.variable_names + defaults.outputfile_eol))
                         self._variable_names_changed = False
                         line = ''  # Skip old varnames
-                fl.write(unicode_to_byte(line))
+                fl.write(unicode_to_bytes(line))
             tmpfl.close()
             fl.close()
 

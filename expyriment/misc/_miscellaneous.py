@@ -197,7 +197,7 @@ def compare_codes(input_code, standard_codes, bitwise_comparison=True):
             return False
 
 
-def byte_to_unicode(s, fse=False):
+def bytes_to_unicode(s, fse=False):
     if isinstance(s, str):
         return s
 
@@ -214,7 +214,7 @@ def byte_to_unicode(s, fse=False):
     return u
 
 
-def unicode_to_byte(u, fse=False):
+def unicode_to_bytes(u, fse=False):
     if isinstance(u, bytes):
         return u
 
@@ -254,7 +254,7 @@ def str_to_unicode(s, fse=False):
     A unicode-type string.
     """
 
-    return byte_to_unicode(s, fse)
+    return bytes_to_unicode(s, fse)
 
 def unicode_to_str(u, fse=False):
     """Convert unicode to str.
@@ -277,7 +277,7 @@ def unicode_to_str(u, fse=False):
     A str-type string.
     """
 
-    return unicode_to_byte(u, fse)
+    return unicode_to_bytes(u, fse)
 
 def numpad_digit_code_to_ascii(keycode):
     """Convert numpad keycode to the ascii code of that particular number
@@ -334,7 +334,7 @@ def add_fonts(folder):
 
     for font in glob.glob(os.path.join(folder, "*")):
         if font[-4:].lower() in ['.ttf', '.ttc']:
-            font = byte_to_unicode(font, fse=True)
+            font = bytes_to_unicode(font, fse=True)
             name = os.path.split(font)[1]
             bold = name.find('Bold') >= 0
             italic = name.find('Italic') >= 0
