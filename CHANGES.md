@@ -134,8 +134,8 @@ Changed:
     - format changes for ``as_text`` output
 - renaming: `misc.py2py3_sort_array()` to `misc.string_sort_array()`
 - more consistent function naming in `misc`:
-  - `bytes2unicode()` to `bytes_to_unicode()`
-  - `unicode2bytes()` to `unicode_to_bytes()`
+  - `byte2unicode()` to `bytes_to_unicode()`
+  - `unicode2byte()` to `unicode_to_bytes()`
   - `str2unicode()` to `str_to_unicode()`
   - `unicode2str()` to `unicode_to_str()`
   - `number2ascii()` to `numpad_digit_code_to_ascii()`
