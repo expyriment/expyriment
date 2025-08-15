@@ -12,7 +12,7 @@ import os as _os
 import pygame as _pygame
 
 from ..misc._colour import Colour as _Colour
-from ..misc._miscellaneous import byte_to_unicode as _str_to_unicode
+from ..misc._miscellaneous import bytes_to_unicode as _bytes_to_unicode
 
 # Keys
 K_BACKSPACE = _pygame.K_BACKSPACE
@@ -173,4 +173,4 @@ P_RANDOM = 'random'
 _tmp = _os.path.abspath(
     _os.path.join(_os.path.dirname(__file__),
                   "..", "expyriment_logo.png"))
-EXPYRIMENT_LOGO_FILE = _str_to_unicode(_tmp)
+EXPYRIMENT_LOGO_FILE = _bytes_to_unicode(_tmp)
