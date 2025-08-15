@@ -1,6 +1,6 @@
 """The expyriment randomise module.
 
-This module contains various functions for randomizing data
+This module contains various functions for randomising data.
 
 """
 
