@@ -108,7 +108,7 @@ def show_GUI():
 
     if not isinstance(_tk, ModuleType):
         raise ImportError("""API Reference Tool could not be started.
-The Python package 'Tkinter' is not installed""")
+The Python package 'tkinter' is not installed""")
 
     # Create the documentation dict
     doc_dict = {}
