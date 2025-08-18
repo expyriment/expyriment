@@ -25,9 +25,7 @@ except ImportError:
     _com_port_list = []
 try:
     import parallel as _parallel
-except ImportError:
-    _parallel = None
-except OSError:
+except Exception:
     _parallel = None
 try:
     import numpy as _numpy
