@@ -1,8 +1,8 @@
 Expyriment Release Notes
 ========================
 
-Coming up
----------
+Version 1.0.0 (18 Aug 2025)
+---------------------------
 New Features:
 - Expyriment is now based on Pygame 2 (using SDL 2) and depends also on
   numpy & mediadecoder
