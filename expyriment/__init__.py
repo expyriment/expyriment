@@ -35,14 +35,14 @@ __version__ = '1.0.0.dev3'
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1] < 9:
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 10:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.9+. Note, the last major "
-                      "release compatible with Python 2.7\n"
+                      "\n\n  Please use Python 3.10+. Note, the last major "
+                      "release compatible with Python 2\n"
                       "  is Expyriment 0.10.")
 
 try:
