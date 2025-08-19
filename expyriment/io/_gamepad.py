@@ -15,8 +15,6 @@ from .. import _internals
 from ..misc._timer import get_time
 from ._input_output import Input, Output
 
-pygame.joystick.init()
-
 
 class GamePad(Input, Output):
     """A class for creating gamepad/joystick input."""
@@ -25,6 +23,8 @@ class GamePad(Input, Output):
     def get_gampad_count():
         """Get the number of gamepads/joysticks connected to the system."""
 
+        if not pygame.joystick.get_init():
+            pygame.joystick.init()
         return pygame.joystick.get_count()
 
     def __init__(self, gamepad_id, track_button_events=True,
@@ -49,6 +49,8 @@ class GamePad(Input, Output):
         Output.__init__(self)
         self.track_button_events = track_button_events
         self.track_motion_events = track_motion_events
+        if not pygame.joystick.get_init():
+            pygame.joystick.init()
         self._joystick = pygame.joystick.Joystick(gamepad_id)
         self._joystick.init()
 
