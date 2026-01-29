@@ -176,7 +176,8 @@ letter arguments run single commands""",
                         help="run the Expyriment test suite")
 
     # parse
-    args = vars(parser.parse_args())
+    #args = vars(parser.parse_args())
+    args, remaining_args = parser.parse_known_args()
 
     # options
     statements = []
@@ -186,32 +187,32 @@ letter arguments run single commands""",
     statements.append("import expyriment as xpy")
     statements.append("_sys.stdout.close()")
     statements.append("_sys.stdout = original_stdout")
-    statements.append("del _sys, _os")
+    statements.append("del _sys, _os, original_stdout")
 
-    if args['develop_mode']:
+    if args.develop_mode:
         statements.append("xpy.control.set_develop_mode(True)")
 
-    if args['intensive_logging']:
+    if args.intensive_logging:
         print("* Intensive logging")
         statements.append("xpy.control.defaults.event_logging = 2")
 
-    if args['fast_mode']:
+    if args.fast_mode:
         print("* Fast mode")
         statements.append("xpy.control.defaults.initialise_delay = 0")
         statements.append("xpy.control.defaults.fast_quit = True")
 
-    if args['window_mode']:
+    if args.window_mode:
         print("* Window mode")
         statements.append("xpy.control.defaults.window_mode = True")
 
     for x in ['no_opengl', 'no_blocking', 'blocking', 'alternative_blocking']:
-        if args[x] is True:
+        if getattr(args, x):
             raise DeprecationWarning(
                 "'{0}' is deprecated! Please use 'opengl'. ".format(x) +\
                 "See '-h' or '--help' for more information")
 
-    if args['opengl'] is not None:
-        mode = args['opengl']
+    if args.opengl is not None:
+        mode = args.opengl
         if mode == 0:
             statements.append("xpy.control.defaults.opengl = 0")
             print("* No OpenGL (no vsync / no blocking)")
@@ -222,63 +223,63 @@ letter arguments run single commands""",
             statements.append("xpy.control.defaults.opengl = 2")
             print("* OpenGL (vsync / blocking")
 
-    if args['no_time_stamps']:
+    if args.no_time_stamps:
         print("* No time stamps")
         statements.append("xpy.io.defaults.outputfile_time_stamp = False")
 
-    if args['auto_subject_id']:
+    if args.auto_subject_id:
         print("* Auto create subject id")
         statements.append("xpy.control.defaults.auto_create_subject_id = True")
 
-    if args["display"] is not None and args["display"] >= 0:
-        print("* Using display #{0}".format(args["display"]))
+    if args.display is not None and args.display >= 0:
+        print("* Using display #{0}".format(args.display))
         statements.append("xpy.control.defaults.display = {0}".format(
-            args['display']))
+            args.display))
 
-    if args["display_resolution"] is not None:
-        res = [int(x) for x in args["display_resolution"].split("x")]
+    if args.display_resolution is not None:
+        res = [int(x) for x in args.display_resolution.split("x")]
         statements.append(
             "xpy.control.defaults.display_resolution = {0}".format(res))
         print("* Setting display resolution to {0}".format(
-            args["display_resolution"]))
+            args.display_resolution))
 
-    if args["text_size"] is not None:
+    if args.text_size is not None:
         statements.append(
             "xpy.design.defaults.experiment_text_size = {0}".format(
-                args['text_size']))
+                args.text_size))
 
-    if args["window_size"] is not None:
-        res = [int(x) for x in args["window_size"].split("x")]
+    if args.window_size is not None:
+        res = [int(x) for x in args.window_size.split("x")]
         statements.append(
             "xpy.control.defaults.display_resolution = {0}".format(res))
         print("* Setting window size to {0}".format(
-            args["window_size"]))
+            args.window_size))
 
     # commands
-    if args["System_info"]:
+    if args.System_info:
         print("System info")
         exec("\n".join(statements), globals())
         print(xpy.misc.get_system_info(as_string=True))
 
-    elif args["Test_suite"]:
+    elif args.Test_suite:
         print("Run test suite")
         exec("\n".join(statements), globals())
         xpy.control.run_test_suite()
 
-    elif args["Browser_api"]:
+    elif args.Browser_api:
         exec("\n".join(statements), globals())
         xpy.show_documentation(1)
 
-    elif args["Api"]:
+    elif args.Api:
         print("Start API reference tool")
         exec("\n".join(statements), globals())
         xpy.show_documentation(2)
 
-    elif args["Create_exp"]:
+    elif args.Create_exp:
         exec("\n".join(statements), globals())
         create_template()
 
-    elif args["Download_stash"]:
+    elif args.Download_stash:
         print("Download from stash")
         exec("\n".join(statements), globals())
         what = ""
@@ -305,7 +306,7 @@ letter arguments run single commands""",
                     branch = branches[1]
         xpy.misc.download_from_stash(what, branch)
 
-    elif args["Join_data"]:
+    elif args.Join_data:
         exec("\n".join(statements), globals())
         d = join_data()
         output = ""
@@ -314,7 +315,7 @@ letter arguments run single commands""",
             output = input()
         d.write_concatenated_data(output)
 
-    elif args["Interactive"]:
+    elif args.Interactive:
         print("Interactive session")
         print("")
         statements.append("expyriment = xpy")
@@ -367,37 +368,64 @@ letter arguments run single commands""",
 
 
     # run script
-    elif args["SCRIPT"] is not None:
-        _script = os.path.abspath(args["SCRIPT"])
-        if not os.path.isfile(_script):
-            print("Can't find {0}!".format(args["SCRIPT"]))
+    elif args.SCRIPT is not None:
+        script = args.SCRIPT
+        if not os.path.isfile(script):
+            print("Can't find {0}!".format(args.SCRIPT))
             exit()
-        exec("\n".join(statements), globals(), locals())
+        #exec("\n".join(statements), globals(), locals())
         #sys.argv[0] = os.path.relpath(_script, os.getcwd()) # expyriment expect sys.argv[0] as main filename
-        os.chdir(os.path.split(_script)[0])
+        #os.chdir(os.path.split(_script)[0])
         #sys.argv.pop(0)
         import expyriment as xpy
-        xpy.misc._secure_hash.main_file = _script
-        secure_hashes = {_script : xpy.misc._secure_hash._make_secure_hash(
-            _script)}
+        xpy.misc._secure_hash.main_file = script
+        secure_hashes = \
+            {script : xpy.misc._secure_hash._make_secure_hash(script)}
         secure_hashes = xpy.misc._secure_hash.\
-                    _append_hashes_from_imported_modules(secure_hashes, _script)
-        xpy.misc._secure_hash.secure_hashes = secure_hashes
-        xpy.misc._secure_hash.cout_hashes()
+                    _append_hashes_from_imported_modules(secure_hashes, script)
+        #xpy.misc._secure_hash.secure_hashes = secure_hashes
+        #xpy.misc._secure_hash.cout_hashes()
+        statements.append(
+            f"xpy.misc._secure_hash.secure_hashes = {secure_hashes}")
+        statements.append("xpy.misc._secure_hash.cout_hashes()")
 
-        # do some cleanup of locals
-        del argparse, parser, args, statements, x, secure_hashes, xpy
+        # Prepare a temporary script to execute statements + SCRIPT
+        import tempfile
+        args = [sys.executable, script]
+        temp_script_content = f"""
+import sys as _sys
+_sys.argv[0] = "{script}"
+__file__ = "{os.path.join(os.getcwd(), script)}"
+__name__ = "__main__"
+del _sys
+{"\n".join(statements)}
+del xpy
+with open("{script}", 'rb') as _file:
+    exec(compile(_file.read(), "{script}", 'exec'))
+        """
 
-        def _execfile(filepath, globals=None, locals=None):
-            if globals is None:
-                globals = {}
-            globals.update({
-                "__file__": os.path.abspath(filepath),
-                "__name__": "__main__",
-            })
-            with open(filepath, 'rb') as file:
-                exec(compile(file.read(), filepath, 'exec'), globals, locals)
-        _execfile(_script, locals=locals())
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.py') as \
+                temp_script:
+            temp_script.write(temp_script_content.encode())
+            temp_script_path = temp_script.name
+
+        # Replace the current process with the new temporary script
+        os.execvp(sys.executable,
+                  [sys.executable, temp_script_path,] + remaining_args)
+
+        ## do some cleanup of locals
+        #del argparse, parser, args, statements, x, secure_hashes, xpy
+
+        #def _execfile(filepath, globals=None, locals=None):
+        #    if globals is None:
+        #        globals = {}
+        #    globals.update({
+        #        "__file__": os.path.abspath(filepath),
+        #        "__name__": "__main__",
+        #    })
+        #    with open(filepath, 'rb') as file:
+        #        exec(compile(file.read(), filepath, 'exec'), globals, locals)
+        #_execfile(_script, locals=locals())
 
     else:
         parser.print_usage()
