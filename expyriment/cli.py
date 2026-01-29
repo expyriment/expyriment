@@ -368,33 +368,36 @@ letter arguments run single commands""",
 
     # run script
     elif args["SCRIPT"] is not None:
-        script = os.path.abspath(args["SCRIPT"])
-        if not os.path.isfile(script):
+        _script = os.path.abspath(args["SCRIPT"])
+        if not os.path.isfile(_script):
             print("Can't find {0}!".format(args["SCRIPT"]))
             exit()
-            local_namespace = {}
-        exec("\n".join(statements), globals(), local_namespace)
-        path, pyfile = os.path.split(script)
-        os.chdir(path)
-        sys.argv[0] = script # expyriment expect sys.argv[0] as main filename
-        xpy.misc._secure_hash.main_file = script
-        secure_hashes = {script : xpy.misc._secure_hash._make_secure_hash(
-            script)}
+        exec("\n".join(statements), globals(), locals())
+        #sys.argv[0] = os.path.relpath(_script, os.getcwd()) # expyriment expect sys.argv[0] as main filename
+        os.chdir(os.path.split(_script)[0])
+        #sys.argv.pop(0)
+        import expyriment as xpy
+        xpy.misc._secure_hash.main_file = _script
+        secure_hashes = {_script : xpy.misc._secure_hash._make_secure_hash(
+            _script)}
         secure_hashes = xpy.misc._secure_hash.\
-                    _append_hashes_from_imported_modules(secure_hashes, script)
+                    _append_hashes_from_imported_modules(secure_hashes, _script)
         xpy.misc._secure_hash.secure_hashes = secure_hashes
         xpy.misc._secure_hash.cout_hashes()
 
-        def execfile(filepath, globals=None, locals=None):
+        # do some cleanup of locals
+        del argparse, parser, args, statements, x, secure_hashes, xpy
+
+        def _execfile(filepath, globals=None, locals=None):
             if globals is None:
                 globals = {}
             globals.update({
-                "__file__": filepath,
+                "__file__": os.path.abspath(filepath),
                 "__name__": "__main__",
             })
             with open(filepath, 'rb') as file:
                 exec(compile(file.read(), filepath, 'exec'), globals, locals)
-        execfile(pyfile, locals=local_namespace)
+        _execfile(_script, locals=locals())
 
     else:
         parser.print_usage()
