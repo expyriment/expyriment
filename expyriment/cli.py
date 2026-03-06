@@ -70,6 +70,7 @@ def join_data():
 
 
 def main():
+    global xpy
     import argparse
     parser = argparse.ArgumentParser(
         description="""
@@ -96,9 +97,10 @@ letter arguments run single commands""",
     parser.add_argument("-2", "--blocking", action="store_true",
                         help="DEPRECATED: OpenGL (vsync / blocking)")
 
-    parser.add_argument("-3", "--alternative-blocking",
-                        action="store_true",
-                        help="DEPRECATED: OpenGL (vsync / alternative blocking)")
+    parser.add_argument(
+        "-3", "--alternative-blocking",
+        action="store_true",
+        help="DEPRECATED: OpenGL (vsync / alternative blocking)")
     # END DEPRECATED
 
     parser.add_argument("-a", "--auto-subject-id",
@@ -109,9 +111,10 @@ letter arguments run single commands""",
                         action="store_true",
                         help="develop mode (equivalent to -wfat)")
 
-    parser.add_argument("-f", "--fast-mode",
-                        action="store_true",
-                        help="fast mode (no initialise delay and fast quitting)")
+    parser.add_argument(
+        "-f", "--fast-mode",
+        action="store_true",
+        help="fast mode (no initialise delay and fast quitting)")
 
     parser.add_argument("-i", "--intensive-logging",
                         action="store_true",
@@ -125,11 +128,13 @@ letter arguments run single commands""",
                         action="store_true",
                         help="window mode")
 
-    parser.add_argument("--display", metavar="INDEX", type=int,
-                        help="show the screen on specific display (multi-monitor setting)")
+    parser.add_argument(
+        "--display", metavar="INDEX", type=int,
+        help="show the screen on specific display (multi-monitor setting)")
 
-    parser.add_argument("--display-resolution", metavar="WIDTHxHEIGHT",
-                        help="set the display resolution (only in fullscreen mode)")
+    parser.add_argument(
+        "--display-resolution", metavar="WIDTHxHEIGHT",
+        help="set the display resolution (only in fullscreen mode)")
 
     parser.add_argument("--opengl", metavar="MODE", type=int,
                         help="set the OpenGL mode: "\
@@ -284,7 +289,8 @@ letter arguments run single commands""",
         exec("\n".join(statements), globals())
         what = ""
         while what not in ["all", "examples", "extras", "tools"]:
-            sys.stdout.write(" what to download ([all]/examples/extras/tools)? ")
+            sys.stdout.write(
+                " what to download ([all]/examples/extras/tools)? ")
             what = input()
             if what == "":
                 what = "all"
@@ -329,13 +335,17 @@ letter arguments run single commands""",
         statements.append("xpy.control.defaults.stdout_logging = False")
         #exp = xpy.control.initialise()
         statements.append(
-            """print("Expyriment is available as both 'expyriment' and 'xpy'.")""")
+            """print("Expyriment is available as both """ + \
+            """ 'expyriment' and 'xpy'.")""")
         statements.append(
-            """print("Run 'exp = xpy.control.initialise()' to quickly initialise a new experiment.")""")
+            """print("Run 'exp = xpy.control.initialise()' """ + \
+            """to quickly initialise a new experiment.")""")
 
         if find_spec("IPython") is not None:
             statements.append(
-                """get_ipython().history_manager.store_inputs(get_ipython().execution_count - 1, "exp = xpy.control.initialise()")""")
+                """get_ipython().history_manager.store_inputs(""" + \
+                """get_ipython().execution_count - 1, """ + \
+                """"exp = xpy.control.initialise()")""")
             command = "\n".join(statements)
             os.execvp(sys.executable, [sys.executable, '-m', 'IPython',
                                        '--no-banner', '-i', '-c', command])
