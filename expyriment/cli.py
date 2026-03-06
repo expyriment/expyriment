@@ -304,7 +304,13 @@ letter arguments run single commands""",
                     branch = "master"
                 else:
                     branch = branches[1]
-        xpy.misc.download_from_stash(what, branch)
+        try:
+            xpy.misc.download_from_stash(what, branch)
+        except Exception as e:
+            if "CERTIFICATE_VERIFY_FAILED" in str(e).upper():
+                print("  SSL verify failed! Install 'pip-system-certs' " +
+                      "and update system certificates.")
+
 
     elif args.Join_data:
         exec("\n".join(statements), globals())
