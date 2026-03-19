@@ -38,7 +38,7 @@ class Tone(Audio):
         samplerate : int, optional
             samplerate of the sine tone
         bitdepth : int, optional
-            bitdeth of the sine tone
+            bitdepth of the sine tone
         amplitude : int, optional
             amplitude of the sine tone
 

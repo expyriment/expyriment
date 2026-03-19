@@ -142,7 +142,7 @@ class Mouse(Input):
                            quit_denied_function=None):
         """Check if mouse exit action has been performed.
 
-        If quit corner location is has been defined via
+        If quit corner location has been defined via
         ``Mouse.set_quit_corner_location()``  (i.e. 0, 1, 2 or 3), clicking
         quickly three times (i.e., within 1 second) in one of the corners of
         the screen forces the experiment to quit.

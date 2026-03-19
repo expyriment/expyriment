@@ -37,7 +37,7 @@ def _square_of_elements(list_, idx_square):
 
 
 def is_permutation_type(type_str):
-    """Return true if the string or value is a know permutation type.
+    """Return true if the string or value is a known permutation type.
 
     Parameters
     ----------

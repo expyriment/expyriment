@@ -26,7 +26,7 @@ fonts = {}
 class TextBox(Visual):
     """A class implementing a text box with wrapped text.
 
-    This wraps a given multiline string into a formatted mutliline text box,
+    This wraps a given multiline string into a formatted multiline text box,
     strips of leading and trailing lines and gets rid of additional
     whitespaces at beginning of lines (indentation).
 
@@ -75,7 +75,7 @@ class TextBox(Visual):
             background colour
         do_not_trim_words: bool, optional
             if True, words that exceed the width of the text box
-            will be not be trimmed and an exception is raise instead.
+            will be not be trimmed and an exception is raised instead.
             default: False
 
         """

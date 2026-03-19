@@ -79,7 +79,7 @@ class MediaTime(float):
                 - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
 
         Returns
         -------

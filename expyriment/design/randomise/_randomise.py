@@ -165,7 +165,7 @@ def shuffle_list(list_, max_repetitions=-1, n_segments=0):
     -----
     When shuffling lists of trials or blocks, IDs and added stimuli will be
     ignored to determine repetitions, because trial or block comparisons are
-    based on the `compare`method (see documentation of `Trial` or `Block`).
+    based on the `compare` method (see documentation of `Trial` or `Block`).
 
     """
 

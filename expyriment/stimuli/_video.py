@@ -683,7 +683,7 @@ class Video(_visual.Stimulus):
                 - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
 
         Examples
         --------
@@ -731,7 +731,7 @@ class Video(_visual.Stimulus):
                 - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
 
         Examples
         --------
@@ -763,7 +763,7 @@ class Video(_visual.Stimulus):
                 - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
 
         Examples
         --------
@@ -901,7 +901,7 @@ class Video(_visual.Stimulus):
                 - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
@@ -971,7 +971,7 @@ class Video(_visual.Stimulus):
                  - float: seconds
                 - tuple: (minutes, seconds) or (hours, minutes, seconds)
                 - list: [minutes, seconds] or [hours, minutes, seconds]
-                - str: 'hhrmm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
+                - str: 'hh:mm:ss', 'hh:mm:ss.sss', or 'mm:ss.sss'
         callback_function : function, optional
             function to repeatedly execute during waiting loop
         process_control_events : bool, optional
