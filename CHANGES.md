@@ -8,10 +8,10 @@ Changed:
     - unknown arguments are now passed through to the script
     - check SSL errors when downloading from stash
 - io.GamePad:
-    - `pygame.joystick.init` not called on import, but later in class init
+    - ``pygame.joystick.init`` not called on import, but later in class init
  
 Fixed:
-- command line interface `SCRIPT` argument resulted in crash
+- command line interface ``SCRIPT`` argument resulted in crash
   (https://github.com/expyriment/expyriment/issues/278)
 
 Version 1.0.0 (18 Aug 2025)
