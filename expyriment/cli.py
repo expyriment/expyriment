@@ -408,13 +408,14 @@ letter arguments run single commands""",
         # Prepare a temporary script to execute statements + SCRIPT
         import tempfile
         args = [sys.executable, script]
+        all_statements = "\n".join(statements)
         temp_script_content = f"""
 import sys as _sys
 _sys.argv[0] = "{script}"
 __file__ = "{os.path.join(os.getcwd(), script)}"
 __name__ = "__main__"
 del _sys
-{"\n".join(statements)}
+{all_statements}
 del xpy
 with open("{script}", 'rb') as _file:
     exec(compile(_file.read(), "{script}", 'exec'))
