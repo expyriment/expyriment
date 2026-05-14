@@ -463,6 +463,7 @@ def get_system_info(as_string=False):
         pil_version = ""
     info["python_pil_version"] = pil_version
     info["python_pygame_version"] = pygame.version.ver
+    info["python_is_pygame_ce"] =  "No" if not getattr(pygame, "IS_CE", False) else "Yes"
     if _ogl is not None:
         pyopengl_version = _ogl.version.__version__
     else:

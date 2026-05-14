@@ -1,6 +1,11 @@
 Expyriment Release Notes
 ========================
 
+Upcoming
+-------------------------
+New Features:
+- system information: new property "python_is_pygame_ce" to check if Pygame CE is used
+
 Version 1.0.1 (5 May 2026)
 --------------------------
 Changed:
@@ -9,7 +14,7 @@ Changed:
     - check SSL errors when downloading from stash
 - io.GamePad:
     - ``pygame.joystick.init`` not called on import, but later in class init
- 
+
 Fixed:
 - command line interface ``SCRIPT`` argument resulted in crash
   (https://github.com/expyriment/expyriment/issues/278)
