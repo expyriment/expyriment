@@ -6,11 +6,13 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 import sys
+from copy import copy
+from hashlib import sha1
 from os.path import sep
 from re import split
-from hashlib import sha1
-from copy import copy
+
 from ._miscellaneous import is_interactive_mode
+
 
 def _make_secure_hash(filename):
     """returns secure hash from file or None, if not possible"""

@@ -9,10 +9,11 @@ __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
 
-from . import defaults
-from  ._input_output  import Output
-from ..misc._timer import get_time
 from .. import _internals
+from ..misc._timer import get_time
+from . import defaults
+from ._input_output import Output
+
 
 class MarkerOutput(Output):
     """A class implementing a marker output."""

@@ -10,7 +10,6 @@ __author__ = 'Florian Krause <florian@expyriment.org> \
 
 
 from .. import _internals
-
 from . import defaults, permute, randomise, randomize
 from ._structure import Block, Experiment, Trial
 
