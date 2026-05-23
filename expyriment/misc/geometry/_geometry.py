@@ -148,10 +148,10 @@ def points_to_vertices(points):
 
     """
 
-    vtx = []
-    for i in range(1, len(points)):
-        vtx.append((points[i].x - points[i - 1].x, points[i].y - points[i - 1].y))
-    return vtx
+    return [  # use itertools.pairwise instead in Python 3.10
+        (points[i].x - points[i - 1].x, points[i].y - points[i - 1].y)
+        for i in range(1, len(points))
+    ]
 
 def lines_intersect(pa, pb, pc, pd):
     """Returns true if two line segments are intersecting

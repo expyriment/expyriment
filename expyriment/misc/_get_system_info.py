@@ -179,23 +179,25 @@ def get_system_info(as_string=False):
 
         try:
             hardware_audio_card = ""
-            cards = []
             p = subprocess.Popen(['lspci'], stdout=subprocess.PIPE, text=True)
-            for line in p.stdout:
-                if "Audio" in line:
-                    cards.append(line.split(":")[-1].strip())
+            cards = [
+                line.split(":")[-1].strip()
+                for line in p.stdout
+                if "Audio" in line
+            ]
             p.wait()
-            if cards != []:
+            if cards:
                 hardware_audio_card = cards
         except Exception:
             try:
                 hardware_audio_card = ""
-                cards = []
                 with open('/proc/asound/cards') as f:
-                    for line in f:
-                        if line.startswith(" 0"):
-                            cards.append(line.split(":")[1].strip())
-                if cards != []:
+                    cards = [
+                        line.split(":")[1].strip()
+                        for line in f
+                        if line.startswith(" 0")
+                    ]
+                if cards:
                     hardware_audio_card = cards
             except Exception:
                 hardware_audio_card = ""
