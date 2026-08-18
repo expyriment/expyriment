@@ -12,7 +12,7 @@ license = "GPL-3.0-or-later"
 license-files=["COPYING.txt"]
 name = "expyriment"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10, <3.14" # TODO: Update to 3.15 when pygame supports it
 dynamic = ["version"]
 keywords = ["experiment control", "open science",
             "neuroscience", "experimental psychology"]
