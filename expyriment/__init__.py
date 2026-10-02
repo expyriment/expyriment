@@ -49,21 +49,22 @@ try:
     import os as _os
     _os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
+    _install_instr = "\nPlease install pygame-ce (>=2.5.8,<3))."
     import pygame as _pygame
-    _install_instr = "\nPlease install Pygame-ce (>=2.5.8,<3))."
 
-    if not getattr(_pygame, "IS_CE", False):
-        raise RuntimeError(f"Expyriment {__version__} is only compatible with Pygame-ce." +
-                           _install_instr)
-
-    if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
-        raise RuntimeError("Expyriment {0} ".format(__version__) +
-                      "is not compatible with Pygame {0}.{1}.{2}.".format(
-                          _pygame.vernum[0], _pygame.vernum[1],
-                          _pygame.vernum[2]) + _install_instr)
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
                       "needs the package 'Pygame-ce'." + _install_instr)
+
+if not getattr(_pygame, "IS_CE", False):
+    raise RuntimeError(f"Expyriment {__version__} is only compatible with Pygame-ce." +
+                        _install_instr)
+
+if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
+    raise RuntimeError("Expyriment {0} ".format(__version__) +
+                    "is not compatible with Pygame {0}.{1}.{2}.".format(
+                        _pygame.vernum[0], _pygame.vernum[1],
+                        _pygame.vernum[2]) + _install_instr)
 
 try:
     import logging as _logging
