@@ -31,17 +31,17 @@ To cite Expyriment in publications, please refer to the following article:
 __author__ = 'Florian Krause <florian@expyriment.org>, \
 Oliver Lindemann <oliver@expyriment.org>'
 
-__version__ = '1.0.1'
+__version__ = '1.1.0-dev1'
 
 import sys as _sys
 
-if _sys.version_info[0] != 3 or _sys.version_info[1] < 10:
+if _sys.version_info[0] != 3 or _sys.version_info[1] < 12:
 
     raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Python {0}.{1}.".format(
                                                     _sys.version_info[0],
                                                     _sys.version_info[1]) +
-                      "\n\n  Please use Python 3.10+. Note, the last major "
+                      "\n\n  Please use Python 3.12+. Note, the last major "
                       "release compatible with Python 2\n"
                       "  is Expyriment 0.10.")
 
@@ -50,16 +50,20 @@ try:
     _os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 
     import pygame as _pygame
+    _install_instr = "\nPlease install Pygame-ce (>=2.5.8,<3))."
+
+    if not getattr(_pygame, "IS_CE", False):
+        raise RuntimeError(f"Expyriment {__version__} is only compatible with Pygame-ce." +
+                           _install_instr)
+
     if _pygame.vernum < (2, 5, 2) or _pygame.vernum >= (3, 0, 0):
         raise RuntimeError("Expyriment {0} ".format(__version__) +
                       "is not compatible with Pygame {0}.{1}.{2}.".format(
                           _pygame.vernum[0], _pygame.vernum[1],
-                          _pygame.vernum[2]) +
-                      "\nPlease install Pygame(>=2.5.2,<3)).")
+                          _pygame.vernum[2]) + _install_instr)
 except ImportError:
     raise ImportError("Expyriment {0} ".format(__version__) +
-                      "needs the package 'Pygame')." +
-                      "\nPlease install Pygame(>=2.5.2,<3).")
+                      "needs the package 'Pygame-ce'." + _install_instr)
 
 try:
     import logging as _logging
