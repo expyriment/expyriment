@@ -83,11 +83,18 @@ class Screen(Output):
         self._no_frame = no_frame
         self._display = display
 
+        # Use Window API for fullscreen OpenGL mode in Pygame-CE
+        self._window = None
+        self._use_window_api = (getattr(pygame, "IS_CE", False)
+                                and self._opengl > 0
+                                and self._fullscreen)
+
         if ogl is None:
             warn_message = "PyOpenGL is not installed. \
 OpenGL will be deactivated!"
             print("Warning: " + warn_message)
-            _internals.active_exp._event_file_warn("Screen,warning," + warn_message)
+            _internals.active_exp._event_file_warn(
+                "Screen,warning," + warn_message)
             self._opengl = False
 
         # Set HiDPI mode on Windows (if SDL environment variable is not set)
@@ -115,7 +122,8 @@ OpenGL will be deactivated!"
                                               "..", "xpy_icon.png"))
         if platform.system() != "Darwin":
             icon = pygame.transform.smoothscale(icon, (32, 32))
-        pygame.display.set_icon(icon)
+        if not self._use_window_api:
+            pygame.display.set_icon(icon)
 
         if not self._opengl:
             if self._fullscreen:
@@ -128,26 +136,82 @@ OpenGL will be deactivated!"
                 pygame.display.set_caption('Expyriment')
 
         else:
-            try:
-                pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
-            except Exception:
-                pass
+            if self._use_window_api:
+                # Initialize Pygame's default conversion format
+                temp = pygame.Window(size=(1, 1), hidden=True)
+                try:
+                    temp.get_surface()
+                finally:
+                    temp.destroy()
 
-            pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
+                # Create an exclusive fullscreen OpenGL window
+                centered = 0x2FFF0000 | self._display
+                self._window = pygame.Window(title="Expyriment",
+                                             size=self._display_resolution,
+                                             position=(centered, centered),
+                                             fullscreen=True, opengl=True)
+                self._window.set_icon(icon)
 
-            if self._fullscreen:
-                self._surface = pygame.display.set_mode(
-                    self._display_resolution, pygame_mode | pygame.FULLSCREEN,
-                    display=self._display, vsync=1)
+                # Mimic dummy Surface returned by display.set_mode using OpenGL
+                self._surface = pygame.Surface(self._window.size, depth=32)
+
+                # Enable vsync
+                vsync_warning = None
+                try:
+                    if platform.system() == "Windows":
+                        sdl_path = os.path.join(
+                            os.path.dirname(pygame.base.__file__), "SDL2.dll")
+                    else:
+                        sdl_path = pygame.base.__file__
+
+                    sdl = ctypes.CDLL(sdl_path)
+
+                    sdl.SDL_GL_SetSwapInterval.argtypes = [ctypes.c_int]
+                    sdl.SDL_GL_SetSwapInterval.restype = ctypes.c_int
+
+                    sdl.SDL_GL_GetSwapInterval.argtypes = []
+                    sdl.SDL_GL_GetSwapInterval.restype = ctypes.c_int
+
+                    sdl.SDL_GetError.argtypes = []
+                    sdl.SDL_GetError.restype = ctypes.c_char_p
+
+                    if sdl.SDL_GL_SetSwapInterval(1) != 0:
+                        vsync_warning = "Could not enable vsync: {}".format(
+                            sdl.SDL_GetError().decode(errors="replace"))
+                    elif sdl.SDL_GL_GetSwapInterval() != 1:
+                        vsync_warning = \
+                            "Could not verify vsync is enabled"
+
+                except (OSError, AttributeError) as exc:
+                    vsync_warning = "Could not enable vsync: {}".format(exc)
+
+                if vsync_warning:
+                    print("Warning: " + vsync_warning)
+                    _internals.active_exp._event_file_warn(
+                        "Screen,warning," + vsync_warning)
 
             else:
-                if no_frame:
-                    pygame_mode = pygame_mode | pygame.NOFRAME
-                self._surface = pygame.display.set_mode(
-                    self._window_size, pygame_mode, display=self._display,
-                    vsync=1)
+                try:
+                    pygame.display.gl_set_attribute(pygame.GL_SWAP_CONTROL, 1)
+                except Exception:
+                    pass
 
-                pygame.display.set_caption('Expyriment')
+                pygame_mode = pygame.DOUBLEBUF | pygame.OPENGL
+
+                if self._fullscreen:
+                    self._surface = \
+                        pygame.display.set_mode( self._display_resolution,
+                                                pygame_mode | pygame.FULLSCREEN,
+                                                display=self._display, vsync=1)
+
+                else:
+                    if no_frame:
+                        pygame_mode = pygame_mode | pygame.NOFRAME
+                    self._surface = pygame.display.set_mode(
+                        self._window_size, pygame_mode, display=self._display,
+                        vsync=1)
+
+                    pygame.display.set_caption('Expyriment')
 
             ogl_version = ogl.glGetString(ogl.GL_VERSION)
             if float(ogl_version[0:3]) < 2.0:
@@ -235,7 +299,10 @@ machine!")
         """
 
         pygame.event.pump()
-        pygame.display.flip()
+        if self._use_window_api:
+            self._window.flip()
+        else:
+            pygame.display.flip()
         if self._opengl >= 2 and blocking:
             ogl.glBegin(ogl.GL_POINTS)
             ogl.glColor4f(0, 0, 0, 1)  # Opaque needed for non-alpha video!

@@ -106,7 +106,7 @@ class _LaminaPanelSurface:
     def refresh_position(self):
         """Recalc where in modelspace quad needs to be to fill screen."""
 
-        screensize = pygame.display.get_surface().get_size()
+        screensize = _internals.active_exp.screen.size
         bottomleft = oglu.gluUnProject(screensize[0] // 2 - \
                                        int(misc.py2_round(self._winsize[0] / 2)) + \
                                        self._position[0],
